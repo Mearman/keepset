@@ -1,23 +1,20 @@
 import { z } from "zod";
-import type { DownloadSizes } from "./download-sizes";
 import { matrixMarketPath, SUITESPARSE_ORIGIN, type SuiteSparseMirror } from "./mirror";
 import { networkDomain, networkName, type NetzschleuderIndex } from "./netzschleuder-index";
 import type { SourceDownload } from "./source";
 import { matrixKey, type SuiteSparseIndex } from "./suitesparse-index";
 
-/* What the collections' own indexes and hosts state of their datasets, which the source catalogue leaves unrecorded for most of them: the domain of a SuiteSparse matrix or a Netzschleuder network and the size of a download. */
+/* What the collections' own indexes and hosts state of their datasets, which the source catalogue leaves unrecorded for most of them: the domain of a SuiteSparse matrix or a Netzschleuder network. */
 
 /** The curated domain of each dataset whose source catalogue and collection index state none, by dataset id, each read from the dataset's own description and the topics its collection files it under. */
 export const GraphDomainsSchema = z.object({ domains: z.record(z.string().min(1), z.string().min(1)) }).strict();
 
-/** What the indexes of the collections the catalogue draws on, and the hosts serving its downloads, state of their datasets. */
+/** What the indexes of the collections the catalogue draws on state of their datasets. */
 export interface SourceFacts {
   /** The kind of each SuiteSparse matrix. */
   readonly suiteSparse: SuiteSparseIndex;
   /** The tags of each Netzschleuder network. */
   readonly netzschleuder: NetzschleuderIndex;
-  /** The size of each download a recipe fetches. */
-  readonly downloadSizes: DownloadSizes;
 }
 
 /**

@@ -51,6 +51,7 @@
     "zenodo"
   ],
   "properties": {
+    "downloadBytes": 120856,
     "surveyId": "or-6"
   },
   "recipe": {

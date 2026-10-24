@@ -6,7 +6,6 @@ import { DATASET_RECIPES, UNVERIFIABLE_DOWNLOADS } from "./dataset-recipes";
 import { FORMAT_RECIPES, READ_DOWNLOADS, REPLACED_DOWNLOADS, UNREADABLE_FORMATS } from "./graph-recipes";
 import { GraphLicencesSchema, graphLicenceResolver } from "./licence";
 import { SuiteSparseMirrorSchema } from "./mirror";
-import { DownloadSizesSchema } from "./download-sizes";
 import { NetzschleuderIndexSchema } from "./netzschleuder-index";
 import { SuiteSparseIndexSchema } from "./suitesparse-index";
 import { GraphboxCatalogueSchema, SourceCatalogueSchema } from "./source";
@@ -52,12 +51,10 @@ const mirror = SuiteSparseMirrorSchema.parse({ readOn: "2026-10-21", host: "http
 const facts = {
   suiteSparse: SuiteSparseIndexSchema.parse({ readOn: "2026-10-24", kinds: { "Pajek/Kohonen": "Weighted Graph" } }),
   netzschleuder: NetzschleuderIndexSchema.parse({ readOn: "2026-10-24", networks: { bison: ["Social", "Animal", "Weighted"] } }),
-  downloadSizes: DownloadSizesSchema.parse({ readOn: "2026-10-24", sizes: { "https://mirror.example/sparse/MM/Pajek/Kohonen.tar.gz": 1234 } }),
 };
 const noFacts = {
   suiteSparse: SuiteSparseIndexSchema.parse({ readOn: "2026-10-24", kinds: {} }),
   netzschleuder: NetzschleuderIndexSchema.parse({ readOn: "2026-10-24", networks: {} }),
-  downloadSizes: DownloadSizesSchema.parse({ readOn: "2026-10-24", sizes: {} }),
 };
 const NO_OVERRIDES = { names: new Map<string, string>(), recipes: new Map() } as const;
 const { entries, report } = convertCatalogue(pipeline, graphbox, { licences: resolver(), mirror, facts, domains: {} }, NO_OVERRIDES);
@@ -286,11 +283,9 @@ describe("the seed import's classification", () => {
     expect(kohonen.licence).toEqual({ kind: "spdx", id: "CC-BY-4.0" });
   });
 
-  it("takes a SuiteSparse matrix's domain from the index's kind where the catalogue gives none, and records the size of the download its recipe fetches", () => {
+  it("takes a SuiteSparse matrix's domain from the index's kind where the catalogue gives none", () => {
     const kohonen = entry("ss-pajek-kohonen");
     expect(kohonen.domain).toBe("Weighted Graph");
-    expect(kohonen.properties).toMatchObject({ downloadBytes: 1234 });
-    expect(entry("wiki-vote").properties).not.toHaveProperty("downloadBytes");
   });
 
   it("takes the domain curated for a dataset the catalogue and the indexes give none, and refuses a curation that names no dataset or one the catalogue already gives a domain", () => {

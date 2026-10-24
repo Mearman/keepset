@@ -5,6 +5,7 @@ import { afterAll, describe, expect, it } from "vitest";
 import { parseEntry, waybackUrl } from "../../src/entry";
 import { serialise } from "../../src/serialise";
 import { liveEntry } from "../../src/test-support/entries";
+import { DownloadSizesSchema } from "./download-sizes";
 import { apply, entryWrites, reportedIds, staleEntries } from "./emit";
 
 /** A SHA-256 is 64 hex digits. */
@@ -12,6 +13,11 @@ const SHA256_DIGITS = 64;
 
 /** The byte length the carry-over test's committed pin records. */
 const PINNED_BYTES = 4096;
+
+/** The size a host states for the carry-over test's live download. */
+const STATED_BYTES = 777;
+
+const NO_SIZES = DownloadSizesSchema.parse({ readOn: "2026-10-24", sizes: {} });
 
 const directories: string[] = [];
 afterAll(() => {
@@ -29,7 +35,7 @@ function scratch(): string {
 
 describe("entryWrites", () => {
   it("maps each entry to its file under the entries directory, serialised", () => {
-    const writes = entryWrites([parseEntry(liveEntry)], "/entries");
+    const writes = entryWrites([parseEntry(liveEntry)], "/entries", NO_SIZES);
     expect([...writes.keys()]).toEqual(["/entries/karate.json"]);
     expect(JSON.parse(writes.get("/entries/karate.json") ?? "null")).toMatchObject({ id: "karate" });
   });
@@ -41,7 +47,7 @@ describe("entryWrites and pinned snapshots", () => {
     const url = "https://example.org/data/karate.txt";
     const committed = parseEntry({ ...liveEntry, name: "An older name", sources: [{ url, retrieved: "2026-01-01", status: "live", snapshot: { timestamp: "20260101000000", url: waybackUrl("20260101000000", url) } }] });
     writeFileSync(join(root, "karate.json"), serialise(committed));
-    const written = parseEntry(JSON.parse(entryWrites([parseEntry(liveEntry)], root).get(join(root, "karate.json")) ?? "null"));
+    const written = parseEntry(JSON.parse(entryWrites([parseEntry(liveEntry)], root, NO_SIZES).get(join(root, "karate.json")) ?? "null"));
     expect(written.sources[0]?.snapshot).toEqual({ timestamp: "20260101000000", url: waybackUrl("20260101000000", url) });
     expect(written.sources[0]?.retrieved).toBe(liveEntry.sources[0]?.retrieved);
     expect(written.name).toBe(liveEntry.name);
@@ -54,29 +60,32 @@ describe("entryWrites and pinned snapshots", () => {
     const committed = parseEntry({ ...liveEntry, sources: [{ url, retrieved: "2026-01-01", status: "live", snapshot: { timestamp: "20260101000000", url: waybackUrl("20260101000000", url), sha256, byteLength: PINNED_BYTES } }] });
     writeFileSync(join(root, "karate.json"), serialise(committed));
     const regenerated = parseEntry({ ...liveEntry, sources: [{ url, retrieved: "2026-04-19", status: "live", snapshot: { timestamp: "20260101000000", url: waybackUrl("20260101000000", url) } }] });
-    const written = parseEntry(JSON.parse(entryWrites([regenerated], root).get(join(root, "karate.json")) ?? "null"));
+    const written = parseEntry(JSON.parse(entryWrites([regenerated], root, NO_SIZES).get(join(root, "karate.json")) ?? "null"));
     expect(written.sources[0]?.snapshot).toMatchObject({ sha256, byteLength: PINNED_BYTES });
   });
 
-  it("records the carried checksum's byte length as the download's size, replacing a size read from the live URL, and records none without a checksum", () => {
+  it("records the carried checksum's byte length as the download's size ahead of the size a host states, and the stated size without a checksum", () => {
     const root = scratch();
     const url = "https://example.org/data/karate.txt";
+    const sizes = DownloadSizesSchema.parse({ readOn: "2026-10-24", sizes: { [url]: STATED_BYTES } });
     const pin = { timestamp: "20260101000000", url: waybackUrl("20260101000000", url) };
     const committed = parseEntry({ ...liveEntry, sources: [{ url, retrieved: "2026-01-01", status: "live", snapshot: { ...pin, sha256: "a".repeat(SHA256_DIGITS), byteLength: PINNED_BYTES } }] });
     writeFileSync(join(root, "karate.json"), serialise(committed));
-    const regenerated = parseEntry({ ...liveEntry, properties: { downloadBytes: 1 }, sources: [{ url, retrieved: "2026-04-19", status: "live", snapshot: pin }] });
-    const sized = parseEntry(JSON.parse(entryWrites([regenerated], root).get(join(root, "karate.json")) ?? "null"));
-    expect(sized.properties["downloadBytes"]).toBe(PINNED_BYTES);
+    const regenerated = parseEntry({ ...liveEntry, sources: [{ url, retrieved: "2026-04-19", status: "live", snapshot: pin }] });
+    const pinned = parseEntry(JSON.parse(entryWrites([regenerated], root, sizes).get(join(root, "karate.json")) ?? "null"));
+    expect(pinned.properties["downloadBytes"]).toBe(PINNED_BYTES);
     const empty = scratch();
-    const unsized = parseEntry(JSON.parse(entryWrites([regenerated], empty).get(join(empty, "karate.json")) ?? "null"));
-    expect(unsized.properties["downloadBytes"]).toBe(1);
+    const stated = parseEntry(JSON.parse(entryWrites([regenerated], empty, sizes).get(join(empty, "karate.json")) ?? "null"));
+    expect(stated.properties["downloadBytes"]).toBe(STATED_BYTES);
+    const unsized = parseEntry(JSON.parse(entryWrites([regenerated], empty, NO_SIZES).get(join(empty, "karate.json")) ?? "null"));
+    expect(unsized.properties).not.toHaveProperty("downloadBytes");
   });
 
   it("does not pin a snapshot for a URL the import no longer lists", () => {
     const root = scratch();
     const committed = parseEntry({ ...liveEntry, sources: [{ url: "https://example.org/other", retrieved: "2026-01-01", status: "live", snapshot: { timestamp: "20260101000000", url: waybackUrl("20260101000000", "https://example.org/other") } }] });
     writeFileSync(join(root, "karate.json"), serialise(committed));
-    const written = parseEntry(JSON.parse(entryWrites([parseEntry(liveEntry)], root).get(join(root, "karate.json")) ?? "null"));
+    const written = parseEntry(JSON.parse(entryWrites([parseEntry(liveEntry)], root, NO_SIZES).get(join(root, "karate.json")) ?? "null"));
     expect(written.sources[0]?.snapshot).toBeUndefined();
   });
 });

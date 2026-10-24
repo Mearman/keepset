@@ -80,6 +80,7 @@
     "france-sdes"
   ],
   "properties": {
+    "downloadBytes": 17083717,
     "probedNodes": 100033,
     "surveyId": "or-72"
   },

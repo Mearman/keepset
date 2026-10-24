@@ -75,6 +75,7 @@
     "huggingface"
   ],
   "properties": {
+    "downloadBytes": 12529819,
     "surveyId": "or-37"
   },
   "recipe": {

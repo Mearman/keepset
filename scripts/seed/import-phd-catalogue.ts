@@ -71,11 +71,11 @@ const pipeline = SourceCatalogueSchema.parse(JSON.parse(pipelineText));
 const graphbox = GraphboxCatalogueSchema.parse(JSON.parse(graphboxText));
 const licences = GraphLicencesSchema.parse(JSON.parse(readFileSync(join(sourcesDir, "graph-licences.json"), "utf8")));
 const mirror = SuiteSparseMirrorSchema.parse(JSON.parse(readFileSync(join(sourcesDir, "suitesparse-mirror.json"), "utf8")));
-const facts = { suiteSparse: SuiteSparseIndexSchema.parse(JSON.parse(readFileSync(join(sourcesDir, "suitesparse-index.json"), "utf8"))), netzschleuder: NetzschleuderIndexSchema.parse(JSON.parse(readFileSync(join(sourcesDir, "netzschleuder-index.json"), "utf8"))), downloadSizes: DownloadSizesSchema.parse(JSON.parse(readFileSync(join(sourcesDir, "download-sizes.json"), "utf8"))) };
+const facts = { suiteSparse: SuiteSparseIndexSchema.parse(JSON.parse(readFileSync(join(sourcesDir, "suitesparse-index.json"), "utf8"))), netzschleuder: NetzschleuderIndexSchema.parse(JSON.parse(readFileSync(join(sourcesDir, "netzschleuder-index.json"), "utf8"))) };
 const { domains } = GraphDomainsSchema.parse(JSON.parse(readFileSync(join(sourcesDir, "graph-domains.json"), "utf8")));
 const { entries, report } = convertCatalogue(pipeline, graphbox, { licences: graphLicenceResolver(licences), mirror, facts, domains });
 
-const writes = entryWrites(entries, entriesDir);
+const writes = entryWrites(entries, entriesDir, DownloadSizesSchema.parse(JSON.parse(readFileSync(join(sourcesDir, "download-sizes.json"), "utf8"))));
 writes.set(reportPath, canonicalJson(report));
 if (values.snapshot === true) {
   const withheld = (text: string): string => `${JSON.stringify(JSON.parse(text, (_key, value: unknown) => (typeof value === "string" && value.startsWith("file:") ? "file:(local path withheld)" : value)), undefined, 2)}\n`;

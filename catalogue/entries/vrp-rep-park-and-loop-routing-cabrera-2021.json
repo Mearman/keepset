@@ -55,6 +55,7 @@
     "vrp-rep"
   ],
   "properties": {
+    "downloadBytes": 967083,
     "surveyId": "or-10",
     "timeUnit": "seconds"
   },
