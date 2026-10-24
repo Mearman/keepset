@@ -1,3 +1,10 @@
+# [0.58.0](https://github.com/Mearman/keepset/compare/v0.57.0...v0.58.0) (2026-10-24)
+
+
+### Features
+
+* **seed:** record the download size of task datasets as well as graphs ([f308123](https://github.com/Mearman/keepset/commit/f30812392f7a7db4950cfe530237f69ff416b14c))
+
 # [0.57.0](https://github.com/Mearman/keepset/compare/v0.56.0...v0.57.0) (2026-10-24)
 
 
