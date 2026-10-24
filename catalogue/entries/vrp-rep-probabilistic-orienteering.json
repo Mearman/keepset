@@ -76,6 +76,7 @@
     "vrp-rep"
   ],
   "properties": {
+    "downloadBytes": 402010,
     "surveyId": "or-3"
   },
   "recipe": {

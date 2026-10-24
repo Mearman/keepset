@@ -87,6 +87,7 @@
     "zenodo"
   ],
   "properties": {
+    "downloadBytes": 259299684,
     "surveyId": "or-25",
     "timeUnit": "seconds"
   },

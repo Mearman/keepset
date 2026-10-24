@@ -1,8 +1,8 @@
-/* Records the size of the download each graph entry offers, as the host serving it reports it.
+/* Records the size of each download an entry's recipe fetches whole, as the host serving it reports it.
 
    pnpm exec tsx scripts/seed/probe-download-sizes.ts
 
-   The URL is the entry's source the recipe reads, or the first source listed where the entry has no recipe yet. Each is requested through the polite client, paced per host, first with a HEAD request and, where that gives no size, with a request for the first byte, whose Content-Range states the whole size. The sizes are written to scripts/seed/sources/download-sizes.json, which the import reads and `seed:check` verifies the entries against. A size already recorded is kept when the host fails to answer this time; a URL no host gives a size for is left out and named, so the script can be run again. */
+   The URLs are those downloadedUrls names for each entry: a paged query has none, and an entry with no recipe offers only a graph's first source. Each is requested through the polite client, paced per host, first with a HEAD request and, where that gives no size, with a request for the first byte, whose Content-Range states the whole size. The sizes are written to scripts/seed/sources/download-sizes.json, which the import reads and `seed:check` verifies the entries against. A size already recorded is kept when the host fails to answer this time; a URL no host gives a size for is left out and named, so the script can be run again. */
 
 import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -11,7 +11,7 @@ import { parseEntry } from "../../src/entry";
 import { canonicalJson } from "../../src/serialise";
 import { systemClock } from "../sources/pacing";
 import { DEFAULT_POLITENESS, PoliteClient, RequestFailure } from "../sources/polite-client";
-import { DownloadSizesSchema, statedSize } from "./download-sizes";
+import { downloadedUrls, DownloadSizesSchema, statedSize } from "./download-sizes";
 
 /** The length of the `YYYY-MM-DD` prefix of an ISO 8601 timestamp. */
 const ISO_DATE_LENGTH = "YYYY-MM-DD".length;
@@ -25,9 +25,8 @@ const wanted = [
       .filter((file) => file.endsWith(".json"))
       .flatMap((file) => {
         const entry = parseEntry(JSON.parse(readFileSync(join(entriesDir, file), "utf8")));
-        const url = entry.category === "graph/v1" ? entry.sources["source" in entry.recipe ? entry.recipe.source : 0]?.url : undefined;
 
-        return url === undefined ? [] : [url];
+        return downloadedUrls(entry);
       }),
   ),
 ].sort();

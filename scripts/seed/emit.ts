@@ -4,6 +4,7 @@ import { existsSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import { type Entry, parseEntry } from "../../src/entry";
 import { serialise } from "../../src/serialise";
+import { downloadBytesOf, type DownloadSizes } from "./download-sizes";
 import { pinSnapshots, withChecksum, type Checksum } from "../sources/entries";
 
 /** What an import produces: every file it writes, by absolute path, and the entry files a previous import wrote that this one does not produce, which it removes. */
@@ -13,24 +14,25 @@ export interface Output {
 }
 
 /**
- * The entry with the size of the pinned snapshot its recipe fetches recorded as `downloadBytes`: a fetch resolves a pinned snapshot first, so its recorded byte length is exactly the download, and it replaces any size read from the live URL.
- * @param entry - The entry.
- * @returns The entry with the snapshot's byte length as `downloadBytes`, or the same entry when its recipe fetches no source with a recorded checksum.
+ * The entry with the size of its download recorded as `downloadBytes`.
+ * @param entry - The entry, with the checksums its pinned snapshots record.
+ * @param sizes - The committed sizes of the downloads whose hosts state one.
+ * @returns The entry with `downloadBytes` set, or the same entry when its download has no known size.
  */
-function withSnapshotSize(entry: Entry): Entry {
-  const source = "source" in entry.recipe ? entry.sources[entry.recipe.source] : undefined;
-  const byteLength = source?.snapshot?.byteLength;
+function withDownloadBytes(entry: Entry, sizes: DownloadSizes): Entry {
+  const bytes = downloadBytesOf(entry, sizes);
 
-  return byteLength === undefined ? entry : { ...entry, properties: { ...entry.properties, downloadBytes: byteLength } };
+  return bytes === undefined ? entry : { ...entry, properties: { ...entry.properties, downloadBytes: bytes } };
 }
 
 /**
- * The files for a set of entries. An import does not know the snapshots `scripts/archive-sources.ts` pins on live sources, nor the checksums it records on them, so an entry carries both over from its committed file URL it still lists without one, and a pinned snapshot's recorded size becomes the entry's `downloadBytes`; every other field is the import's.
+ * The files for a set of entries. An import does not know the snapshots `scripts/archive-sources.ts` pins on live sources, nor the checksums it records on them, so an entry carries both over from its committed file URL it still lists without one, and the size of its download, which needs those checksums, becomes its `downloadBytes`; every other field is the import's.
  * @param entries - The entries.
  * @param entriesDir - The directory entry files live in.
+ * @param sizes - The committed sizes of the downloads whose hosts state one.
  * @returns Each entry's file path mapped to its serialised text.
  */
-export function entryWrites(entries: readonly Entry[], entriesDir: string): Map<string, string> {
+export function entryWrites(entries: readonly Entry[], entriesDir: string, sizes: DownloadSizes): Map<string, string> {
   return new Map(
     entries.map((entry) => {
       const path = join(entriesDir, `${entry.id}.json`);
@@ -54,7 +56,7 @@ export function entryWrites(entries: readonly Entry[], entriesDir: string): Map<
         }
       }
 
-      return [path, serialise(withSnapshotSize(carried))];
+      return [path, serialise(withDownloadBytes(carried, sizes))];
     }),
   );
 }

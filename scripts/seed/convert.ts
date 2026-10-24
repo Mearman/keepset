@@ -6,7 +6,6 @@ import type { JsonScalar } from "../../src/targets/json-scalar";
 import { HGB_FILES, SPLITS, TRIPLE_FILES, type HgbLayout, type TriplesLayout } from "./graph-layouts";
 import type { GraphLicenceResolver } from "./licence";
 import { matrixMarketPath, mirrorUrl, SUITESPARSE_ORIGIN, type SuiteSparseMirror } from "./mirror";
-import { downloadSize } from "./download-sizes";
 import { indexedDomainOf, type SourceFacts } from "./source-facts";
 import { downloadsOf, type GraphboxCatalogue, type SourceCatalogue, type SourceDataset, type SourceEntry, type StructuredCitation } from "./source";
 
@@ -779,7 +778,7 @@ export const OVERRIDES: Overrides = { names: NAME_OVERRIDES, recipes: DATASET_RE
 /**
  * Converts one dataset.
  * @param dataset - The catalogue's dataset.
- * @param curation - The curated inputs: where each dataset's licence was read (the entry's licence is the one its curation records for the source its recipe fetches, its first source when it has no recipe), the SuiteSparse mirror (a download it holds is offered from the mirror ahead of the collection's own link), and what the collections' indexes state of their datasets (a dataset the source catalogue gives no domain takes a SuiteSparse matrix's kind or a Netzschleuder network's topic, and the size of the download its recipe fetches is recorded as `downloadBytes`).
+ * @param curation - The curated inputs: where each dataset's licence was read (the entry's licence is the one its curation records for the source its recipe fetches, its first source when it has no recipe), the SuiteSparse mirror (a download it holds is offered from the mirror ahead of the collection's own link), and what the collections' indexes state of their datasets (a dataset the source catalogue gives no domain takes a SuiteSparse matrix's kind or a Netzschleuder network's topic).
  * @param overrides - Replacement names and dataset recipes by dataset id; a dataset named in neither keeps the catalogue's name and gets the recipe its format gives.
  * @returns The entry, when the dataset converts, and its outcome for the report.
  * @throws Error when a dataset recipe reads a download in the preferred format and the dataset has none.
@@ -889,8 +888,8 @@ export function convertDataset(dataset: SourceDataset, curation: Curation, overr
     recipe = { status: "fetchable", source: urls.indexOf(chosen.url), archive: chosen.archive, parser: chosen.parser };
   }
 
-  const primarySource = sources[recipe.status === "fetchable" ? recipe.source : 0];
-  if (primarySource === undefined) {
+  const licenceSource = sources[recipe.status === "fetchable" ? recipe.source : 0];
+  if (licenceSource === undefined) {
     throw new Error(`${id} has no source to read a licence from`);
   }
   const named = namespaceOf(id);
@@ -900,7 +899,6 @@ export function convertDataset(dataset: SourceDataset, curation: Curation, overr
   }
   const description = correction?.description ?? dataset.description;
   const domain = dataset.domain ?? curation.domains[id] ?? indexedDomainOf(all, mirror, facts);
-  const downloadBytes = downloadSize(facts.downloadSizes, primarySource.url);
   const entry = parseEntry({
     id,
     ...(named === undefined ? {} : { namespace: named.namespace, aliases: [named.alias] }),
@@ -910,12 +908,12 @@ export function convertDataset(dataset: SourceDataset, curation: Curation, overr
     tags: dataset.category === undefined ? [] : [dataset.category],
     category: "graph/v1",
     sources,
-    licence: licences.resolve(id, primarySource.url),
+    licence: licences.resolve(id, licenceSource.url),
     citations: citationsOf(dataset.citation),
     recipe,
     crosswalk: { file: chosen?.crosswalk ?? CROSSWALKS.topology },
     expectedCounts: (fixed !== undefined && "archive" in fixed ? fixed.counts : undefined) ?? { nodes: correction?.expectedNodes ?? dataset.nodeCount, edges: correction?.expectedEdges ?? dataset.edgeCount },
-    properties: { ...propertiesOf(dataset), ...(downloadBytes === undefined ? {} : { downloadBytes }), ...correction?.properties },
+    properties: { ...propertiesOf(dataset), ...correction?.properties },
   });
 
   return { entry, outcome: { id, outcome: flags.length === 0 ? "converted" : "converted-with-flags", recipe: recipe.status, flags } };
