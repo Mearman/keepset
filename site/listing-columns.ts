@@ -1,6 +1,6 @@
 /* How the listing's seven columns are sized, shared by the static table the generator writes and the interactive one the client mounts, so both lay out identically. The kind, the entities and the size are content columns: each is as wide as the widest header or value it can show, so a count is never cut with an ellipsis. The four that carry long text (name, id, domain and the last, Recipe on the static table and Tags in the island) share what is left in fixed proportions. */
 
-import { entitiesText, formatBytes, type Dimensions } from "./dimensions";
+import { entitiesText, sizeText, type Dimensions } from "./dimensions";
 
 /** What the listing needs of a row to size its content columns. */
 export interface ListingRow extends Dimensions {
@@ -25,7 +25,7 @@ const COLUMNS: readonly Column[] = [
   { header: "Kind", value: (row) => row.kind },
   { share: 13 },
   { header: "Entities", value: (row) => entitiesText(row) },
-  { header: "Size", value: (row) => formatBytes(row.bytes) },
+  { header: "Size", value: (row) => sizeText(row) },
   { share: 10 },
 ];
 

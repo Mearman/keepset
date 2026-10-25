@@ -8,7 +8,7 @@ import "@mantine/core/styles.css";
 import "leaflet/dist/leaflet.css";
 import { useWindowVirtualizer } from "@tanstack/react-virtual";
 import { type ColumnDef, createSortedRowModel, rowSortingFeature, tableFeatures, useTable } from "@tanstack/react-table";
-import { entitiesText, entityTotal, formatBytes, type Dimensions } from "../dimensions";
+import { entitiesText, entityTotal, sizeText, type Dimensions } from "../dimensions";
 import { listingColumnWidths } from "../listing-columns";
 import { siteRoot } from "./site-root";
 import "../styles.css";
@@ -106,7 +106,7 @@ function Listing({ records }: { readonly records: readonly SearchRecord[] }): Re
     { accessorKey: "domain", header: "Domain" },
     /* Sorts by the sum of the recorded counts and shows each with its noun; an entry with no count sorts after every other, whichever way the column is sorted. */
     { id: "entities", accessorFn: (row) => entityTotal(row), header: "Entities", sortUndefined: "last", cell: (info) => entitiesText(info.row.original) },
-    { id: "size", accessorFn: (row) => row.bytes, header: "Size", sortUndefined: "last", cell: (info) => formatBytes(info.row.original.bytes) },
+    { id: "size", accessorFn: (row) => row.bytes, header: "Size", sortUndefined: "last", cell: (info) => sizeText(info.row.original) },
     { id: "tags", accessorFn: (row) => row.tags.join(", "), header: "Tags" },
   ];
 
