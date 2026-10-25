@@ -1,7 +1,7 @@
 import { parseEntry } from "keepset";
 import { describe, expect, it } from "vitest";
-import { liveEntry, taskCollectionEntry } from "../src/test-support/entries";
-import { dimensionsOf, entitiesText, entityTotal, formatBytes, formatCount } from "./dimensions";
+import { liveEntry, socrataEntry, taskCollectionEntry } from "../src/test-support/entries";
+import { dimensionsOf, entitiesText, entityTotal, formatBytes, formatCount, sizeText } from "./dimensions";
 
 const KARATE_NODES = 34;
 const KARATE_EDGES = 78;
@@ -22,6 +22,11 @@ describe("dimensionsOf", () => {
     expect(dimensionsOf(parseEntry({ ...liveEntry, properties: { rawBytes: BYTES_IN_A_FILE, downloadBytes: KIBIBYTE } }))).toHaveProperty("bytes", KIBIBYTE);
     expect(dimensionsOf(parseEntry({ ...liveEntry, properties: { rawBytes: 0, downloadBytes: KIBIBYTE } }))).toHaveProperty("bytes", KIBIBYTE);
     expect(dimensionsOf(parseEntry({ ...liveEntry, properties: { rawBytes: BYTES_IN_A_FILE } }))).toHaveProperty("bytes", BYTES_IN_A_FILE);
+  });
+
+  it("marks a recipe that reads a query a page at a time as paged, and no other", () => {
+    expect(dimensionsOf(parseEntry(socrataEntry))).toHaveProperty("paged", true);
+    expect(dimensionsOf(parseEntry(liveEntry))).not.toHaveProperty("paged");
   });
 
   it("reads a collection's instance count", () => {
@@ -50,6 +55,14 @@ describe("formatCount and formatBytes", () => {
     expect(formatBytes(HALF_KIBIBYTE)).toBe("512 B");
     expect(formatBytes(KIBIBYTE_AND_A_HALF)).toBe("1.5 KiB");
     expect(formatBytes(GIBIBYTE)).toBe("1 GiB");
+  });
+});
+
+describe("sizeText", () => {
+  it("writes the download's size, says paged where there is no download, and writes nothing where neither holds", () => {
+    expect(sizeText({ bytes: KIBIBYTE })).toBe("1 KiB");
+    expect(sizeText({ paged: true })).toBe("paged");
+    expect(sizeText({})).toBe("");
   });
 });
 

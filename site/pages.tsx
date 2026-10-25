@@ -4,7 +4,7 @@
 import { Fragment, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { groupsOf, NAME_SEPARATOR, rawSnapshotUrl, type Archive, type ArchiveMember, type Dataset, type Manifest, type NamespaceNode, type Parser } from "keepset";
-import { dimensionsOf, entitiesText, formatBytes, formatCount } from "./dimensions";
+import { dimensionsOf, entitiesText, formatCount, sizeText } from "./dimensions";
 import { listingColumnWidths } from "./listing-columns";
 import { propertyLabel, propertyText } from "./properties";
 import { scriptJson, slug } from "./html";
@@ -37,7 +37,7 @@ function Row({ dataset, root }: { readonly dataset: Dataset; readonly root: stri
   const entities = entitiesText(dimensions);
 
   return (
-    <tr data-id={entry.id}><td title={entry.name}><a href={`${root}datasets/${entry.id}/`}>{entry.name}</a></td><td title={entry.id}><code>{entry.id}</code></td><td>{dataset.kind}</td><td title={entry.domain}>{entry.domain ?? ""}</td><td title={entities}>{entities}</td><td>{formatBytes(dimensions.bytes)}</td><td>{entry.recipe.status === "fetchable" ? "fetchable" : "not fetchable yet"}</td></tr>
+    <tr data-id={entry.id}><td title={entry.name}><a href={`${root}datasets/${entry.id}/`}>{entry.name}</a></td><td title={entry.id}><code>{entry.id}</code></td><td>{dataset.kind}</td><td title={entry.domain}>{entry.domain ?? ""}</td><td title={entities}>{entities}</td><td>{sizeText(dimensions)}</td><td>{entry.recipe.status === "fetchable" ? "fetchable" : "not fetchable yet"}</td></tr>
   );
 }
 
@@ -186,8 +186,9 @@ export function entryPage(context: PageContext, dataset: Dataset): string {
   const otherGroups = groupsOf(entry).filter((group) => group.join(NAME_SEPARATOR) !== home);
   const licenceNode: ReactNode = licence.kind === "spdx" ? <a href={`https://spdx.org/licenses/${licence.id}.html`}>{licence.id}</a> : licence.kind === "custom" ? <a href={licence.url}>{licence.name}</a> : "not recorded by the source";
 
-  const { nodes, edges, instances, bytes } = dimensionsOf(entry);
-  const figures: readonly (readonly [string, string])[] = [["Nodes", formatCount(nodes)], ["Edges", formatCount(edges)], ["Instances", formatCount(instances)], ["Size", formatBytes(bytes)]].filter((figure): figure is [string, string] => figure[1] !== "");
+  const dimensions = dimensionsOf(entry);
+  const { nodes, edges, instances } = dimensions;
+  const figures: readonly (readonly [string, string])[] = [["Nodes", formatCount(nodes)], ["Edges", formatCount(edges)], ["Instances", formatCount(instances)], ["Size", sizeText(dimensions)]].filter((figure): figure is [string, string] => figure[1] !== "");
   // The entries of the recipe's sources that it reads, so the sources table can say which of the mirrors the fetch uses.
   const readSources = new Set<number>(recipe.status !== "fetchable" ? [] : "files" in recipe ? recipe.files.map((file) => file.source) : [recipe.source]);
 

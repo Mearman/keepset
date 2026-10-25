@@ -8,6 +8,8 @@ export interface Dimensions {
   readonly edges?: number;
   readonly instances?: number;
   readonly bytes?: number;
+  /** True where the recipe reads the dataset a page at a time from a query, which has no whole download whose size could be stated. */
+  readonly paged?: true;
   /** True where `nodes` is a count a probe read from a source that grows and not one the entry asserts, so it is shown as approximate. */
   readonly probed?: true;
 }
@@ -31,7 +33,7 @@ export function isBytesProperty(key: string): boolean {
 export const PROBED_NODES_PROPERTY = "probedNodes";
 
 /**
- * Reads an entry's dimensions. The size is what a fetch downloads where the entry records it (`properties.downloadBytes`), else the raw size the source catalogue states (`properties.rawBytes`, `0` where it stated none, so a zero is no size and is left out).
+ * Reads an entry's dimensions. The size is what a fetch downloads where the entry records it (`properties.downloadBytes`), else the raw size the source catalogue states (`properties.rawBytes`, `0` where it stated none, so a zero is no size and is left out). A recipe that pages a query has no download, so it is marked paged instead.
  * @param entry - The entry.
  * @returns The dimensions the entry records.
  */
@@ -47,6 +49,7 @@ export function dimensionsOf(entry: Entry): Dimensions {
     ...(expectedCounts["edges"] === undefined ? {} : { edges: expectedCounts["edges"] }),
     ...(expectedCounts["instances"] === undefined ? {} : { instances: expectedCounts["instances"] }),
     ...(bytes === undefined ? {} : { bytes }),
+    ...(entry.recipe.status === "fetchable" && "paging" in entry.recipe && entry.recipe.paging !== undefined ? { paged: true as const } : {}),
   };
 }
 
@@ -57,6 +60,15 @@ export function dimensionsOf(entry: Entry): Dimensions {
  */
 export function formatCount(count: number | undefined): string {
   return count === undefined ? "" : count.toLocaleString("en-GB");
+}
+
+/**
+ * Writes a dataset's size as the listing shows it: the download's size, or "paged" where the recipe reads a query a page at a time and so has no download to measure.
+ * @param dimensions - The recorded dimensions.
+ * @returns The text; empty where the entry records no size and is not paged.
+ */
+export function sizeText(dimensions: Dimensions): string {
+  return dimensions.bytes === undefined ? (dimensions.paged === true ? "paged" : "") : formatBytes(dimensions.bytes);
 }
 
 /** Bytes in the next unit up of the binary prefixes, and the units' names from the smallest. */
