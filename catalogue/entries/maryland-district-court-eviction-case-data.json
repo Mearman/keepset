@@ -58,6 +58,7 @@
     "maryland"
   ],
   "properties": {
+    "downloadBytes": 127369168,
     "probedNodes": 794432,
     "surveyId": "or-42"
   },
