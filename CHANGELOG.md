@@ -1,3 +1,11 @@
+## [0.58.1](https://github.com/Mearman/keepset/compare/v0.58.0...v0.58.1) (2026-10-25)
+
+
+### Bug Fixes
+
+* **seed:** drop error-page download sizes and record the measured ones ([48b7372](https://github.com/Mearman/keepset/commit/48b7372caab6cafa0eadce975ae67fcc8dd7eb69))
+* **seed:** ignore the size an error response states and count a body that states none ([1b818da](https://github.com/Mearman/keepset/commit/1b818da9d3a3379b8d6d91d0e5011636710c3d6a))
+
 # [0.58.0](https://github.com/Mearman/keepset/compare/v0.57.0...v0.58.0) (2026-10-24)
 
 
