@@ -5,7 +5,7 @@ import { DATASET_RECIPES, UNVERIFIABLE_DOWNLOADS, type DatasetRecipe } from "./d
 import type { JsonScalar } from "../../src/targets/json-scalar";
 import { HGB_FILES, SPLITS, TRIPLE_FILES, type HgbLayout, type TriplesLayout } from "./graph-layouts";
 import type { GraphLicenceResolver } from "./licence";
-import { matrixMarketPath, mirrorUrl, SUITESPARSE_ORIGIN, type SuiteSparseMirror } from "./mirror";
+import { matrixMarketPathAt, mirrorCopies, type SuiteSparseMirror } from "./mirror";
 import { indexedDomainOf, type SourceFacts } from "./source-facts";
 import { downloadsOf, type GraphboxCatalogue, type SourceCatalogue, type SourceDataset, type SourceEntry, type StructuredCitation } from "./source";
 
@@ -494,10 +494,10 @@ const COUNT_FILES: ReadonlyMap<string, Omit<Chosen, "url">> = new Map([
  * Chooses a recipe for one download.
  * @param download - The download.
  * @param datasetId - The dataset, for the pipeline's parser overrides.
- * @param mirror - The SuiteSparse mirror, whose downloads are laid out as the collection's own.
+ * @param mirrors - The SuiteSparse mirrors, whose downloads are laid out as the collection's own.
  * @returns The recipe parts and their flags, or the reason this download has no declarative recipe.
  */
-function recipeFor(download: Download, datasetId: string, mirror: SuiteSparseMirror): Chosen | { readonly unsupported: string } {
+function recipeFor(download: Download, datasetId: string, mirrors: readonly SuiteSparseMirror[]): Chosen | { readonly unsupported: string } {
   const original = parseWayback(download.url)?.original ?? download.url;
   const { format } = download;
   // A download whose bytes were read is judged by what they are, before anything its URL suggests.
@@ -599,8 +599,8 @@ function recipeFor(download: Download, datasetId: string, mirror: SuiteSparseMir
   if (kind === "none" || kind === "gzip" || kind === "bzip2") {
     return { url: download.url, archive: { kind }, parser, crosswalk: CROSSWALKS.topology, flags };
   }
-  // SuiteSparse serves each matrix as MM/<group>/<name>.tar.gz holding <name>/<name>.mtx, from its own host and from the mirror.
-  const suiteSparse = /([^/]+)\.tar\.gz$/.exec(matrixMarketPath(original, SUITESPARSE_ORIGIN) ?? matrixMarketPath(original, mirror.host) ?? "");
+  // SuiteSparse serves each matrix as MM/<group>/<name>.tar.gz holding <name>/<name>.mtx, from its own host and from the mirrors.
+  const suiteSparse = /([^/]+)\.tar\.gz$/.exec(matrixMarketPathAt(mirrors, original) ?? "");
   if (mapped === "gd-contest" && kind === "zip" && download.innerPath !== undefined) {
     // The GD 2004 contest bundle ships its problems in a zip inside the zip (GD04/challenge.zip), and the catalogue's inner path is the problem's path inside that inner zip.
     flags.push("GD contest bundle: the problem is read from the bundle's one inner .zip member, which the source catalogue does not record");
@@ -758,8 +758,8 @@ export const NAME_OVERRIDES: ReadonlyMap<string, string> = new Map([
 export interface Curation {
   /** Where each dataset's licence was read. */
   readonly licences: Readonly<GraphLicenceResolver>;
-  /** The SuiteSparse files the University of Florida mirror holds. */
-  readonly mirror: SuiteSparseMirror;
+  /** The SuiteSparse files each mirror holds, in the order their copies are offered. */
+  readonly mirrors: readonly SuiteSparseMirror[];
   /** What the collections' own indexes state of the datasets the source catalogue leaves a domain or size unrecorded for. */
   readonly facts: SourceFacts;
   /** The curated domain of each dataset by id, for those neither the source catalogue nor an index gives one. */
@@ -778,14 +778,14 @@ export const OVERRIDES: Overrides = { names: NAME_OVERRIDES, recipes: DATASET_RE
 /**
  * Converts one dataset.
  * @param dataset - The catalogue's dataset.
- * @param curation - The curated inputs: where each dataset's licence was read (the entry's licence is the one its curation records for the source its recipe fetches, its first source when it has no recipe), the SuiteSparse mirror (a download it holds is offered from the mirror ahead of the collection's own link), and what the collections' indexes state of their datasets (a dataset the source catalogue gives no domain takes a SuiteSparse matrix's kind or a Netzschleuder network's topic).
+ * @param curation - The curated inputs: where each dataset's licence was read (the entry's licence is the one its curation records for the source its recipe fetches, its first source when it has no recipe), the SuiteSparse mirrors (a download one holds is offered from it ahead of the collection's own link), and what the collections' indexes state of their datasets (a dataset the source catalogue gives no domain takes a SuiteSparse matrix's kind or a Netzschleuder network's topic).
  * @param overrides - Replacement names and dataset recipes by dataset id; a dataset named in neither keeps the catalogue's name and gets the recipe its format gives.
  * @returns The entry, when the dataset converts, and its outcome for the report.
  * @throws Error when a dataset recipe reads a download in the preferred format and the dataset has none.
  */
 export function convertDataset(dataset: SourceDataset, curation: Curation, overrides: Overrides = OVERRIDES): { readonly entry?: Entry; readonly outcome: Outcome } {
   const { id } = dataset;
-  const { licences, mirror, facts } = curation;
+  const { licences, mirrors, facts } = curation;
   const flags: string[] = [];
   const notConverted = (reason: string): { outcome: Outcome } => ({ outcome: { id, outcome: "not-converted", reason, flags } });
   if (dataset.sources === undefined || dataset.sources === null || dataset.sources.length === 0) {
@@ -817,10 +817,9 @@ export function convertDataset(dataset: SourceDataset, curation: Curation, overr
       continue;
     }
     const recorded = { format: download.format, innerPath: download.innerPath, columns: download.columns, skipLines: download.skipLines };
-    const mirrored = mirrorUrl(mirror, url);
-    if (mirrored !== undefined) {
-      downloads.push({ url: mirrored, ...recorded });
-      flags.push("the collection's own link is also offered from the University of Florida mirror, which the recipe reads");
+    for (const copy of mirrorCopies(mirrors, url)) {
+      downloads.push({ url: copy.url, ...recorded });
+      flags.push(`the collection's own link is also offered from ${copy.mirror.label}, which the recipe reads`);
     }
     downloads.push({ url, ...recorded });
     const replaced = REPLACED_DOWNLOADS.get(url);
@@ -860,7 +859,7 @@ export function convertDataset(dataset: SourceDataset, curation: Curation, overr
   } else {
     const ordered = [...downloads.filter((download) => download.format === dataset.preferredFormat), ...downloads.filter((download) => download.format !== dataset.preferredFormat)];
     for (const download of ordered) {
-      const candidate = recipeFor(download, id, mirror);
+      const candidate = recipeFor(download, id, mirrors);
       if ("unsupported" in candidate) {
         unsupported.push(`${download.format ?? "unrecorded format"}: ${candidate.unsupported}`);
         continue;
@@ -871,7 +870,7 @@ export function convertDataset(dataset: SourceDataset, curation: Curation, overr
   }
 
   const urls = [...new Set([...downloads.map((download) => download.url), ...(chosen === undefined ? [] : [chosen.url])])];
-  const sources = urls.map((url) => sourceFor(url, url.startsWith(mirror.host) ? mirror.readOn : (REPLACEMENT_RETRIEVED.get(url) ?? retrieved)));
+  const sources = urls.map((url) => sourceFor(url, mirrors.find(({ host }) => url.startsWith(host))?.readOn ?? REPLACEMENT_RETRIEVED.get(url) ?? retrieved));
   let recipe: Recipe;
   if (chosen === undefined) {
     recipe = { status: "not-fetchable", reason: fixed !== undefined && "unsupported" in fixed ? fixed.unsupported : `no download is in a form keepset reads yet (${[...new Set(unsupported)].join("; ")})` };
@@ -898,7 +897,7 @@ export function convertDataset(dataset: SourceDataset, curation: Curation, overr
     flags.push(`corrected against the downloaded file: ${correction.reason}`);
   }
   const description = correction?.description ?? dataset.description;
-  const domain = dataset.domain ?? curation.domains[id] ?? indexedDomainOf(all, mirror, facts);
+  const domain = dataset.domain ?? curation.domains[id] ?? indexedDomainOf(all, mirrors, facts);
   const entry = parseEntry({
     id,
     ...(named === undefined ? {} : { namespace: named.namespace, aliases: [named.alias] }),
@@ -968,7 +967,7 @@ export interface Report {
  * Converts a whole catalogue.
  * @param pipeline - The pipeline catalogue.
  * @param graphbox - The graphbox catalogue, for the overlap section.
- * @param curation - The licence curation, whose resolver is checked for unused records once every dataset has converted, and the SuiteSparse mirror inventory.
+ * @param curation - The licence curation, whose resolver is checked for unused records once every dataset has converted, and the SuiteSparse mirror inventories.
  * @param overrides - Replacement names and dataset recipes by dataset id.
  * @returns The entries in id order and the report.
  * @throws Error when an override names a dataset the catalogue lacks or gives the name the dataset already has.

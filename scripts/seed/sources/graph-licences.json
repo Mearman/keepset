@@ -6,7 +6,8 @@
       "name": "SuiteSparse Matrix Collection",
       "prefixes": [
         "https://sparse.tamu.edu/",
-        "https://www.cise.ufl.edu/research/sparse/"
+        "https://www.cise.ufl.edu/research/sparse/",
+        "http://sparse-files.engr.tamu.edu/"
       ],
       "terms": {
         "licence": {
