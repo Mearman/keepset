@@ -23,15 +23,38 @@ export function downloadSize(sizes: DownloadSizes, url: string): number | undefi
 }
 
 /**
- * The size a response states for the whole of its body: its Content-Length, or for a range response the total after the slash of its Content-Range.
- * @param headers - The response's headers.
- * @returns The size in bytes, or undefined when the response states none.
+ * The size a response states for the whole of its body: its Content-Length, or for a range response the total after the slash of its Content-Range. A response that is not a success states the size of its error page, which is no download's, so it states none.
+ * @param response - The response.
+ * @returns The size in bytes, or undefined when the response failed or states none.
  */
-export function statedSize(headers: Headers): number | undefined {
-  const range = /^bytes \d+-\d+\/(\d+)$/.exec(headers.get("content-range") ?? "")?.[1];
-  const length = range === undefined ? Number(headers.get("content-length")) : Number(range);
+export function statedSize(response: Pick<Response, "headers" | "ok">): number | undefined {
+  if (!response.ok) {
+    return undefined;
+  }
+  const range = /^bytes \d+-\d+\/(\d+)$/.exec(response.headers.get("content-range") ?? "")?.[1];
+  const length = range === undefined ? Number(response.headers.get("content-length")) : Number(range);
 
   return Number.isInteger(length) && length > 0 ? length : undefined;
+}
+
+/**
+ * The size of a body counted by reading it to its end, for a host that states no length: the bytes a fetch receives, after any content encoding is undone, which are the bytes a recipe's fetch reads.
+ * @param body - The response body, which is consumed.
+ * @returns The number of bytes, or undefined when the body is absent or empty.
+ */
+export async function countedSize(body: ReadableStream<Uint8Array> | null): Promise<number | undefined> {
+  if (body === null) {
+    return undefined;
+  }
+  const reader = body.getReader();
+  const read = async (total: number): Promise<number> => {
+    const chunk = await reader.read();
+
+    return chunk.done ? total : read(total + chunk.value.byteLength);
+  };
+  const total = await read(0);
+
+  return total > 0 ? total : undefined;
 }
 
 /**

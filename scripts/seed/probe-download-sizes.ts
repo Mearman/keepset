@@ -2,7 +2,7 @@
 
    pnpm exec tsx scripts/seed/probe-download-sizes.ts
 
-   The URLs are those downloadedUrls names for each entry: a paged query has none, and an entry with no recipe offers only a graph's first source. Each is requested through the polite client, paced per host, first with a HEAD request and, where that gives no size, with a request for the first byte, whose Content-Range states the whole size. The sizes are written to scripts/seed/sources/download-sizes.json, which the import reads and `seed:check` verifies the entries against. A size already recorded is kept when the host fails to answer this time; a URL no host gives a size for is left out and named, so the script can be run again. */
+   The URLs are those downloadedUrls names for each entry: a paged query has none, and an entry with no recipe offers only a graph's first source. Each is requested through the polite client, paced per host, first with a HEAD request, then, where that gives no size, with a request for the first byte, whose Content-Range states the whole size, and last, for a host that states no length at all, by reading the whole body and counting its bytes. The sizes are written to scripts/seed/sources/download-sizes.json, which the import reads and `seed:check` verifies the entries against. A size already recorded is kept, in place of reading the body again, when the host states none; a URL no host gives a size for is left out and named, so the script can be run again. */
 
 import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -11,7 +11,7 @@ import { parseEntry } from "../../src/entry";
 import { canonicalJson } from "../../src/serialise";
 import { systemClock } from "../sources/pacing";
 import { DEFAULT_POLITENESS, PoliteClient, RequestFailure } from "../sources/polite-client";
-import { downloadedUrls, DownloadSizesSchema, statedSize } from "./download-sizes";
+import { countedSize, downloadedUrls, DownloadSizesSchema, statedSize } from "./download-sizes";
 
 /** The length of the `YYYY-MM-DD` prefix of an ISO 8601 timestamp. */
 const ISO_DATE_LENGTH = "YYYY-MM-DD".length;
@@ -32,7 +32,10 @@ const wanted = [
 ].sort();
 
 const known = existsSync(sizesPath) ? DownloadSizesSchema.parse(JSON.parse(readFileSync(sizesPath, "utf8"))).sizes : {};
+/** How many times the polite client's allowance for one request a whole body is given: a header answers at once, but a body is read to its end and a host that streams an export without a length can take several times the allowance. */
+const BODY_ALLOWANCE_FACTOR = 10;
 const client = new PoliteClient(fetch, systemClock, DEFAULT_POLITENESS);
+const bodyClient = new PoliteClient(fetch, systemClock, { ...DEFAULT_POLITENESS, timeoutMilliseconds: DEFAULT_POLITENESS.timeoutMilliseconds * BODY_ALLOWANCE_FACTOR });
 
 /**
  * Sends a request and keeps only what it states.
@@ -45,9 +48,27 @@ async function ask(url: string, init: RequestInit): Promise<number | undefined> 
     const response = await client.request(url, init);
     await response.body?.cancel();
 
-    return statedSize(response.headers);
+    return statedSize(response);
   } catch (error) {
     if (error instanceof RequestFailure) {
+      return undefined;
+    }
+    throw error;
+  }
+}
+
+/**
+ * Reads a download to its end and counts the bytes, for a host that states no size.
+ * @param url - The download's URL.
+ * @returns The bytes received, or undefined when the host failed or sent nothing.
+ */
+async function count(url: string): Promise<number | undefined> {
+  try {
+    const response = await bodyClient.request(url, {});
+
+    return response.ok ? await countedSize(response.body) : undefined;
+  } catch (error) {
+    if (error instanceof RequestFailure || (error instanceof DOMException && error.name === "TimeoutError")) {
       return undefined;
     }
     throw error;
@@ -65,7 +86,7 @@ async function measure(remaining: readonly string[]): Promise<void> {
   if (url === undefined) {
     return;
   }
-  const size = (await ask(url, { method: "HEAD" })) ?? (await ask(url, { headers: { range: "bytes=0-0" } })) ?? known[url];
+  const size = (await ask(url, { method: "HEAD" })) ?? (await ask(url, { headers: { range: "bytes=0-0" } })) ?? known[url] ?? (await count(url));
   if (size === undefined) {
     unmeasured.push(url);
   } else {
