@@ -75,6 +75,7 @@
     "northern-powergrid"
   ],
   "properties": {
+    "downloadBytes": 7590109,
     "probedNodes": 473,
     "surveyId": "or-112"
   },
