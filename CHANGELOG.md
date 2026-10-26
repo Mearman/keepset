@@ -1,3 +1,18 @@
+# [0.59.0](https://github.com/Mearman/keepset/compare/v0.58.1...v0.59.0) (2026-10-26)
+
+
+### Bug Fixes
+
+* **seed:** record the size of the SuiteSparse downloads their captures give ([2d76326](https://github.com/Mearman/keepset/commit/2d76326b4adf23da83b42509e2c608bc245ccbb2))
+
+
+### Features
+
+* **seed:** offer a SuiteSparse file's Wayback capture ahead of the collection's own link ([038985c](https://github.com/Mearman/keepset/commit/038985cce71c34dae58dfdf7f6253f181681c98e))
+* **seed:** pin the Wayback captures of SuiteSparse files the collection no longer serves ([ec3e686](https://github.com/Mearman/keepset/commit/ec3e686f568cbe8b034a6f986570ed2eb07c9562))
+* **seed:** size a pinned snapshot that records no length from the snapshot ([0f80077](https://github.com/Mearman/keepset/commit/0f800778be28f94e9a909044d58f0c0c5a5c0b7f))
+* **site:** show a paged query's size as paged ([ea85859](https://github.com/Mearman/keepset/commit/ea858590e146f06b62c62fd942b31bf314595074))
+
 ## [0.58.1](https://github.com/Mearman/keepset/compare/v0.58.0...v0.58.1) (2026-10-25)
 
 
