@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 131812,
+        "sha256": "34bd70d12f5bd943bba863648ae46cd07108e533e22f34101131f69708907abf",
+        "timestamp": "20240603115526",
+        "url": "https://web.archive.org/web/20240603115526/http://sparse-files.engr.tamu.edu/MM/ML_Graph/dataset18mfeatmorphological_10NN.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/dataset18mfeatmorphological_10NN.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/ML_Graph/dataset18mfeatmorphological_10NN.tar.gz"

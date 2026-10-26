@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 782712,
+        "sha256": "85ab34db11fad62f76452d0165d5ae7c30cda77e62ca1680d5f66ee8c9727028",
+        "timestamp": "20240603122241",
+        "url": "https://web.archive.org/web/20240603122241/http://sparse-files.engr.tamu.edu/MM/ML_Graph/JapaneseVowelsSmall_10NN.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/JapaneseVowelsSmall_10NN.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/ML_Graph/JapaneseVowelsSmall_10NN.tar.gz"

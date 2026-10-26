@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 46066,
+        "sha256": "7cb8270e75bd9c0a4bb06ca72aa25abb61ad330d134b47dd6d72efae39290b0d",
+        "timestamp": "20240710003133",
+        "url": "https://web.archive.org/web/20240710003133/http://sparse-files.engr.tamu.edu/MM/ML_Graph/Spectro_10NN.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/Spectro_10NN.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/ML_Graph/Spectro_10NN.tar.gz"

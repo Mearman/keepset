@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 66139,
+        "sha256": "744cd09c97c1c719b13930ade8fea7a4c200aed418b4ecaa39d3199eb6461de0",
+        "timestamp": "20240710183334",
+        "url": "https://web.archive.org/web/20240710183334/http://sparse-files.engr.tamu.edu/MM/ML_Graph/Vehicle_10NN.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/Vehicle_10NN.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/ML_Graph/Vehicle_10NN.tar.gz"

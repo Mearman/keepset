@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 151077,
+        "sha256": "c5cb1e83a8d2f2e8cf227dc3b54fd7205bd9842e531fd14abf24c13859d95f62",
+        "timestamp": "20240604190933",
+        "url": "https://web.archive.org/web/20240604190933/http://sparse-files.engr.tamu.edu/MM/ML_Graph/plantsmargin_12NN.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/plantsmargin_12NN.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/ML_Graph/plantsmargin_12NN.tar.gz"

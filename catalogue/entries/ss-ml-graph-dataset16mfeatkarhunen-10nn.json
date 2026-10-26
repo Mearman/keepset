@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 162702,
+        "sha256": "c0d59c0c0395a9813687f05ca7719172aa960468d4302686cf6192eecf2d3ac1",
+        "timestamp": "20240603104005",
+        "url": "https://web.archive.org/web/20240603104005/http://sparse-files.engr.tamu.edu/MM/ML_Graph/dataset16mfeatkarhunen_10NN.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/dataset16mfeatkarhunen_10NN.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/ML_Graph/dataset16mfeatkarhunen_10NN.tar.gz"

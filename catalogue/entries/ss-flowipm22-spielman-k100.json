@@ -59,6 +59,8 @@
     {
       "retrieved": "2026-10-25",
       "snapshot": {
+        "byteLength": 29131901,
+        "sha256": "ac31a4ef540c40c16ac42a2f9e6ba7783a75d6892d6415a3ed0919b987ceb4ce",
         "timestamp": "20250619011001",
         "url": "https://web.archive.org/web/20250619011001/http://sparse-files.engr.tamu.edu/MM/FlowIPM22/Spielman_k100.tar.gz"
       },

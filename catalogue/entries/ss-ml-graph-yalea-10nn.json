@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 14562,
+        "sha256": "bd45899f5252ff0fe6d0ee2a854a8c4a47beb0d4a18342bafb6543bb008ca030",
+        "timestamp": "20240605212330",
+        "url": "https://web.archive.org/web/20240605212330/http://sparse-files.engr.tamu.edu/MM/ML_Graph/YaleA_10NN.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/YaleA_10NN.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/ML_Graph/YaleA_10NN.tar.gz"

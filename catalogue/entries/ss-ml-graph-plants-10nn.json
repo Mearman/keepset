@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 130150,
+        "sha256": "34bed4d08aae3b1c8853523bb0941ee23f4a618a4fea8ceb208bbb3537657de0",
+        "timestamp": "20240710193946",
+        "url": "https://web.archive.org/web/20240710193946/http://sparse-files.engr.tamu.edu/MM/ML_Graph/Plants_10NN.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/Plants_10NN.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/ML_Graph/Plants_10NN.tar.gz"

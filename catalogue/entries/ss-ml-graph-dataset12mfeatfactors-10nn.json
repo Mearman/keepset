@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 162231,
+        "sha256": "279b9a1a564d69f4821067b6ade38de3cc3fb745782cd4fc1f10a57a33d3d6d4",
+        "timestamp": "20240604224405",
+        "url": "https://web.archive.org/web/20240604224405/http://sparse-files.engr.tamu.edu/MM/ML_Graph/dataset12mfeatfactors_10NN.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/dataset12mfeatfactors_10NN.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/ML_Graph/dataset12mfeatfactors_10NN.tar.gz"

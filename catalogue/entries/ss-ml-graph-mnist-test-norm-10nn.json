@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 898856,
+        "sha256": "d9d2b9c81a28e5e0bcaeb0d4b39bad5de4c9b6926f109e69311a27dd2e90f4a6",
+        "timestamp": "20240707032755",
+        "url": "https://web.archive.org/web/20240707032755/http://sparse-files.engr.tamu.edu/MM/ML_Graph/mnist_test_norm_10NN.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/mnist_test_norm_10NN.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/ML_Graph/mnist_test_norm_10NN.tar.gz"

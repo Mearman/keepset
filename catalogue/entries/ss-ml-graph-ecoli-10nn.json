@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 27740,
+        "sha256": "733c64ca2d1f0d27115a5262c35701148b7d3a34291143b6c3803fc3ad105f54",
+        "timestamp": "20240603114511",
+        "url": "https://web.archive.org/web/20240603114511/http://sparse-files.engr.tamu.edu/MM/ML_Graph/Ecoli_10NN.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/Ecoli_10NN.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/ML_Graph/Ecoli_10NN.tar.gz"

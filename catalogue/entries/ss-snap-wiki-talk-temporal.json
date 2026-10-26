@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 66518566,
+        "sha256": "7bcf4c60110f1dfed0eb9c41a306d17ab1591621cfe83241338db73db63dd6be",
+        "timestamp": "20240707080415",
+        "url": "https://web.archive.org/web/20240707080415/http://sparse-files.engr.tamu.edu/MM/SNAP/wiki-talk-temporal.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/SNAP/wiki-talk-temporal.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/SNAP/wiki-talk-temporal.tar.gz"

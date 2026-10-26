@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 417252,
+        "sha256": "d1c8ab1d2286d636af228725701dd6ccde10b09edeef820e1d8cd319ded336e8",
+        "timestamp": "20240607181653",
+        "url": "https://web.archive.org/web/20240607181653/http://sparse-files.engr.tamu.edu/MM/SNAP/CollegeMsg.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/SNAP/CollegeMsg.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/SNAP/CollegeMsg.tar.gz"

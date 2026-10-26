@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 13755223,
+        "sha256": "b2543477eb35517d7de7f84b4922e55f886ba15f8275bda3819c5d6f72e770f8",
+        "timestamp": "20240706144828",
+        "url": "https://web.archive.org/web/20240706144828/http://sparse-files.engr.tamu.edu/MM/SNAP/com-Youtube.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/SNAP/com-Youtube.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/SNAP/com-Youtube.tar.gz"

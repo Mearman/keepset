@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 34246,
+        "sha256": "fa6277b6d7c6fa4c6130fe72e4e97c8eb313fc358ecfe5cf71fb02f4de7ff320",
+        "timestamp": "20240706203305",
+        "url": "https://web.archive.org/web/20240706203305/http://sparse-files.engr.tamu.edu/MM/ML_Graph/Olivetti_norm_10NN.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/Olivetti_norm_10NN.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/ML_Graph/Olivetti_norm_10NN.tar.gz"

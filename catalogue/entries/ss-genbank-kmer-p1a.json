@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 660468080,
+        "sha256": "c073271f773b151e9fb7ac062563781351c0b70c640474fdc0ddcb552a593228",
+        "timestamp": "20240709180102",
+        "url": "https://web.archive.org/web/20240709180102/http://sparse-files.engr.tamu.edu/MM/GenBank/kmer_P1a.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/GenBank/kmer_P1a.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/GenBank/kmer_P1a.tar.gz"

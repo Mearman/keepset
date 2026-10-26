@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 201319720,
+        "sha256": "7650e37b2224ddf7da28d5ce735725142d230fbdec757d9bb8edcb7fb23f5b03",
+        "timestamp": "20240710222737",
+        "url": "https://web.archive.org/web/20240710222737/http://sparse-files.engr.tamu.edu/MM/MAWI/mawi_201512020030.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/MAWI/mawi_201512020030.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/MAWI/mawi_201512020030.tar.gz"

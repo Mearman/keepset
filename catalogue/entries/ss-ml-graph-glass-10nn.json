@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 19119,
+        "sha256": "63e6d7679469944b30975dabf617f53c9db38108911ce686b001b5aec3635278",
+        "timestamp": "20240604122807",
+        "url": "https://web.archive.org/web/20240604122807/http://sparse-files.engr.tamu.edu/MM/ML_Graph/Glass_10NN.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/Glass_10NN.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/ML_Graph/Glass_10NN.tar.gz"

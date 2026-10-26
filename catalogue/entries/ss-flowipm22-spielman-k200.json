@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 228191940,
+        "sha256": "af00dc4b148f4a4cf9d20ca30f30136eb937e9c584041ed7ecec37f7e1a56b78",
+        "timestamp": "20250613035708",
+        "url": "https://web.archive.org/web/20250613035708/http://sparse-files.engr.tamu.edu/MM/FlowIPM22/Spielman_k200.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/FlowIPM22/Spielman_k200.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/FlowIPM22/Spielman_k200.tar.gz"

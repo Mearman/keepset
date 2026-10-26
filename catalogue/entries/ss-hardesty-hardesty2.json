@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 37075824,
+        "sha256": "f372c65edc0a4d2df18df16b5b22ec0ec30bf1d881daaad76698453fdff38735",
+        "timestamp": "20240710174024",
+        "url": "https://web.archive.org/web/20240710174024/http://sparse-files.engr.tamu.edu/MM/Hardesty/Hardesty2.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/Hardesty/Hardesty2.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/Hardesty/Hardesty2.tar.gz"

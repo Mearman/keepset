@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 20360075,
+        "sha256": "262a24732434174f1f65fe44f4b28b2d233f3d890b563b870c6f6bd070a59b13",
+        "timestamp": "20240711020506",
+        "url": "https://web.archive.org/web/20240711020506/http://sparse-files.engr.tamu.edu/MM/SNAP/sx-askubuntu.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/SNAP/sx-askubuntu.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/SNAP/sx-askubuntu.tar.gz"

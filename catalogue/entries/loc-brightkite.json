@@ -56,8 +56,25 @@
   "sources": [
     {
       "retrieved": "2026-01-17",
+      "snapshot": {
+        "byteLength": 1364607,
+        "sha256": "0714a1ff54225f49fae8bd228d807e6a2a7ee27b8ff3c60989cfd9d20089a229",
+        "timestamp": "20230309171113",
+        "url": "https://web.archive.org/web/20230309171113/https://snap.stanford.edu/data/loc-brightkite_edges.txt.gz"
+      },
       "status": "live",
       "url": "https://snap.stanford.edu/data/loc-brightkite_edges.txt.gz"
+    },
+    {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 57554438,
+        "sha256": "3b6fff012803dc4600f68e5f7b8399c7a427ccd5766c82882ae686b01274c80d",
+        "timestamp": "20240710100803",
+        "url": "https://web.archive.org/web/20240710100803/http://sparse-files.engr.tamu.edu/MM/SNAP/loc-Brightkite.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/SNAP/loc-Brightkite.tar.gz"
     },
     {
       "retrieved": "2026-01-17",

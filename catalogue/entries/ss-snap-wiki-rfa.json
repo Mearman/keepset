@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 14732797,
+        "sha256": "36573ab982400ced2d3d8a119c39389ba54789a5d330923c60456506b1ac6547",
+        "timestamp": "20240608204932",
+        "url": "https://web.archive.org/web/20240608204932/http://sparse-files.engr.tamu.edu/MM/SNAP/wiki-RfA.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/SNAP/wiki-RfA.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/SNAP/wiki-RfA.tar.gz"

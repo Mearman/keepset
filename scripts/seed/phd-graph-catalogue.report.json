@@ -4182,15 +4182,19 @@
       "recipe": "fetchable"
     },
     {
-      "flags": [],
+      "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads"
+      ],
       "id": "loc-brightkite",
-      "outcome": "converted",
+      "outcome": "converted-with-flags",
       "recipe": "fetchable"
     },
     {
-      "flags": [],
+      "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads"
+      ],
       "id": "loc-gowalla",
-      "outcome": "converted",
+      "outcome": "converted-with-flags",
       "recipe": "fetchable"
     },
     {
@@ -7120,6 +7124,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-flowipm22-spielman-k100",
@@ -7128,6 +7133,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-flowipm22-spielman-k200",
@@ -7136,6 +7142,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-flowipm22-spielman-k300",
@@ -7144,6 +7151,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-flowipm22-spielman-k400",
@@ -7152,6 +7160,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-flowipm22-spielman-k500",
@@ -7160,6 +7169,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-flowipm22-spielman-k600",
@@ -7168,6 +7178,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-flowipm22-uni-chimera-i1",
@@ -7176,6 +7187,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-flowipm22-uni-chimera-i2",
@@ -7184,6 +7196,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-flowipm22-uni-chimera-i3",
@@ -7192,6 +7205,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-flowipm22-uni-chimera-i4",
@@ -7200,6 +7214,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-flowipm22-uni-chimera-i5",
@@ -7243,6 +7258,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-gap-gap-road",
@@ -7251,6 +7267,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-gap-gap-twitter",
@@ -7283,6 +7300,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-genbank-kmer-p1a",
@@ -7291,6 +7309,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-genbank-kmer-u1a",
@@ -7299,6 +7318,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-genbank-kmer-v1r",
@@ -7307,6 +7327,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-genbank-kmer-v2a",
@@ -8008,6 +8029,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-hardesty-hardesty1",
@@ -8016,6 +8038,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-hardesty-hardesty2",
@@ -8024,6 +8047,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-hardesty-hardesty3",
@@ -8599,6 +8623,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-martin-marine1",
@@ -8625,6 +8650,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-mawi-mawi-201512012345",
@@ -8641,6 +8667,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-mawi-mawi-201512020030",
@@ -8649,6 +8676,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-mawi-mawi-201512020130",
@@ -8665,6 +8693,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-binaryalphadigs-10nn",
@@ -8673,6 +8702,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-breasttissue-10nn",
@@ -8681,6 +8711,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-cnae9-10nn",
@@ -8689,6 +8720,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-collins-15nn",
@@ -8697,6 +8729,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-dataset12mfeatfactors-10nn",
@@ -8705,6 +8738,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-dataset16mfeatkarhunen-10nn",
@@ -8713,6 +8747,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-dataset18mfeatmorphological-10nn",
@@ -8721,6 +8756,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-dataset20mfeatpixel-10nn",
@@ -8729,6 +8765,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-dataset22mfeatzernike-10nn",
@@ -8737,6 +8774,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-dermatology-5nn",
@@ -8745,6 +8783,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-ecoli-10nn",
@@ -8753,6 +8792,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-fashion-mnist-norm-10nn",
@@ -8761,6 +8801,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-glass-10nn",
@@ -8769,6 +8810,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-har-10nn",
@@ -8777,6 +8819,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-indianpines-10nn",
@@ -8785,6 +8828,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-iris-dataset-30nn",
@@ -8793,6 +8837,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-japanesevowelssmall-10nn",
@@ -8801,6 +8846,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-k49-norm-10nn",
@@ -8809,6 +8855,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-kmnist-norm-10nn",
@@ -8817,6 +8864,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-mice-10nn",
@@ -8825,6 +8873,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-micromass-10nn",
@@ -8833,6 +8882,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-mnist-test-norm-10nn",
@@ -8841,6 +8891,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-olivetti-norm-10nn",
@@ -8849,6 +8900,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-optdigits-10nn",
@@ -8857,6 +8909,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-plants-10nn",
@@ -8865,6 +8918,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-plantsmargin-12nn",
@@ -8873,6 +8927,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-plantstexture-10nn",
@@ -8881,6 +8936,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-semeion-10nn",
@@ -8889,6 +8945,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-spectro-10nn",
@@ -8897,6 +8954,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-umistfacesnorm-10nn",
@@ -8905,6 +8963,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-usps-norm-5nn",
@@ -8913,6 +8972,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-vehicle-10nn",
@@ -8921,6 +8981,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-worms20-10nn",
@@ -8929,6 +8990,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-yalea-10nn",
@@ -8945,6 +9007,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-ml-graph-yeast-30nn",
@@ -9439,6 +9502,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-powersystem-power197k",
@@ -9564,6 +9628,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-snap-collegemsg",
@@ -9572,6 +9637,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-snap-com-amazon",
@@ -9580,6 +9646,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-snap-com-dblp",
@@ -9604,6 +9671,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-snap-com-orkut",
@@ -9612,6 +9680,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-snap-com-youtube",
@@ -9620,6 +9689,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-snap-email-eu-core",
@@ -9628,6 +9698,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-snap-email-eu-core-temporal",
@@ -9636,6 +9707,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-snap-higgs-twitter",
@@ -9707,6 +9779,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-snap-soc-pokec",
@@ -9715,6 +9788,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-snap-soc-sign-bitcoin-alpha",
@@ -9723,6 +9797,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-snap-soc-sign-bitcoin-otc",
@@ -9767,6 +9842,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-snap-sx-askubuntu",
@@ -9775,6 +9851,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-snap-sx-mathoverflow",
@@ -9791,6 +9868,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-snap-sx-superuser",
@@ -9825,6 +9903,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-snap-wiki-rfa",
@@ -9833,6 +9912,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-snap-wiki-talk-temporal",
@@ -9883,6 +9963,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-tamu-smartgridcenter-activsg10k",
@@ -9891,6 +9972,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-tamu-smartgridcenter-activsg2000",
@@ -9899,6 +9981,7 @@
     },
     {
       "flags": [
+        "the collection's own link is also offered from the file host it redirects to, as the Wayback Machine captured it, which the recipe reads",
         "archive member derived from the SuiteSparse archive layout, <name>/<name>.mtx"
       ],
       "id": "ss-tamu-smartgridcenter-activsg70k",

@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 967222,
+        "sha256": "bcb40bc3718c223408e79a275d52ec7936c8b71715687f2809c956f60ec923bb",
+        "timestamp": "20240706184814",
+        "url": "https://web.archive.org/web/20240706184814/http://sparse-files.engr.tamu.edu/MM/ML_Graph/kmnist_norm_10NN.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/kmnist_norm_10NN.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/ML_Graph/kmnist_norm_10NN.tar.gz"

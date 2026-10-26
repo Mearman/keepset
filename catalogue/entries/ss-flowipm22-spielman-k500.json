@@ -57,6 +57,15 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "timestamp": "20250619001100",
+        "url": "https://web.archive.org/web/20250619001100/http://sparse-files.engr.tamu.edu/MM/FlowIPM22/Spielman_k500.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/FlowIPM22/Spielman_k500.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/FlowIPM22/Spielman_k500.tar.gz"

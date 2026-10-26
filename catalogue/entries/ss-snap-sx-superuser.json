@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 30834654,
+        "sha256": "5aca0afbc0b8162af8bec101e1bde127738ee3411052af298a9b775a8a8619f5",
+        "timestamp": "20240710174352",
+        "url": "https://web.archive.org/web/20240710174352/http://sparse-files.engr.tamu.edu/MM/SNAP/sx-superuser.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/SNAP/sx-superuser.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/SNAP/sx-superuser.tar.gz"

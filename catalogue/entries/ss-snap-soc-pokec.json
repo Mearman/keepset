@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 430434848,
+        "sha256": "3819af42461fd6816c2b84be120cbb509424996a987ba06ce9a318746667c2f9",
+        "timestamp": "20250928001657",
+        "url": "https://web.archive.org/web/20250928001657/http://sparse-files.engr.tamu.edu/MM/SNAP/soc-Pokec.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/SNAP/soc-Pokec.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/SNAP/soc-Pokec.tar.gz"
