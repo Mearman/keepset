@@ -33,6 +33,7 @@
     "cyclic": true,
     "density": 0.033080384262929745,
     "directed": true,
+    "downloadBytes": 2174733,
     "edgeTypes": 1,
     "heterogeneous": false,
     "multigraph": false,
