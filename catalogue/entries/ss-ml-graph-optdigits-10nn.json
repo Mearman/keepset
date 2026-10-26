@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 478572,
+        "sha256": "336949bf9a2ac3a0643a8d7a2217792f52e0fdbec54e1b870079f257f200abfc",
+        "timestamp": "20240706224536",
+        "url": "https://web.archive.org/web/20240706224536/http://sparse-files.engr.tamu.edu/MM/ML_Graph/optdigits_10NN.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/optdigits_10NN.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/ML_Graph/optdigits_10NN.tar.gz"

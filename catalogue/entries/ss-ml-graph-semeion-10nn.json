@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 85567,
+        "sha256": "d0f76bee68c819c6ea2bba0d8d5c453142643359f9e8854dc1afde8b28ff2367",
+        "timestamp": "20240710233131",
+        "url": "https://web.archive.org/web/20240710233131/http://sparse-files.engr.tamu.edu/MM/ML_Graph/semeion_10NN.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/semeion_10NN.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/ML_Graph/semeion_10NN.tar.gz"

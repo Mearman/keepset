@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 744910,
+        "sha256": "313fd342ed44d25f1881029c4de588dc2bc33925a4b9db224aa4c0ee11a16e04",
+        "timestamp": "20240603131754",
+        "url": "https://web.archive.org/web/20240603131754/http://sparse-files.engr.tamu.edu/MM/ML_Graph/indianpines_10NN.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/indianpines_10NN.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/ML_Graph/indianpines_10NN.tar.gz"

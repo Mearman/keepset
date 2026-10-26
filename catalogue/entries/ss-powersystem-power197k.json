@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 13376955,
+        "sha256": "a5e9935c8d3615ffedb1424059b98f62f8d29c609f9cac3966d4acfa9fe806d9",
+        "timestamp": "20240710080451",
+        "url": "https://web.archive.org/web/20240710080451/http://sparse-files.engr.tamu.edu/MM/PowerSystem/power197k.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/PowerSystem/power197k.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/PowerSystem/power197k.tar.gz"

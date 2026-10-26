@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 68157,
+        "sha256": "362fe658e1447c40f223fbdfe19f492718bb2c815b0614a425b7d036a93fbe2b",
+        "timestamp": "20240608220455",
+        "url": "https://web.archive.org/web/20240608220455/http://sparse-files.engr.tamu.edu/MM/SNAP/email-Eu-core.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/SNAP/email-Eu-core.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/SNAP/email-Eu-core.tar.gz"

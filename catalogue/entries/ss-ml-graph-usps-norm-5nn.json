@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 467315,
+        "sha256": "3bc3c7c48f11b605bd1362dee015dc08bdc464a797bd513424bc5b6f5c51a78a",
+        "timestamp": "20240710211802",
+        "url": "https://web.archive.org/web/20240710211802/http://sparse-files.engr.tamu.edu/MM/ML_Graph/usps_norm_5NN.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/usps_norm_5NN.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/ML_Graph/usps_norm_5NN.tar.gz"

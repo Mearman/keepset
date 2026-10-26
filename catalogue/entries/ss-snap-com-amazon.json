@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 12894262,
+        "sha256": "a4b3150474339971e29365a556ad56b99685f2310af50a74114a1f720787ed82",
+        "timestamp": "20240709205316",
+        "url": "https://web.archive.org/web/20240709205316/http://sparse-files.engr.tamu.edu/MM/SNAP/com-Amazon.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/SNAP/com-Amazon.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/SNAP/com-Amazon.tar.gz"

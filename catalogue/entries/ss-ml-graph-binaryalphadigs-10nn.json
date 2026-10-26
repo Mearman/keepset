@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 80762,
+        "sha256": "4b3908b97079b56f392a3049aca8541dbad1e970b1355a8c7d0f812b92db3e3a",
+        "timestamp": "20240603105029",
+        "url": "https://web.archive.org/web/20240603105029/http://sparse-files.engr.tamu.edu/MM/ML_Graph/Binaryalphadigs_10NN.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/Binaryalphadigs_10NN.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/ML_Graph/Binaryalphadigs_10NN.tar.gz"

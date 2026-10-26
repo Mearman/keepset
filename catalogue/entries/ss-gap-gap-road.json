@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 192775251,
+        "sha256": "e7b5202b4d0c3c05e33cbe3b00f16ec5a7744215fe6f3eec0d727722a213c0ec",
+        "timestamp": "20240604024447",
+        "url": "https://web.archive.org/web/20240604024447/http://sparse-files.engr.tamu.edu/MM/GAP/GAP-road.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/GAP/GAP-road.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/GAP/GAP-road.tar.gz"

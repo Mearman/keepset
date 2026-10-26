@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 1602474,
+        "sha256": "1958465bc848c44a115231a9614b1609ff0752b16d14d610d23516c5b8a5bce0",
+        "timestamp": "20240710071737",
+        "url": "https://web.archive.org/web/20240710071737/http://sparse-files.engr.tamu.edu/MM/TAMU_SmartGridCenter/ACTIVSg10K.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/TAMU_SmartGridCenter/ACTIVSg10K.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/TAMU_SmartGridCenter/ACTIVSg10K.tar.gz"

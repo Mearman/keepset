@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 161225,
+        "sha256": "41352e0c195f1d3b02c5b53fede5a83d1e266eb48897c5d7118001a34cab9c2d",
+        "timestamp": "20240604124513",
+        "url": "https://web.archive.org/web/20240604124513/http://sparse-files.engr.tamu.edu/MM/ML_Graph/dataset22mfeatzernike_10NN.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/dataset22mfeatzernike_10NN.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/ML_Graph/dataset22mfeatzernike_10NN.tar.gz"

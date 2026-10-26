@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 29245,
+        "sha256": "18ee323532a53992c46f0976e1c84a85c62ad5cffcab3811d1bd96bec0879f41",
+        "timestamp": "20240605152932",
+        "url": "https://web.archive.org/web/20240605152932/http://sparse-files.engr.tamu.edu/MM/ML_Graph/iris_dataset_30NN.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/iris_dataset_30NN.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/ML_Graph/iris_dataset_30NN.tar.gz"

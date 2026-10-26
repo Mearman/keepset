@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 339321,
+        "sha256": "f17c6d4f81419e1d4aae9f08e5fb34ab954903b6a7fae84106ecd8c39d111983",
+        "timestamp": "20240607204313",
+        "url": "https://web.archive.org/web/20240607204313/http://sparse-files.engr.tamu.edu/MM/SNAP/soc-sign-bitcoin-alpha.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/SNAP/soc-sign-bitcoin-alpha.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/SNAP/soc-sign-bitcoin-alpha.tar.gz"

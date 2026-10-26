@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 10515,
+        "sha256": "dc7d7c253c1e031337900afc7aec5dd8e7a2f52fe0f8a270a7c988a221a4c801",
+        "timestamp": "20240605035033",
+        "url": "https://web.archive.org/web/20240605035033/http://sparse-files.engr.tamu.edu/MM/ML_Graph/dermatology_5NN.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/dermatology_5NN.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/ML_Graph/dermatology_5NN.tar.gz"

@@ -42,6 +42,14 @@
     },
     {
       "entries": [
+        "ss-flowipm22-uni-chimera-i2"
+      ],
+      "evidence": "HTTP 403",
+      "reason": "access-wall",
+      "url": "http://sparse-files.engr.tamu.edu/MM/FlowIPM22/uni_chimera_i2.tar.gz"
+    },
+    {
+      "entries": [
         "ortec-verolog-2016-2017-instances"
       ],
       "evidence": "error:invalid-host-resolution",
@@ -1842,6 +1850,14 @@
     },
     {
       "entries": [
+        "ss-gap-gap-road"
+      ],
+      "evidence": "HTTP 403 from sparse-files.engr.tamu.edu",
+      "reason": "access-wall",
+      "url": "https://sparse.tamu.edu/MM/GAP/GAP-road.tar.gz"
+    },
+    {
+      "entries": [
         "ss-gap-gap-twitter"
       ],
       "evidence": "HTTP 403 from sparse-files.engr.tamu.edu",
@@ -2698,6 +2714,14 @@
     },
     {
       "entries": [
+        "ss-hardesty-hardesty1"
+      ],
+      "evidence": "HTTP 403 from sparse-files.engr.tamu.edu",
+      "reason": "access-wall",
+      "url": "https://sparse.tamu.edu/MM/Hardesty/Hardesty1.tar.gz"
+    },
+    {
+      "entries": [
         "ss-hardesty-hardesty2"
       ],
       "evidence": "HTTP 403 from sparse-files.engr.tamu.edu",
@@ -3114,11 +3138,27 @@
     },
     {
       "entries": [
+        "ss-ml-graph-dataset18mfeatmorphological-10nn"
+      ],
+      "evidence": "HTTP 403 from sparse-files.engr.tamu.edu",
+      "reason": "access-wall",
+      "url": "https://sparse.tamu.edu/MM/ML_Graph/dataset18mfeatmorphological_10NN.tar.gz"
+    },
+    {
+      "entries": [
         "ss-ml-graph-dataset20mfeatpixel-10nn"
       ],
       "evidence": "HTTP 403 from sparse-files.engr.tamu.edu",
       "reason": "access-wall",
       "url": "https://sparse.tamu.edu/MM/ML_Graph/dataset20mfeatpixel_10NN.tar.gz"
+    },
+    {
+      "entries": [
+        "ss-ml-graph-dataset22mfeatzernike-10nn"
+      ],
+      "evidence": "HTTP 403 from sparse-files.engr.tamu.edu",
+      "reason": "access-wall",
+      "url": "https://sparse.tamu.edu/MM/ML_Graph/dataset22mfeatzernike_10NN.tar.gz"
     },
     {
       "entries": [
@@ -6292,6 +6332,14 @@
     },
     {
       "entries": [
+        "ss-flowipm22-uni-chimera-i2"
+      ],
+      "evidence": "HTTP 403 from sparse-files.engr.tamu.edu",
+      "reason": "access-wall",
+      "url": "https://sparse.tamu.edu/RB/FlowIPM22/uni_chimera_i2.tar.gz"
+    },
+    {
+      "entries": [
         "ss-flowipm22-uni-chimera-i3"
       ],
       "evidence": "HTTP 403 from sparse-files.engr.tamu.edu",
@@ -7716,6 +7764,14 @@
     },
     {
       "entries": [
+        "ss-ml-graph-kmnist-norm-10nn"
+      ],
+      "evidence": "HTTP 403 from sparse-files.engr.tamu.edu",
+      "reason": "access-wall",
+      "url": "https://sparse.tamu.edu/RB/ML_Graph/kmnist_norm_10NN.tar.gz"
+    },
+    {
+      "entries": [
         "ss-ml-graph-mice-10nn"
       ],
       "evidence": "HTTP 403 from sparse-files.engr.tamu.edu",
@@ -8695,6 +8751,14 @@
     },
     {
       "entries": [
+        "ss-snap-com-amazon"
+      ],
+      "evidence": "HTTP 403 from sparse-files.engr.tamu.edu",
+      "reason": "access-wall",
+      "url": "https://sparse.tamu.edu/RB/SNAP/com-Amazon.tar.gz"
+    },
+    {
+      "entries": [
         "ss-snap-com-dblp"
       ],
       "evidence": "HTTP 403 from sparse-files.engr.tamu.edu",
@@ -8988,6 +9052,14 @@
       "evidence": "HTTP 403 from sparse-files.engr.tamu.edu",
       "reason": "access-wall",
       "url": "https://sparse.tamu.edu/RB/SNAP/sx-stackoverflow.tar.gz"
+    },
+    {
+      "entries": [
+        "ss-snap-sx-superuser"
+      ],
+      "evidence": "HTTP 403 from sparse-files.engr.tamu.edu",
+      "reason": "access-wall",
+      "url": "https://sparse.tamu.edu/RB/SNAP/sx-superuser.tar.gz"
     },
     {
       "entries": [
@@ -10855,6 +10927,14 @@
     },
     {
       "entries": [
+        "ss-flowipm22-spielman-k100"
+      ],
+      "evidence": "redirects to https://sparse.tamu.edu/404",
+      "reason": "source-error",
+      "url": "https://sparse.tamu.edu/mat/FlowIPM22/Spielman_k100.tar.gz"
+    },
+    {
+      "entries": [
         "ss-flowipm22-spielman-k200"
       ],
       "evidence": "redirects to https://sparse.tamu.edu/404",
@@ -11007,6 +11087,14 @@
     },
     {
       "entries": [
+        "ss-genbank-kmer-p1a"
+      ],
+      "evidence": "redirects to https://sparse.tamu.edu/404",
+      "reason": "source-error",
+      "url": "https://sparse.tamu.edu/mat/GenBank/kmer_P1a.tar.gz"
+    },
+    {
+      "entries": [
         "ss-genbank-kmer-u1a"
       ],
       "evidence": "redirects to https://sparse.tamu.edu/404",
@@ -11020,6 +11108,14 @@
       "evidence": "redirects to https://sparse.tamu.edu/404",
       "reason": "source-error",
       "url": "https://sparse.tamu.edu/mat/GenBank/kmer_V1r.tar.gz"
+    },
+    {
+      "entries": [
+        "ss-genbank-kmer-v2a"
+      ],
+      "evidence": "redirects to https://sparse.tamu.edu/404",
+      "reason": "source-error",
+      "url": "https://sparse.tamu.edu/mat/GenBank/kmer_V2a.tar.gz"
     },
     {
       "entries": [
@@ -12223,6 +12319,14 @@
     },
     {
       "entries": [
+        "ss-ml-graph-dataset16mfeatkarhunen-10nn"
+      ],
+      "evidence": "redirects to https://sparse.tamu.edu/404",
+      "reason": "source-error",
+      "url": "https://sparse.tamu.edu/mat/ML_Graph/dataset16mfeatkarhunen_10NN.tar.gz"
+    },
+    {
+      "entries": [
         "ss-ml-graph-dataset18mfeatmorphological-10nn"
       ],
       "evidence": "redirects to https://sparse.tamu.edu/404",
@@ -12236,6 +12340,14 @@
       "evidence": "redirects to https://sparse.tamu.edu/404",
       "reason": "source-error",
       "url": "https://sparse.tamu.edu/mat/ML_Graph/dataset20mfeatpixel_10NN.tar.gz"
+    },
+    {
+      "entries": [
+        "ss-ml-graph-dataset22mfeatzernike-10nn"
+      ],
+      "evidence": "redirects to https://sparse.tamu.edu/404",
+      "reason": "source-error",
+      "url": "https://sparse.tamu.edu/mat/ML_Graph/dataset22mfeatzernike_10NN.tar.gz"
     },
     {
       "entries": [
@@ -13602,6 +13714,14 @@
     },
     {
       "entries": [
+        "ss-snap-wiki-talk-temporal"
+      ],
+      "evidence": "redirects to https://sparse.tamu.edu/404",
+      "reason": "source-error",
+      "url": "https://sparse.tamu.edu/mat/SNAP/wiki-talk-temporal.tar.gz"
+    },
+    {
+      "entries": [
         "ss-schulthess-n-biocarta"
       ],
       "evidence": "redirects to https://sparse.tamu.edu/404",
@@ -14189,6 +14309,318 @@
     {
       "timestamp": "20250619011001",
       "url": "http://sparse-files.engr.tamu.edu/MM/FlowIPM22/Spielman_k100.tar.gz"
+    },
+    {
+      "timestamp": "20250613035708",
+      "url": "http://sparse-files.engr.tamu.edu/MM/FlowIPM22/Spielman_k200.tar.gz"
+    },
+    {
+      "timestamp": "20250618204628",
+      "url": "http://sparse-files.engr.tamu.edu/MM/FlowIPM22/Spielman_k300.tar.gz"
+    },
+    {
+      "timestamp": "20250703143602",
+      "url": "http://sparse-files.engr.tamu.edu/MM/FlowIPM22/Spielman_k400.tar.gz"
+    },
+    {
+      "timestamp": "20250619001100",
+      "url": "http://sparse-files.engr.tamu.edu/MM/FlowIPM22/Spielman_k500.tar.gz"
+    },
+    {
+      "timestamp": "20250619173505",
+      "url": "http://sparse-files.engr.tamu.edu/MM/FlowIPM22/Spielman_k600.tar.gz"
+    },
+    {
+      "timestamp": "20260108064757",
+      "url": "http://sparse-files.engr.tamu.edu/MM/FlowIPM22/uni_chimera_i1.tar.gz"
+    },
+    {
+      "timestamp": "20260108065108",
+      "url": "http://sparse-files.engr.tamu.edu/MM/FlowIPM22/uni_chimera_i3.tar.gz"
+    },
+    {
+      "timestamp": "20260109042022",
+      "url": "http://sparse-files.engr.tamu.edu/MM/FlowIPM22/uni_chimera_i4.tar.gz"
+    },
+    {
+      "timestamp": "20260108210828",
+      "url": "http://sparse-files.engr.tamu.edu/MM/FlowIPM22/uni_chimera_i5.tar.gz"
+    },
+    {
+      "timestamp": "20240604024447",
+      "url": "http://sparse-files.engr.tamu.edu/MM/GAP/GAP-road.tar.gz"
+    },
+    {
+      "timestamp": "20240709180102",
+      "url": "http://sparse-files.engr.tamu.edu/MM/GenBank/kmer_P1a.tar.gz"
+    },
+    {
+      "timestamp": "20240710060104",
+      "url": "http://sparse-files.engr.tamu.edu/MM/GenBank/kmer_U1a.tar.gz"
+    },
+    {
+      "timestamp": "20240710215318",
+      "url": "http://sparse-files.engr.tamu.edu/MM/GenBank/kmer_V1r.tar.gz"
+    },
+    {
+      "timestamp": "20240707011124",
+      "url": "http://sparse-files.engr.tamu.edu/MM/GenBank/kmer_V2a.tar.gz"
+    },
+    {
+      "timestamp": "20240707010302",
+      "url": "http://sparse-files.engr.tamu.edu/MM/Hardesty/Hardesty1.tar.gz"
+    },
+    {
+      "timestamp": "20240710174024",
+      "url": "http://sparse-files.engr.tamu.edu/MM/Hardesty/Hardesty2.tar.gz"
+    },
+    {
+      "timestamp": "20240706193101",
+      "url": "http://sparse-files.engr.tamu.edu/MM/Hardesty/Hardesty3.tar.gz"
+    },
+    {
+      "timestamp": "20240706211944",
+      "url": "http://sparse-files.engr.tamu.edu/MM/MAWI/mawi_201512012345.tar.gz"
+    },
+    {
+      "timestamp": "20240710222737",
+      "url": "http://sparse-files.engr.tamu.edu/MM/MAWI/mawi_201512020030.tar.gz"
+    },
+    {
+      "timestamp": "20240710194856",
+      "url": "http://sparse-files.engr.tamu.edu/MM/MAWI/mawi_201512020130.tar.gz"
+    },
+    {
+      "timestamp": "20240603105029",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/Binaryalphadigs_10NN.tar.gz"
+    },
+    {
+      "timestamp": "20240603114511",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/Ecoli_10NN.tar.gz"
+    },
+    {
+      "timestamp": "20240604110609",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/Fashion_MNIST_norm_10NN.tar.gz"
+    },
+    {
+      "timestamp": "20240604122807",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/Glass_10NN.tar.gz"
+    },
+    {
+      "timestamp": "20240603122241",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/JapaneseVowelsSmall_10NN.tar.gz"
+    },
+    {
+      "timestamp": "20240706203305",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/Olivetti_norm_10NN.tar.gz"
+    },
+    {
+      "timestamp": "20240710193946",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/Plants_10NN.tar.gz"
+    },
+    {
+      "timestamp": "20240710003133",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/Spectro_10NN.tar.gz"
+    },
+    {
+      "timestamp": "20240710183334",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/Vehicle_10NN.tar.gz"
+    },
+    {
+      "timestamp": "20240605212330",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/YaleA_10NN.tar.gz"
+    },
+    {
+      "timestamp": "20240603144459",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/breasttissue_10NN.tar.gz"
+    },
+    {
+      "timestamp": "20240605071040",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/cnae9_10NN.tar.gz"
+    },
+    {
+      "timestamp": "20240605111603",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/collins_15NN.tar.gz"
+    },
+    {
+      "timestamp": "20240604224405",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/dataset12mfeatfactors_10NN.tar.gz"
+    },
+    {
+      "timestamp": "20240603104005",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/dataset16mfeatkarhunen_10NN.tar.gz"
+    },
+    {
+      "timestamp": "20240603115526",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/dataset18mfeatmorphological_10NN.tar.gz"
+    },
+    {
+      "timestamp": "20240604104036",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/dataset20mfeatpixel_10NN.tar.gz"
+    },
+    {
+      "timestamp": "20240604124513",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/dataset22mfeatzernike_10NN.tar.gz"
+    },
+    {
+      "timestamp": "20240605035033",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/dermatology_5NN.tar.gz"
+    },
+    {
+      "timestamp": "20240606080245",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/har_10NN.tar.gz"
+    },
+    {
+      "timestamp": "20240603131754",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/indianpines_10NN.tar.gz"
+    },
+    {
+      "timestamp": "20240605152932",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/iris_dataset_30NN.tar.gz"
+    },
+    {
+      "timestamp": "20240706190832",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/k49_norm_10NN.tar.gz"
+    },
+    {
+      "timestamp": "20240706184814",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/kmnist_norm_10NN.tar.gz"
+    },
+    {
+      "timestamp": "20240606011653",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/mice_10NN.tar.gz"
+    },
+    {
+      "timestamp": "20240707080713",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/micromass_10NN.tar.gz"
+    },
+    {
+      "timestamp": "20240707032755",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/mnist_test_norm_10NN.tar.gz"
+    },
+    {
+      "timestamp": "20240706224536",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/optdigits_10NN.tar.gz"
+    },
+    {
+      "timestamp": "20240604190933",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/plantsmargin_12NN.tar.gz"
+    },
+    {
+      "timestamp": "20240710025429",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/plantstexture_10NN.tar.gz"
+    },
+    {
+      "timestamp": "20240710233131",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/semeion_10NN.tar.gz"
+    },
+    {
+      "timestamp": "20240711030749",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/umistfacesnorm_10NN.tar.gz"
+    },
+    {
+      "timestamp": "20240710211802",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/usps_norm_5NN.tar.gz"
+    },
+    {
+      "timestamp": "20240710182118",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/worms20_10NN.tar.gz"
+    },
+    {
+      "timestamp": "20240710004853",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/yeast_30NN.tar.gz"
+    },
+    {
+      "timestamp": "20240709213602",
+      "url": "http://sparse-files.engr.tamu.edu/MM/Martin/marine1.tar.gz"
+    },
+    {
+      "timestamp": "20240710080451",
+      "url": "http://sparse-files.engr.tamu.edu/MM/PowerSystem/power197k.tar.gz"
+    },
+    {
+      "timestamp": "20240607181653",
+      "url": "http://sparse-files.engr.tamu.edu/MM/SNAP/CollegeMsg.tar.gz"
+    },
+    {
+      "timestamp": "20240709205316",
+      "url": "http://sparse-files.engr.tamu.edu/MM/SNAP/com-Amazon.tar.gz"
+    },
+    {
+      "timestamp": "20240709212126",
+      "url": "http://sparse-files.engr.tamu.edu/MM/SNAP/com-DBLP.tar.gz"
+    },
+    {
+      "timestamp": "20250928001657",
+      "url": "http://sparse-files.engr.tamu.edu/MM/SNAP/com-Orkut.tar.gz"
+    },
+    {
+      "timestamp": "20240706144828",
+      "url": "http://sparse-files.engr.tamu.edu/MM/SNAP/com-Youtube.tar.gz"
+    },
+    {
+      "timestamp": "20240607173453",
+      "url": "http://sparse-files.engr.tamu.edu/MM/SNAP/email-Eu-core-temporal.tar.gz"
+    },
+    {
+      "timestamp": "20240608220455",
+      "url": "http://sparse-files.engr.tamu.edu/MM/SNAP/email-Eu-core.tar.gz"
+    },
+    {
+      "timestamp": "20240710000739",
+      "url": "http://sparse-files.engr.tamu.edu/MM/SNAP/higgs-twitter.tar.gz"
+    },
+    {
+      "timestamp": "20240710100803",
+      "url": "http://sparse-files.engr.tamu.edu/MM/SNAP/loc-Brightkite.tar.gz"
+    },
+    {
+      "timestamp": "20240710013556",
+      "url": "http://sparse-files.engr.tamu.edu/MM/SNAP/loc-Gowalla.tar.gz"
+    },
+    {
+      "timestamp": "20250928001657",
+      "url": "http://sparse-files.engr.tamu.edu/MM/SNAP/soc-Pokec.tar.gz"
+    },
+    {
+      "timestamp": "20240607204313",
+      "url": "http://sparse-files.engr.tamu.edu/MM/SNAP/soc-sign-bitcoin-alpha.tar.gz"
+    },
+    {
+      "timestamp": "20240609114208",
+      "url": "http://sparse-files.engr.tamu.edu/MM/SNAP/soc-sign-bitcoin-otc.tar.gz"
+    },
+    {
+      "timestamp": "20240711020506",
+      "url": "http://sparse-files.engr.tamu.edu/MM/SNAP/sx-askubuntu.tar.gz"
+    },
+    {
+      "timestamp": "20240711154521",
+      "url": "http://sparse-files.engr.tamu.edu/MM/SNAP/sx-mathoverflow.tar.gz"
+    },
+    {
+      "timestamp": "20240710174352",
+      "url": "http://sparse-files.engr.tamu.edu/MM/SNAP/sx-superuser.tar.gz"
+    },
+    {
+      "timestamp": "20240608204932",
+      "url": "http://sparse-files.engr.tamu.edu/MM/SNAP/wiki-RfA.tar.gz"
+    },
+    {
+      "timestamp": "20240707080415",
+      "url": "http://sparse-files.engr.tamu.edu/MM/SNAP/wiki-talk-temporal.tar.gz"
+    },
+    {
+      "timestamp": "20240710071737",
+      "url": "http://sparse-files.engr.tamu.edu/MM/TAMU_SmartGridCenter/ACTIVSg10K.tar.gz"
+    },
+    {
+      "timestamp": "20240710215220",
+      "url": "http://sparse-files.engr.tamu.edu/MM/TAMU_SmartGridCenter/ACTIVSg2000.tar.gz"
+    },
+    {
+      "timestamp": "20240710231723",
+      "url": "http://sparse-files.engr.tamu.edu/MM/TAMU_SmartGridCenter/ACTIVSg70K.tar.gz"
     },
     {
       "timestamp": "20261021225301",
@@ -15405,6 +15837,10 @@
     {
       "timestamp": "20261004065942",
       "url": "https://snap.stanford.edu/data/facebook_combined.txt.gz"
+    },
+    {
+      "timestamp": "20230309171113",
+      "url": "https://snap.stanford.edu/data/loc-brightkite_edges.txt.gz"
     },
     {
       "timestamp": "20251020041923",

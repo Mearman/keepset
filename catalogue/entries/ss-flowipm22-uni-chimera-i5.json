@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 74206088,
+        "sha256": "133b2120517559f04349c7a6208163ad5d2feae228ca99a3a4a0a8428cf353ad",
+        "timestamp": "20260108210828",
+        "url": "https://web.archive.org/web/20260108210828/http://sparse-files.engr.tamu.edu/MM/FlowIPM22/uni_chimera_i5.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/FlowIPM22/uni_chimera_i5.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/FlowIPM22/uni_chimera_i5.tar.gz"

@@ -66,6 +66,17 @@
       "url": "https://snap.stanford.edu/data/loc-gowalla_edges.txt.gz"
     },
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 104065737,
+        "sha256": "6ac2d226baa3d061fd20039448a4ed2c78d39eb6b481df1c52bd518a786efbb0",
+        "timestamp": "20240710013556",
+        "url": "https://web.archive.org/web/20240710013556/http://sparse-files.engr.tamu.edu/MM/SNAP/loc-Gowalla.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/SNAP/loc-Gowalla.tar.gz"
+    },
+    {
       "retrieved": "2026-01-17",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/SNAP/loc-Gowalla.tar.gz"

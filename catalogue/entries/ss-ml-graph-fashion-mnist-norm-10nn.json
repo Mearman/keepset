@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 978040,
+        "sha256": "0a1821cb0594e86e65b69f5b782f851912759e03413d4d1feab9abec12b68c99",
+        "timestamp": "20240604110609",
+        "url": "https://web.archive.org/web/20240604110609/http://sparse-files.engr.tamu.edu/MM/ML_Graph/Fashion_MNIST_norm_10NN.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/ML_Graph/Fashion_MNIST_norm_10NN.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/ML_Graph/Fashion_MNIST_norm_10NN.tar.gz"

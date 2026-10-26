@@ -57,6 +57,17 @@
   },
   "sources": [
     {
+      "retrieved": "2026-10-25",
+      "snapshot": {
+        "byteLength": 927824532,
+        "sha256": "8b52b87048044eff76b5385b2ea2681674117ffd770695b19518e248629cc725",
+        "timestamp": "20250928001657",
+        "url": "https://web.archive.org/web/20250928001657/http://sparse-files.engr.tamu.edu/MM/SNAP/com-Orkut.tar.gz"
+      },
+      "status": "live",
+      "url": "http://sparse-files.engr.tamu.edu/MM/SNAP/com-Orkut.tar.gz"
+    },
+    {
       "retrieved": "2026-02-16",
       "status": "live",
       "url": "https://sparse.tamu.edu/MM/SNAP/com-Orkut.tar.gz"
