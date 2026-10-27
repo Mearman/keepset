@@ -1,3 +1,10 @@
+# [0.63.0](https://github.com/Mearman/keepset/compare/v0.62.0...v0.63.0) (2026-10-27)
+
+
+### Features
+
+* read the instances of the dynamic team orienteering benchmark ([5a3fdca](https://github.com/Mearman/keepset/commit/5a3fdca4f232fd538ea80f3a3c652f2882ac65dd))
+
 # [0.62.0](https://github.com/Mearman/keepset/compare/v0.61.0...v0.62.0) (2026-10-27)
 
 
