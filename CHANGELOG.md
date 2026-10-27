@@ -1,3 +1,16 @@
+# [0.61.0](https://github.com/Mearman/keepset/compare/v0.60.0...v0.61.0) (2026-10-27)
+
+
+### Bug Fixes
+
+* **seed:** keep a recorded download size instead of asking the host again ([fe205c5](https://github.com/Mearman/keepset/commit/fe205c58361731c438ef77ab875046d58fcc72ad))
+
+
+### Features
+
+* **seed:** add the SNAP originals of two SuiteSparse graphs ([e2e867d](https://github.com/Mearman/keepset/commit/e2e867dd3fde6545beb76d1bf7471b96b0bcdd0e))
+* **seed:** record what a publisher states about a dataset with no recipe ([6884b79](https://github.com/Mearman/keepset/commit/6884b79d326c185c89e52efd5f17bc03ff05556b))
+
 # [0.60.0](https://github.com/Mearman/keepset/compare/v0.59.0...v0.60.0) (2026-10-27)
 
 
