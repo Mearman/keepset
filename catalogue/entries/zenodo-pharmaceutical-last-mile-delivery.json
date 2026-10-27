@@ -10,11 +10,37 @@
     }
   ],
   "crosswalk": {
-    "file": "crosswalks/tasks-v1/nodes.json"
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].LAT",
+        "op": "move",
+        "to": "nodes[].deadline"
+      },
+      {
+        "from": "nodes[].SERVICE_TIME",
+        "op": "move",
+        "to": "nodes[].duration"
+      }
+    ],
+    "source": "csv-table",
+    "target": "tasks/v1"
   },
   "description": "Distance and time matrices, service times and time windows for a real pharmaceutical last-mile delivery operation.",
   "domain": "Vehicle routing with time windows",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "instances": 9
+  },
   "id": "zenodo-pharmaceutical-last-mile-delivery",
   "licence": {
     "id": "CC-BY-4.0",
@@ -26,12 +52,42 @@
   ],
   "properties": {
     "downloadBytes": 2926700,
-    "probedNodes": 653,
-    "surveyId": "or-7"
+    "surveyId": "or-7",
+    "timeUnit": "minutes"
   },
   "recipe": {
-    "reason": "The zip holds an orders workbook with a sheet for each of nine daily instances, whose rows give a node's weight, volume, service time, earliest arrival, latitude and time window, beside workbooks of distance and time matrices; a collection reads a file for each instance, not a sheet, and keepset does not read a workbook inside a zip.",
-    "status": "not-fetchable"
+    "archive": {
+      "inner": {
+        "kind": "xlsx"
+      },
+      "kind": "zip",
+      "members": {
+        "path": "orders/orders.xlsx"
+      }
+    },
+    "parser": {
+      "columns": [
+        "LAT",
+        "SERVICE_TIME"
+      ],
+      "delimiter": "comma",
+      "encoding": "utf-8",
+      "format": "csv-table",
+      "idColumn": "NODE_ID",
+      "numericColumns": [
+        {
+          "column": "SERVICE_TIME",
+          "factor": 1
+        },
+        {
+          "column": "LAT",
+          "factor": 1
+        }
+      ],
+      "skipLines": 0
+    },
+    "source": 1,
+    "status": "fetchable"
   },
   "sources": [
     {
