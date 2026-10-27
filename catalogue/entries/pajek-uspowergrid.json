@@ -55,6 +55,9 @@
     "source": 1,
     "status": "fetchable"
   },
+  "sameDataAs": [
+    "power"
+  ],
   "sources": [
     {
       "retrieved": "2026-02-16",

@@ -59,6 +59,9 @@
     "source": 0,
     "status": "fetchable"
   },
+  "sameDataAs": [
+    "ss-snap-soc-sign-bitcoin-otc"
+  ],
   "sources": [
     {
       "retrieved": "2026-03-26",

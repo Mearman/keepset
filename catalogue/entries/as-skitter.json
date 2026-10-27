@@ -53,6 +53,9 @@
     "source": 0,
     "status": "fetchable"
   },
+  "sameDataAs": [
+    "ss-snap-as-skitter"
+  ],
   "sources": [
     {
       "retrieved": "2026-02-16",

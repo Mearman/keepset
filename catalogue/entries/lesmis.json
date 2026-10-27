@@ -50,6 +50,10 @@
     "source": 0,
     "status": "fetchable"
   },
+  "sameDataAs": [
+    "lesmiserables",
+    "ss-newman-lesmis"
+  ],
   "sources": [
     {
       "retrieved": "2026-02-16",

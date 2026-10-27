@@ -54,6 +54,9 @@
     "source": 1,
     "status": "fetchable"
   },
+  "sameDataAs": [
+    "polblogs"
+  ],
   "sources": [
     {
       "retrieved": "2026-04-19",

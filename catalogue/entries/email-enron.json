@@ -53,6 +53,9 @@
     "source": 0,
     "status": "fetchable"
   },
+  "sameDataAs": [
+    "snap-email-enron"
+  ],
   "sources": [
     {
       "retrieved": "2026-01-17",
