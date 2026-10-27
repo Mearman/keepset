@@ -56,6 +56,9 @@
     "source": 0,
     "status": "fetchable"
   },
+  "sameDataAs": [
+    "snap-epinions-signed"
+  ],
   "sources": [
     {
       "retrieved": "2026-10-21",

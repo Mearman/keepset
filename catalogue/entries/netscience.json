@@ -52,6 +52,9 @@
     "source": 0,
     "status": "fetchable"
   },
+  "sameDataAs": [
+    "pajek-netscience"
+  ],
   "sources": [
     {
       "retrieved": "2026-01-17",

@@ -46,6 +46,9 @@
     "source": 0,
     "status": "fetchable"
   },
+  "sameDataAs": [
+    "ss-pajek-divorce"
+  ],
   "sources": [
     {
       "retrieved": "2026-02-16",

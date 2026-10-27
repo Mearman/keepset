@@ -58,6 +58,9 @@
     "source": 0,
     "status": "fetchable"
   },
+  "sameDataAs": [
+    "ss-snap-soc-sign-epinions"
+  ],
   "sources": [
     {
       "retrieved": "2026-03-27",

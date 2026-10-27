@@ -56,6 +56,9 @@
     "source": 1,
     "status": "fetchable"
   },
+  "sameDataAs": [
+    "pajek-gd00"
+  ],
   "sources": [
     {
       "retrieved": "2026-02-16",

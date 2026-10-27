@@ -55,6 +55,9 @@
     "source": 1,
     "status": "fetchable"
   },
+  "sameDataAs": [
+    "arenas-celegans-metabolic"
+  ],
   "sources": [
     {
       "retrieved": "2026-04-20",

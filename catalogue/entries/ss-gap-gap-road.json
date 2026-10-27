@@ -56,6 +56,9 @@
     "source": 0,
     "status": "fetchable"
   },
+  "sameDataAs": [
+    "ss-dimacs10-road-usa"
+  ],
   "sources": [
     {
       "retrieved": "2026-10-25",

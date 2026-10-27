@@ -49,6 +49,9 @@
     "source": 0,
     "status": "fetchable"
   },
+  "sameDataAs": [
+    "netzschleuder-email-company"
+  ],
   "sources": [
     {
       "retrieved": "2026-04-19",

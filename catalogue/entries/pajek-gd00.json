@@ -52,6 +52,9 @@
     "source": 0,
     "status": "fetchable"
   },
+  "sameDataAs": [
+    "ss-pajek-gd00-a"
+  ],
   "sources": [
     {
       "retrieved": "2026-02-16",
