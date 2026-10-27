@@ -108,7 +108,7 @@ export const ArcgisOutcomeSchema = z
   .strict();
 export type ArcgisOutcome = z.infer<typeof ArcgisOutcomeSchema>;
 
-/** A dataset that is a collection of tables in an archive, one table file per instance: every member the archive selector matches is read as a table with the same header and options, as for a single table, and becomes an instance of the set. `timeUnit` says what the source's time quantities are measured in, since the tasks/v1 `duration` is seconds (a column in minutes is scaled by a factor of sixty), and is left out for a source that has none. */
+/** A dataset that is a collection of tables in an archive, one table file per instance: every member the archive selector matches is read as a table with the same header and options, as for a single table, and becomes an instance of the set. `timeUnit` says what the source's time quantities are measured in, since the tasks/v1 `duration` is seconds (a column in minutes is scaled by a factor of sixty, unless a deadline is in the same table: a deadline is never scaled, so a table whose durations and deadlines are both in minutes keeps both as they are and says `minutes`), and is left out for a source that has none. */
 export const TableCollectionOutcomeSchema = z
   .object({
     status: z.literal("fetchable-table-collection"),
@@ -121,7 +121,7 @@ export const TableCollectionOutcomeSchema = z
     numericColumns: z.array(z.object({ column: ColumnNameSchema, factor: z.number().positive() }).strict()),
     header: z.array(z.string()).min(1),
     map: FieldMapSchema,
-    timeUnit: z.enum(["seconds", "abstract units"]).optional(),
+    timeUnit: z.enum(["seconds", "minutes", "abstract units"]).optional(),
     expectedInstances: z.int().min(0).optional(),
   })
   .strict();
@@ -147,7 +147,7 @@ export const InstanceFilesOutcomeSchema = z
     keep: z.array(ColumnNameSchema),
     /** What a mapped duration or travel time column is multiplied by to put it in seconds, for a source that gives minutes. */
     factors: z.object({ duration: z.number().positive().optional(), travelTime: z.number().positive().optional() }).strict().optional(),
-    timeUnit: z.enum(["seconds", "abstract units"]).optional(),
+    timeUnit: z.enum(["seconds", "minutes", "abstract units"]).optional(),
     expectedInstances: z.int().min(0).optional(),
     expectedNodes: z.int().min(0).optional(),
   })

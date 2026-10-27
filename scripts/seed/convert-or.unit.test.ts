@@ -436,6 +436,11 @@ describe("convertItem for a collection of instance files", () => {
     expect(outcome.recipe).toBe("fetchable");
   });
 
+  it("records minutes as the time unit of a source whose durations and deadlines are both left in minutes", () => {
+    const { entry } = convertItem(item ?? expect.unreachable("the fixture survey has an item"), curated({ ...collection, timeUnit: "minutes" }), "2026-10-19");
+    expect(entry.properties).toEqual({ surveyId: "or-10", timeUnit: "minutes" });
+  });
+
   it("records no time unit for a source that has no time quantities", () => {
     const untimed = Object.fromEntries(Object.entries(collection).filter(([key]) => key !== "timeUnit"));
     const { entry } = convertItem(item ?? expect.unreachable("the fixture survey has an item"), curated(untimed), "2026-10-19");

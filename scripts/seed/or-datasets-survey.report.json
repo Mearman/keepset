@@ -80,12 +80,12 @@
       "flags": [
         "the Zenodo record is CC BY 4.0 but the Data in Brief article is CC BY-NC 4.0 per Crossref",
         "exact node locations are withheld for confidentiality, so there are no coordinates",
-        "column names come from the Zenodo description, not from the xlsx files",
+        "the nine daily instances are the nine sheets of orders/orders.xlsx inside the zip; the distance and time matrix workbooks beside it are not read",
+        "the service time and the latest arrival time are written in minutes and kept in minutes, the entry's timeUnit",
         "the survey URL is a DOI that resolves to the publisher article page"
       ],
       "id": "zenodo-pharmaceutical-last-mile-delivery",
-      "reason": "The zip holds an orders workbook with a sheet for each of nine daily instances, whose rows give a node's weight, volume, service time, earliest arrival, latitude and time window, beside workbooks of distance and time matrices; a collection reads a file for each instance, not a sheet, and keepset does not read a workbook inside a zip.",
-      "recipe": "not-fetchable",
+      "recipe": "fetchable",
       "surveyId": "or-7"
     },
     {

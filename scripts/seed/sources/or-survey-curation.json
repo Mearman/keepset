@@ -7945,7 +7945,8 @@
       "flags": [
         "the Zenodo record is CC BY 4.0 but the Data in Brief article is CC BY-NC 4.0 per Crossref",
         "exact node locations are withheld for confidentiality, so there are no coordinates",
-        "column names come from the Zenodo description, not from the xlsx files",
+        "the nine daily instances are the nine sheets of orders/orders.xlsx inside the zip; the distance and time matrix workbooks beside it are not read",
+        "the service time and the latest arrival time are written in minutes and kept in minutes, the entry's timeUnit",
         "the survey URL is a DOI that resolves to the publisher article page"
       ],
       "id": "zenodo-pharmaceutical-last-mile-delivery",
@@ -7960,11 +7961,45 @@
       "name": "Pharmaceutical last-mile delivery dataset (Vrani et al.)",
       "namespace": "zenodo",
       "outcome": {
-        "reason": "The zip holds an orders workbook with a sheet for each of nine daily instances, whose rows give a node's weight, volume, service time, earliest arrival, latitude and time window, beside workbooks of distance and time matrices; a collection reads a file for each instance, not a sheet, and keepset does not read a workbook inside a zip.",
-        "status": "not-fetchable",
-        "nodes": 653,
-        "downloadBytes": 2926700,
-        "evidence": "Counted from the order sheets of orders.xlsx, the nine daily instances' order rows; the Zenodo files API gives the size of the data.zip that holds them."
+        "status": "fetchable-table-collection",
+        "archive": {
+          "kind": "zip",
+          "members": {
+            "path": "orders/orders.xlsx"
+          },
+          "inner": {
+            "kind": "xlsx"
+          }
+        },
+        "encoding": "utf-8",
+        "delimiter": "comma",
+        "skipLines": 0,
+        "idColumn": "NODE_ID",
+        "numericColumns": [
+          {
+            "column": "SERVICE_TIME",
+            "factor": 1
+          },
+          {
+            "column": "LAT",
+            "factor": 1
+          }
+        ],
+        "header": [
+          "NODE_ID",
+          "WEIGHT",
+          "VOLUME",
+          "SERVICE_TIME",
+          "EAT",
+          "LAT",
+          "TIME WINDOW"
+        ],
+        "map": {
+          "duration": "SERVICE_TIME",
+          "deadline": "LAT"
+        },
+        "timeUnit": "minutes",
+        "expectedInstances": 9
       },
       "surveyId": "or-7"
     },
