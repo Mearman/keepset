@@ -12,7 +12,7 @@
   "crosswalk": {
     "file": "crosswalks/tasks-v1/nodes.json"
   },
-  "description": "Instances for the multi-period electric vehicle home health care routing and scheduling problem with uncertain travel times and service durations, from Yin et al. in Omega. The instances are in the authors' GitHub repository, whose description names the article; the publisher's page answers a robot check, so the article's own link to the repository is unconfirmed.",
+  "description": "Instances for the multi-period electric vehicle home health care routing and scheduling problem with uncertain travel times and service durations, from Yin et al. in Omega. The instances are in the authors' GitHub repository, whose description names the article and whose folders of 20, 25, 30 and 35 patients match the sizes the article's abstract reports; the data availability statement is in the full text, which needs publisher access.",
   "domain": "Technician and home-care routing",
   "expectedCounts": {},
   "id": "elsevier-ev-hhcrsp-multi-period",
@@ -29,7 +29,7 @@
     "surveyId": "or-18"
   },
   "recipe": {
-    "reason": "The instances are pairs of patient and caregiver text files in four size folders of the authors' GitHub repository, whose description names this article, and no recipe reads that layout; the article page answers a robot check, so its own link to the repository is unconfirmed.",
+    "reason": "The instances are pairs of patient and caregiver text files in four size folders of the authors' GitHub repository, whose description names this article, and no recipe reads that layout; the article's full text, where its data availability statement sits, needs publisher access, so its own link to the repository is unconfirmed.",
     "status": "not-fetchable"
   },
   "sources": [
