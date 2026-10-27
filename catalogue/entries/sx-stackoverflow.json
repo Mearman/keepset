@@ -1,0 +1,64 @@
+{
+  "category": "graph/v1",
+  "citations": [
+    {
+      "text": "Ashwin Paranjape, Austin R. Benson, Jure Leskovec (2017). Motifs in Temporal Networks. ACM WSDM."
+    }
+  ],
+  "crosswalk": {
+    "file": "crosswalks/graph-v1/topology.json"
+  },
+  "description": "Temporal network of interactions among Stack Overflow users: answers to questions, comments on questions and comments on answers, one row per interaction with its Unix timestamp.",
+  "domain": "Social network",
+  "expectedCounts": {
+    "edges": 63497050,
+    "nodes": 2601977
+  },
+  "id": "sx-stackoverflow",
+  "licence": {
+    "kind": "unrecorded"
+  },
+  "name": "Stack Overflow Interactions",
+  "properties": {
+    "directed": true,
+    "downloadBytes": 529869668,
+    "edgeTypes": 1,
+    "heterogeneous": false,
+    "multigraph": true,
+    "nodeTypes": 1,
+    "rawBytes": 0,
+    "weighted": false
+  },
+  "recipe": {
+    "archive": {
+      "kind": "gzip"
+    },
+    "parser": {
+      "commentPrefixes": [
+        "#",
+        "%"
+      ],
+      "delimiter": "detect",
+      "encoding": "utf-8",
+      "format": "edge-list",
+      "skipLines": 0,
+      "sourceColumn": 0,
+      "targetColumn": 1
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sameDataAs": [
+    "ss-snap-sx-stackoverflow"
+  ],
+  "sources": [
+    {
+      "retrieved": "2026-10-27",
+      "status": "live",
+      "url": "https://snap.stanford.edu/data/sx-stackoverflow.txt.gz"
+    }
+  ],
+  "tags": [
+    "social"
+  ]
+}
