@@ -218,6 +218,9 @@ export function formatShow(dataset: Dataset): string {
   if (entry.aliases !== undefined) {
     lines.push(`aliases: ${entry.aliases.join(", ")}`);
   }
+  if (entry.sameDataAs !== undefined) {
+    lines.push(`same data as: ${entry.sameDataAs.join(", ")}`);
+  }
   if (entry.subjects !== undefined) {
     lines.push(`subjects: ${entry.subjects.join(", ")}`);
   }

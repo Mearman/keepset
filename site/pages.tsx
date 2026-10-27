@@ -169,13 +169,20 @@ export function homePage(context: PageContext, datasets: readonly Dataset[]): st
   return Layout(context, { title: "keepset: dataset catalogue", description: context.manifest.description, body });
 }
 
+/** An entry that holds the same data as the page's own: enough to link to it and say what it is. */
+export interface SameDataEntry {
+  readonly id: string;
+  readonly name: string;
+}
+
 /**
  * An entry's page: the descriptor, the copyable fetch command, and tables of sources and provenance, licence and citations, recipe, crosswalk rules, expected counts and properties, with the schema.org Dataset JSON-LD in the head.
  * @param context - The page context (`root` is two levels up).
  * @param dataset - The dataset.
+ * @param sameData - The entries that hold the same data, in the order the entry names them.
  * @returns The document.
  */
-export function entryPage(context: PageContext, dataset: Dataset): string {
+export function entryPage(context: PageContext, dataset: Dataset, sameData: readonly SameDataEntry[]): string {
   const { entry, crosswalk } = dataset;
   const pageUrl = `${context.siteUrl}datasets/${entry.id}/`;
   const jsonLd = datasetJsonLd(dataset, pageUrl, context.siteUrl);
@@ -210,6 +217,7 @@ export function entryPage(context: PageContext, dataset: Dataset): string {
       ...(entry.namespace === undefined ? [] : [["Namespace", <code key="namespace"><GroupPath segments={entry.namespace} root={context.root} /></code>] as const]),
       ...(otherGroups.length === 0 ? [] : [["Also in", otherGroups.map((group) => <code key={group.join(NAME_SEPARATOR)}><GroupPath segments={group} root={context.root} /></code>).flatMap((group, index) => (index === 0 ? [group] : [", ", group]))] as const]),
       ...(entry.aliases === undefined ? [] : [["Aliases", entry.aliases.map((alias) => <code key={alias}>{alias}</code>).flatMap((alias, index) => (index === 0 ? [alias] : [", ", alias]))] as const]),
+      ...(sameData.length === 0 ? [] : [["Same data as", sameData.map((other) => <Fragment key={other.id}><a href={`../${other.id}/`}>{other.name}</a> <code>{other.id}</code></Fragment>).flatMap((link, index) => (index === 0 ? [link] : [", ", link]))] as const]),
       ["Category", <code key="category">{entry.category}</code>],
       ["Kind", <a key="kind" href={`../../kinds/${slug(dataset.kind)}/`}>{dataset.kind}</a>],
       ...(entry.domain === undefined ? [] : [["Domain", <a key="domain" href={`../../domains/${slug(entry.domain)}/`}>{entry.domain}</a>] as const]),

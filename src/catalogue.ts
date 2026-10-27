@@ -10,7 +10,7 @@ import { getOwn } from "./own";
 import { recordOf } from "./record";
 
 /**
- * A catalogue index: the manifest, every entry, and every crosswalk file of the catalogue, keyed by its catalogue-relative path. The build assembles it from a catalogue directory; a consumer holding its own catalogue (a fork, say) can pass one to `createCatalogue`. Entry ids are unique, no two entries have the same name once case and surrounding or repeated spaces are ignored (a listing would show two rows a reader cannot tell apart), every fully qualified name (the whole path of an id or alias) identifies one entry and is not another entry's id, every namespace segment the manifest gives aliases to is some entry's segment and no alias is itself one, every crosswalk passes crossmap's structural validation, every crosswalk file reference resolves, and every crosswalk's target is the category of each entry that uses it.
+ * A catalogue index: the manifest, every entry, and every crosswalk file of the catalogue, keyed by its catalogue-relative path. The build assembles it from a catalogue directory; a consumer holding its own catalogue (a fork, say) can pass one to `createCatalogue`. Entry ids are unique, no two entries have the same name once case and surrounding or repeated spaces are ignored (a listing would show two rows a reader cannot tell apart), every fully qualified name (the whole path of an id or alias) identifies one entry and is not another entry's id, every entry `sameDataAs` names exists and names the entry back (the same data is the same data from either side), every namespace segment the manifest gives aliases to is some entry's segment and no alias is itself one, every crosswalk passes crossmap's structural validation, every crosswalk file reference resolves, and every crosswalk's target is the category of each entry that uses it.
  */
 export const CatalogueIndexSchema = define(
   z
@@ -38,6 +38,7 @@ export const CatalogueIndexSchema = define(
       const seen = new Set<string>();
       const ids = new Set(index.entries.map((entry) => entry.id));
       const owners = new Map<string, string>();
+      const sameData = new Map(index.entries.map((entry) => [entry.id, new Set(entry.sameDataAs)]));
       const namers = new Map<string, string>();
       for (const [position, entry] of index.entries.entries()) {
         const listed = entry.name.trim().replace(/\s+/g, " ").toLowerCase();
@@ -51,6 +52,14 @@ export const CatalogueIndexSchema = define(
           ctx.addIssue({ code: "custom", path: ["entries", position, "id"], message: `duplicate entry id ${entry.id}` });
         }
         seen.add(entry.id);
+        for (const other of entry.sameDataAs ?? []) {
+          const theirs = sameData.get(other);
+          if (theirs === undefined) {
+            ctx.addIssue({ code: "custom", path: ["entries", position, "sameDataAs"], message: `${other} is not an entry of the catalogue` });
+          } else if (!theirs.has(entry.id)) {
+            ctx.addIssue({ code: "custom", path: ["entries", position, "sameDataAs"], message: `${other} does not name ${entry.id} back, so the two disagree on whether they hold the same data` });
+          }
+        }
         for (const name of namesOf(entry).full) {
           const owner = owners.get(name);
           if (owner !== undefined && owner !== entry.id) {
