@@ -1,3 +1,11 @@
+# [0.60.0](https://github.com/Mearman/keepset/compare/v0.59.0...v0.60.0) (2026-10-27)
+
+
+### Features
+
+* let an entry name the entries that hold the same data ([409961c](https://github.com/Mearman/keepset/commit/409961c2b4f907bb688c86c141914a41e77fad64))
+* **seed:** record which graph entries hold the same data ([6943a5b](https://github.com/Mearman/keepset/commit/6943a5b90e6ec30caf734d613c919e3ca0d2cd8e))
+
 # [0.59.0](https://github.com/Mearman/keepset/compare/v0.58.1...v0.59.0) (2026-10-26)
 
 
