@@ -14,11 +14,52 @@
     }
   ],
   "crosswalk": {
-    "file": "crosswalks/tasks-v1/nodes.json"
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].score",
+        "op": "move",
+        "to": "nodes[].prize"
+      },
+      {
+        "from": "nodes[].x",
+        "op": "move",
+        "to": "nodes[].x"
+      },
+      {
+        "from": "nodes[].y",
+        "op": "move",
+        "to": "nodes[].y"
+      },
+      {
+        "from": "nodes[].arrival",
+        "op": "move",
+        "to": "nodes[].arrival"
+      },
+      {
+        "from": "nodes[].role",
+        "op": "move",
+        "to": "nodes[].role"
+      }
+    ],
+    "source": "dtop",
+    "target": "tasks/v1"
   },
   "description": "Mendeley Data deposit for the dynamic team orienteering problem of Kirac, Milburn and Gedik, described as benchmark instances adapted from the Chao et al. team orienteering instances at weak, moderate and high dynamism.",
   "domain": "Orienteering",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "instances": 1161
+  },
   "id": "mendeley-data-dynamic-team-orienteering",
   "licence": {
     "id": "CC-BY-4.0",
@@ -29,13 +70,22 @@
     "mendeley-data"
   ],
   "properties": {
-    "downloadBytes": 1956632,
-    "instanceCount": 1161,
+    "downloadBytes": 982533,
     "surveyId": "or-2"
   },
   "recipe": {
-    "reason": "The deposit holds 1,161 plain text instance files, each a header of the node count, team size and time limit above a row of coordinates, score and arrival time for each node, and an Excel workbook of aggregate results per solved instance; no parser reads that instance layout, and the workbook has no row for a place or a task.",
-    "status": "not-fetchable"
+    "archive": {
+      "kind": "zip",
+      "members": {
+        "pattern": ".*/d[hmw]\\.p\\d+\\.\\d+\\.[a-z]+\\.txt"
+      }
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "dtop"
+    },
+    "source": 1,
+    "status": "fetchable"
   },
   "sources": [
     {
@@ -48,6 +98,11 @@
       },
       "status": "live",
       "url": "https://data.mendeley.com/datasets/xnf6c4d5gt/1"
+    },
+    {
+      "retrieved": "2026-10-19",
+      "status": "live",
+      "url": "https://data.mendeley.com/public-api/zip/xnf6c4d5gt/download/1"
     }
   ],
   "subjects": [

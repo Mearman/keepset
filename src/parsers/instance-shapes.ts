@@ -5,7 +5,7 @@ import { TDC_COLUMNS, TDC_META, TDC_TEXT_COLUMNS } from "./tdc";
 import { VEROLOG_2017_COLUMNS, VEROLOG_2017_META, VEROLOG_2017_TEXT_COLUMNS } from "./verolog-2017";
 import { CUSTOMER_POINTS_COLUMNS, CUSTOMER_POINTS_META, CUSTOMER_POINTS_TEXT_COLUMNS } from "./customer-points";
 import { SOLOMON_COLUMNS, SOLOMON_META, SOLOMON_TEXT_COLUMNS } from "./solomon";
-import { TOP_COLUMNS, TOP_META, TOP_TEXT_COLUMNS } from "./top";
+import { DTOP_COLUMNS, TOP_COLUMNS, TOP_META, TOP_TEXT_COLUMNS } from "./top";
 import { TSPLIB_COLUMNS, TSPLIB_META, TSPLIB_TEXT_COLUMNS } from "./tsplib";
 import { VEROLOG_2019_COLUMNS, VEROLOG_2019_META, VEROLOG_2019_TEXT_COLUMNS } from "./verolog-2019";
 import { VRP_REP_COLUMNS, VRP_REP_META, VRP_REP_TEXT_COLUMNS } from "./vrp-rep";
@@ -16,6 +16,7 @@ export const INSTANCE_SHAPES = {
   "customer-points": { columns: CUSTOMER_POINTS_COLUMNS, text: CUSTOMER_POINTS_TEXT_COLUMNS, meta: CUSTOMER_POINTS_META },
   solomon: { columns: SOLOMON_COLUMNS, text: SOLOMON_TEXT_COLUMNS, meta: SOLOMON_META },
   top: { columns: TOP_COLUMNS, text: TOP_TEXT_COLUMNS, meta: TOP_META },
+  dtop: { columns: DTOP_COLUMNS, text: TOP_TEXT_COLUMNS, meta: TOP_META },
   "verolog-2019": { columns: VEROLOG_2019_COLUMNS, text: VEROLOG_2019_TEXT_COLUMNS, meta: VEROLOG_2019_META },
   "vrp-rep": { columns: VRP_REP_COLUMNS, text: VRP_REP_TEXT_COLUMNS, meta: VRP_REP_META },
   tsplib: { columns: TSPLIB_COLUMNS, text: TSPLIB_TEXT_COLUMNS, meta: TSPLIB_META },

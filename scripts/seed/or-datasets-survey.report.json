@@ -24,11 +24,12 @@
     },
     {
       "flags": [
-        "The page describes benchmark instances, but the file in version 1 holds solution values and run statistics, not instances."
+        "the deposit's whole-dataset zip holds 1,161 instance files in seven folders, one file for each of three degrees of dynamism (dh, dm and dw), and a workbook of aggregate results that is not read",
+        "each row ends with the time its point becomes known, kept as the node's arrival column; the first and last points are the start and the end",
+        "positions and times are in the same planar unit, which the format does not name"
       ],
       "id": "mendeley-data-dynamic-team-orienteering",
-      "reason": "The deposit holds 1,161 plain text instance files, each a header of the node count, team size and time limit above a row of coordinates, score and arrival time for each node, and an Excel workbook of aggregate results per solved instance; no parser reads that instance layout, and the workbook has no row for a place or a task.",
-      "recipe": "not-fetchable",
+      "recipe": "fetchable",
       "surveyId": "or-2"
     },
     {
