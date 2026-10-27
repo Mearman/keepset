@@ -12,7 +12,7 @@
   "crosswalk": {
     "file": "crosswalks/tasks-v1/nodes.json"
   },
-  "description": "Instances for the multi-period electric vehicle home health care routing and scheduling problem with uncertain travel times and service durations, from Yin et al. in Omega. The publisher's page refuses automated requests, so this rests on the survey item and the article's metadata.",
+  "description": "Instances for the multi-period electric vehicle home health care routing and scheduling problem with uncertain travel times and service durations, from Yin et al. in Omega. The instances are in the authors' GitHub repository, whose description names the article; the publisher's page answers a robot check, so the article's own link to the repository is unconfirmed.",
   "domain": "Technician and home-care routing",
   "expectedCounts": {},
   "id": "elsevier-ev-hhcrsp-multi-period",
@@ -24,10 +24,12 @@
     "elsevier"
   ],
   "properties": {
+    "downloadBytes": 42044,
+    "instanceCount": 32,
     "surveyId": "or-18"
   },
   "recipe": {
-    "reason": "The survey URL is a journal article DOI and no dataset download was found.",
+    "reason": "The instances are pairs of patient and caregiver text files in four size folders of the authors' GitHub repository, whose description names this article, and no recipe reads that layout; the article page answers a robot check, so its own link to the repository is unconfirmed.",
     "status": "not-fetchable"
   },
   "sources": [
@@ -35,6 +37,11 @@
       "retrieved": "2026-10-19",
       "status": "live",
       "url": "https://doi.org/10.1016/j.omega.2026.103587"
+    },
+    {
+      "retrieved": "2026-10-19",
+      "status": "live",
+      "url": "https://github.com/qingl-a/Instances"
     }
   ],
   "subjects": [
