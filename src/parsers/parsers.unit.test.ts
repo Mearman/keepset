@@ -305,6 +305,33 @@ describe("the top parser", () => {
   });
 });
 
+describe("the dtop parser", () => {
+  const dtop: Parser = { format: "dtop", encoding: "utf-8" };
+  const text = "n 4\nm 2\ntmax 25.0\n10.5\t14.4\t0\t0.0\n18.0\t15.9\t10\t16.9\n18.3\t13.3\t10\t6.7\n11.2\t14.1\t0\t0.0\n";
+
+  it("reads the points of a team orienteering file with the time each becomes known", () => {
+    expect(parseNative(utf8(text), dtop)).toEqual({
+      meta: { points: 4, paths: 2, budget: 25 },
+      nodes: [
+        { id: "0", x: 10.5, y: 14.4, score: 0, arrival: 0, role: "start" },
+        { id: "1", x: 18, y: 15.9, score: 10, arrival: 16.9, role: "visit" },
+        { id: "2", x: 18.3, y: 13.3, score: 10, arrival: 6.7, role: "visit" },
+        { id: "3", x: 11.2, y: 14.1, score: 0, arrival: 0, role: "end" },
+      ],
+    });
+  });
+
+  it("rejects a row without the arrival time or with a fifth number, and names itself in the error", () => {
+    expect(parseError(() => parseNative(utf8(text.replace("18.0\t15.9\t10\t16.9", "18.0\t15.9\t10")), dtop)).message).toMatch(/dtop line 5: expected four numbers/);
+    expect(parseError(() => parseNative(utf8(text.replace("18.0\t15.9\t10\t16.9", "18.0\t15.9\t10\t16.9\t1")), dtop)).message).toMatch(/dtop line 5: expected four numbers/);
+    expect(parseError(() => parseNative(utf8(text.replace("n 4", "n 5")), dtop)).message).toMatch(/header gives 5 points, found 4 rows/);
+  });
+
+  it("is refused by the top parser, whose rows are three numbers", () => {
+    expect(parseError(() => parseNative(utf8(text), { format: "top", encoding: "utf-8" })).message).toMatch(/top line 4: expected three numbers/);
+  });
+});
+
 describe("the tsplib parser", () => {
   const tsplib: Parser = { format: "tsplib", encoding: "utf-8" };
   const pop = (weights: string, body: string, probabilities = "1 0 1.0\n2 45 0.31\n3 45 0.62\n"): string =>

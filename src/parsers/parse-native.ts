@@ -18,7 +18,7 @@ import type { NativeDocument, NativeGraph, NativeInstance, NativeTable } from ".
 import { parsePajek } from "./pajek";
 import { parseCustomerPoints } from "./customer-points";
 import { parseSolomon } from "./solomon";
-import { parseTop } from "./top";
+import { parseDtop, parseTop } from "./top";
 import { parseToptw } from "./toptw";
 import { parseTsplib } from "./tsplib";
 import { parseUcinetDl } from "./ucinet-dl";
@@ -192,6 +192,9 @@ export function parseNative(bytes: Uint8Array, parser: Parser): NativeDocument {
   }
   if (parser.format === "top") {
     return parseTop(text);
+  }
+  if (parser.format === "dtop") {
+    return parseDtop(text);
   }
   if (parser.format === "toptw") {
     return parseToptw(text);

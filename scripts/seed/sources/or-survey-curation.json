@@ -3665,7 +3665,9 @@
       ],
       "description": "Mendeley Data deposit for the dynamic team orienteering problem of Kirac, Milburn and Gedik, described as benchmark instances adapted from the Chao et al. team orienteering instances at weak, moderate and high dynamism.",
       "flags": [
-        "The page describes benchmark instances, but the file in version 1 holds solution values and run statistics, not instances."
+        "the deposit's whole-dataset zip holds 1,161 instance files in seven folders, one file for each of three degrees of dynamism (dh, dm and dw), and a workbook of aggregate results that is not read",
+        "each row ends with the time its point becomes known, kept as the node's arrival column; the first and last points are the start and the end",
+        "positions and times are in the same planar unit, which the format does not name"
       ],
       "id": "mendeley-data-dynamic-team-orienteering",
       "licence": {
@@ -3679,13 +3681,30 @@
       "name": "Dynamic team orienteering problem",
       "namespace": "mendeley-data",
       "outcome": {
-        "reason": "The deposit holds 1,161 plain text instance files, each a header of the node count, team size and time limit above a row of coordinates, score and arrival time for each node, and an Excel workbook of aggregate results per solved instance; no parser reads that instance layout, and the workbook has no row for a place or a task.",
-        "status": "not-fetchable",
-        "instances": 1161,
-        "downloadBytes": 1956632,
-        "evidence": "The Mendeley Data public API lists 1,169 files totalling this many bytes, of which the description's 1,161 benchmark instances are plain text files."
+        "status": "fetchable-instance-files",
+        "archive": {
+          "kind": "zip",
+          "members": {
+            "pattern": ".*/d[hmw]\\.p\\d+\\.\\d+\\.[a-z]+\\.txt"
+          }
+        },
+        "parser": {
+          "format": "dtop",
+          "encoding": "utf-8"
+        },
+        "map": {
+          "x": "x",
+          "y": "y",
+          "prize": "score"
+        },
+        "keep": [
+          "arrival",
+          "role"
+        ],
+        "expectedInstances": 1161
       },
-      "surveyId": "or-2"
+      "surveyId": "or-2",
+      "downloadUrl": "https://data.mendeley.com/public-api/zip/xnf6c4d5gt/download/1"
     },
     {
       "description": "Register of licensed contractors in Washington State with specialty, status and licence effective and expiry dates.",

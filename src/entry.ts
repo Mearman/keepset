@@ -310,6 +310,7 @@ export const ParserSchema = z.discriminatedUnion("format", [
   z.object({ format: z.literal("customer-points"), encoding: EncodingSchema }).strict(),
   z.object({ format: z.literal("solomon"), encoding: EncodingSchema }).strict(),
   z.object({ format: z.literal("top"), encoding: EncodingSchema }).strict(),
+  z.object({ format: z.literal("dtop"), encoding: EncodingSchema }).strict(),
   z.object({ format: z.literal("toptw"), encoding: EncodingSchema }).strict(),
   z.object({ format: z.literal("tsplib"), encoding: EncodingSchema }).strict(),
   z.object({ format: z.literal("verolog-2019"), encoding: z.literal("utf-8") }).strict(),
