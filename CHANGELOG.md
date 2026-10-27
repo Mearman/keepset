@@ -1,3 +1,15 @@
+# [0.64.0](https://github.com/Mearman/keepset/compare/v0.63.0...v0.64.0) (2026-10-27)
+
+
+### Bug Fixes
+
+* **seed:** say what the Omega article's abstract confirms about its instances ([379c626](https://github.com/Mearman/keepset/commit/379c6260283ba67cc79501c77a5a1f4d5a3a52bb))
+
+
+### Features
+
+* **seed:** record the repository and figures of the Omega EV instances ([d5d291e](https://github.com/Mearman/keepset/commit/d5d291e55f1d4227cab9d969a4d294ecf9ebf7ac))
+
 # [0.63.0](https://github.com/Mearman/keepset/compare/v0.62.0...v0.63.0) (2026-10-27)
 
 
