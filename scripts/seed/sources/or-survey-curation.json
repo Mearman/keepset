@@ -3606,7 +3606,7 @@
           "doi": "10.1016/j.omega.2026.103587"
         }
       ],
-      "description": "Instances for the multi-period electric vehicle home health care routing and scheduling problem with uncertain travel times and service durations, from Yin et al. in Omega. The instances are in the authors' GitHub repository, whose description names the article; the publisher's page answers a robot check, so the article's own link to the repository is unconfirmed.",
+      "description": "Instances for the multi-period electric vehicle home health care routing and scheduling problem with uncertain travel times and service durations, from Yin et al. in Omega. The instances are in the authors' GitHub repository, whose description names the article and whose folders of 20, 25, 30 and 35 patients match the sizes the article's abstract reports; the data availability statement is in the full text, which needs publisher access.",
       "flags": [
         "Only the Elsevier text and data mining licence for the article was found, not a dataset licence."
       ],
@@ -3621,7 +3621,7 @@
       "namespace": "elsevier",
       "outcome": {
         "status": "not-fetchable",
-        "reason": "The instances are pairs of patient and caregiver text files in four size folders of the authors' GitHub repository, whose description names this article, and no recipe reads that layout; the article page answers a robot check, so its own link to the repository is unconfirmed.",
+        "reason": "The instances are pairs of patient and caregiver text files in four size folders of the authors' GitHub repository, whose description names this article, and no recipe reads that layout; the article's full text, where its data availability statement sits, needs publisher access, so its own link to the repository is unconfirmed.",
         "instances": 32,
         "downloadBytes": 42044,
         "evidence": "The repository's file tree lists 65 files in the folders 20, 25, 30 and 35, eight caregiver and eight patient files for each size, so 32 instances, totalling this many bytes."
