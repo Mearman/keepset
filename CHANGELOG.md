@@ -1,3 +1,10 @@
+# [0.65.0](https://github.com/Mearman/keepset/compare/v0.64.0...v0.65.0) (2026-10-27)
+
+
+### Features
+
+* **seed:** pin and size the uni_chimera_i2 capture ([217f342](https://github.com/Mearman/keepset/commit/217f34278ef43e2d7b7bcacff785523f0f264dad))
+
 # [0.64.0](https://github.com/Mearman/keepset/compare/v0.63.0...v0.64.0) (2026-10-27)
 
 
