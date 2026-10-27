@@ -1,3 +1,10 @@
+# [0.62.0](https://github.com/Mearman/keepset/compare/v0.61.0...v0.62.0) (2026-10-27)
+
+
+### Features
+
+* **seed:** read the daily instances of the Zenodo pharmaceutical dataset ([e5bfc7a](https://github.com/Mearman/keepset/commit/e5bfc7aee86f2e53a65207dfcf79ada49dbaa8b9))
+
 # [0.61.0](https://github.com/Mearman/keepset/compare/v0.60.0...v0.61.0) (2026-10-27)
 
 
