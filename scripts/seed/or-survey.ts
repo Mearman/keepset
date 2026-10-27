@@ -155,8 +155,18 @@ export const InstanceFilesOutcomeSchema = z
   .refine((outcome) => (outcome.archive === undefined) !== (outcome.files === undefined), { message: "an instance files outcome reads one download (archive) or separate downloads (files), not both or neither" });
 export type InstanceFilesOutcome = z.infer<typeof InstanceFilesOutcomeSchema>;
 
-/** A dataset with no recipe yet, and why. */
-export const NotFetchableOutcomeSchema = z.object({ status: z.literal("not-fetchable"), reason: prose() }).strict();
+/** A dataset with no recipe yet, and why. Where the publisher's own API, headers or documentation state how much the dataset holds, or the files were counted, the outcome records the figures and where they were read (`evidence` is required with any of them): `nodes` is the number of places or tasks, `instances` the number of instance files a collection holds, and `downloadBytes` the size of everything the publisher offers for download, so the listing can still state them. */
+export const NotFetchableOutcomeSchema = z
+  .object({
+    status: z.literal("not-fetchable"),
+    reason: prose(),
+    nodes: z.int().min(0).optional(),
+    instances: z.int().min(0).optional(),
+    downloadBytes: z.int().positive().optional(),
+    evidence: prose().optional(),
+  })
+  .strict()
+  .refine((outcome) => (outcome.nodes === undefined && outcome.instances === undefined && outcome.downloadBytes === undefined) === (outcome.evidence === undefined), { message: "figures and the evidence they were read from come together" });
 
 /** The prose that says what a dataset is: the same text as other prose in the catalogue, and not blank, since an entry with nothing to read in a listing cannot be told from its neighbours. */
 const description = (): z.ZodString => prose().refine((text) => text.trim() !== "", { message: "must not be blank" });

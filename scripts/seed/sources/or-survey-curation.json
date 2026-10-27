@@ -494,7 +494,10 @@
       "namespace": "cfpb",
       "outcome": {
         "reason": "The bulk download is a zip of 355,930,383 bytes covering every product, and the debt collection subset is reachable only through the complaint search API, whose CSV export answers every request with a 400 naming its size parameter and whose JSON results past the first ten thousand are reached only through search_after break points, a paging no recipe reads; the subset is small enough to hold, so the obstacle is the paging and not the size.",
-        "status": "not-fetchable"
+        "status": "not-fetchable",
+        "nodes": 1223396,
+        "downloadBytes": 358982910,
+        "evidence": "The complaint search API (size=0, product Debt collection) reports this many complaints, and the Content-Length of the bulk zip that covers every product is this many bytes. Both grow daily."
       },
       "surveyId": "or-105"
     },
@@ -834,7 +837,10 @@
       "namespace": "mendeley-data",
       "outcome": {
         "reason": "The download is hundreds of small Excel workbooks whose task sheets have no coordinates (places exist only as distance matrices) and whose file names repeat across folders, so no recipe can name one table.",
-        "status": "not-fetchable"
+        "status": "not-fetchable",
+        "instances": 310,
+        "downloadBytes": 27011797,
+        "evidence": "The Mendeley Data public API lists 310 workbooks, one instance each, totalling this many bytes."
       },
       "surveyId": "or-11"
     },
@@ -1546,7 +1552,10 @@
       "namespace": "defra",
       "outcome": {
         "reason": "The yearly download is a zip holding a ten sheet xlsx workbook with a title row above each header, durations as Excel day fractions and outlet positions only as National Grid references, so a workbook inside a zip with no coordinates in degrees has no recipe; the host the landing page names has no address, so the files are fetched through the catalogue's download API.",
-        "status": "not-fetchable"
+        "status": "not-fetchable",
+        "nodes": 14302,
+        "downloadBytes": 6017716,
+        "evidence": "Counted from the All WaSC sheet of the latest annual workbook (the 2025 return), which equals the sum of its company sheets; the size is the Content-Length the download serves for that year's zip. A return is added each year."
       },
       "surveyId": "or-119"
     },
@@ -3636,7 +3645,10 @@
       "namespace": "cqc",
       "outcome": {
         "reason": "The CSV has a title and a production note above its header and its address contains the month it was produced, so it changes every month and has no stable download URL.",
-        "status": "not-fetchable"
+        "status": "not-fetchable",
+        "nodes": 57107,
+        "downloadBytes": 18957416,
+        "evidence": "Counted from the directory CSV of the month it was read: its data rows below the title lines and header, each a distinct CQC location. The server states no length, so the size is the bytes of a full identity-encoded download. Both change with each monthly file."
       },
       "surveyId": "or-19"
     },
@@ -3667,8 +3679,11 @@
       "name": "Dynamic team orienteering problem",
       "namespace": "mendeley-data",
       "outcome": {
-        "reason": "The only file is an Excel workbook of aggregate results per solved instance, with no row for a place or a task, so there are no nodes to map.",
-        "status": "not-fetchable"
+        "reason": "The deposit holds 1,161 plain text instance files, each a header of the node count, team size and time limit above a row of coordinates, score and arrival time for each node, and an Excel workbook of aggregate results per solved instance; no parser reads that instance layout, and the workbook has no row for a place or a task.",
+        "status": "not-fetchable",
+        "instances": 1161,
+        "downloadBytes": 1956632,
+        "evidence": "The Mendeley Data public API lists 1,169 files totalling this many bytes, of which the description's 1,161 benchmark instances are plain text files."
       },
       "surveyId": "or-2"
     },
@@ -3813,7 +3828,10 @@
       "namespace": "mendeley-data",
       "outcome": {
         "status": "not-fetchable",
-        "reason": "Each instance is a MATLAB 5 file whose orders, the nodes with their quantities, mix codes and delivery times, are a MATLAB table of datetime and other class objects, which MATLAB stores in the file's undocumented MCOS subsystem data rather than as arrays; the only plain arrays are the travel time and distance matrices, so nothing at node level can be read without reverse engineering that serialisation."
+        "reason": "Each instance is a MATLAB 5 file whose orders, the nodes with their quantities, mix codes and delivery times, are a MATLAB table of datetime and other class objects, which MATLAB stores in the file's undocumented MCOS subsystem data rather than as arrays; the only plain arrays are the travel time and distance matrices, so nothing at node level can be read without reverse engineering that serialisation.",
+        "instances": 263,
+        "downloadBytes": 1123289,
+        "evidence": "The Mendeley Data public API lists 269 files totalling this many bytes, and the description states 263 instances, one MATLAB file for each."
       },
       "surveyId": "or-22"
     },
@@ -4969,7 +4987,10 @@
       "namespace": "amazon",
       "outcome": {
         "reason": "The data is large nested JSON with bare NaN tokens, the largest file is 1.8 GB, and keepset has no JSON parser for it.",
-        "status": "not-fetchable"
+        "status": "not-fetchable",
+        "nodes": 1337758,
+        "downloadBytes": 3338803214,
+        "evidence": "The public S3 bucket listing (anonymous ListObjectsV2, prefix almrrc2021/) holds 28 objects totalling this many bytes. The stops are the 904,527 of the 6,112 training routes and the 433,231 of the 3,052 evaluation routes in the two route data files, depots included, counted from the files."
       },
       "surveyId": "or-27"
     },
@@ -5182,7 +5203,10 @@
       "namespace": "github-meituan",
       "outcome": {
         "reason": "The data is released under CC BY-NC 4.0 with a bar on passing it to third parties without permission, and its coordinates are shifted by the publisher, so they are not WGS84 positions.",
-        "status": "not-fetchable"
+        "status": "not-fetchable",
+        "nodes": 654343,
+        "downloadBytes": 56205945,
+        "evidence": "The repository's data description PDF states this many rows in the waybill table; the four data files total this many bytes in the repository's tree listing."
       },
       "surveyId": "or-30"
     },
@@ -5282,7 +5306,10 @@
       "namespace": "kaggle",
       "outcome": {
         "reason": "The records are patient level health data under CC BY-NC-SA 4.0 with no location column.",
-        "status": "not-fetchable"
+        "status": "not-fetchable",
+        "nodes": 110527,
+        "downloadBytes": 10739535,
+        "evidence": "The dataset description states 110.527 appointments, and Kaggle's public dataset view reports this total size."
       },
       "surveyId": "or-32"
     },
@@ -5425,7 +5452,10 @@
       "namespace": "mendeley-data",
       "outcome": {
         "reason": "The county-level file is one download of 14,365,643 rows, more cells than a fetch can hold even for the id alone, and a recipe streams only a paged source, since a single file is downloaded whole before it is read; 8,264 of its rows also have unquoted commas in the state and county names of the armed forces entries, which the csv-table parser refuses at line 1892.",
-        "status": "not-fetchable"
+        "status": "not-fetchable",
+        "nodes": 14365643,
+        "downloadBytes": 916897688,
+        "evidence": "The county waits file of the current version has this Content-Length, and the row count is the one the entry's probe read."
       },
       "surveyId": "or-35"
     },
@@ -6650,7 +6680,10 @@
       "namespace": "leeds",
       "outcome": {
         "reason": "Each quarter is its own file at its own tokenised address, the later quarters are xlsx, and each CSV has a title row above its header and a summary block and blank rows below its data.",
-        "status": "not-fetchable"
+        "status": "not-fetchable",
+        "nodes": 19172,
+        "downloadBytes": 1748960,
+        "evidence": "Counted from the 21 quarterly files listed on the dataset page when it was read: the rows whose client or site is Leeds City Council, excluding headers and summary rows. The sizes of the same 21 files sum to this many bytes. A file is added each quarter."
       },
       "surveyId": "or-53"
     },
@@ -6941,7 +6974,10 @@
       "namespace": "camden",
       "outcome": {
         "reason": "This survey item is the same Socrata dataset as or-70 (x43g-c2rf), whose entry carries the recipe, so it is not given a second one.",
-        "status": "not-fetchable"
+        "status": "not-fetchable",
+        "nodes": 3411,
+        "downloadBytes": 4098470,
+        "evidence": "The Socrata count query on x43g-c2rf reports this many rows when read, and a full download of its CSV is this many bytes; this is the table camden-hmo-licensing-register reads."
       },
       "surveyId": "or-58"
     },
@@ -7924,8 +7960,11 @@
       "name": "Pharmaceutical last-mile delivery dataset (Vrani et al.)",
       "namespace": "zenodo",
       "outcome": {
-        "reason": "The download is a zip of Excel workbooks that hold distance and time matrices only, so there are no nodes to map, and keepset reads a sheet of a workbook, not a workbook inside a zip.",
-        "status": "not-fetchable"
+        "reason": "The zip holds an orders workbook with a sheet for each of nine daily instances, whose rows give a node's weight, volume, service time, earliest arrival, latitude and time window, beside workbooks of distance and time matrices; a collection reads a file for each instance, not a sheet, and keepset does not read a workbook inside a zip.",
+        "status": "not-fetchable",
+        "nodes": 653,
+        "downloadBytes": 2926700,
+        "evidence": "Counted from the order sheets of orders.xlsx, the nine daily instances' order rows; the Zenodo files API gives the size of the data.zip that holds them."
       },
       "surveyId": "or-7"
     },
@@ -8366,7 +8405,9 @@
       "namespace": "overheid-nl",
       "outcome": {
         "status": "not-fetchable",
-        "reason": "The source is an SRU search interface whose Gemeenteblad environmental permit notices are a result set of well over a million records, while the interface serves at most 100 records a request and none past the 10,000th of a result set; a fetch would have to split the query by date into hundreds of windows and make more than ten thousand requests for gigabytes of XML, which no recipe reads, and a single window of the set is not this dataset."
+        "reason": "The source is an SRU search interface whose Gemeenteblad environmental permit notices are a result set of well over a million records, while the interface serves at most 100 records a request and none past the 10,000th of a result set; a fetch would have to split the query by date into hundreds of windows and make more than ten thousand requests for gigabytes of XML, which no recipe reads, and a single window of the set is not this dataset.",
+        "nodes": 1703169,
+        "evidence": "The SRU search for Gemeenteblad notices of type omgevingsvergunning reports this many records when read; the interface serves a hundred records a request and offers no single download, and notices are added daily."
       },
       "surveyId": "or-74"
     },
@@ -8459,7 +8500,10 @@
       "namespace": "madrid",
       "outcome": {
         "reason": "The CSV is not valid RFC 4180: a quote opens inside an unquoted field (first at line 183433), so the csv-table parser refuses the file.",
-        "status": "not-fetchable"
+        "status": "not-fetchable",
+        "nodes": 197432,
+        "downloadBytes": 55676106,
+        "evidence": "Counted from the May 2026 resource the entry points at, decoded as latin1: its data lines below the header. The download's Content-Length and the portal's CKAN record both give this size."
       },
       "surveyId": "or-76"
     },
@@ -8663,7 +8707,10 @@
       "namespace": "mendeley-data",
       "outcome": {
         "reason": "The only file is an Excel workbook with a row per stop visit of a route that holds minute offsets and distances between stops and no location, so the only node field it could fill is a time window and a fetch would carry no place.",
-        "status": "not-fetchable"
+        "status": "not-fetchable",
+        "nodes": 249231,
+        "downloadBytes": 19713337,
+        "evidence": "Counted from the one sheet of the workbook, a row for each stop visit below the header; the Mendeley Data API and the download give this size."
       },
       "surveyId": "or-8"
     },
@@ -8685,8 +8732,11 @@
       "name": "Expiation notice system data (South Australia)",
       "namespace": "south-australia",
       "outcome": {
-        "reason": "The portal answered a bot challenge to automated requests for the table dumps when probed, and the data is a file per financial year and report type with different columns before and after 2022, so no single recipe covers the dataset.",
-        "status": "not-fetchable"
+        "reason": "The data is a file per financial year and report type, with different columns before and after 2022, and the earliest year is a raw CSV where the later ones are zips, so no single recipe covers the dataset.",
+        "status": "not-fetchable",
+        "nodes": 8536728,
+        "downloadBytes": 266291023,
+        "evidence": "Counted from the 26 notice data files that CKAN package_show lists, excluding the data dictionary, the camera location list, the PDFs and the mobile camera codes: their data rows below the headers, and their Content-Lengths summed. A file is added each year."
       },
       "surveyId": "or-80"
     },

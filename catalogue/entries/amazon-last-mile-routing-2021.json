@@ -25,6 +25,8 @@
     "amazon"
   ],
   "properties": {
+    "downloadBytes": 3338803214,
+    "probedNodes": 1337758,
     "surveyId": "or-27"
   },
   "recipe": {

@@ -21,6 +21,8 @@
     "cfpb"
   ],
   "properties": {
+    "downloadBytes": 358982910,
+    "probedNodes": 1223396,
     "surveyId": "or-105"
   },
   "recipe": {

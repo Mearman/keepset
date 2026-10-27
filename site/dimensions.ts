@@ -29,6 +29,9 @@ export function isBytesProperty(key: string): boolean {
   return key === BYTES_PROPERTY || key === DOWNLOAD_BYTES_PROPERTY;
 }
 
+/** The property key that records how many instance files a collection holds, for an entry with no recipe to read them, as its publisher states or the files were counted. */
+export const INSTANCE_COUNT_PROPERTY = "instanceCount";
+
 /** The property key that records the node count a probe read from a source that grows, which a fetch does not assert. */
 export const PROBED_NODES_PROPERTY = "probedNodes";
 
@@ -42,12 +45,14 @@ export function dimensionsOf(entry: Entry): Dimensions {
   const bytes = [properties[DOWNLOAD_BYTES_PROPERTY], properties[BYTES_PROPERTY]].find((candidate): candidate is number => typeof candidate === "number" && candidate > 0);
   const probed = properties[PROBED_NODES_PROPERTY];
   const asserted = expectedCounts["nodes"];
+  const stated = properties[INSTANCE_COUNT_PROPERTY];
+  const instances = expectedCounts["instances"] ?? (typeof stated === "number" ? stated : undefined);
   const nodes: Dimensions = asserted !== undefined ? { nodes: asserted } : typeof probed === "number" ? { nodes: probed, probed: true } : {};
 
   return {
     ...nodes,
     ...(expectedCounts["edges"] === undefined ? {} : { edges: expectedCounts["edges"] }),
-    ...(expectedCounts["instances"] === undefined ? {} : { instances: expectedCounts["instances"] }),
+    ...(instances === undefined ? {} : { instances }),
     ...(bytes === undefined ? {} : { bytes }),
     ...(entry.recipe.status === "fetchable" && "paging" in entry.recipe && entry.recipe.paging !== undefined ? { paged: true as const } : {}),
   };

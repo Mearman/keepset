@@ -39,6 +39,11 @@ describe("dimensionsOf", () => {
     expect(dimensionsOf(parseEntry({ ...liveEntry, properties: { probedNodes: 1 } }))).toEqual({ nodes: KARATE_NODES, edges: KARATE_EDGES });
   });
 
+  it("reads the instance count and download size an entry with no recipe records from its publisher", () => {
+    const stated = parseEntry({ ...taskCollectionEntry, expectedCounts: {}, properties: { instanceCount: 310, downloadBytes: 2048 } });
+    expect(dimensionsOf(stated)).toEqual({ instances: 310, bytes: 2048 });
+  });
+
   it("leaves out what an entry does not record", () => {
     expect(dimensionsOf(parseEntry({ ...liveEntry, expectedCounts: {}, properties: {} }))).toEqual({});
   });

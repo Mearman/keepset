@@ -20,12 +20,17 @@
     "camden"
   ],
   "properties": {
+    "downloadBytes": 4098470,
+    "probedNodes": 3411,
     "surveyId": "or-58"
   },
   "recipe": {
     "reason": "This survey item is the same Socrata dataset as or-70 (x43g-c2rf), whose entry carries the recipe, so it is not given a second one.",
     "status": "not-fetchable"
   },
+  "sameDataAs": [
+    "camden-hmo-licensing-register"
+  ],
   "sources": [
     {
       "retrieved": "2026-10-19",

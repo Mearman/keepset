@@ -121,6 +121,10 @@
     [
       "sx-stackoverflow",
       "ss-snap-sx-stackoverflow"
+    ],
+    [
+      "camden-hmo-licensing-register",
+      "camden-hmo-licensing-register-duplicate"
     ]
   ]
 }

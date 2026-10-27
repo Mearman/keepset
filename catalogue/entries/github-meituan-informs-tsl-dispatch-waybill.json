@@ -25,6 +25,8 @@
     "github-meituan"
   ],
   "properties": {
+    "downloadBytes": 56205945,
+    "probedNodes": 654343,
     "surveyId": "or-30"
   },
   "recipe": {
