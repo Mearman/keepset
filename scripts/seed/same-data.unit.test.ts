@@ -13,8 +13,12 @@ describe("withSameData", () => {
     expect(result.map((item) => item.sameDataAs)).toEqual([["b", "c"], ["a", "c"], ["a", "b"], undefined]);
   });
 
-  it("refuses a group that names an id no entry has", () => {
+  it("refuses a group that names an id this import did not produce beside one it did", () => {
     expect(() => withSameData(entries, { groups: [["a", "missing"]] })).toThrow("missing");
+  });
+
+  it("skips a group none of whose entries this import produced", () => {
+    expect(withSameData(entries, { groups: [["x", "y"]] })).toEqual(entries);
   });
 
   it("refuses an entry in two groups", () => {

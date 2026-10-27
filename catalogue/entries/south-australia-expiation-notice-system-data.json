@@ -20,10 +20,12 @@
     "south-australia"
   ],
   "properties": {
+    "downloadBytes": 266291023,
+    "probedNodes": 8536728,
     "surveyId": "or-80"
   },
   "recipe": {
-    "reason": "The portal answered a bot challenge to automated requests for the table dumps when probed, and the data is a file per financial year and report type with different columns before and after 2022, so no single recipe covers the dataset.",
+    "reason": "The data is a file per financial year and report type, with different columns before and after 2022, and the earliest year is a raw CSV where the later ones are zips, so no single recipe covers the dataset.",
     "status": "not-fetchable"
   },
   "sources": [

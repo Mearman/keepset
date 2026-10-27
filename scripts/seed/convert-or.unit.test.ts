@@ -8,7 +8,7 @@ import { zip } from "../../src/test-support/archives";
 import { fixtureManifest } from "../../src/test-support/entries";
 import { convertItem, convertSurvey, MAX_CELLS, PAGE_ROWS, pagingOf, SUBJECT } from "./convert-or";
 import { licenceMetadata } from "./licence";
-import { CurationItemSchema, SurveySourceSchema, TARGET_FIELD_NAMES, TARGET_FIELDS } from "./or-survey";
+import { CurationItemSchema, NotFetchableOutcomeSchema, SurveySourceSchema, TARGET_FIELD_NAMES, TARGET_FIELDS } from "./or-survey";
 
 const STATED = { licence: { kind: "spdx", id: "CC-BY-4.0" }, statedAt: "https://example.org/requests", statement: "The page says the data are licensed under CC BY 4.0." };
 const UNSTATED = { readAt: ["https://example.org/about"], reason: "The page states no licence." };
@@ -150,6 +150,21 @@ describe("convertSurvey", () => {
     expect(instances?.aliases).toBeUndefined();
     expect(report.outcomes[0]).toEqual({ surveyId: "or-2", id: "classic-instances", recipe: "not-fetchable", reason: "the instances are in a text format with no parser yet", flags: [] });
     expect(report.outcomes[1]).toEqual({ surveyId: "or-10", id: "example-service-requests", recipe: "fetchable", flags: ["personal data in one column, not mapped"] });
+  });
+
+  it("records the figures a no-recipe item's publisher states, as properties", () => {
+    const outcome = { status: "not-fetchable", reason: "the instances are in a text format with no parser yet", nodes: 653, instances: 9, downloadBytes: 2048, evidence: "The files API lists the zip's size." };
+    const [first, second] = curation.items;
+    const figured = convertSurvey(survey, { ...curation, items: [first, { ...second, outcome }] }, none).entries.find((entry) => entry.id === "classic-instances");
+    expect(figured?.properties).toMatchObject({ probedNodes: 653, instanceCount: 9, downloadBytes: 2048 });
+    expect(instances?.properties).not.toHaveProperty("downloadBytes");
+  });
+
+  it("refuses figures without the evidence they were read from, and evidence without figures", () => {
+    const base = { status: "not-fetchable", reason: "x" };
+    expect(NotFetchableOutcomeSchema.safeParse({ ...base, nodes: 1 }).success).toBe(false);
+    expect(NotFetchableOutcomeSchema.safeParse({ ...base, evidence: "x" }).success).toBe(false);
+    expect(NotFetchableOutcomeSchema.safeParse({ ...base, nodes: 1, evidence: "x" }).success).toBe(true);
   });
 
   it("builds a fetchable entry that fetches, maps only the mapped columns, and holds the round trip", async () => {

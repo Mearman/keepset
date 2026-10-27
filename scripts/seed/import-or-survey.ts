@@ -15,6 +15,7 @@ import { convertSurvey } from "./convert-or";
 import { DownloadSizesSchema } from "./download-sizes";
 import { apply, entryWrites, reportedIds, staleEntries } from "./emit";
 import { SurveySourceSchema } from "./or-survey";
+import { SameDataSchema, withSameData } from "./same-data";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repoRoot = join(here, "../..");
@@ -23,6 +24,7 @@ const reportPath = join(here, "or-datasets-survey.report.json");
 const surveyPath = join(here, "sources/or-datasets-survey.json");
 const curationPath = join(here, "sources/or-survey-curation.json");
 const sizesPath = join(here, "sources/download-sizes.json");
+const sameDataPath = join(here, "sources/same-data.json");
 
 const { values } = parseArgs({ options: { check: { type: "boolean" } }, strict: true });
 
@@ -32,7 +34,7 @@ const previous = existsSync(reportPath) ? reportedIds(readFileSync(reportPath, "
 const takenIds = new Set(readdirSync(entriesDir).map((name) => name.replace(/\.json$/, "")).filter((id) => !(previous?.has(id) ?? false)));
 const { entries, report } = convertSurvey(survey, JSON.parse(readFileSync(curationPath, "utf8")), takenIds);
 
-const writes = entryWrites(entries, entriesDir, DownloadSizesSchema.parse(JSON.parse(readFileSync(sizesPath, "utf8"))));
+const writes = entryWrites(withSameData(entries, SameDataSchema.parse(JSON.parse(readFileSync(sameDataPath, "utf8")))), entriesDir, DownloadSizesSchema.parse(JSON.parse(readFileSync(sizesPath, "utf8"))));
 writes.set(reportPath, canonicalJson(report));
 const stale = staleEntries(entriesDir, previous, new Set(entries.map((entry) => entry.id)));
 

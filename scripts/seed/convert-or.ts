@@ -446,6 +446,23 @@ function probedNodesOf(outcome: CurationItem["outcome"]): { readonly probedNodes
 }
 
 /**
+ * The figures a dataset with no recipe records from its publisher: the places or tasks it holds, as a count a probe read (`probedNodes`, shown as approximate), the instance files a collection holds, and the size of what the publisher offers for download.
+ * @param outcome - The outcome.
+ * @returns The properties, none where the outcome records no figure.
+ */
+function statedFiguresOf(outcome: CurationItem["outcome"]): { readonly probedNodes?: number; readonly instanceCount?: number; readonly downloadBytes?: number } {
+  if (outcome.status !== "not-fetchable") {
+    return {};
+  }
+
+  return {
+    ...(outcome.nodes === undefined ? {} : { probedNodes: outcome.nodes }),
+    ...(outcome.instances === undefined ? {} : { instanceCount: outcome.instances }),
+    ...(outcome.downloadBytes === undefined ? {} : { downloadBytes: outcome.downloadBytes }),
+  };
+}
+
+/**
  * Builds the entry and the outcome for one surveyed dataset.
  * @param item - The surveyed item.
  * @param curation - Its curation.
@@ -489,7 +506,7 @@ export function convertItem(item: SurveyEntry, curation: CurationItem, probedOn:
     recipe: recipeOf(item.id, outcome, { source: dataUrl === undefined ? 0 : 1, url: givenUrl, firstFile: dataUrl === undefined ? 1 : 2 }),
     crosswalk: outcome.status === "not-fetchable" ? { file: OR_NODES_CROSSWALK } : outcome.status === "fetchable-instance-files" ? instanceFilesCrosswalkOf(outcome) : crosswalkOf(outcome),
     expectedCounts: expectedCountsOf(outcome),
-    properties: { surveyId: item.id, ...probedNodesOf(outcome), ...((outcome.status === "fetchable-instance-files" || outcome.status === "fetchable-table-collection") && outcome.timeUnit !== undefined ? { timeUnit: outcome.timeUnit } : {}) },
+    properties: { surveyId: item.id, ...probedNodesOf(outcome), ...statedFiguresOf(outcome), ...((outcome.status === "fetchable-instance-files" || outcome.status === "fetchable-table-collection") && outcome.timeUnit !== undefined ? { timeUnit: outcome.timeUnit } : {}) },
   });
 
   return {

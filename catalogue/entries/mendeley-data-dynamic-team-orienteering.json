@@ -29,10 +29,12 @@
     "mendeley-data"
   ],
   "properties": {
+    "downloadBytes": 1956632,
+    "instanceCount": 1161,
     "surveyId": "or-2"
   },
   "recipe": {
-    "reason": "The only file is an Excel workbook of aggregate results per solved instance, with no row for a place or a task, so there are no nodes to map.",
+    "reason": "The deposit holds 1,161 plain text instance files, each a header of the node count, team size and time limit above a row of coordinates, score and arrival time for each node, and an Excel workbook of aggregate results per solved instance; no parser reads that instance layout, and the workbook has no row for a place or a task.",
     "status": "not-fetchable"
   },
   "sources": [

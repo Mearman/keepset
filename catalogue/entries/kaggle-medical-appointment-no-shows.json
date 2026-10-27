@@ -20,6 +20,8 @@
     "kaggle"
   ],
   "properties": {
+    "downloadBytes": 10739535,
+    "probedNodes": 110527,
     "surveyId": "or-32"
   },
   "recipe": {

@@ -13,18 +13,18 @@ export type SameData = z.infer<typeof SameDataSchema>;
 
 /**
  * The entries with `sameDataAs` set from the curated groups.
- * @param entries - The imported entries.
- * @param same - The curated groups.
+ * @param entries - The entries one import produced.
+ * @param same - The curated groups, which every import reads: a group none of whose entries this import produced belongs to another import and is skipped.
  * @returns The entries, each in a group naming the others of it in the group's order.
- * @throws Error when a group names an id that is not among the entries, or an entry sits in two groups.
+ * @throws Error when a group names both an entry of this import and one that is not, since a relation is written into both entries by the one import, or when an entry sits in two groups.
  */
 export function withSameData(entries: readonly Entry[], same: SameData): Entry[] {
   const known = new Set(entries.map((entry) => entry.id));
   const others = new Map<string, readonly string[]>();
-  for (const group of same.groups) {
+  for (const group of same.groups.filter((candidate) => candidate.some((id) => known.has(id)))) {
     for (const id of group) {
       if (!known.has(id)) {
-        throw new Error(`the same-data group ${group.join(", ")} names ${id}, which is not an imported entry`);
+        throw new Error(`the same-data group ${group.join(", ")} names ${id}, which this import did not produce, beside entries it did`);
       }
       if (others.has(id)) {
         throw new Error(`${id} sits in more than one same-data group`);

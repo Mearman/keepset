@@ -20,6 +20,8 @@
     "leeds"
   ],
   "properties": {
+    "downloadBytes": 1748960,
+    "probedNodes": 19172,
     "surveyId": "or-53"
   },
   "recipe": {
