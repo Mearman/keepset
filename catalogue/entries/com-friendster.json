@@ -1,0 +1,68 @@
+{
+  "category": "graph/v1",
+  "citations": [
+    {
+      "text": "Jaewon Yang, Jure Leskovec (2012). Defining and Evaluating Network Communities based on Ground-truth. IEEE ICDM."
+    }
+  ],
+  "crosswalk": {
+    "file": "crosswalks/graph-v1/topology.json"
+  },
+  "description": "Friendster online social network, an undirected friendship graph with ground-truth communities.",
+  "domain": "Social network",
+  "expectedCounts": {
+    "edges": 1806067135,
+    "nodes": 65608366
+  },
+  "id": "com-friendster",
+  "licence": {
+    "kind": "unrecorded"
+  },
+  "name": "Friendster Social Network",
+  "properties": {
+    "components": 1,
+    "connected": true,
+    "cyclic": true,
+    "density": 8.391613034383803e-7,
+    "directed": false,
+    "downloadBytes": 9371322431,
+    "edgeTypes": 1,
+    "heterogeneous": false,
+    "multigraph": false,
+    "nodeTypes": 1,
+    "rawBytes": 0,
+    "weighted": false
+  },
+  "recipe": {
+    "archive": {
+      "kind": "gzip"
+    },
+    "parser": {
+      "commentPrefixes": [
+        "#",
+        "%"
+      ],
+      "delimiter": "detect",
+      "encoding": "utf-8",
+      "format": "edge-list",
+      "skipLines": 0,
+      "sourceColumn": 0,
+      "targetColumn": 1
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sameDataAs": [
+    "ss-snap-com-friendster"
+  ],
+  "sources": [
+    {
+      "retrieved": "2026-10-27",
+      "status": "live",
+      "url": "https://snap.stanford.edu/data/bigdata/communities/com-friendster.ungraph.txt.gz"
+    }
+  ],
+  "tags": [
+    "social"
+  ]
+}

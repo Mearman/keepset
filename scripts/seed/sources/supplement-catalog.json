@@ -1,0 +1,93 @@
+{
+  "datasets": {
+    "com-friendster": {
+      "id": "com-friendster",
+      "name": "Friendster Social Network",
+      "description": "Friendster online social network, an undirected friendship graph with ground-truth communities.",
+      "domain": "Social network",
+      "category": "social",
+      "citation": {
+        "authors": [
+          "Jaewon Yang",
+          "Jure Leskovec"
+        ],
+        "publisher": "IEEE ICDM",
+        "title": "Defining and Evaluating Network Communities based on Ground-truth",
+        "type": "conference",
+        "year": 2012
+      },
+      "nodeCount": 65608366,
+      "edgeCount": 1806067135,
+      "preferredFormat": "edge-list",
+      "rawBytes": 0,
+      "retrieved": "2026-10-27",
+      "properties": {
+        "density": 8.391613034383803e-07,
+        "edge_type_count": 1,
+        "is_connected": true,
+        "is_cyclic": true,
+        "is_directed": false,
+        "is_heterogeneous": false,
+        "is_multigraph": false,
+        "is_weighted": false,
+        "n_components": 1,
+        "node_type_count": 1
+      },
+      "sources": [
+        {
+          "source": "snap",
+          "downloads": [
+            {
+              "description": "Tab-delimited undirected edge list (gzipped)",
+              "format": "edge-list",
+              "url": "https://snap.stanford.edu/data/bigdata/communities/com-friendster.ungraph.txt.gz"
+            }
+          ]
+        }
+      ]
+    },
+    "sx-stackoverflow": {
+      "id": "sx-stackoverflow",
+      "name": "Stack Overflow Interactions",
+      "description": "Temporal network of interactions among Stack Overflow users: answers to questions, comments on questions and comments on answers, one row per interaction with its Unix timestamp.",
+      "domain": "Social network",
+      "category": "social",
+      "citation": {
+        "authors": [
+          "Ashwin Paranjape",
+          "Austin R. Benson",
+          "Jure Leskovec"
+        ],
+        "publisher": "ACM WSDM",
+        "title": "Motifs in Temporal Networks",
+        "type": "conference",
+        "year": 2017
+      },
+      "nodeCount": 2601977,
+      "edgeCount": 63497050,
+      "preferredFormat": "edge-list",
+      "rawBytes": 0,
+      "retrieved": "2026-10-27",
+      "properties": {
+        "edge_type_count": 1,
+        "is_directed": true,
+        "is_heterogeneous": false,
+        "is_multigraph": true,
+        "is_weighted": false,
+        "node_type_count": 1
+      },
+      "sources": [
+        {
+          "source": "snap",
+          "downloads": [
+            {
+              "description": "Space-delimited temporal edge list: source, target and Unix timestamp (gzipped)",
+              "format": "edge-list",
+              "url": "https://snap.stanford.edu/data/sx-stackoverflow.txt.gz"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

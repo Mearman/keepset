@@ -8,7 +8,7 @@
 
    --snapshot also refreshes the committed source copies in scripts/seed/sources/, with every file: URL's path withheld: a local path names a machine, not a public source, and the import drops such downloads whatever their path, so the copy converts to the same entries as the original.
 
-   A SuiteSparse download the University of Florida mirror holds, or the file host the collection's links redirect to holds a Wayback Machine capture of (scripts/seed/sources/suitesparse-mirror.json and suitesparse-file-host.json, written by probe-suitesparse-mirror.ts), is listed as a source ahead of the collection's own link, the mirror's first, and the first listed is the one the recipe fetches. A SuiteSparse matrix the source catalogue gives no domain takes the kind the collection's index states for it as its domain, (scripts/seed/sources/suitesparse-index.json, written by probe-suitesparse-index.ts); a Netzschleuder network the source catalogue gives no domain takes the topic its first tag names (scripts/seed/sources/netzschleuder-index.json, written by probe-netzschleuder-index.ts). A dataset none of these gives a domain takes the one scripts/seed/sources/graph-domains.json curates for it. Entries that hold the same data in another file or format name each other as `sameDataAs`, from the groups scripts/seed/sources/same-data.json curates. The size of the download a recipe fetches is recorded from scripts/seed/sources/download-sizes.json, written by probe-download-sizes.ts.
+   A SuiteSparse download the University of Florida mirror holds, or the file host the collection's links redirect to holds a Wayback Machine capture of (scripts/seed/sources/suitesparse-mirror.json and suitesparse-file-host.json, written by probe-suitesparse-mirror.ts), is listed as a source ahead of the collection's own link, the mirror's first, and the first listed is the one the recipe fetches. A SuiteSparse matrix the source catalogue gives no domain takes the kind the collection's index states for it as its domain, (scripts/seed/sources/suitesparse-index.json, written by probe-suitesparse-index.ts); a Netzschleuder network the source catalogue gives no domain takes the topic its first tag names (scripts/seed/sources/netzschleuder-index.json, written by probe-netzschleuder-index.ts). A dataset none of these gives a domain takes the one scripts/seed/sources/graph-domains.json curates for it. Datasets the pipeline catalogue lacks are added from scripts/seed/sources/supplement-catalog.json, in its record shape, and an id already in the pipeline catalogue is refused. Entries that hold the same data in another file or format name each other as `sameDataAs`, from the groups scripts/seed/sources/same-data.json curates. The size of the download a recipe fetches is recorded from scripts/seed/sources/download-sizes.json, written by probe-download-sizes.ts.
 
    Every entry's licence comes from scripts/seed/sources/graph-licences.json, which records for each publisher (and for each dataset whose terms differ) the page or file the licence was read from; the import fails when a dataset's source falls under no record, and when a record serves no dataset.
 
@@ -28,7 +28,7 @@ import { NetzschleuderIndexSchema } from "./netzschleuder-index";
 import { SameDataSchema, withSameData } from "./same-data";
 import { GraphDomainsSchema } from "./source-facts";
 import { SuiteSparseIndexSchema } from "./suitesparse-index";
-import { GraphboxCatalogueSchema, SourceCatalogueSchema } from "./source";
+import { GraphboxCatalogueSchema, SourceCatalogueSchema, SupplementCatalogueSchema, withSupplement } from "./source";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repoRoot = realpathSync(join(here, "../.."));
@@ -68,7 +68,7 @@ const pipelinePath = inputPath(values.pipeline);
 const graphboxPath = inputPath(values.graphbox);
 const pipelineText = readFileSync(pipelinePath, "utf8");
 const graphboxText = readFileSync(graphboxPath, "utf8");
-const pipeline = SourceCatalogueSchema.parse(JSON.parse(pipelineText));
+const pipeline = withSupplement(SourceCatalogueSchema.parse(JSON.parse(pipelineText)), SupplementCatalogueSchema.parse(JSON.parse(readFileSync(join(sourcesDir, "supplement-catalog.json"), "utf8"))));
 const graphbox = GraphboxCatalogueSchema.parse(JSON.parse(graphboxText));
 const licences = GraphLicencesSchema.parse(JSON.parse(readFileSync(join(sourcesDir, "graph-licences.json"), "utf8")));
 const mirrors = MIRROR_INVENTORIES.map((file) => SuiteSparseMirrorSchema.parse(JSON.parse(readFileSync(join(sourcesDir, file), "utf8"))));

@@ -55,6 +55,9 @@
     "source": 0,
     "status": "fetchable"
   },
+  "sameDataAs": [
+    "com-friendster"
+  ],
   "sources": [
     {
       "retrieved": "2026-02-16",

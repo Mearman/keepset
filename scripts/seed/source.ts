@@ -61,6 +61,29 @@ export const SourceCatalogueSchema = z.looseObject({
 });
 export type SourceCatalogue = z.infer<typeof SourceCatalogueSchema>;
 
+/** The datasets this repository curates that the pipeline catalogue lacks, in the pipeline catalogue's own record shape. */
+export const SupplementCatalogueSchema = z.looseObject({
+  datasets: z.record(z.string(), SourceDatasetSchema),
+});
+export type SupplementCatalogue = z.infer<typeof SupplementCatalogueSchema>;
+
+/**
+ * The pipeline catalogue with the supplement's datasets added.
+ * @param catalogue - The pipeline catalogue.
+ * @param supplement - The datasets to add.
+ * @returns The catalogue holding both sets of datasets.
+ * @throws Error when a supplement dataset has the id of one the catalogue already holds, which the supplement would silently override.
+ */
+export function withSupplement(catalogue: SourceCatalogue, supplement: SupplementCatalogue): SourceCatalogue {
+  for (const id of Object.keys(supplement.datasets)) {
+    if (Object.hasOwn(catalogue.datasets, id)) {
+      throw new Error(`the supplement dataset ${id} is already in the pipeline catalogue`);
+    }
+  }
+
+  return { ...catalogue, datasets: { ...catalogue.datasets, ...supplement.datasets } };
+}
+
 /** A graphbox dataset, read only for its id and download URLs. */
 export const GraphboxDatasetSchema = z.looseObject({
   id: z.string(),

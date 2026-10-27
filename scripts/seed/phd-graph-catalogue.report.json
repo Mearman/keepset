@@ -3787,6 +3787,12 @@
       "recipe": "fetchable"
     },
     {
+      "flags": [],
+      "id": "com-friendster",
+      "outcome": "converted",
+      "recipe": "fetchable"
+    },
+    {
       "flags": [
         "pipeline parser override: delimiter tab"
       ],
@@ -10426,6 +10432,12 @@
       ],
       "id": "string-human-ppi",
       "outcome": "converted-with-flags",
+      "recipe": "fetchable"
+    },
+    {
+      "flags": [],
+      "id": "sx-stackoverflow",
+      "outcome": "converted",
       "recipe": "fetchable"
     },
     {

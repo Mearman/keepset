@@ -113,6 +113,14 @@
     [
       "ss-snap-wiki-topcats",
       "wiki-topcats"
+    ],
+    [
+      "com-friendster",
+      "ss-snap-com-friendster"
+    ],
+    [
+      "sx-stackoverflow",
+      "ss-snap-sx-stackoverflow"
     ]
   ]
 }

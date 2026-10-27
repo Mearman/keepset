@@ -1,5 +1,5 @@
 {
-  "readOn": "2026-10-26",
+  "readOn": "2026-10-27",
   "sizes": {
     "http://sparse-files.engr.tamu.edu/MM/FlowIPM22/Spielman_k500.tar.gz": 3527957923,
     "http://sparse-files.engr.tamu.edu/MM/FlowIPM22/Spielman_k600.tar.gz": 6668848445,
@@ -92,6 +92,7 @@
     "https://raw.githubusercontent.com/dwitvliet/nature2021/master/data/synapses/Dataset4_synapses.json": 123018,
     "https://raw.githubusercontent.com/dwitvliet/nature2021/master/data/synapses/Dataset5_synapses.json": 185466,
     "https://snap.stanford.edu/data/bigdata/communities/com-dblp.ungraph.txt.gz": 4138463,
+    "https://snap.stanford.edu/data/bigdata/communities/com-friendster.ungraph.txt.gz": 9371322431,
     "https://snap.stanford.edu/data/bigdata/communities/com-lj.ungraph.txt.gz": 124262769,
     "https://snap.stanford.edu/data/bigdata/communities/com-youtube.ungraph.txt.gz": 10590328,
     "https://snap.stanford.edu/data/ca-AstroPh.txt.gz": 1453950,
@@ -105,6 +106,7 @@
     "https://snap.stanford.edu/data/roadNet-CA.txt.gz": 17892860,
     "https://snap.stanford.edu/data/roadNet-TX.txt.gz": 12442024,
     "https://snap.stanford.edu/data/soc-Slashdot0811.txt.gz": 3096873,
+    "https://snap.stanford.edu/data/sx-stackoverflow.txt.gz": 529869668,
     "https://snap.stanford.edu/data/twitter_combined.txt.gz": 10621918,
     "https://snap.stanford.edu/data/web-NotreDame.txt.gz": 3708538,
     "https://snap.stanford.edu/data/web-Stanford.txt.gz": 8908378,
