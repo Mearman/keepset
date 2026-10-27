@@ -162,6 +162,32 @@ describe("buildSite on a fixture catalogue", () => {
   });
 });
 
+describe("buildSite with entries that hold the same data", () => {
+  const twins = createCatalogue({
+    ...fixtureIndex,
+    entries: [
+      { ...liveEntry, sameDataAs: ["twin"] },
+      { ...liveEntry, id: "twin", name: "Entry twin", sameDataAs: [liveEntry.id] },
+    ],
+  });
+  const files = build(twins);
+
+  it("links each entry's page to the other's, naming it", () => {
+    expect(page(files, "datasets/karate/index.html")).toContain('<th scope="row">Same data as</th><td><a href="../twin/">Entry twin</a> <code>twin</code></td>');
+    expect(page(files, "datasets/twin/index.html")).toContain('<a href="../karate/">');
+  });
+
+  it("names the other entries' pages as schema.org sameAs", () => {
+    expect(DatasetJsonLdSchema.parse(jsonLdOf(page(files, "datasets/karate/index.html")))).toMatchObject({ sameAs: [`${SITE_URL}datasets/twin/`] });
+  });
+
+  it("leaves the row and the property out for an entry with no counterpart", () => {
+    const plain = build(createCatalogue(fixtureIndex));
+    expect(page(plain, "datasets/karate/index.html")).not.toContain("Same data as");
+    expect(page(plain, "datasets/karate/index.html")).not.toContain("sameAs");
+  });
+});
+
 describe("buildSite with namespaced and aliased entries", () => {
   const named = createCatalogue({ ...fixtureIndex, entries: [{ ...liveEntry, namespace: ["one", "inner"], aliases: ["short", "club"] }] });
   const files = build(named);

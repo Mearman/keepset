@@ -3,7 +3,7 @@ import { dirname, join } from "node:path";
 import { NAME_SEPARATOR, type Dataset, type DatasetQuery, type Manifest, type NamespaceNode } from "keepset";
 import { dimensionsOf, type Dimensions } from "./dimensions";
 import { slug } from "./html";
-import { entryPage, groupsPage, homePage, listingPage, namespacePage, type PageContext } from "./pages";
+import { entryPage, groupsPage, homePage, listingPage, namespacePage, type PageContext, type SameDataEntry } from "./pages";
 
 /** One row of the search index the client island loads: enough to filter and label a result without fetching its page. */
 export interface SearchRecord extends Dimensions {
@@ -97,9 +97,20 @@ export function buildSite(options: SiteOptions): SiteFiles {
   const files = new Map<string, string>();
   const context = (root: string): PageContext => ({ siteUrl, manifest, packageVersion, root });
 
+  const named = new Map(datasets.map(({ entry }): [string, SameDataEntry] => [entry.id, { id: entry.id, name: entry.name }]));
+  const sameDataOf = ({ entry }: Dataset): SameDataEntry[] =>
+    (entry.sameDataAs ?? []).map((id) => {
+      const other = named.get(id);
+      if (other === undefined) {
+        throw new Error(`${entry.id} holds the same data as ${id}, which is not an entry of the catalogue`);
+      }
+
+      return other;
+    });
+
   files.set("index.html", homePage(context(""), datasets));
   for (const dataset of datasets) {
-    files.set(`datasets/${dataset.entry.id}/index.html`, entryPage(context("../../"), dataset));
+    files.set(`datasets/${dataset.entry.id}/index.html`, entryPage(context("../../"), dataset, sameDataOf(dataset)));
   }
   for (const [title, directory, groups] of [
     ["Domains", "domains", groupBy(datasets, (dataset) => (dataset.entry.domain === undefined ? [] : [dataset.entry.domain]))],

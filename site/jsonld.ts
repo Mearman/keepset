@@ -20,6 +20,8 @@ export interface DatasetJsonLd {
   readonly keywords: readonly string[];
   readonly license?: string;
   readonly alternateName?: readonly string[];
+  /** The pages of the entries that hold the same data, as another file or in another format. */
+  readonly sameAs?: readonly string[];
   readonly citation?: readonly string[];
   readonly isPartOf: { readonly "@type": "DataCatalog"; readonly name: string; readonly url: string };
   readonly distribution: readonly DataDownload[];
@@ -61,6 +63,7 @@ export function datasetJsonLd(dataset: Dataset, pageUrl: string, catalogueUrl: s
     url: pageUrl,
     identifier: entry.id,
     ...(entry.aliases === undefined ? {} : { alternateName: entry.aliases }),
+    ...(entry.sameDataAs === undefined ? {} : { sameAs: entry.sameDataAs.map((id) => `${catalogueUrl}datasets/${id}/`) }),
     keywords: [dataset.kind, ...(entry.domain === undefined ? [] : [entry.domain]), ...(entry.subjects ?? []), ...entry.tags],
     ...(license === undefined ? {} : { license }),
     ...(citation.length === 0 ? {} : { citation }),

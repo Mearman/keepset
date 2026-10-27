@@ -170,6 +170,20 @@ describe("an entry's namespace and aliases", () => {
   });
 });
 
+describe("an entry's sameDataAs", () => {
+  it("accepts the ids of other entries and round-trips them through parse and serialise", () => {
+    const doc = { ...liveEntry, sameDataAs: ["other-one", "other-two"] };
+    expect(parseEntry(JSON.parse(serialise(parseEntry(doc))))).toEqual(parseEntry(doc));
+  });
+
+  it("refuses an empty list, a repeated id, the entry's own id and a name that is not an id", () => {
+    expect(EntrySchema.is({ ...liveEntry, sameDataAs: [] })).toBe(false);
+    expect(EntrySchema.is({ ...liveEntry, sameDataAs: ["other", "other"] })).toBe(false);
+    expect(EntrySchema.is({ ...liveEntry, sameDataAs: [liveEntry.id] })).toBe(false);
+    expect(EntrySchema.is({ ...liveEntry, sameDataAs: ["has space"] })).toBe(false);
+  });
+});
+
 describe("an archive that selects one file or every file", () => {
   const withArchive = (base: typeof taskEntry | typeof taskCollectionEntry, archive: unknown): unknown => ({ ...base, recipe: { ...base.recipe, archive } });
   const issues = (doc: unknown): string => {

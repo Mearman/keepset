@@ -143,6 +143,24 @@ describe("namespaces and aliases", () => {
   });
 });
 
+describe("entries that hold the same data", () => {
+  const first = { ...liveEntry, id: "first", name: "Entry first", sameDataAs: ["second"] };
+  const second = { ...liveEntry, id: "second", name: "Entry second", sameDataAs: ["first"] };
+
+  it("accepts entries that name each other", () => {
+    expect(CatalogueIndexSchema.is({ ...fixtureIndex, entries: [first, second] })).toBe(true);
+  });
+
+  it("rejects a name that is not an entry of the catalogue", () => {
+    expect(CatalogueIndexSchema.is({ ...fixtureIndex, entries: [first] })).toBe(false);
+  });
+
+  it("rejects an entry the other does not name back", () => {
+    const bare = Object.fromEntries(Object.entries(second).filter(([key]) => key !== "sameDataAs"));
+    expect(CatalogueIndexSchema.is({ ...fixtureIndex, entries: [first, bare] })).toBe(false);
+  });
+});
+
 /** Entries for grouping: `bar` is in `home/deep`, listed also under `foo/graphs` and `one` by path aliases, and `baz` is in `foo/graphs` only, so the tree has three depths and an entry in two branches. */
 const bar = { ...liveEntry, id: "bar", name: "Entry bar", namespace: ["home", "deep"], aliases: ["foo/graphs/bar", "one/bar"] };
 const baz = { ...liveEntry, id: "baz", name: "Entry baz", namespace: ["foo", "graphs"] };

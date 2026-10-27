@@ -1,7 +1,7 @@
 import { createCatalogue, DatasetNotFoundError, RecipeError, type Dataset, type DatasetQuery } from "keepset";
 import { captureRequestsFor, type DownloadProvenance, type FetchedDataset, type RoundTripReport } from "keepset/node";
 import { describe, expect, it } from "vitest";
-import { deadEntry, fixtureIndex, streamedEntry } from "../src/test-support/entries";
+import { deadEntry, fixtureIndex, liveEntry, streamedEntry } from "../src/test-support/entries";
 import { EXIT_FAILED, EXIT_NO, EXIT_OK, formatNamespaces, formatSearch, formatShow, provenancePath, run, type CliIo, type CliLibrary } from "./run";
 
 const catalogue = createCatalogue(fixtureIndex);
@@ -189,6 +189,12 @@ describe("show", () => {
     ]) {
       expect(text).toContain(line);
     }
+  });
+
+  it("names the entries that hold the same data", () => {
+    const twins = createCatalogue({ ...fixtureIndex, entries: [{ ...liveEntry, sameDataAs: ["twin"] }, { ...liveEntry, id: "twin", name: "Entry twin", sameDataAs: [liveEntry.id] }] });
+    expect(formatShow(twins.getDataset("karate"))).toContain("same data as: twin\n");
+    expect(formatShow(karate)).not.toContain("same data as");
   });
 
   it("says why a dataset is not fetchable, and names a custom licence", () => {
