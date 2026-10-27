@@ -2,7 +2,7 @@
 
    pnpm exec tsx scripts/seed/probe-download-sizes.ts
 
-   The URLs are those downloadedUrls names for each entry: a paged query has none, and an entry with no recipe offers only a graph's first source. A URL whose source pins a snapshot that records its byte length needs no request, since that length is the size, and one whose source pins a snapshot with no recorded length is asked for at the snapshot first, which a fetch resolves first, and at the URL itself where the snapshot states none, its size recorded under the source's own URL. Each is requested through the polite client, paced per host, first with a HEAD request, then, where that gives no size, with a request for the first byte, whose Content-Range states the whole size, and last, for a host that states no length at all, by reading the whole body and counting its bytes. The sizes are written to scripts/seed/sources/download-sizes.json, which the import reads and `seed:check` verifies the entries against. A size already recorded is kept, in place of reading the body again, when the host states none; a URL no host gives a size for is left out and named, so the script can be run again. */
+   The URLs are those downloadedUrls names for each entry: a paged query has none, and an entry with no recipe offers only a graph's first source. A URL whose source pins a snapshot that records its byte length needs no request, since that length is the size, and one whose source pins a snapshot with no recorded length is asked for at the snapshot first, which a fetch resolves first, and at the URL itself where the snapshot states none, its size recorded under the source's own URL. Each is requested through the polite client, paced per host, first with a HEAD request, then, where that gives no size, with a request for the first byte, whose Content-Range states the whole size, and last, for a host that states no length at all, by reading the whole body and counting its bytes. The sizes are written to scripts/seed/sources/download-sizes.json, which the import reads and `seed:check` verifies the entries against. A size already recorded is kept and the host not asked again, so a host that answers wrongly in one run (a throttle page with a short length) cannot overwrite a good figure; to re-read one, delete its line from the committed file. A URL no host gives a size for is left out and named, so the script can be run again. */
 
 import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -107,7 +107,7 @@ async function measure(remaining: readonly (readonly [string, readonly string[]]
     return;
   }
   const [url, asked] = next;
-  const size = (await stated(asked)) ?? known[url] ?? (await count(url));
+  const size = known[url] ?? (await stated(asked)) ?? (await count(url));
   if (size === undefined) {
     unmeasured.push(url);
   } else {
