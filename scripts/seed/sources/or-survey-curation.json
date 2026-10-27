@@ -3606,7 +3606,7 @@
           "doi": "10.1016/j.omega.2026.103587"
         }
       ],
-      "description": "Instances for the multi-period electric vehicle home health care routing and scheduling problem with uncertain travel times and service durations, from Yin et al. in Omega. The publisher's page refuses automated requests, so this rests on the survey item and the article's metadata.",
+      "description": "Instances for the multi-period electric vehicle home health care routing and scheduling problem with uncertain travel times and service durations, from Yin et al. in Omega. The instances are in the authors' GitHub repository, whose description names the article; the publisher's page answers a robot check, so the article's own link to the repository is unconfirmed.",
       "flags": [
         "Only the Elsevier text and data mining licence for the article was found, not a dataset licence."
       ],
@@ -3620,10 +3620,14 @@
       "name": "EV home health care routing, multi-period variant",
       "namespace": "elsevier",
       "outcome": {
-        "reason": "The survey URL is a journal article DOI and no dataset download was found.",
-        "status": "not-fetchable"
+        "status": "not-fetchable",
+        "reason": "The instances are pairs of patient and caregiver text files in four size folders of the authors' GitHub repository, whose description names this article, and no recipe reads that layout; the article page answers a robot check, so its own link to the repository is unconfirmed.",
+        "instances": 32,
+        "downloadBytes": 42044,
+        "evidence": "The repository's file tree lists 65 files in the folders 20, 25, 30 and 35, eight caregiver and eight patient files for each size, so 32 instances, totalling this many bytes."
       },
-      "surveyId": "or-18"
+      "surveyId": "or-18",
+      "downloadUrl": "https://github.com/qingl-a/Instances"
     },
     {
       "description": "The Care Quality Commission's list of the places in England where care is regulated, covering hospitals, care homes, GPs, dentists and home care agencies, with their addresses and postcodes. It is published as a spreadsheet that the commission updates regularly.",
