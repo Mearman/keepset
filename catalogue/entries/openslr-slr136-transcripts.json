@@ -1,0 +1,119 @@
+{
+  "aliases": [
+    "slr136-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].utterance",
+        "op": "move",
+        "to": "nodes[].text"
+      },
+      {
+        "from": "nodes[].emotion",
+        "op": "move",
+        "to": "nodes[].emotion"
+      },
+      {
+        "from": "nodes[].gender",
+        "op": "move",
+        "to": "nodes[].gender"
+      },
+      {
+        "from": "nodes[].age",
+        "op": "move",
+        "to": "nodes[].age"
+      },
+      {
+        "from": "nodes[].level",
+        "op": "move",
+        "to": "nodes[].level"
+      },
+      {
+        "from": "nodes[].audio_recording",
+        "op": "move",
+        "to": "nodes[].audio"
+      },
+      {
+        "from": "nodes[].user_id",
+        "op": "move",
+        "to": "nodes[].speaker"
+      }
+    ],
+    "source": "csv-table",
+    "target": "speech/v1"
+  },
+  "description": "The transcripts of EMNS: one record per utterance with its text, emotion, speaker and audio file. It carries none of the audio, which the download list of openslr-slr136 gives.",
+  "domain": "Speech, text-to-speech, automatic speech recognition",
+  "expectedCounts": {
+    "nodes": 1205
+  },
+  "id": "openslr-slr136-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Apache 2.0",
+    "url": "https://www.openslr.org/136/"
+  },
+  "name": "EMNS transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "columns": [
+        "utterance",
+        "emotion",
+        "gender",
+        "age",
+        "level",
+        "audio_recording",
+        "user_id"
+      ],
+      "delimiter": "pipe",
+      "encoding": "utf-8",
+      "format": "csv-table",
+      "idColumn": "id",
+      "numericColumns": [],
+      "skipLines": 0
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/136/metadata.csv"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "text",
+    "emotion",
+    "gender",
+    "age",
+    "level",
+    "audio",
+    "speaker"
+  ]
+}
