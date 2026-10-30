@@ -1,0 +1,134 @@
+{
+  "aliases": [
+    "pg-catalog",
+    "gutenberg-catalog"
+  ],
+  "category": "texts/v1",
+  "citations": [],
+  "crosswalk": {
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].Title",
+        "op": "move",
+        "to": "nodes[].title"
+      },
+      {
+        "from": "nodes[].Language",
+        "op": "move",
+        "to": "nodes[].language"
+      },
+      {
+        "from": "nodes[].Authors",
+        "op": "move",
+        "to": "nodes[].authors"
+      },
+      {
+        "from": "nodes[].Subjects",
+        "op": "move",
+        "to": "nodes[].subjects"
+      },
+      {
+        "from": "nodes[].Issued",
+        "op": "move",
+        "to": "nodes[].issued"
+      },
+      {
+        "from": "nodes[].Type",
+        "op": "move",
+        "to": "nodes[].type"
+      },
+      {
+        "from": "nodes[].LoCC",
+        "op": "move",
+        "to": "nodes[].classification"
+      },
+      {
+        "from": "nodes[].Bookshelves",
+        "op": "move",
+        "to": "nodes[].collections"
+      }
+    ],
+    "source": "csv-table",
+    "target": "texts/v1"
+  },
+  "description": "The catalogue of Project Gutenberg's free ebooks: one record per work, with title, language, authors, subjects, issue date, type, Library of Congress classification and bookshelves. It describes the works and does not contain their texts.",
+  "domain": "Library catalogue",
+  "expectedCounts": {
+    "nodes": 79576
+  },
+  "id": "gutenberg-catalogue",
+  "licence": {
+    "kind": "custom",
+    "name": "Public domain (the catalogue data, as Project Gutenberg states it)",
+    "url": "https://www.gutenberg.org/policy/robot_access.html"
+  },
+  "name": "Project Gutenberg catalogue",
+  "namespace": [
+    "gutenberg"
+  ],
+  "properties": {
+    "downloadBytes": 21253758
+  },
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "columns": [
+        "Type",
+        "Issued",
+        "Title",
+        "Language",
+        "Authors",
+        "Subjects",
+        "LoCC",
+        "Bookshelves"
+      ],
+      "delimiter": "comma",
+      "encoding": "utf-8",
+      "format": "csv-table",
+      "idColumn": "Text",
+      "numericColumns": [],
+      "skipLines": 0
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 21253758,
+        "sha256": "3c60f0ad5181881587553d8e13925b3f862693b71854ea34261bf8a6cf3d4c1d",
+        "timestamp": "20261016045300",
+        "url": "https://web.archive.org/web/20261016045300/https://www.gutenberg.org/cache/epub/feeds/pg_catalog.csv"
+      },
+      "status": "live",
+      "url": "https://www.gutenberg.org/cache/epub/feeds/pg_catalog.csv"
+    }
+  ],
+  "subjects": [
+    "literature"
+  ],
+  "tags": [
+    "title",
+    "language",
+    "authors",
+    "subjects",
+    "issued",
+    "type",
+    "classification",
+    "collections"
+  ]
+}
