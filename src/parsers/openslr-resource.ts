@@ -42,13 +42,17 @@ const ENTITY = /&(?:#(\d+)|#x([0-9a-fA-F]+)|([A-Za-z][A-Za-z0-9]*));/g;
 /** The tags after which text starts on a new line. */
 const BLOCK_END = /<\/(?:p|li|ul|ol|h[1-6]|pre|tr|table)>|<br\s*\/?>|<p\s*\/?>/gi;
 
+/** A link with a quoted address, whose text and address are captured. */
+const LINK = /<a\s+href=(["'])(.*?)\1[^>]*>([\s\S]*?)<\/a>/gi;
+
 /**
- * Turns a fragment of page markup into text: block tags become line breaks, every other tag is dropped, character references are decoded (a name the parser does not know is left as written), runs of blanks become one space, and blank lines collapse to one.
+ * Turns a fragment of page markup into text: a link whose text does not show its address is followed by the address in parentheses, block tags become line breaks, every other tag is dropped, character references are decoded (a name the parser does not know is left as written), runs of blanks become one space, and blank lines collapse to one.
  * @param markup - A fragment of the page.
  * @returns The text, trimmed.
  */
 function textOf(markup: string): string {
-  const plain = markup.replaceAll(BLOCK_END, "\n").replaceAll(/<[^>]*>/g, "");
+  const linked = markup.replaceAll(LINK, (_whole, _quote: string, address: string, label: string) => (label.includes(address.trim()) || address.trim() === "" ? label : `${label} (${address.trim()})`));
+  const plain = linked.replaceAll(BLOCK_END, "\n").replaceAll(/<[^>]*>/g, "");
   const decoded = plain.replaceAll(ENTITY, (whole, decimal: string | undefined, hex: string | undefined, name: string | undefined) => {
     if (decimal !== undefined) {
       return String.fromCodePoint(Number(decimal));

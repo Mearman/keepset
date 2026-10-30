@@ -15,7 +15,7 @@ const page = (parts: { readonly title?: string; readonly labels?: string; readon
 };
 
 const downloads = `<p class="resource"> <b>Downloads (use a mirror closer to you):</b> <br>\n${file("dev.tar.gz", "337M", "development set, &quot;clean&quot; speech")}<br>${file("train.tar.gz", "6.3G", "training set")}<br><br></p>`;
-const about = '<p class="resource"><b>About this resource:</b></p><div id="about"><p>Read speech, 16&nbsp;kHz.</p>\n<ul><li>one</li><li>two</li></ul><div>nested</div></div>';
+const about = '<p class="resource"><b>About this resource:</b></p><div id="about"><p>Read speech, 16&nbsp;kHz. See <a href="https://example.com/paper">the paper</a> or <a href="https://example.com/home">https://example.com/home</a>.</p>\n<ul><li>one</li><li>two</li></ul><div>nested</div></div>';
 const external = '<p class="resource"> <b>External URL:</b> <a href="http://example.com/corpus.tgz\n"> http://example.com/corpus.tgz\n </a> &nbsp;  </p>';
 
 describe("the openslr-resource parser", () => {
@@ -27,7 +27,7 @@ describe("the openslr-resource parser", () => {
       summary: "A small corpus",
       category: "Speech",
       licence: "CC BY 4.0",
-      about: "Read speech, 16 kHz.\n\none\ntwo\n\nnested",
+      about: "Read speech, 16 kHz. See the paper (https://example.com/paper) or https://example.com/home.\n\none\ntwo\n\nnested",
       externalUrl: "http://example.com/corpus.tgz",
     });
     expect(nodes).toEqual([
