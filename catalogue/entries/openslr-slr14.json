@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr14"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Phonemic transcriptions of over 250,000 English words. (British English pronunciations)",
+  "domain": "Text",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr14",
+  "licence": {
+    "kind": "custom",
+    "name": "Research and development use only",
+    "url": "https://www.openslr.org/14/"
+  },
+  "name": "BEEP Dictionary",
+  "namespace": [
+    "openslr",
+    "text"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4360,
+        "sha256": "09228d131ec960171e7433563a6ad16fe1577fa2cb8de6dcb26a41bdfda64495",
+        "timestamp": "20260616120346",
+        "url": "https://web.archive.org/web/20260616120346/https://www.openslr.org/14/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/14/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

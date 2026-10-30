@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr160"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "70 hours of Armenian speech collected via crowdsourcing with Toloka and texts from Yerevan City Magazine.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr160",
+  "licence": {
+    "kind": "custom",
+    "name": "CC BY 4.0",
+    "url": "https://www.openslr.org/160/"
+  },
+  "name": "Armenian Speech Crowdsourcing Data",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 5460,
+        "sha256": "c4e2b31027a85ef2c3757ad63bfdf8372d996decbddb6faaad1a71260a3ba752",
+        "timestamp": "20260418031540",
+        "url": "https://web.archive.org/web/20260418031540/https://www.openslr.org/160/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/160/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

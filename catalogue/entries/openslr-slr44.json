@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr44"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Multi-speaker TTS data for Sundanese (su-ID)",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 3
+  },
+  "id": "openslr-slr44",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 4.0 (CC BY-SA 4.0)",
+    "url": "https://www.openslr.org/44/"
+  },
+  "name": "High quality TTS data for Sundanese.",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4540,
+        "sha256": "f48a970636549f72a04f8bf78037d8e57ea7e0aab767cda39836036e9e2e8de4",
+        "timestamp": "20260516210323",
+        "url": "https://web.archive.org/web/20260516210323/https://www.openslr.org/44/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/44/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

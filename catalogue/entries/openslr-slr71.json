@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr71"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Data set which contains recordings of Chilean Spanish.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 6
+  },
+  "id": "openslr-slr71",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 4.0 International",
+    "url": "https://www.openslr.org/71/"
+  },
+  "name": "Crowdsourced high-quality Chilean Spanish speech data set.",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 6074,
+        "sha256": "87b0b9d923d5a71b335a5459857beaa937cc943a997b0a527aaf6fdcd3adc4e2",
+        "timestamp": "20260516202312",
+        "url": "https://web.archive.org/web/20260516202312/https://www.openslr.org/71/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/71/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

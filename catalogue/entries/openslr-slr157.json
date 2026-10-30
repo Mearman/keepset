@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr157"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Automatic Speech Recognition Dataset for Oromo Language",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr157",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)",
+    "url": "https://www.openslr.org/157/"
+  },
+  "name": "Sagalee",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3666,
+        "sha256": "b0bdf07400cb26f117421354a09f5bb61409910b5c5e8d702277536daa84b6a1",
+        "timestamp": "20260516204957",
+        "url": "https://web.archive.org/web/20260516204957/https://www.openslr.org/157/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/157/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

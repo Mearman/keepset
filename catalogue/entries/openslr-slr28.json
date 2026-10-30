@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr28"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "A database of simulated and real room impulse responses, isotropic and point-source noises. The audio files in this data are all in 16k sampling rate and 16-bit precision.",
+  "domain": "Audio",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr28",
+  "licence": {
+    "kind": "custom",
+    "name": "Apache 2.0",
+    "url": "https://www.openslr.org/28/"
+  },
+  "name": "Room Impulse Response and Noise Database",
+  "namespace": [
+    "openslr",
+    "audio"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3059,
+        "sha256": "ae80828d9bdf5915017decdfc1cd73ef2842e67a7afd56469b83f28e09e401ab",
+        "timestamp": "20260926133223",
+        "url": "https://web.archive.org/web/20260926133223/https://www.openslr.org/28/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/28/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

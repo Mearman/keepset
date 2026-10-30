@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr49"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Various files for the VoxCeleb datasets",
+  "domain": "Misc",
+  "expectedCounts": {
+    "nodes": 5
+  },
+  "id": "openslr-slr49",
+  "licence": {
+    "kind": "custom",
+    "name": "Not copyrighted",
+    "url": "https://www.openslr.org/49/"
+  },
+  "name": "VoxCeleb Data",
+  "namespace": [
+    "openslr",
+    "other"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4730,
+        "sha256": "c1264b7d44f5f28eedacf06945cc2c880fa398d993dfe8b37b80748f2681fb62",
+        "timestamp": "20251022034046",
+        "url": "https://web.archive.org/web/20251022034046/https://www.openslr.org/49/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/49/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

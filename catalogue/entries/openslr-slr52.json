@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr52"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Sinhala ASR training data set containing ~185K utterances.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 19
+  },
+  "id": "openslr-slr52",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 4.0 International",
+    "url": "https://www.openslr.org/52/"
+  },
+  "name": "Large Sinhala ASR training data set",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 10711,
+        "sha256": "24d9851836a21c5c14bb3d30ade4ea5faf20ec73ed94e74fc6da704b6cf1d352",
+        "timestamp": "20260516204719",
+        "url": "https://web.archive.org/web/20260516204719/https://www.openslr.org/52/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/52/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

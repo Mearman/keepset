@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr129"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "A large, high-fidelity, multilingual, and uniquely African speech corpus",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 6
+  },
+  "id": "openslr-slr129",
+  "licence": {
+    "kind": "custom",
+    "name": "Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)",
+    "url": "https://www.openslr.org/129/"
+  },
+  "name": "BibleTTS",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 7002,
+        "sha256": "5aa83fa974cc6414fdf47e4738b019539cc149bb4acdea998e2df9197090c687",
+        "timestamp": "20260315173456",
+        "url": "https://web.archive.org/web/20260315173456/https://www.openslr.org/129/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/129/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr74"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Data set which contains recordings of Puerto Rico Spanish.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 4
+  },
+  "id": "openslr-slr74",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 4.0 International",
+    "url": "https://www.openslr.org/74/"
+  },
+  "name": "Crowdsourced high-quality Puerto Rico Spanish speech data set.",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 5216,
+        "sha256": "4c4caddb34e3bb6ef9624498ac2f1512a45c16e6426f787f3ad085963ecd6aeb",
+        "timestamp": "20260516203808",
+        "url": "https://web.archive.org/web/20260516203808/https://www.openslr.org/74/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/74/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

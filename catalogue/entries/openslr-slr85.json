@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr85"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "A far-field text-dependent speaker verification database for AISHELL Speaker Verification Challenge 2019",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 5
+  },
+  "id": "openslr-slr85",
+  "licence": {
+    "kind": "custom",
+    "name": "Apache License v.2.0",
+    "url": "https://www.openslr.org/85/"
+  },
+  "name": "HI-MIA",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 5433,
+        "sha256": "4156e2ce486c894b6d6a930380af896e6bf37827f60f49f48574effc133bd198",
+        "timestamp": "20260521090148",
+        "url": "https://web.archive.org/web/20260521090148/https://www.openslr.org/85/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/85/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

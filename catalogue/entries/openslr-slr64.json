@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr64"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Data set which contains recordings of native speakers of Marathi",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 4
+  },
+  "id": "openslr-slr64",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 4.0 International",
+    "url": "https://www.openslr.org/64/"
+  },
+  "name": "Crowdsourced high-quality Marathi multi-speaker speech data set.",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 5228,
+        "sha256": "b55711166b4d47b66471b8387b2f4dbae37f5e1539e6f469fe1c958568b2f7fa",
+        "timestamp": "20260616125934",
+        "url": "https://web.archive.org/web/20260616125934/https://www.openslr.org/64/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/64/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

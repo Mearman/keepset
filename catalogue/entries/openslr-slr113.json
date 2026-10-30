@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr113"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "The Korean Corpus of Spontaneous Speech (aka, Seoul Corpus), created from the NRF(Korea)-funded project",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 3
+  },
+  "id": "openslr-slr113",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-NonCommercial 2.0 Generic (CC BY-NC 2.0)",
+    "url": "https://www.openslr.org/113/"
+  },
+  "name": "SEOUL CORPUS",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3904,
+        "sha256": "feef5be1d6afe3ce33e45ed1e4f103bb4fc17d6bafc738190ff9bb95f97d61f9",
+        "timestamp": "20260516202144",
+        "url": "https://web.archive.org/web/20260516202144/https://www.openslr.org/113/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/113/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

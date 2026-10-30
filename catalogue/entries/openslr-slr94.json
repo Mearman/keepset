@@ -1,0 +1,55 @@
+{
+  "aliases": [
+    "slr94"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "A large multilingual corpus derived from LibriVox audiobooks",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 0
+  },
+  "id": "openslr-slr94",
+  "licence": {
+    "kind": "custom",
+    "name": "CC BY 4.0",
+    "url": "https://www.openslr.org/94/"
+  },
+  "name": "Multilingual LibriSpeech (MLS)",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 9521,
+        "sha256": "d19576a2e4bb9d1fc3e0f92bae6bef328180db237cfb94131e5f6af51681c7aa",
+        "timestamp": "20261011033114",
+        "url": "https://web.archive.org/web/20261011033114/https://www.openslr.org/94/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/94/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr128"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Samrómur Icelandic Speech, 2,200 hours of mostly unverified data approved for release in July 2022",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 12
+  },
+  "id": "openslr-slr128",
+  "licence": {
+    "kind": "custom",
+    "name": "CC by 4.0",
+    "url": "https://www.openslr.org/128/"
+  },
+  "name": "Samrómur Unverified 22.07",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 9684,
+        "sha256": "963e8a3268b71550781bb1c6cc3d9628d7676d8f22786447ee0009c2ee9cb83c",
+        "timestamp": "20260516195341",
+        "url": "https://web.archive.org/web/20260516195341/https://www.openslr.org/128/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/128/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

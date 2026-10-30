@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr95"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Free single german speaker dataset (> 23 hours) by Thorsten Müller (voice) and Dominik Kreutz (audio optimization) for tts training",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr95",
+  "licence": {
+    "kind": "custom",
+    "name": "Creative Commons (CC0) Licence",
+    "url": "https://www.openslr.org/95/"
+  },
+  "name": "Thorsten Müller (German Neutral-TTS dataset)",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4492,
+        "sha256": "6a4423b450484e3281416da6da376e72623d666172be49f1d4a6f1c4bba03fe1",
+        "timestamp": "20260516202341",
+        "url": "https://web.archive.org/web/20260516202341/https://www.openslr.org/95/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/95/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

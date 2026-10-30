@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr36"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Sundanese ASR training data set containing ~220K utterances.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 19
+  },
+  "id": "openslr-slr36",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 4.0 International",
+    "url": "https://www.openslr.org/36/"
+  },
+  "name": "Large Sundanese ASR training data set",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 11140,
+        "sha256": "dbe367866e73523b16a229bea14580e7e6b2fdf0c8f997f83e4a58f5bf9998e7",
+        "timestamp": "20260120173925",
+        "url": "https://web.archive.org/web/20260120173925/https://www.openslr.org/36/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/36/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

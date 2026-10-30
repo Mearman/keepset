@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr75"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Data set which contains recordings of Venezuelan Spanish.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 6
+  },
+  "id": "openslr-slr75",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 4.0 International",
+    "url": "https://www.openslr.org/75/"
+  },
+  "name": "Crowdsourced high-quality Venezuelan Spanish speech data set.",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 6083,
+        "sha256": "ceb1c8d3762ebadbb44523ca145024e36d459ed7f1f8e6615039473dab5b3985",
+        "timestamp": "20260516204140",
+        "url": "https://web.archive.org/web/20260516204140/https://www.openslr.org/75/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/75/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

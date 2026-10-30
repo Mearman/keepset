@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr63"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Data set which contains recordings of native speakers of Malayalam.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 6
+  },
+  "id": "openslr-slr63",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 4.0 International",
+    "url": "https://www.openslr.org/63/"
+  },
+  "name": "Crowdsourced high-quality Malayalam multi-speaker speech data set.",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 6148,
+        "sha256": "5a947593ca38359d0e480109632b756b5f1896f79251045d816472d9cef6e940",
+        "timestamp": "20260725003556",
+        "url": "https://web.archive.org/web/20260725003556/https://www.openslr.org/63/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/63/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

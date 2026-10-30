@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr22"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "A free Uyghur speech database Released by CSLT@Tsinghua University & Xinjiang University",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 5
+  },
+  "id": "openslr-slr22",
+  "licence": {
+    "kind": "custom",
+    "name": "Apache License v.2.0",
+    "url": "https://www.openslr.org/22/"
+  },
+  "name": "THUYG-20",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 6203,
+        "sha256": "3d62450c81aa750840c8f9f154da4472eae7170e6f67c20f1a7c8207b4c4b01e",
+        "timestamp": "20260116002802",
+        "url": "https://web.archive.org/web/20260116002802/https://www.openslr.org/22/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/22/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

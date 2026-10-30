@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr46"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Tunisian Modern Standard Arabic",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr46",
+  "licence": {
+    "kind": "custom",
+    "name": "Apache 2.0",
+    "url": "https://www.openslr.org/46/"
+  },
+  "name": "Tunisian_MSA",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3197,
+        "sha256": "fcf2633529a320089c626ecdf86afe1f1e304ca9bc5005fb15ee2e9034c85dc7",
+        "timestamp": "20260617200710",
+        "url": "https://web.archive.org/web/20260617200710/https://www.openslr.org/46/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/46/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

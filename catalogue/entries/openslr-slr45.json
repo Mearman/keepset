@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr45"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "A free American English corpus by Surfingtech (www.surfing.ai), containing utterances from 10 speakers, Each speaker has about 350 utterances;",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr45",
+  "licence": {
+    "kind": "custom",
+    "name": "Creative Common BY-NC-ND 4.0 (Attribution-NonCommercial-NoDerivatives 4.0 International)",
+    "url": "https://www.openslr.org/45/"
+  },
+  "name": "Free ST American English Corpus",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3547,
+        "sha256": "c5dcb1d919be0fab05d6c6546b31d32206c176555318b3661569e4bafa8c44ce",
+        "timestamp": "20260607084311",
+        "url": "https://web.archive.org/web/20260607084311/https://www.openslr.org/45/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/45/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

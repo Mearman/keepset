@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr83"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Data set which contains male and female recordings of English from various dialects of the UK and Ireland.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 15
+  },
+  "id": "openslr-slr83",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 4.0 International",
+    "url": "https://www.openslr.org/83/"
+  },
+  "name": "Crowdsourced high-quality UK and Ireland English Dialect speech data set.",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 10947,
+        "sha256": "793eb074195fa9ae4fa40fef3d2320f075a7823312956b9f7355a73bea5f46f2",
+        "timestamp": "20260414005824",
+        "url": "https://web.archive.org/web/20260414005824/https://www.openslr.org/83/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/83/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

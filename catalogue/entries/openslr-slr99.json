@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr99"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "A human nonverbal vocal sound dataset by Deeply Inc.",
+  "domain": "Audio",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr99",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)",
+    "url": "https://www.openslr.org/99/"
+  },
+  "name": "Deeply Nonverbal Vocalization Dataset",
+  "namespace": [
+    "openslr",
+    "audio"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 5260,
+        "sha256": "8981a98556c7753677e08e5875bc2a39e4f800300d172a67ae12d0513280ca42",
+        "timestamp": "20260516204226",
+        "url": "https://web.archive.org/web/20260516204226/https://www.openslr.org/99/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/99/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

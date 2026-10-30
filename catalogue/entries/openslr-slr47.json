@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr47"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Chinese Mandarin corpus released by Shanghai Primewords Co. Ltd. (www.primewords.cn), containing 100 hours of speech data.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr47",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)",
+    "url": "https://www.openslr.org/47/"
+  },
+  "name": "Primewords Chinese Corpus Set 1",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3589,
+        "sha256": "aad8dfcf4e492204a40d7878b7939dba7549cb6a7268a67558fc8f4e4bf48451",
+        "timestamp": "20260301015704",
+        "url": "https://web.archive.org/web/20260301015704/https://www.openslr.org/47/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/47/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

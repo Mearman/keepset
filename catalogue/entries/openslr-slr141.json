@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr141"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Sound quality improved version of the LibriTTS corpus which is a large-scale corpus of English speech designed for TTS use",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 10
+  },
+  "id": "openslr-slr141",
+  "licence": {
+    "kind": "custom",
+    "name": "CC BY 4.0",
+    "url": "https://www.openslr.org/141/"
+  },
+  "name": "LibriTTS-R",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 8094,
+        "sha256": "6b0262043e82cadfce2bdb514b09f17d04a20895f0deb4eae8a74e9ade83ba60",
+        "timestamp": "20261001072614",
+        "url": "https://web.archive.org/web/20261001072614/https://www.openslr.org/141/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/141/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

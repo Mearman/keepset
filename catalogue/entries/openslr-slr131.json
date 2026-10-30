@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr131"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Samrómur Icelandic Speech, 66.7 hours of speech where users mimic utterances. Approved in September 2022",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 2
+  },
+  "id": "openslr-slr131",
+  "licence": {
+    "kind": "custom",
+    "name": "CC by 4.0",
+    "url": "https://www.openslr.org/131/"
+  },
+  "name": "Samrómur Mimic 22.09",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4862,
+        "sha256": "30b3b955aca387d3f70d623df2647953a634dcda4e494cacedea9c7b561b6829",
+        "timestamp": "20260516202704",
+        "url": "https://web.archive.org/web/20260516202704/https://www.openslr.org/131/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/131/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "aliases": [
+    "slr56"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Aachen data splits (train/test/val) for the IAM dataset.",
+  "domain": "Other",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr56",
+  "licence": {
+    "kind": "unrecorded"
+  },
+  "name": "IAM Aachen splits",
+  "namespace": [
+    "openslr",
+    "other"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 2897,
+        "sha256": "6a8ba4d9bc9f82d8f7950d5136c2e9b89a829b900902a97b7534184b8868fad3",
+        "timestamp": "20261010152353",
+        "url": "https://web.archive.org/web/20261010152353/https://www.openslr.org/56/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/56/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

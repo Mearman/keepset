@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr35"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Javanese ASR training data set containing ~185K utterances.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 19
+  },
+  "id": "openslr-slr35",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 4.0 International",
+    "url": "https://www.openslr.org/35/"
+  },
+  "name": "Large Javanese ASR training data set",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 11123,
+        "sha256": "29470586cf5ae8bfa2e0e1ef12e9223738b035fc29517a4bc561efb4429e2f51",
+        "timestamp": "20260418042221",
+        "url": "https://web.archive.org/web/20260418042221/https://www.openslr.org/35/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/35/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

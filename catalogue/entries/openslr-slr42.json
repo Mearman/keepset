@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr42"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Multi-speaker TTS data for Khmer (km-KH)",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 2
+  },
+  "id": "openslr-slr42",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 4.0 (CC BY-SA 4.0)",
+    "url": "https://www.openslr.org/42/"
+  },
+  "name": "High quality TTS data for Khmer.",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4046,
+        "sha256": "b908221faad22f410576d33f5af515ed96ea2d3bf9355f99f592c374c03d2afc",
+        "timestamp": "20260616125421",
+        "url": "https://web.archive.org/web/20260616125421/https://www.openslr.org/42/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/42/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

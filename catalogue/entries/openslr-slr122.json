@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr122"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "An audio and text corpus for the Kashmiri language",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr122",
+  "licence": {
+    "kind": "custom",
+    "name": "GPL-3.0-or-later",
+    "url": "https://www.openslr.org/122/"
+  },
+  "name": "Kashmiri Data Corpus",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 2911,
+        "sha256": "973bee2588b9e3eaa32400e187532bd21deb61bea6d5053aefd0b242dd5d5046",
+        "timestamp": "20260516211102",
+        "url": "https://web.archive.org/web/20260516211102/https://www.openslr.org/122/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/122/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

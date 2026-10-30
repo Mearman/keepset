@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr1"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Sixty recordings of one individual saying yes or no in Hebrew; each recording is eight words long.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr1",
+  "licence": {
+    "kind": "custom",
+    "name": "No formal license but free to use for any purpose.",
+    "url": "https://www.openslr.org/1/"
+  },
+  "name": "Yesno",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3523,
+        "sha256": "6088bf3971cfdb012f25b0e33c70bf8ac24641a3fb9b08aea0384abcea2cdf5f",
+        "timestamp": "20260105075229",
+        "url": "https://web.archive.org/web/20260105075229/https://www.openslr.org/1/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/1/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

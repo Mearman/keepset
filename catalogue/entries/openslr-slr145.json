@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr145"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "LibriSpeech text with Punctuation and Capitalization",
+  "domain": "Text",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr145",
+  "licence": {
+    "kind": "custom",
+    "name": "CC BY 4.0",
+    "url": "https://www.openslr.org/145/"
+  },
+  "name": "LibriSpeech-PC",
+  "namespace": [
+    "openslr",
+    "text"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3698,
+        "sha256": "a98d9de0b9943822898285319f35833f1f9e32c53ff3dfaef57cf7b322c4afa4",
+        "timestamp": "20260516204000",
+        "url": "https://web.archive.org/web/20260516204000/https://www.openslr.org/145/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/145/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr79"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Data set which contains recordings of native speakers of Kannada.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 6
+  },
+  "id": "openslr-slr79",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 4.0 International",
+    "url": "https://www.openslr.org/79/"
+  },
+  "name": "Crowdsourced high-quality Kannada multi-speaker speech data set.",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 6142,
+        "sha256": "42c9af281f681983492cc30785f019f57b4f0c1f3b46ac38672431362eaa7eac",
+        "timestamp": "20260112075813",
+        "url": "https://web.archive.org/web/20260112075813/https://www.openslr.org/79/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/79/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

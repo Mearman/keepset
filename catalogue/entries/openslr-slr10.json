@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr10"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Various files from SRE data that NIST used to host online",
+  "domain": "Misc",
+  "expectedCounts": {
+    "nodes": 4
+  },
+  "id": "openslr-slr10",
+  "licence": {
+    "kind": "custom",
+    "name": "Public domain, I believe",
+    "url": "https://www.openslr.org/10/"
+  },
+  "name": "SRE Data",
+  "namespace": [
+    "openslr",
+    "other"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4340,
+        "sha256": "6f63a80308e7f9be9794667d06e177d467e16c867a1ee9d113cf37642365df89",
+        "timestamp": "20260131180849",
+        "url": "https://web.archive.org/web/20260131180849/https://www.openslr.org/10/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/10/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

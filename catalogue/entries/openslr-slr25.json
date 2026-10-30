@@ -1,0 +1,58 @@
+{
+  "aliases": [
+    "slr25"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Amharic, Swahili and Wolof data, mirrored from the ALFFA git repository",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 3
+  },
+  "id": "openslr-slr25",
+  "licence": {
+    "id": "MIT",
+    "kind": "spdx"
+  },
+  "name": "ALFFA (African Languages in the Field: speech Fundamentals and Automation)",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 6748,
+        "sha256": "58b92eeaf1c654453a39ee7bf60121df304ef2505b1459a66b4439fdb760935e",
+        "timestamp": "20260511063259",
+        "url": "https://web.archive.org/web/20260511063259/https://www.openslr.org/25/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/25/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

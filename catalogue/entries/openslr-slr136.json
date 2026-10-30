@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr136"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "An emotive single-speaker dataset for narrative storytelling. EMNS is dataset containing transcriptions, emotion, emotion intensity, and description of acted speech.",
+  "domain": "Speech, text-to-speech, automatic speech recognition",
+  "expectedCounts": {
+    "nodes": 5
+  },
+  "id": "openslr-slr136",
+  "licence": {
+    "kind": "custom",
+    "name": "Apache 2.0",
+    "url": "https://www.openslr.org/136/"
+  },
+  "name": "EMNS",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 5395,
+        "sha256": "ab451d4035c971f621caaab69e0ececa9d7cd817560157fddb6cda49d8aee5c5",
+        "timestamp": "20261007201319",
+        "url": "https://web.archive.org/web/20261007201319/https://www.openslr.org/136/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/136/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

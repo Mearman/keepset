@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr126"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Kannada transcribed speech corpus for ASR",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 2
+  },
+  "id": "openslr-slr126",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution 2.0 Generic (CC BY 2.0)",
+    "url": "https://www.openslr.org/126/"
+  },
+  "name": "IISc-MILE Kannada ASR Corpus",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4601,
+        "sha256": "d1d0d30cb479624e45cb27ae3e592e3ff8d09e9659d665a1d4cc0bcea8a5fb6e",
+        "timestamp": "20260616120235",
+        "url": "https://web.archive.org/web/20260616120235/https://www.openslr.org/126/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/126/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr76"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Data set which contains recordings of Basque.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 6
+  },
+  "id": "openslr-slr76",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 4.0 International",
+    "url": "https://www.openslr.org/76/"
+  },
+  "name": "Crowdsourced high-quality Basque speech data set.",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 6041,
+        "sha256": "abc156f2e40b57d160837756b02fa8a513f42760609886f358cdd75e1628be27",
+        "timestamp": "20261018025251",
+        "url": "https://web.archive.org/web/20261018025251/https://www.openslr.org/76/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/76/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

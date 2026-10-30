@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr134"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Hebrew speech and transcripts by a single speaker (30 hours)",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 4
+  },
+  "id": "openslr-slr134",
+  "licence": {
+    "kind": "custom",
+    "name": "Custom non-commercial (See README)",
+    "url": "https://www.openslr.org/134/"
+  },
+  "name": "SASPEECH",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 6034,
+        "sha256": "505953bd7866f451088b48e7cf92cb1097db92953ab32bccc8ab215704aea701",
+        "timestamp": "20260129025941",
+        "url": "https://web.archive.org/web/20260129025941/https://www.openslr.org/134/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/134/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr137"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Corpus of the Silbo Gomero whistled language, based on 49 minutes of recordings created by 4 whistlers.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 4
+  },
+  "id": "openslr-slr137",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)",
+    "url": "https://www.openslr.org/137/"
+  },
+  "name": "Silbo Gomero Speech Corpus",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 5456,
+        "sha256": "cb64e6f5d170931ab052619fd859a7957fd530d3fa3e92c567714b0c3d5d1d3d",
+        "timestamp": "20260516204034",
+        "url": "https://web.archive.org/web/20260516204034/https://www.openslr.org/137/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/137/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

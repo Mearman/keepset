@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr158"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "33.5-hour Lhasa-Tibetan read-speech corpus with Kaldi-style transcripts",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr158",
+  "licence": {
+    "kind": "custom",
+    "name": "Creative Commons Attribution 4.0 International (CC BY 4.0)",
+    "url": "https://www.openslr.org/158/"
+  },
+  "name": "NICT-Tib1",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4838,
+        "sha256": "ad768222d489c383f550c34a1491eb1d3ede14c2f95c7d5bb56cecddb573ac24",
+        "timestamp": "20260418032542",
+        "url": "https://web.archive.org/web/20260418032542/https://www.openslr.org/158/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/158/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

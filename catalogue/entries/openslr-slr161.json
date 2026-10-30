@@ -1,0 +1,55 @@
+{
+  "aliases": [
+    "slr161"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "A crowdsourced Italian emotional speech corpus",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 0
+  },
+  "id": "openslr-slr161",
+  "licence": {
+    "kind": "custom",
+    "name": "Creative Commons Attribution 4.0 International",
+    "url": "https://www.openslr.org/161/"
+  },
+  "name": "Emozionalmente",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4518,
+        "sha256": "87384327a4d6f74e330476cec614c9d6d807e44dba1e1da04a46d6dfe57e5455",
+        "timestamp": "20260418040943",
+        "url": "https://web.archive.org/web/20260418040943/https://www.openslr.org/161/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/161/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

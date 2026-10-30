@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr103"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Datasets for sub-task1 in Multilingual and code-switching ASR challenges for low resource Indian languages - MUCS 2021 (https://navana-tech.github.io/MUCS2021/)",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 7
+  },
+  "id": "openslr-slr103",
+  "licence": {
+    "kind": "custom",
+    "name": "https://msropendata-web-api.azurewebsites.net/licenses/f1f352a6-243f-4905-8e00-389edbca9e83/view",
+    "url": "https://www.openslr.org/103/"
+  },
+  "name": "Multilingual and code-switching ASR Challenge Dataset - sub-task1",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 7767,
+        "sha256": "c25ed41d9965ec3b46af822aed10363821c46c0b3a5d5b2d0b37b7e9783fb20c",
+        "timestamp": "20260725003524",
+        "url": "https://web.archive.org/web/20260725003524/https://www.openslr.org/103/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/103/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

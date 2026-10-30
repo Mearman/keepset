@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr67"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Spanish data taken from the TEDx Talks",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr67",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)",
+    "url": "https://www.openslr.org/67/"
+  },
+  "name": "TEDx Spanish Corpus",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3604,
+        "sha256": "d4bb9944bb9e7dcd739149a87a7c03793b8130d9653d02038a0208f859393f44",
+        "timestamp": "20260714191505",
+        "url": "https://web.archive.org/web/20260714191505/https://www.openslr.org/67/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/67/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

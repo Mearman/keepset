@@ -1,0 +1,57 @@
+{
+  "aliases": [
+    "slr9"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Some auxiliary non-speech data used to build AMI systems with Kaldi",
+  "domain": "Text",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr9",
+  "licence": {
+    "kind": "unrecorded"
+  },
+  "name": "The AMI pack",
+  "namespace": [
+    "openslr",
+    "text"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 2508,
+        "sha256": "999c9cb3ef8d4a6978222145a478fff837b02c02ef109dc907891521c71f7d72",
+        "timestamp": "20260516204927",
+        "url": "https://web.archive.org/web/20260516204927/https://www.openslr.org/9/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/9/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr138"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "A Chinese Mandarin corpus by Shanghai Acoustics Laboratory, CAS and Wuxi Sandu Intelligent Technology Co., Ltd.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr138",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)",
+    "url": "https://www.openslr.org/138/"
+  },
+  "name": "SHALCAS22A",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3411,
+        "sha256": "9f005e60d2a359b08995f9ef033b6ab0545c2f1024fec6af62579f21235de602",
+        "timestamp": "20260617200823",
+        "url": "https://web.archive.org/web/20260617200823/https://www.openslr.org/138/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/138/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr3"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "A mirror of the sph2pipe software",
+  "domain": "Software",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr3",
+  "licence": {
+    "kind": "custom",
+    "name": "One-off",
+    "url": "https://www.openslr.org/3/"
+  },
+  "name": "sph2pipe",
+  "namespace": [
+    "openslr",
+    "software"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 2992,
+        "sha256": "c6b61a341f22672dc0ba6f70fefcfce3d804782daf16b12a47be634bc65c899f",
+        "timestamp": "20260516200532",
+        "url": "https://web.archive.org/web/20260516200532/https://www.openslr.org/3/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/3/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

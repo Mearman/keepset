@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr40"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Korean Open-source Speech Corpus for Speech Recognition by Zeroth Project (https://github.com/goodatlas/zeroth)",
+  "domain": "Speech Corpus for Automatic Speech Recognition",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr40",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution 4.0 International (CC BY 4.0)",
+    "url": "https://www.openslr.org/40/"
+  },
+  "name": "Zeroth-Korean",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3713,
+        "sha256": "3e7664fc9af1fc2852b04b4ee25c6d4fab2abc9c733c0d2dff7ce23d87f2b146",
+        "timestamp": "20260926145454",
+        "url": "https://web.archive.org/web/20260926145454/https://www.openslr.org/40/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/40/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr112"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Samrómur Icelandic Speech corpus approved for release in May 2021",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr112",
+  "licence": {
+    "kind": "custom",
+    "name": "CC BY 4.0",
+    "url": "https://www.openslr.org/112/"
+  },
+  "name": "Samromur 21.05",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 6473,
+        "sha256": "83edf4fed1facf86b06b4e68c40c96ee1f149dd8d6570e5e15bf6b75065379e1",
+        "timestamp": "20260516210605",
+        "url": "https://web.archive.org/web/20260516210605/https://www.openslr.org/112/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/112/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

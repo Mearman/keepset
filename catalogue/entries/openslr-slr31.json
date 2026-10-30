@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr31"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Subset of LibriSpeech corpus for purpose of regression testing",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 3
+  },
+  "id": "openslr-slr31",
+  "licence": {
+    "kind": "custom",
+    "name": "CC BY 4.0",
+    "url": "https://www.openslr.org/31/"
+  },
+  "name": "Mini LibriSpeech ASR corpus",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3376,
+        "sha256": "3da285125fce2c3a7131d45206ae86f7ed8fd47a4a5b3425f793c0c8ff11bb2f",
+        "timestamp": "20260607133229",
+        "url": "https://web.archive.org/web/20260607133229/https://www.openslr.org/31/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/31/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr39"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Spanish data, mirrored from the LDC",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr39",
+  "licence": {
+    "kind": "custom",
+    "name": "apache 2.0",
+    "url": "https://www.openslr.org/39/"
+  },
+  "name": "Heroico",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3522,
+        "sha256": "5993266d182897ab93e8a2649025b797583d98f573c3a6b1b68ffdaafbca3a49",
+        "timestamp": "20260516125517",
+        "url": "https://web.archive.org/web/20260516125517/https://www.openslr.org/39/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/39/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

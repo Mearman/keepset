@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr148"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Audio corpus of Zacatlán-Ahuacatlán-Tepetzintla (Puebla) Nahuatl speech (Glottocode: zaca1241; ISO 639-3: nhi)",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 6
+  },
+  "id": "openslr-slr148",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)",
+    "url": "https://www.openslr.org/148/"
+  },
+  "name": "Tepetzintla Zacatlan Nahuatl Endangered Language",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 9422,
+        "sha256": "75fd566f15cc0df6a633e364042ea199192af6cde77ed4d957a2b6f214c2218f",
+        "timestamp": "20260516200203",
+        "url": "https://web.archive.org/web/20260516200203/https://www.openslr.org/148/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/148/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr123"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "The corpus by Magic Data Technology Co., Ltd. , containing 180 hours of rich annotated Mandarin spontaneous conversational speech data.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr123",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-NonCommercial-NoDerivatives 4.0 International Public License (CC BY-NC-ND 4.0)",
+    "url": "https://www.openslr.org/123/"
+  },
+  "name": "MAGICDATA Mandarin Chinese Conversational Speech Corpus",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 5290,
+        "sha256": "6e6ad165cdae6b85851243ec6ec539c3f80003527da5a7f52dfa19f28a92f9e7",
+        "timestamp": "20260624173739",
+        "url": "https://web.archive.org/web/20260624173739/https://www.openslr.org/123/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/123/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

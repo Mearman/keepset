@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr12"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Large-scale (1000 hours) corpus of read English speech",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 12
+  },
+  "id": "openslr-slr12",
+  "licence": {
+    "kind": "custom",
+    "name": "CC BY 4.0",
+    "url": "https://www.openslr.org/12/"
+  },
+  "name": "LibriSpeech ASR corpus",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 8245,
+        "sha256": "9b012c60f8fe6a5435f96cf034c042ffe4222e7936c88cb835671413e74a5301",
+        "timestamp": "20261012025658",
+        "url": "https://web.archive.org/web/20261012025658/https://www.openslr.org/12/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/12/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

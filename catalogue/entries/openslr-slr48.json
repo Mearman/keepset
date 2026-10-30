@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr48"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Unofficial data splits (dev/train/test) for the MADCAT Arabic LDC corpus",
+  "domain": "Other",
+  "expectedCounts": {
+    "nodes": 3
+  },
+  "id": "openslr-slr48",
+  "licence": {
+    "kind": "custom",
+    "name": "Apache 2.0",
+    "url": "https://www.openslr.org/48/"
+  },
+  "name": "MADCAT Arabic data splits",
+  "namespace": [
+    "openslr",
+    "other"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4369,
+        "sha256": "9ba40bb66f2541fa4b956ee74c4eaf11a7a5b6f09a06a1def59093075816b72e",
+        "timestamp": "20260511064059",
+        "url": "https://web.archive.org/web/20260511064059/https://www.openslr.org/48/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/48/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

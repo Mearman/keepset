@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr140"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "High-quality open source Kazakh speech corpus developed by the Department of Artificial Intelligence and Big Data of Al-Farabi Kazakh National University (554 hours)",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 5
+  },
+  "id": "openslr-slr140",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0 US)",
+    "url": "https://www.openslr.org/140/"
+  },
+  "name": "Kazakh Speech Dataset (KSD)",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 5455,
+        "sha256": "d2b7ad47e91f23c41b4c653a9aaf0380dc02fb0d8964e3a7fab1d28c049f976a",
+        "timestamp": "20260911131307",
+        "url": "https://web.archive.org/web/20260911131307/https://www.openslr.org/140/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/140/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}
