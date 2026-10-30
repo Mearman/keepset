@@ -1,3 +1,10 @@
+# [0.71.0](https://github.com/Mearman/keepset/compare/v0.70.0...v0.71.0) (2026-10-30)
+
+
+### Features
+
+* **parsers:** read files of utterance lines ([1a0128e](https://github.com/Mearman/keepset/commit/1a0128e5f18371dd0008dae16a80159ba1150faf))
+
 # [0.70.0](https://github.com/Mearman/keepset/compare/v0.69.0...v0.70.0) (2026-10-30)
 
 
