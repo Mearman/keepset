@@ -3,6 +3,7 @@ import { HHCRSP_COLUMNS, HHCRSP_META, HHCRSP_TEXT_COLUMNS } from "./hhcrsp";
 import { MANKOWSKA_COLUMNS, MANKOWSKA_META, MANKOWSKA_TEXT_COLUMNS } from "./mankowska";
 import { TDC_COLUMNS, TDC_META, TDC_TEXT_COLUMNS } from "./tdc";
 import { VEROLOG_2017_COLUMNS, VEROLOG_2017_META, VEROLOG_2017_TEXT_COLUMNS } from "./verolog-2017";
+import { OPENSLR_RESOURCE_COLUMNS, OPENSLR_RESOURCE_META, OPENSLR_RESOURCE_TEXT_COLUMNS } from "./openslr-resource";
 import { CUSTOMER_POINTS_COLUMNS, CUSTOMER_POINTS_META, CUSTOMER_POINTS_TEXT_COLUMNS } from "./customer-points";
 import { SOLOMON_COLUMNS, SOLOMON_META, SOLOMON_TEXT_COLUMNS } from "./solomon";
 import { DTOP_COLUMNS, TOP_COLUMNS, TOP_META, TOP_TEXT_COLUMNS } from "./top";
@@ -25,6 +26,7 @@ export const INSTANCE_SHAPES = {
   mankowska: { columns: MANKOWSKA_COLUMNS, text: MANKOWSKA_TEXT_COLUMNS, meta: MANKOWSKA_META },
   "verolog-2017": { columns: VEROLOG_2017_COLUMNS, text: VEROLOG_2017_TEXT_COLUMNS, meta: VEROLOG_2017_META },
   tdc: { columns: TDC_COLUMNS, text: TDC_TEXT_COLUMNS, meta: TDC_META },
+  "openslr-resource": { columns: OPENSLR_RESOURCE_COLUMNS, text: OPENSLR_RESOURCE_TEXT_COLUMNS, meta: OPENSLR_RESOURCE_META },
 } as const;
 
 /** The format names of the instance file parsers. */

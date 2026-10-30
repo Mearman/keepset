@@ -11,6 +11,7 @@ import { parseMatrixMarket } from "./matrix-market";
 import { parseCsvTable } from "./csv-table";
 import { parseGeojson } from "./geojson";
 import { parseHhcrsp } from "./hhcrsp";
+import { parseOpenslrResource } from "./openslr-resource";
 import { parseMankowska } from "./mankowska";
 import { parseTdc } from "./tdc";
 import { parseVerolog2017 } from "./verolog-2017";
@@ -210,6 +211,9 @@ export function parseNative(bytes: Uint8Array, parser: Parser): NativeDocument {
   }
   if (parser.format === "hhcrsp") {
     return parseHhcrsp(text);
+  }
+  if (parser.format === "openslr-resource") {
+    return parseOpenslrResource(text);
   }
   if (parser.format === "ogb") {
     // The recipe schema gives a multi-file parser only a files archive, which is read by parseNativeFiles, so a parsed entry never reaches this.
