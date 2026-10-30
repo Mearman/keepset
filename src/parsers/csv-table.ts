@@ -338,6 +338,9 @@ export class TableReader {
   public constructor(private readonly options: CsvTableParser) {
     this.records = new RecordReader(options);
     this.missing = new Set(options.nullValues ?? []);
+    if (options.headerNames !== undefined) {
+      this.layout = layoutOf({ fields: [...options.headerNames], line: options.skipLines + 1 }, options);
+    }
   }
 
   /**
@@ -353,7 +356,7 @@ export class TableReader {
   /**
    * Ends the file.
    * @returns The rows left when the text ends, in file order.
-   * @throws NativeParseError as `parseCsvTable` does, including for a file with no header row.
+   * @throws NativeParseError as `parseCsvTable` does, including for a file with no header row unless the recipe names the columns itself.
    */
   public end(): NativeRow[] {
     const rows = this.rowsOf(this.records.end());
@@ -444,7 +447,7 @@ function layoutOf(header: CsvRecord, options: CsvTableParser): RowLayout {
 }
 
 /**
- * Parses a delimited table into rows (a cell whose text is one of the recipe's `nullValues` is empty, so null): the first record after `skipLines` lines is the header, each later record is a row, and every row carries every column but the id column (or, when the recipe lists `columns`, exactly those, so a wide table is not held cell for cell), an empty cell being null. Cells are trimmed. A column the recipe declares numeric is read as a decimal number times its factor and any other column stays a string. `id` is the row's id, so a column of that name which is not the id column is named by its position. A row's id is the cell of the recipe's id column, which is then not also a column, or its 1-based row number when the recipe names none. Blank lines are skipped; a row with a different number of fields than the header, two columns with the same name, and an id cell that is empty are errors.
+ * Parses a delimited table into rows (a cell whose text is one of the recipe's `nullValues` is empty, so null): the first record after `skipLines` lines is the header, each later record is a row (or, when the recipe gives `headerNames`, the file has no header and every record after `skipLines` lines is a row, its cells named by those in order), and every row carries every column but the id column (or, when the recipe lists `columns`, exactly those, so a wide table is not held cell for cell), an empty cell being null. Cells are trimmed. A column the recipe declares numeric is read as a decimal number times its factor and any other column stays a string. `id` is the row's id, so a column of that name which is not the id column is named by its position. A row's id is the cell of the recipe's id column, which is then not also a column, or its 1-based row number when the recipe names none. Blank lines are skipped; a row with a different number of fields than the header, two columns with the same name, and an id cell that is empty are errors.
  * @param text - The file text, or its pieces in order.
  * @param options - The recipe's table parser.
  * @returns The rows, in file order.

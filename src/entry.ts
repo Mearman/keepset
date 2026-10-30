@@ -330,12 +330,15 @@ export const ParserSchema = z.discriminatedUnion("format", [
       idColumn: ColumnNameSchema.nullable(),
       numericColumns: z.array(z.object({ column: ColumnNameSchema, factor: z.number().positive() }).strict()),
       columns: z.array(ColumnNameSchema).optional(),
+      /** Set on a file with no header row: the names of its columns in order, as the parser would have spelled them from a header, so the first record after the skipped lines is a row. */
+      headerNames: z.array(ColumnNameSchema).min(1).optional(),
       /** Cell texts, besides the empty cell, that stand for a missing value (`NA`): such a cell is null in every column, numeric or not. */
       nullValues: z.array(z.string().min(1)).optional(),
     })
     .strict()
     .refine((parser) => new Set(parser.numericColumns.map((numeric) => numeric.column)).size === parser.numericColumns.length, { message: "a column may be declared numeric once", path: ["numericColumns"] })
-    .refine((parser) => parser.columns === undefined || new Set(parser.columns).size === parser.columns.length, { message: "a column may be listed once", path: ["columns"] }),
+    .refine((parser) => parser.columns === undefined || new Set(parser.columns).size === parser.columns.length, { message: "a column may be listed once", path: ["columns"] })
+    .refine((parser) => parser.headerNames === undefined || new Set(parser.headerNames).size === parser.headerNames.length, { message: "a header name may be given once", path: ["headerNames"] }),
   z
     .object({
       format: z.literal("geojson"),
