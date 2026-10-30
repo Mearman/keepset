@@ -3,6 +3,7 @@ import { CategoryIdSchema, countTarget, getCategory, getCollectionTarget, getTar
 import { KeepsetError, UnknownCategoryError } from "./errors";
 import { GraphV1Schema } from "./targets/graph-v1";
 import { ResourcesV1Schema } from "./targets/resources-v1";
+import { SpeechV1Schema } from "./targets/speech-v1";
 import { TasksV1Schema } from "./targets/tasks-v1";
 import { TextsV1Schema } from "./targets/texts-v1";
 
@@ -26,6 +27,11 @@ describe("the category registry", () => {
     expect(getCategory("tasks/v1").counted).toEqual(["nodes"]);
   });
 
+  it("resolves speech/v1 to its target schema", () => {
+    expect(getTarget("speech/v1")).toBe(SpeechV1Schema);
+    expect(getCategory("speech/v1").counted).toEqual(["nodes"]);
+  });
+
   it("resolves resources/v1 to its target schema", () => {
     expect(getTarget("resources/v1")).toBe(ResourcesV1Schema);
     expect(getCategory("resources/v1").counted).toEqual(["nodes"]);
@@ -39,14 +45,14 @@ describe("the category registry", () => {
   it("rejects an unknown category id with an error naming the known ones", () => {
     expect(() => getTarget("graph/v2")).toThrow(UnknownCategoryError);
     expect(() => getTarget("graph/v2")).toThrow(KeepsetError);
-    expect(() => getTarget("graph/v2")).toThrow(/known categories are graph\/v1, resources\/v1, tasks\/v1, texts\/v1/);
+    expect(() => getTarget("graph/v2")).toThrow(/known categories are graph\/v1, resources\/v1, speech\/v1, tasks\/v1, texts\/v1/);
   });
 
-  it("holds the removed ids out of the registry: the registry is graph/v1, resources/v1, tasks/v1 and texts/v1, and or/v1 and or-set/v1 are unknown", () => {
-    expect(listCategories().map((category) => category.id)).toEqual(["graph/v1", "resources/v1", "tasks/v1", "texts/v1"]);
+  it("holds the removed ids out of the registry: the registry is graph/v1, resources/v1, speech/v1, tasks/v1 and texts/v1, and or/v1 and or-set/v1 are unknown", () => {
+    expect(listCategories().map((category) => category.id)).toEqual(["graph/v1", "resources/v1", "speech/v1", "tasks/v1", "texts/v1"]);
     for (const removed of ["or/v1", "or-set/v1"]) {
       expect(() => getTarget(removed)).toThrow(UnknownCategoryError);
-      expect(() => getCategory(removed)).toThrow(/known categories are graph\/v1, resources\/v1, tasks\/v1, texts\/v1$/);
+      expect(() => getCategory(removed)).toThrow(/known categories are graph\/v1, resources\/v1, speech\/v1, tasks\/v1, texts\/v1$/);
     }
   });
 
@@ -68,6 +74,7 @@ describe("the category registry", () => {
     expect(kindOf("tasks/v1")).toBe("tasks");
     expect(kindOf("texts/v1")).toBe("texts");
     expect(kindOf("resources/v1")).toBe("resources");
+    expect(kindOf("speech/v1")).toBe("speech");
   });
 });
 
@@ -150,6 +157,40 @@ describe("the resources/v1 target", () => {
 
   it("counts its nodes", () => {
     expect(countTarget("resources/v1", ResourcesV1Schema.parse(resource))).toEqual(new Map([["nodes", resource.nodes.length]]));
+  });
+});
+
+const corpus = {
+  meta: { name: "Crowdsourced speech", language: "ta", licence: null },
+  nodes: [
+    { id: "taf_02345_00348037167", text: "ஆஸ்த்ரேலியப்", speaker: "02345", gender: "female", language: "ta-IN", audio: "taf_02345_00348037167.wav", duration: 3.2, split: "train" },
+    { id: "taf_07049_00155837462", text: null, extraColumn: "kept as given" },
+  ],
+};
+
+describe("the speech/v1 target", () => {
+  it("accepts a representative corpus, with every utterance field optional or null and others kept, and a corpus with no utterances", () => {
+    expect(SpeechV1Schema.parse(corpus)).toEqual(corpus);
+    expect(SpeechV1Schema.is({ meta: {}, nodes: [] })).toBe(true);
+  });
+
+  it("rejects an utterance without an id and a duplicate id", () => {
+    expect(SpeechV1Schema.is({ ...corpus, nodes: [{ text: "x" }] })).toBe(false);
+    const result = SpeechV1Schema.safeParse({ ...corpus, nodes: [{ id: "a" }, { id: "a" }] });
+    expect(result.success).toBe(false);
+    expect(JSON.stringify(result.error?.issues)).toMatch(/duplicate node id/);
+  });
+
+  it("rejects an empty or mistyped utterance field, a negative duration, a non-scalar meta value and any key beyond meta and nodes", () => {
+    for (const node of [{ text: "" }, { speaker: 5 }, { duration: "3.2" }, { duration: -1 }, { split: [] }]) {
+      expect(SpeechV1Schema.is({ ...corpus, nodes: [{ id: "a", ...node }] })).toBe(false);
+    }
+    expect(SpeechV1Schema.is({ ...corpus, meta: { nested: { a: 1 } } })).toBe(false);
+    expect(SpeechV1Schema.is({ ...corpus, edges: [] })).toBe(false);
+  });
+
+  it("counts its nodes", () => {
+    expect(countTarget("speech/v1", SpeechV1Schema.parse(corpus))).toEqual(new Map([["nodes", corpus.nodes.length]]));
   });
 });
 
