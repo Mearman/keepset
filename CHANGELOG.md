@@ -1,3 +1,11 @@
+# [0.70.0](https://github.com/Mearman/keepset/compare/v0.69.0...v0.70.0) (2026-10-30)
+
+
+### Features
+
+* **catalogue:** add the dialect and emotion transcript tables of two OpenSLR corpora ([bd9b0f0](https://github.com/Mearman/keepset/commit/bd9b0f02f33ea0413f8af540450c4c8bc0faeb83))
+* **parsers:** read a pipe delimited table ([e43840b](https://github.com/Mearman/keepset/commit/e43840b15e9b409f6e3ab3eb8d82e401b536ea62))
+
 # [0.69.0](https://github.com/Mearman/keepset/compare/v0.68.0...v0.69.0) (2026-10-30)
 
 
