@@ -231,7 +231,7 @@ async function verifyOne(curated: CurationItem): Promise<string> {
     const result = entire ? await fetchEntry(dataset) : await attempt(0);
     memory.sample();
     const instances = "instances" in result.data ? result.data.instances : [];
-    const nodes = "nodes" in result.data ? result.data.nodes : instances.flatMap((instance) => instance.nodes);
+    const nodes = "nodes" in result.data ? result.data.nodes : instances.flatMap((instance) => [...instance.nodes]);
     tally.add(nodes);
     held = nodes.length;
     shape = "instances" in result.data ? `${String(instances.length)} instances, ${String(nodes.length)} nodes` : `${String(nodes.length)} rows`;

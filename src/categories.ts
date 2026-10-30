@@ -3,16 +3,18 @@ import { UnknownCategoryError } from "./errors";
 import { GraphV1Schema, type GraphV1 } from "./targets/graph-v1";
 import { COLLECTION_COUNTED, collectionOf, type Collection } from "./targets/collection";
 import { TaskSchema, TasksMetaSchema, TasksV1Schema, type Task, type TasksV1 } from "./targets/tasks-v1";
+import { TextSchema, TextsMetaSchema, TextsV1Schema, type Text, type TextsV1 } from "./targets/texts-v1";
 import type { JsonScalar } from "./targets/json-scalar";
 
 /** Every category id the registry knows. A category id is `<kind>/v<version>`: the kind of data, and the version of its normalisation target, so a breaking change to a target is a new category rather than an edit to an old one. */
-export const CategoryIdSchema = z.enum(["graph/v1", "tasks/v1"]);
+export const CategoryIdSchema = z.enum(["graph/v1", "tasks/v1", "texts/v1"]);
 export type CategoryId = z.infer<typeof CategoryIdSchema>;
 
 /** The normalisation target each category resolves to, keyed by category id. */
 export interface CategoryTargets {
   readonly "graph/v1": GraphV1;
   readonly "tasks/v1": TasksV1;
+  readonly "texts/v1": TextsV1;
 }
 
 /** The normalised shape of any category: what `fetchDataset` can resolve to. */
@@ -27,6 +29,7 @@ export type CollectionTarget<Id extends CategoryId = CategoryId> = Id extends Ca
 /** The node a streamed result of each category hands on, for a category whose target is `{ meta, nodes }` and nothing else. */
 export interface StreamedNodes {
   readonly "tasks/v1": Task;
+  readonly "texts/v1": Text;
 }
 
 /** The categories that can be streamed. */
@@ -68,6 +71,14 @@ const registry: { readonly [Id in CategoryId]: CategoryOf<Id> } = {
     collection: collectionOf(TasksV1Schema),
     counted: ["nodes"],
     streamed: { meta: TasksMetaSchema, node: TaskSchema },
+  },
+  "texts/v1": {
+    id: "texts/v1",
+    description: "A set of texts (works in a collection, such as the books of a library's catalogue) as { meta, nodes }: a flat record of scalar metadata and nodes carrying at least an id, with optional title, language, authors, subjects, issue date, type, classification and collections.",
+    target: TextsV1Schema,
+    collection: collectionOf(TextsV1Schema),
+    counted: ["nodes"],
+    streamed: { meta: TextsMetaSchema, node: TextSchema },
   },
 };
 

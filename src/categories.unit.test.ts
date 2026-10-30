@@ -3,6 +3,7 @@ import { CategoryIdSchema, countTarget, getCategory, getCollectionTarget, getTar
 import { KeepsetError, UnknownCategoryError } from "./errors";
 import { GraphV1Schema } from "./targets/graph-v1";
 import { TasksV1Schema } from "./targets/tasks-v1";
+import { TextsV1Schema } from "./targets/texts-v1";
 
 const graph = {
   meta: { name: "Zachary karate club", directed: false, nodeCount: 3, note: null },
@@ -24,17 +25,22 @@ describe("the category registry", () => {
     expect(getCategory("tasks/v1").counted).toEqual(["nodes"]);
   });
 
+  it("resolves texts/v1 to its target schema", () => {
+    expect(getTarget("texts/v1")).toBe(TextsV1Schema);
+    expect(getCategory("texts/v1").counted).toEqual(["nodes"]);
+  });
+
   it("rejects an unknown category id with an error naming the known ones", () => {
     expect(() => getTarget("graph/v2")).toThrow(UnknownCategoryError);
     expect(() => getTarget("graph/v2")).toThrow(KeepsetError);
-    expect(() => getTarget("graph/v2")).toThrow(/known categories are graph\/v1, tasks\/v1/);
+    expect(() => getTarget("graph/v2")).toThrow(/known categories are graph\/v1, tasks\/v1, texts\/v1/);
   });
 
-  it("holds the removed ids out of the registry: the registry is graph/v1 and tasks/v1, and or/v1 and or-set/v1 are unknown", () => {
-    expect(listCategories().map((category) => category.id)).toEqual(["graph/v1", "tasks/v1"]);
+  it("holds the removed ids out of the registry: the registry is graph/v1, tasks/v1 and texts/v1, and or/v1 and or-set/v1 are unknown", () => {
+    expect(listCategories().map((category) => category.id)).toEqual(["graph/v1", "tasks/v1", "texts/v1"]);
     for (const removed of ["or/v1", "or-set/v1"]) {
       expect(() => getTarget(removed)).toThrow(UnknownCategoryError);
-      expect(() => getCategory(removed)).toThrow(/known categories are graph\/v1, tasks\/v1$/);
+      expect(() => getCategory(removed)).toThrow(/known categories are graph\/v1, tasks\/v1, texts\/v1$/);
     }
   });
 
@@ -54,6 +60,7 @@ describe("the category registry", () => {
   it("derives the kind of data from the id", () => {
     expect(kindOf("graph/v1")).toBe("graph");
     expect(kindOf("tasks/v1")).toBe("tasks");
+    expect(kindOf("texts/v1")).toBe("texts");
   });
 });
 
@@ -104,6 +111,38 @@ const instance = {
     { id: "c", extraColumn: "kept as given" },
   ],
 };
+
+const catalogue = {
+  meta: { name: "Library catalogue", note: null },
+  nodes: [
+    { id: "1", title: "The Declaration of Independence", language: "en", authors: "Jefferson, Thomas, 1743-1826", issued: "1971-12-01", type: "Text" },
+    { id: "2", title: null, collections: "Politics; United States Law", extraColumn: "kept as given" },
+  ],
+};
+
+describe("the texts/v1 target", () => {
+  it("accepts a representative catalogue, with every field optional or null and others kept", () => {
+    expect(TextsV1Schema.parse(catalogue)).toEqual(catalogue);
+  });
+
+  it("rejects a node without an id and a duplicate id", () => {
+    expect(TextsV1Schema.is({ ...catalogue, nodes: [{ title: "x" }] })).toBe(false);
+    const result = TextsV1Schema.safeParse({ ...catalogue, nodes: [{ id: "a" }, { id: "a" }] });
+    expect(result.success).toBe(false);
+    expect(JSON.stringify(result.error?.issues)).toMatch(/duplicate node id/);
+  });
+
+  it("rejects an empty text field, a non-text field and any key beyond meta and nodes", () => {
+    for (const node of [{ title: "" }, { language: 5 }, { authors: [] }]) {
+      expect(TextsV1Schema.is({ ...catalogue, nodes: [{ id: "a", ...node }] })).toBe(false);
+    }
+    expect(TextsV1Schema.is({ ...catalogue, edges: [] })).toBe(false);
+  });
+
+  it("counts its nodes", () => {
+    expect(countTarget("texts/v1", TextsV1Schema.parse(catalogue))).toEqual(new Map([["nodes", catalogue.nodes.length]]));
+  });
+});
 
 describe("the tasks/v1 target", () => {
   it("accepts a representative instance, with every field optional or null and others kept", () => {
