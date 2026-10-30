@@ -42,6 +42,11 @@ describe("the openslr-resource parser", () => {
     expect(parseOpenslrResource(page({ downloads: bare })).nodes).toEqual([{ id: "a.tgz", url: "https://host.example/resources/7/a.tgz", size: "2.7M", description: null }]);
   });
 
+  it("trims the whitespace a page leaves inside a file link's address", () => {
+    const padded = '<p class="resource"> <b>Downloads (use a mirror closer to you):</b> <br>\n<a href="https://host.example/resources/7/a.tgz\t"> a.tgz </a> [2.7M] &nbsp; ( x\n) &nbsp;  Mirrors: \n<br><br></p>';
+    expect(parseOpenslrResource(page({ downloads: padded })).nodes).toEqual([{ id: "a.tgz", url: "https://host.example/resources/7/a.tgz", size: "2.7M", description: "x" }]);
+  });
+
   it("gives a labelled line the page does not have as null, and leaves an unknown character reference as written", () => {
     const { meta } = parseOpenslrResource(page({ labels: '<p class="resource"> <b>Identifier:</b> SLR7 </p>\n', title: "Caf&eacute; &#233; &#xE9;" }));
     expect(meta).toMatchObject({ name: "Caf&eacute; é é", summary: null, category: null, licence: null });
