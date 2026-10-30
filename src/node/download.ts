@@ -108,7 +108,10 @@ async function follow(url: URL, init: DownloadInit, redirects: number): Promise<
     throw new KeepsetError(`${url.href} answered without a status line`);
   }
   if (!REDIRECTS.has(status)) {
-    return new Response(await readBody(response), { status, statusText: statusMessage });
+    // The one header the resolution chain reads: whether the bytes are a transport encoding of the page, which this downloader leaves as served.
+    const contentEncoding = response.headers["content-encoding"];
+
+    return new Response(await readBody(response), { status, statusText: statusMessage, ...(contentEncoding === undefined ? {} : { headers: { "content-encoding": contentEncoding } }) });
   }
   response.resume();
   const { location } = response.headers;
@@ -123,7 +126,7 @@ async function follow(url: URL, init: DownloadInit, redirects: number): Promise<
 }
 
 /**
- * Downloads a URL's bytes exactly as the server sends them, following redirects. Unlike the platform `fetch`, it never undoes a `Content-Encoding`: servers commonly label a `.gz` file `Content-Encoding: gzip`, and a recipe that unpacks gzip needs the file as published, which is also what its SHA-256 is recorded over. No `Accept-Encoding` is sent, so a server that compresses on the fly has no reason to.
+ * Downloads a URL's bytes exactly as the server sends them, following redirects; the response carries the server's `Content-Encoding`, so the caller can tell a transport encoding from a compressed file. Unlike the platform `fetch`, it never undoes a `Content-Encoding`: servers commonly label a `.gz` file `Content-Encoding: gzip`, and a recipe that unpacks gzip needs the file as published, which is also what its SHA-256 is recorded over. No `Accept-Encoding` is sent, so a server that compresses on the fly has no reason to.
  * @param url - An http or https URL.
  * @param init - The request options.
  * @returns A Response holding the raw bytes, with the final status.

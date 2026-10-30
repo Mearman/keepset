@@ -91,6 +91,31 @@ describe("resolveSource", () => {
   });
 });
 
+describe("resolveSource's transport encodings", () => {
+  const page = "<html>page</html>";
+  const gzipped = async (text: string): Promise<Uint8Array> => new Uint8Array(await new Response(new Blob([text]).stream().pipeThrough(new CompressionStream("gzip"))).arrayBuffer());
+  const gzipLabelled = async (text: string): Promise<Response> => new Response(await gzipped(text), { status: OK, headers: { "content-encoding": "gzip" } });
+
+  it("undoes a gzip transport encoding of a page, so a capture replayed gzip-encoded and one replayed plain give the same bytes", async () => {
+    const { port } = served({ [raw(PIN)]: await gzipLabelled(page) });
+    expect(new TextDecoder().decode((await resolveSource(live({ snapshot: snapshotOf(PIN, URL_LIVE) }), { port })).bytes)).toBe(page);
+    const plain = served({ [raw(PIN)]: page });
+    expect(new TextDecoder().decode((await resolveSource(live({ snapshot: snapshotOf(PIN, URL_LIVE) }), { port: plain.port })).bytes)).toBe(page);
+  });
+
+  it("leaves a compressed file as published, even when the server labels it gzip-encoded", async () => {
+    const file = "https://x.example/data.csv.gz";
+    const bytes = await gzipped(page);
+    const port: FetchPort = async () => Promise.resolve(new Response(bytes, { status: OK, headers: { "content-encoding": "gzip" } }));
+    expect((await resolveSource({ url: file, retrieved: "2026-10-01", status: "live" }, { port })).bytes).toEqual(bytes);
+  });
+
+  it("leaves bytes that are not gzip data alone when the label says gzip, as after a browser's platform fetch has decoded them", async () => {
+    const port: FetchPort = async () => Promise.resolve(new Response(page, { status: OK, headers: { "content-encoding": "gzip" } }));
+    expect(new TextDecoder().decode((await resolveSource({ url: URL_LIVE, retrieved: "2026-10-01", status: "live" }, { port })).bytes)).toBe(page);
+  });
+});
+
 describe("captureRequestFor", () => {
   const download = (fetchedUrl: string, status: Source["status"]): Parameters<typeof captureRequestFor>[0] => ({ source: { url: URL_LIVE, status }, fetchedUrl });
 
