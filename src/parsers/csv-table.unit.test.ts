@@ -66,6 +66,15 @@ describe("the csv-table parser", () => {
     expect(parseNative(utf8(""), options).nodes).toEqual([]);
   });
 
+  it("reads a double quote as an ordinary character in a file the recipe says is unquoted", () => {
+    const options = table({ delimiter: "tab", idColumn: "file_id", headerNames: ["file_id", "text"], unquoted: true });
+    expect(parseNative(utf8('a1\tthe "quoted" word\nb2\t"leading quote\n'), options).nodes).toEqual([
+      { id: "a1", text: 'the "quoted" word' },
+      { id: "b2", text: '"leading quote' },
+    ]);
+    expect(parseError(() => parseNative(utf8('a1\tthe "quoted" word\n'), { ...options, unquoted: undefined })).message).toContain("a quote opens inside an unquoted field");
+  });
+
   it("reports a row whose width differs from the names the recipe gives", () => {
     const error = parseError(() => parseNative(utf8("a1\thello\tmore\n"), table({ delimiter: "tab", idColumn: "file_id", headerNames: ["file_id", "text"] })));
     expect(error.message).toContain("the row has 3 fields, the header has 2");
