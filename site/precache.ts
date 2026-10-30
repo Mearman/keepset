@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { readFileSync, writeFileSync } from "node:fs";
+import { appendFileSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 /** The service worker's precache manifest as buildSite writes it: a version naming the build and the URLs, relative to the site root, to cache on install. */
@@ -23,7 +23,8 @@ function fileOf(url: string): string {
 
 /**
  * Appends a digest of every precached file's bytes to the manifest's version, in place. The service worker answers from a cache named for that version, so a version that tracks only the package and the catalogue leaves returning visitors on stale assets whenever a deploy changes a stylesheet, script or page without a release in between; a content digest changes exactly when something the worker serves changed. Run after the client bundle is written, since the bundle's files are among the precached ones.
- * @param outDir - The built site directory, holding precache.json and every file it names.
+ * It also stamps the version on the end of sw.js as a comment. A browser installs a new service worker only when the worker's own bytes differ from the installed one's, and the worker reads its version from precache.json at run time, so without the stamp a deploy that changes only pages or assets would never reach a returning visitor.
+ * @param outDir - The built site directory, holding precache.json, sw.js and every file the manifest names.
  * @returns The version written.
  */
 export function finalisePrecache(outDir: string): string {
@@ -39,6 +40,7 @@ export function finalisePrecache(outDir: string): string {
   }
   const version = `${parsed.version}+${digest.digest("hex")}`;
   writeFileSync(manifestPath, JSON.stringify({ version, urls: parsed.urls }));
+  appendFileSync(join(outDir, "sw.js"), `\n// precache ${version}\n`);
 
   return version;
 }

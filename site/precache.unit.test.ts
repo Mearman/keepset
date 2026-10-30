@@ -19,6 +19,7 @@ function site(css: string): string {
   writeFileSync(join(outDir, "index.html"), "<html>home</html>");
   writeFileSync(join(outDir, "domains", "index.html"), "<html>domains</html>");
   writeFileSync(join(outDir, "app.css"), css);
+  writeFileSync(join(outDir, "sw.js"), "self.addEventListener();");
   writeFileSync(join(outDir, "precache.json"), JSON.stringify({ version: "1.2.3+cat@1", urls: ["./", "app.css", "domains/"] }));
 
   return outDir;
@@ -46,6 +47,15 @@ describe("finalisePrecache", () => {
     writeFileSync(join(outDir, "precache.json"), JSON.stringify({ version: "1.2.3+cat@1", urls: ["./", "app.css", "domains/"] }));
     writeFileSync(join(outDir, "domains", "index.html"), "<html>changed</html>");
     expect(finalisePrecache(outDir)).not.toBe(before);
+  });
+
+  it("stamps the version on the service worker, so its bytes differ whenever the version does", () => {
+    const first = site("a{}");
+    const second = site("b{}");
+    const firstVersion = finalisePrecache(first);
+    finalisePrecache(second);
+    expect(readFileSync(join(first, "sw.js"), "utf8")).toBe(`self.addEventListener();\n// precache ${firstVersion}\n`);
+    expect(readFileSync(join(first, "sw.js"), "utf8")).not.toBe(readFileSync(join(second, "sw.js"), "utf8"));
   });
 
   it("refuses a precache manifest of the wrong shape", () => {
