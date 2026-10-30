@@ -344,6 +344,22 @@ export const ParserSchema = z.discriminatedUnion("format", [
     .refine((parser) => parser.headerNames === undefined || new Set(parser.headerNames).size === parser.headerNames.length, { message: "a header name may be given once", path: ["headerNames"] }),
   z
     .object({
+      format: z.literal("json-table"),
+      encoding: z.literal("utf-8"),
+      /** `lines` is a file of one JSON record per line (as speech manifests are written), `array` a file that is one JSON array of records. */
+      layout: z.enum(["lines", "array"]),
+      /** The field whose value is each record's id; a record must hold it, as a string or a number. */
+      idField: ColumnNameSchema,
+      /** The fields kept besides the id, each a string, a number or null (also where a record lacks it); any other field of a record is left out. */
+      fields: z.array(ColumnNameSchema).min(1),
+      /** Fields, among those kept, that a source writes as decimal text (`"8.64"`) and that are read as numbers; a number the record already holds is kept as it is. */
+      numericFields: z.array(ColumnNameSchema).optional(),
+    })
+    .strict()
+    .refine((parser) => !parser.fields.includes(parser.idField) && new Set(parser.fields).size === parser.fields.length, { message: "the id field is the row's id, so it is not listed among the fields, and a field may be listed once", path: ["fields"] })
+    .refine((parser) => (parser.numericFields ?? []).every((field) => parser.fields.includes(field)), { message: "a numeric field must be among the fields kept", path: ["numericFields"] }),
+  z
+    .object({
       format: z.literal("geojson"),
       encoding: z.literal("utf-8"),
       idColumn: ColumnNameSchema.nullable(),
