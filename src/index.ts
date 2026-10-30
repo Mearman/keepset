@@ -50,6 +50,8 @@ export { TextSchema, TextsMetaSchema, TextsV1Schema } from "./targets/texts-v1";
 export type { Text, TextsV1 } from "./targets/texts-v1";
 export { ResourceFileSchema, ResourcesMetaSchema, ResourcesV1Schema } from "./targets/resources-v1";
 export type { ResourceFile, ResourcesV1 } from "./targets/resources-v1";
+export { SpeechMetaSchema, SpeechV1Schema, UtteranceSchema } from "./targets/speech-v1";
+export type { SpeechV1, Utterance } from "./targets/speech-v1";
 export { collectionOf } from "./targets/collection";
 export type { Collection, Instance } from "./targets/collection";
 export { validateDataset } from "./validate";
