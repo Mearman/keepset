@@ -321,6 +321,7 @@ export const ParserSchema = z.discriminatedUnion("format", [
   z.object({ format: z.literal("tdc"), encoding: EncodingSchema }).strict(),
   /** A resource page of OpenSLR (openslr.org): the resource's title, identifier, summary, category, licence, description and external address as the instance's meta, and its download links as nodes. */
   z.object({ format: z.literal("openslr-resource"), encoding: z.literal("utf-8") }).strict(),
+  z.object({ format: z.literal("utterance-lines"), encoding: EncodingSchema }).strict(),
   z
     .object({
       format: z.literal("csv-table"),
