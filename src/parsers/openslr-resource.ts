@@ -140,7 +140,7 @@ export function parseOpenslrResource(page: string): NativeInstance {
       }
       names.add(name);
       const description = textOf((match[4] ?? "").replace(/\)\s*$/, ""));
-      nodes.push({ id: name, url: match[1] ?? null, size: match[3] ?? null, description: description === "" ? null : description });
+      nodes.push({ id: name, url: match[1]?.trim() ?? null, size: match[3] ?? null, description: description === "" ? null : description });
     }
     if (nodes.length === 0) {
       throw new NativeParseError(FORMAT, lineOf(page, downloads.index), "the downloads block holds no file link");
