@@ -1,7 +1,7 @@
 {
   "name": "keepset",
   "description": "Library, CLI and statically generated catalogue for dataset fetch-and-normalise recipes",
-  "version": "0.72.0",
+  "version": "0.73.0",
   "bin": {
     "keepset": "./dist-cli/keepset.mjs"
   },

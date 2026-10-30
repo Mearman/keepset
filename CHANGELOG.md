@@ -1,3 +1,15 @@
+# [0.73.0](https://github.com/Mearman/keepset/compare/v0.72.0...v0.73.0) (2026-10-30)
+
+
+### Bug Fixes
+
+* **parsers:** trim the whitespace a resource page leaves in a file address ([087bd47](https://github.com/Mearman/keepset/commit/087bd47be7ee4052cc4be40e0d604ceb53170e70))
+
+
+### Features
+
+* **parsers:** read a table from JSON records ([4d2f74a](https://github.com/Mearman/keepset/commit/4d2f74a4969e12685f063cbc6ab0c906a842de84))
+
 # [0.72.0](https://github.com/Mearman/keepset/compare/v0.71.0...v0.72.0) (2026-10-30)
 
 
