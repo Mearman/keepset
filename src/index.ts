@@ -48,6 +48,8 @@ export { TaskSchema, TasksMetaSchema, TasksV1Schema } from "./targets/tasks-v1";
 export type { Task, TasksV1 } from "./targets/tasks-v1";
 export { TextSchema, TextsMetaSchema, TextsV1Schema } from "./targets/texts-v1";
 export type { Text, TextsV1 } from "./targets/texts-v1";
+export { ResourceFileSchema, ResourcesMetaSchema, ResourcesV1Schema } from "./targets/resources-v1";
+export type { ResourceFile, ResourcesV1 } from "./targets/resources-v1";
 export { collectionOf } from "./targets/collection";
 export type { Collection, Instance } from "./targets/collection";
 export { validateDataset } from "./validate";

@@ -2,12 +2,13 @@ import { z } from "zod";
 import { UnknownCategoryError } from "./errors";
 import { GraphV1Schema, type GraphV1 } from "./targets/graph-v1";
 import { COLLECTION_COUNTED, collectionOf, type Collection } from "./targets/collection";
+import { ResourceFileSchema, ResourcesMetaSchema, ResourcesV1Schema, type ResourceFile, type ResourcesV1 } from "./targets/resources-v1";
 import { TaskSchema, TasksMetaSchema, TasksV1Schema, type Task, type TasksV1 } from "./targets/tasks-v1";
 import { TextSchema, TextsMetaSchema, TextsV1Schema, type Text, type TextsV1 } from "./targets/texts-v1";
 import type { JsonScalar } from "./targets/json-scalar";
 
 /** Every category id the registry knows. A category id is `<kind>/v<version>`: the kind of data, and the version of its normalisation target, so a breaking change to a target is a new category rather than an edit to an old one. */
-export const CategoryIdSchema = z.enum(["graph/v1", "tasks/v1", "texts/v1"]);
+export const CategoryIdSchema = z.enum(["graph/v1", "resources/v1", "tasks/v1", "texts/v1"]);
 export type CategoryId = z.infer<typeof CategoryIdSchema>;
 
 /** The normalisation target each category resolves to, keyed by category id. */
@@ -15,6 +16,7 @@ export interface CategoryTargets {
   readonly "graph/v1": GraphV1;
   readonly "tasks/v1": TasksV1;
   readonly "texts/v1": TextsV1;
+  readonly "resources/v1": ResourcesV1;
 }
 
 /** The normalised shape of any category: what `fetchDataset` can resolve to. */
@@ -30,6 +32,7 @@ export type CollectionTarget<Id extends CategoryId = CategoryId> = Id extends Ca
 export interface StreamedNodes {
   readonly "tasks/v1": Task;
   readonly "texts/v1": Text;
+  readonly "resources/v1": ResourceFile;
 }
 
 /** The categories that can be streamed. */
@@ -79,6 +82,14 @@ const registry: { readonly [Id in CategoryId]: CategoryOf<Id> } = {
     collection: collectionOf(TextsV1Schema),
     counted: ["nodes"],
     streamed: { meta: TextsMetaSchema, node: TextSchema },
+  },
+  "resources/v1": {
+    id: "resources/v1",
+    description: "A downloadable resource as { meta, nodes }: a flat record of scalar metadata saying what the resource is, and nodes carrying at least an id, one per file it is distributed as, with optional url, size and description.",
+    target: ResourcesV1Schema,
+    collection: collectionOf(ResourcesV1Schema),
+    counted: ["nodes"],
+    streamed: { meta: ResourcesMetaSchema, node: ResourceFileSchema },
   },
 };
 
