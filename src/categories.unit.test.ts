@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { CategoryIdSchema, countTarget, getCategory, getCollectionTarget, getTarget, kindOf, listCategories } from "./categories";
 import { KeepsetError, UnknownCategoryError } from "./errors";
 import { GraphV1Schema } from "./targets/graph-v1";
+import { ResourcesV1Schema } from "./targets/resources-v1";
 import { TasksV1Schema } from "./targets/tasks-v1";
 import { TextsV1Schema } from "./targets/texts-v1";
 
@@ -25,6 +26,11 @@ describe("the category registry", () => {
     expect(getCategory("tasks/v1").counted).toEqual(["nodes"]);
   });
 
+  it("resolves resources/v1 to its target schema", () => {
+    expect(getTarget("resources/v1")).toBe(ResourcesV1Schema);
+    expect(getCategory("resources/v1").counted).toEqual(["nodes"]);
+  });
+
   it("resolves texts/v1 to its target schema", () => {
     expect(getTarget("texts/v1")).toBe(TextsV1Schema);
     expect(getCategory("texts/v1").counted).toEqual(["nodes"]);
@@ -33,14 +39,14 @@ describe("the category registry", () => {
   it("rejects an unknown category id with an error naming the known ones", () => {
     expect(() => getTarget("graph/v2")).toThrow(UnknownCategoryError);
     expect(() => getTarget("graph/v2")).toThrow(KeepsetError);
-    expect(() => getTarget("graph/v2")).toThrow(/known categories are graph\/v1, tasks\/v1, texts\/v1/);
+    expect(() => getTarget("graph/v2")).toThrow(/known categories are graph\/v1, resources\/v1, tasks\/v1, texts\/v1/);
   });
 
-  it("holds the removed ids out of the registry: the registry is graph/v1, tasks/v1 and texts/v1, and or/v1 and or-set/v1 are unknown", () => {
-    expect(listCategories().map((category) => category.id)).toEqual(["graph/v1", "tasks/v1", "texts/v1"]);
+  it("holds the removed ids out of the registry: the registry is graph/v1, resources/v1, tasks/v1 and texts/v1, and or/v1 and or-set/v1 are unknown", () => {
+    expect(listCategories().map((category) => category.id)).toEqual(["graph/v1", "resources/v1", "tasks/v1", "texts/v1"]);
     for (const removed of ["or/v1", "or-set/v1"]) {
       expect(() => getTarget(removed)).toThrow(UnknownCategoryError);
-      expect(() => getCategory(removed)).toThrow(/known categories are graph\/v1, tasks\/v1, texts\/v1$/);
+      expect(() => getCategory(removed)).toThrow(/known categories are graph\/v1, resources\/v1, tasks\/v1, texts\/v1$/);
     }
   });
 
@@ -61,6 +67,7 @@ describe("the category registry", () => {
     expect(kindOf("graph/v1")).toBe("graph");
     expect(kindOf("tasks/v1")).toBe("tasks");
     expect(kindOf("texts/v1")).toBe("texts");
+    expect(kindOf("resources/v1")).toBe("resources");
   });
 });
 
@@ -111,6 +118,40 @@ const instance = {
     { id: "c", extraColumn: "kept as given" },
   ],
 };
+
+const resource = {
+  meta: { name: "LibriSpeech ASR corpus", identifier: "SLR12", licence: "CC BY 4.0", externalUrl: null },
+  nodes: [
+    { id: "dev-clean.tar.gz", url: "https://example.com/resources/12/dev-clean.tar.gz", size: "337M", description: "development set" },
+    { id: "intro.txt", extraColumn: "kept as given" },
+  ],
+};
+
+describe("the resources/v1 target", () => {
+  it("accepts a representative resource, with every file field optional or null and others kept, and a resource with no files", () => {
+    expect(ResourcesV1Schema.parse(resource)).toEqual(resource);
+    expect(ResourcesV1Schema.is({ meta: {}, nodes: [] })).toBe(true);
+  });
+
+  it("rejects a file without an id and a duplicate id", () => {
+    expect(ResourcesV1Schema.is({ ...resource, nodes: [{ url: "x" }] })).toBe(false);
+    const result = ResourcesV1Schema.safeParse({ ...resource, nodes: [{ id: "a" }, { id: "a" }] });
+    expect(result.success).toBe(false);
+    expect(JSON.stringify(result.error?.issues)).toMatch(/duplicate node id/);
+  });
+
+  it("rejects an empty or non-text file field, a non-scalar meta value and any key beyond meta and nodes", () => {
+    for (const node of [{ url: "" }, { size: 5 }, { description: [] }]) {
+      expect(ResourcesV1Schema.is({ ...resource, nodes: [{ id: "a", ...node }] })).toBe(false);
+    }
+    expect(ResourcesV1Schema.is({ ...resource, meta: { nested: { a: 1 } } })).toBe(false);
+    expect(ResourcesV1Schema.is({ ...resource, edges: [] })).toBe(false);
+  });
+
+  it("counts its nodes", () => {
+    expect(countTarget("resources/v1", ResourcesV1Schema.parse(resource))).toEqual(new Map([["nodes", resource.nodes.length]]));
+  });
+});
 
 const catalogue = {
   meta: { name: "Library catalogue", note: null },
