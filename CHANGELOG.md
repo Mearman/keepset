@@ -1,3 +1,10 @@
+# [0.68.0](https://github.com/Mearman/keepset/compare/v0.67.0...v0.68.0) (2026-10-30)
+
+
+### Features
+
+* **catalogue:** file the OpenSLR resources one entry each, by category ([1c87b8a](https://github.com/Mearman/keepset/commit/1c87b8aa5c507a3c9f31d8d598a31891678770c7))
+
 # [0.67.0](https://github.com/Mearman/keepset/compare/v0.66.0...v0.67.0) (2026-10-30)
 
 
