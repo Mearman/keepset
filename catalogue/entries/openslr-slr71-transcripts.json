@@ -1,0 +1,108 @@
+{
+  "aliases": [
+    "slr71-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].text",
+        "op": "move",
+        "to": "nodes[].text"
+      }
+    ],
+    "source": "csv-table",
+    "target": "speech/v1"
+  },
+  "description": "The transcripts of Crowdsourced high-quality Chilean Spanish speech data set: one record per utterance with its identifier and text. It carries none of the audio, which the download list of openslr-slr71 gives.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "instances": 2
+  },
+  "id": "openslr-slr71-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 4.0 International",
+    "url": "https://www.openslr.org/71/"
+  },
+  "name": "Crowdsourced high-quality Chilean Spanish speech data set transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "files": [
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "line_index_female.tsv",
+        "source": 0
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "line_index_male.tsv",
+        "source": 1
+      }
+    ],
+    "parser": {
+      "delimiter": "tab",
+      "encoding": "utf-8",
+      "format": "csv-table",
+      "headerNames": [
+        "file_id",
+        "text"
+      ],
+      "idColumn": "file_id",
+      "numericColumns": [],
+      "skipLines": 0,
+      "unquoted": true
+    },
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 135202,
+        "sha256": "4a32f2a7b72b603ffb85562cd338e6e92a2f8097914aa9c7dafd1783de44c0e7",
+        "timestamp": "20210724052224",
+        "url": "https://web.archive.org/web/20210724052224/https://www.openslr.org/resources/71/line_index_female.tsv"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/resources/71/line_index_female.tsv"
+    },
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 205357,
+        "sha256": "25c60b5e29d3356ae37136d0a36a55fc9d89882770a47413c8a3872db6a9c966",
+        "timestamp": "20210724034236",
+        "url": "https://web.archive.org/web/20210724034236/https://www.openslr.org/resources/71/line_index_male.tsv"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/resources/71/line_index_male.tsv"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "text"
+  ]
+}

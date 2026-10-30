@@ -1,0 +1,108 @@
+{
+  "aliases": [
+    "slr78-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].text",
+        "op": "move",
+        "to": "nodes[].text"
+      }
+    ],
+    "source": "csv-table",
+    "target": "speech/v1"
+  },
+  "description": "The transcripts of Crowdsourced high-quality Gujarati multi-speaker speech data set: one record per utterance with its identifier and text. It carries none of the audio, which the download list of openslr-slr78 gives.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "instances": 2
+  },
+  "id": "openslr-slr78-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 4.0 International",
+    "url": "https://www.openslr.org/78/"
+  },
+  "name": "Crowdsourced high-quality Gujarati multi-speaker speech data set transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "files": [
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "line_index_female.tsv",
+        "source": 0
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "line_index_male.tsv",
+        "source": 1
+      }
+    ],
+    "parser": {
+      "delimiter": "tab",
+      "encoding": "utf-8",
+      "format": "csv-table",
+      "headerNames": [
+        "file_id",
+        "text"
+      ],
+      "idColumn": "file_id",
+      "numericColumns": [],
+      "skipLines": 0,
+      "unquoted": true
+    },
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 423647,
+        "sha256": "86fa6985a903d731bb1668e6bfba7d78548fb39a6a5d9e46df30d5ffcc22ec1b",
+        "timestamp": "20210724054749",
+        "url": "https://web.archive.org/web/20210724054749/https://www.openslr.org/resources/78/line_index_female.tsv"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/resources/78/line_index_female.tsv"
+    },
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 393771,
+        "sha256": "cdc78e892d2b15d021e6939ee42a4716b642e3c5a1ed573ec13a95a8e89ff7e1",
+        "timestamp": "20210724041552",
+        "url": "https://web.archive.org/web/20210724041552/https://www.openslr.org/resources/78/line_index_male.tsv"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/resources/78/line_index_male.tsv"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "text"
+  ]
+}
