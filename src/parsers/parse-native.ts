@@ -13,6 +13,7 @@ import { parseGeojson } from "./geojson";
 import { parseHhcrsp } from "./hhcrsp";
 import { parseOpenslrResource } from "./openslr-resource";
 import { parseUtteranceLines } from "./utterance-lines";
+import { parseJsonTable } from "./json-table";
 import { parseMankowska } from "./mankowska";
 import { parseTdc } from "./tdc";
 import { parseVerolog2017 } from "./verolog-2017";
@@ -130,7 +131,7 @@ export function* decodePieces(bytes: Uint8Array, parser: Parser, pieceBytes: num
   }
 }
 
-type TableParser = Extract<Parser, { format: "csv-table" | "geojson" }>;
+type TableParser = Extract<Parser, { format: "csv-table" | "geojson" | "json-table" }>;
 
 /**
  * Reads a file into the native shape of the recipe's parser: a graph for the graph formats, a table of rows for the table formats.
@@ -170,6 +171,9 @@ export function parseNative(bytes: Uint8Array, parser: Parser): NativeDocument {
   const text = decode(bytes, parser);
   if (parser.format === "geojson") {
     return parseGeojson(text, parser);
+  }
+  if (parser.format === "json-table") {
+    return parseJsonTable(text, parser);
   }
   if (parser.format === "matrix-market") {
     return parseMatrixMarket(text);

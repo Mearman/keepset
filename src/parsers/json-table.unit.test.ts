@@ -1,0 +1,66 @@
+import { describe, expect, it } from "vitest";
+import type { Parser } from "../entry";
+import { NativeParseError } from "../errors";
+import { parseNative } from "./parse-native";
+import { parseJsonTable } from "./json-table";
+
+const parser = (options: Partial<Extract<Parser, { format: "json-table" }>> = {}): Extract<Parser, { format: "json-table" }> => ({
+  format: "json-table",
+  encoding: "utf-8",
+  layout: "lines",
+  idField: "audio_filepath",
+  fields: ["text", "duration"],
+  ...options,
+});
+
+describe("the json-table parser", () => {
+  it("reads one record per line, keeping the id as text and the fields it is told to, and leaving the rest out", () => {
+    const text = '{"audio_filepath": "a/1.wav", "duration": 2.5, "text": "hello", "extra": {"nested": true}}\n\n{"audio_filepath": "a/2.wav", "text": "world", "duration": null}\n';
+    expect(parseJsonTable(text, parser()).nodes).toEqual([
+      { id: "a/1.wav", text: "hello", duration: 2.5 },
+      { id: "a/2.wav", text: "world", duration: null },
+    ]);
+  });
+
+  it("reads an array of records, giving a field a record lacks as null and a numeric id as text", () => {
+    const text = '[{"id": 64869, "text": "one"}, {"id": "7", "text": "two", "length": "8.1"}]';
+    expect(parseJsonTable(text, parser({ layout: "array", idField: "id", fields: ["text", "length"] })).nodes).toEqual([
+      { id: "64869", text: "one", length: null },
+      { id: "7", text: "two", length: "8.1" },
+    ]);
+  });
+
+  it("names the line of a record that is not JSON, not an object, lacks an id, holds a nested kept field or repeats an id", () => {
+    const run = (text: string, options = parser()): NativeParseError => {
+      try {
+        parseJsonTable(text, options);
+      } catch (error) {
+        if (error instanceof NativeParseError) {
+          return error;
+        }
+        throw error;
+      }
+      throw new Error("expected a NativeParseError");
+    };
+    expect(run('{"audio_filepath": "a"}\n{oops').message).toMatch(/line 2/);
+    expect(run("[1]").message).toMatch(/not an object/);
+    expect(run('{"text": "x"}').message).toMatch(/id field audio_filepath is missing/);
+    expect(run('{"audio_filepath": "a", "text": ["x"]}').message).toMatch(/field text holds object/);
+    expect(run('{"audio_filepath": "a"}\n{"audio_filepath": "a"}').message).toMatch(/id a is used twice/);
+    expect(run('{"id": "a"}', parser({ layout: "array" })).message).toMatch(/not an array/);
+  });
+
+  it("reads the fields declared numeric as numbers, from decimal text or a number, and refuses other text", () => {
+    const options = parser({ layout: "array", idField: "id", fields: ["length", "text"], numericFields: ["length"] });
+    expect(parseJsonTable('[{"id": "a", "length": "8.64", "text": "1"}, {"id": "b", "length": 3, "text": "2"}, {"id": "c", "length": ""}]', options).nodes).toEqual([
+      { id: "a", length: 8.64, text: "1" },
+      { id: "b", length: 3, text: "2" },
+      { id: "c", length: null, text: null },
+    ]);
+    expect(() => parseJsonTable('[{"id": "a", "length": "long"}]', options)).toThrow(/declared numeric but holds "long"/);
+  });
+
+  it("is what parseNative runs for the format", () => {
+    expect(parseNative(new TextEncoder().encode('{"audio_filepath": "a", "text": "x", "duration": 1}'), parser()).nodes).toEqual([{ id: "a", text: "x", duration: 1 }]);
+  });
+});
