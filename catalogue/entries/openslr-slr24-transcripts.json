@@ -1,0 +1,54 @@
+{
+  "aliases": [
+    "slr24-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/utterance-lines.json"
+  },
+  "description": "The transcripts of Iban: one instance per transcript file, each record being an utterance with its identifier and text. It carries none of the audio, which the download list of openslr-slr24 gives.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "instances": 2
+  },
+  "id": "openslr-slr24-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 2.0 Generic (CC BY-SA 2.0)",
+    "url": "https://www.openslr.org/24/"
+  },
+  "name": "Iban transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "tar.gz",
+      "members": {
+        "pattern": "data/[^/]+/text"
+      }
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "utterance-lines"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/24/iban.tar.gz"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "text"
+  ]
+}
