@@ -80,6 +80,7 @@ class RecordScanner {
   public constructor(
     private readonly delimiterCode: number,
     firstLine: number,
+    private readonly quoting: boolean,
   ) {
     this.started = firstLine;
     this.line = firstLine;
@@ -121,7 +122,7 @@ class RecordScanner {
         continue;
       }
       const code = text.charCodeAt(index);
-      if (code === QUOTE) {
+      if (code === QUOTE && this.quoting) {
         if (this.field !== "") {
           throw new NativeParseError("csv-table", this.line, "a quote opens inside an unquoted field");
         }
@@ -142,7 +143,7 @@ class RecordScanner {
         let next = index + 1;
         while (next < text.length) {
           const following = text.charCodeAt(next);
-          if (following === QUOTE || following === this.delimiterCode || following === LINE_FEED || following === CARRIAGE_RETURN) {
+          if ((following === QUOTE && this.quoting) || following === this.delimiterCode || following === LINE_FEED || following === CARRIAGE_RETURN) {
             break;
           }
           next += 1;
@@ -180,10 +181,10 @@ class RecordScanner {
 }
 
 /** The options a record reader takes from the recipe's table parser: how fields are delimited and how many physical lines come before the header. */
-type RecordOptions = Readonly<Pick<CsvTableParser, "delimiter" | "skipLines">>;
+type RecordOptions = Readonly<Pick<CsvTableParser, "delimiter" | "skipLines" | "unquoted">>;
 
 /**
- * Reads a table file's records as its text arrives in pieces, so neither the whole file nor every cell is held at once: a leading byte order mark is removed, the physical lines the recipe skips are dropped, and the rest is split into records and fields by RFC 4180 (a field may be quoted, a quoted field may hold the delimiter, line breaks and doubled quotes, and a record ends at an unquoted LF, CRLF or CR). Blank lines are not records. A piece may end anywhere, even between the two quotes of a doubled quote or between a CR and its LF.
+ * Reads a table file's records as its text arrives in pieces, so neither the whole file nor every cell is held at once: a leading byte order mark is removed, the physical lines the recipe skips are dropped, and the rest is split into records and fields by RFC 4180, or without quoting when the recipe says the file has none, a double quote then being an ordinary character (a field may be quoted, a quoted field may hold the delimiter, line breaks and doubled quotes, and a record ends at an unquoted LF, CRLF or CR). Blank lines are not records. A piece may end anywhere, even between the two quotes of a doubled quote or between a CR and its LF.
  */
 class RecordReader {
   private readonly scanner: RecordScanner;
@@ -195,7 +196,7 @@ class RecordReader {
   private toSkip: number;
 
   public constructor(private readonly options: RecordOptions) {
-    this.scanner = new RecordScanner(DELIMITERS[options.delimiter].charCodeAt(0), options.skipLines + 1);
+    this.scanner = new RecordScanner(DELIMITERS[options.delimiter].charCodeAt(0), options.skipLines + 1, options.unquoted !== true);
     this.toSkip = options.skipLines;
   }
 
@@ -249,7 +250,7 @@ class RecordReader {
  * @throws NativeParseError when a quoted field is never closed or a quote opens inside an unquoted field.
  */
 export function csvGrid(text: string): (readonly string[])[] {
-  const scanner = new RecordScanner(DELIMITERS.comma.charCodeAt(0), 1);
+  const scanner = new RecordScanner(DELIMITERS.comma.charCodeAt(0), 1, true);
   const { completed } = scanner.scan(text, true);
   const last = scanner.finish();
 

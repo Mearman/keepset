@@ -332,6 +332,8 @@ export const ParserSchema = z.discriminatedUnion("format", [
       columns: z.array(ColumnNameSchema).optional(),
       /** Set on a file with no header row: the names of its columns in order, as the parser would have spelled them from a header, so the first record after the skipped lines is a row. */
       headerNames: z.array(ColumnNameSchema).min(1).optional(),
+      /** Set on a file that never quotes a field, as a tab-separated list of sentences that holds double quotes in its text: a double quote is then an ordinary character and no field is read as quoted. */
+      unquoted: z.literal(true).optional(),
       /** Cell texts, besides the empty cell, that stand for a missing value (`NA`): such a cell is null in every column, numeric or not. */
       nullValues: z.array(z.string().min(1)).optional(),
     })
