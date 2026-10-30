@@ -109,6 +109,10 @@ describe("the csv-table parser", () => {
     expect(parseNative(utf8("a;b\n1,5;2\n"), table({ delimiter: "semicolon" })).nodes).toEqual([{ id: "1", a: "1,5", b: "2" }]);
   });
 
+  it("reads a pipe delimited file, whose quoted field may hold a line break", () => {
+    expect(parseNative(utf8('id|text\n7|"two\nlines"\n'), table({ delimiter: "pipe", idColumn: "id" })).nodes).toEqual([{ id: "7", text: "two\nlines" }]);
+  });
+
   it("skips blank lines and trims cells", () => {
     expect(parseNative(utf8("a,b\n\n  x , y \n\n"), table()).nodes).toEqual([{ id: "1", a: "x", b: "y" }]);
   });

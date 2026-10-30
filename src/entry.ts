@@ -325,7 +325,7 @@ export const ParserSchema = z.discriminatedUnion("format", [
     .object({
       format: z.literal("csv-table"),
       encoding: EncodingSchema,
-      delimiter: z.enum(["comma", "tab", "semicolon"]),
+      delimiter: z.enum(["comma", "tab", "semicolon", "pipe"]),
       skipLines: z.int().min(0),
       idColumn: ColumnNameSchema.nullable(),
       numericColumns: z.array(z.object({ column: ColumnNameSchema, factor: z.number().positive() }).strict()),

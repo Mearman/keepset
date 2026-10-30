@@ -5,7 +5,7 @@ import type { NativeRow, NativeTable } from "./native";
 type CsvTableParser = Extract<Parser, { format: "csv-table" }>;
 
 /** The character each delimiter option splits fields on. */
-const DELIMITERS: Readonly<Record<CsvTableParser["delimiter"], string>> = { comma: ",", tab: "\t", semicolon: ";" };
+const DELIMITERS: Readonly<Record<CsvTableParser["delimiter"], string>> = { comma: ",", tab: "\t", semicolon: ";", pipe: "|" };
 
 /** A number as a decimal literal, with an optional sign and exponent. `Number` alone would also accept hex, binary, `Infinity` and the empty string. */
 const DECIMAL = /^[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?$/;
