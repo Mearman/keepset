@@ -201,7 +201,7 @@ export function entryPage(context: PageContext, dataset: Dataset, sameData: read
 
   const sections: ReactNode[] = [
     <nav className="breadcrumb" aria-label="Breadcrumb" key="breadcrumb"><ol><li><a href={context.root}>All datasets</a></li><li><a href={`../../kinds/${slug(dataset.kind)}/`}>{dataset.kind}</a></li>{entry.domain === undefined ? null : <li><a href={`../../domains/${slug(entry.domain)}/`}>{entry.domain}</a></li>}</ol></nav>,
-    <h1 key="name">{entry.name}</h1>,
+    <h1 key="name">{entry.name} <span className="star-mount" data-star-id={entry.id} data-star-name={entry.name} /></h1>,
     entry.description === undefined ? null : <p className="description" key="description">{entry.description}</p>,
     <p className="command" key="command"><code>{command}</code> <span data-copy-text={command} /></p>,
     figures.length === 0 ? null : <dl className="stats" key="stats">{figures.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>,
