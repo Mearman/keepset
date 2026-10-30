@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr107"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Totonac Speech with Transcription",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 3
+  },
+  "id": "openslr-slr107",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-NonCommercial-ShareAlike 3.0 Unported (CC BY-NC-SA 3.0)",
+    "url": "https://www.openslr.org/107/"
+  },
+  "name": "Totonac Resources",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 6517,
+        "sha256": "2150a4d96989e81fb0de9b8374a59212126e2d5a3893b219558e79ed053668fc",
+        "timestamp": "20251206042616",
+        "url": "https://web.archive.org/web/20251206042616/https://www.openslr.org/107/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/107/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

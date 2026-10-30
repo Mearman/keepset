@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr111"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "A Free Mandarin Multi-channel Meeting Speech Corpus, provided by Beijing Shell Shell Technology Co.,Ltd",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 4
+  },
+  "id": "openslr-slr111",
+  "licence": {
+    "kind": "custom",
+    "name": "CC BY-SA 4.0",
+    "url": "https://www.openslr.org/111/"
+  },
+  "name": "AISHELL-4",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 5689,
+        "sha256": "dd73839fcd4ab9fd7a022e7463d52be8d0f787cb960eda51b602cead515953fa",
+        "timestamp": "20260217125114",
+        "url": "https://web.archive.org/web/20260217125114/https://www.openslr.org/111/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/111/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

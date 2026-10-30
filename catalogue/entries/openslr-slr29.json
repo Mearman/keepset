@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr29"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Swedish pronunciation dictionary",
+  "domain": "Text",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr29",
+  "licence": {
+    "kind": "custom",
+    "name": "Creative Commons ZERO (CC-ZERO)",
+    "url": "https://www.openslr.org/29/"
+  },
+  "name": "Sprakbanken_Swe",
+  "namespace": [
+    "openslr",
+    "text"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3079,
+        "sha256": "743c5764260293eee8c1343373878624d61c5aa1fc6571afbf6d6fa86602e6f3",
+        "timestamp": "20260516200652",
+        "url": "https://web.archive.org/web/20260516200652/https://www.openslr.org/29/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/29/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

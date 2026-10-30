@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr115"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "a database of emotional speech intended to be open-sourced and used for synthesis and generation purpose. It contains data for male and female actors in English (https://github.com/numediart/EmoV-DB)",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 18
+  },
+  "id": "openslr-slr115",
+  "licence": {
+    "kind": "custom",
+    "name": "Click here to view the license (https://github.com/numediart/EmoV-DB/blob/master/LICENSE.md)",
+    "url": "https://www.openslr.org/115/"
+  },
+  "name": "EmoV_DB",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 11684,
+        "sha256": "119473de96717b574993af04e720f5e90d41311033c2097c7288a77e8f5377a6",
+        "timestamp": "20260903063116",
+        "url": "https://web.archive.org/web/20260903063116/https://www.openslr.org/115/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/115/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

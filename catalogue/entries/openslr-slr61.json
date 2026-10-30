@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr61"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Data set which contains 5739 recordings of native speakers of Spanish",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 9
+  },
+  "id": "openslr-slr61",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 4.0 International",
+    "url": "https://www.openslr.org/61/"
+  },
+  "name": "Crowdsourced high-quality Argentinian Spanish speech data set.",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 7709,
+        "sha256": "dfa36015a51c8a4c1fb0eef8d1a5c8cf022cb7976b98ad758fb702186c9eb701",
+        "timestamp": "20260516203342",
+        "url": "https://web.archive.org/web/20260516203342/https://www.openslr.org/61/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/61/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

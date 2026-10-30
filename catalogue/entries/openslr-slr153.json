@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr153"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "A Free Armenian News Text Corpus, provided by Qaghaki Amsagir LLC (Yerevan City Magazine, evnmag.com)",
+  "domain": "Text",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr153",
+  "licence": {
+    "kind": "custom",
+    "name": "CC BY-SA 4.0",
+    "url": "https://www.openslr.org/153/"
+  },
+  "name": "Yerevan City Magazine",
+  "namespace": [
+    "openslr",
+    "text"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3173,
+        "sha256": "7096f1a7493050928be0bcb5b5cf870f25b84fb3125368b18d320efb756dad47",
+        "timestamp": "20260617193553",
+        "url": "https://web.archive.org/web/20260617193553/https://www.openslr.org/153/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/153/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

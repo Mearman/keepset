@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr147"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Audio corpus of Orizaba (Veracruz) Nahuatl speech (Glottocode: oriz1235; ISO 639-3: nlv)",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 6
+  },
+  "id": "openslr-slr147",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)",
+    "url": "https://www.openslr.org/147/"
+  },
+  "name": "Veracruz Orizaba Nahuatl Endangered Language",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 8526,
+        "sha256": "94c0ad870dc1f764b05dd42d3d15af125904af7b05a8477448773872f43de650",
+        "timestamp": "20260516204644",
+        "url": "https://web.archive.org/web/20260516204644/https://www.openslr.org/147/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/147/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

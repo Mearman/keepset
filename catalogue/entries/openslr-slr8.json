@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr8"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Danish pronunciation dictionary generated using eSpeak",
+  "domain": "Text",
+  "expectedCounts": {
+    "nodes": 2
+  },
+  "id": "openslr-slr8",
+  "licence": {
+    "kind": "custom",
+    "name": "Unrestricted",
+    "url": "https://www.openslr.org/8/"
+  },
+  "name": "Sprakbanken",
+  "namespace": [
+    "openslr",
+    "text"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3410,
+        "sha256": "246b56bd1a5cb6874f796919220b8fc9fe382707801f1da5403649745360996e",
+        "timestamp": "20260516205555",
+        "url": "https://web.archive.org/web/20260516205555/https://www.openslr.org/8/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/8/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

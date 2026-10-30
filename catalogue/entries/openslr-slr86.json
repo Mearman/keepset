@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr86"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Data set which contains recordings of Yoruba.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 7
+  },
+  "id": "openslr-slr86",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 4.0 International",
+    "url": "https://www.openslr.org/86/"
+  },
+  "name": "Crowdsourced high-quality Yoruba speech data set.",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 6464,
+        "sha256": "84177b27cf90e215206b434ffdaf729fd0d7d4d652f06a1569c885b5ed4aecd4",
+        "timestamp": "20260516203847",
+        "url": "https://web.archive.org/web/20260516203847/https://www.openslr.org/86/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/86/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

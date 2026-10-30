@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr68"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "The corpus by Magic Data Technology Co., Ltd. , containing 755 hours of scripted read speech data from 1080 native speakers of the Mandarin Chinese spoken in mainland China. The sentence transcription accuracy is higher than 98%.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 4
+  },
+  "id": "openslr-slr68",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-NonCommercial-NoDerivatives 4.0 International Public License (CC BY-NC-ND 4.0)",
+    "url": "https://www.openslr.org/68/"
+  },
+  "name": "MAGICDATA Mandarin Chinese Read Speech Corpus",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 6796,
+        "sha256": "e316110bda8fdf4cb763ba1b963cc2b5c9a5a084901ba73efc32be5b1e06194e",
+        "timestamp": "20260705094040",
+        "url": "https://web.archive.org/web/20260705094040/https://www.openslr.org/68/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/68/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

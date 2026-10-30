@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr54"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Nepali ASR training data set containing ~157K utterances.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 19
+  },
+  "id": "openslr-slr54",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 4.0 International",
+    "url": "https://www.openslr.org/54/"
+  },
+  "name": "Large Nepali ASR training data set",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 10628,
+        "sha256": "16d9bee8c7202dc8f329fe8f3639def0dbe3583a45aca947852839a94c1664d8",
+        "timestamp": "20260617190151",
+        "url": "https://web.archive.org/web/20260617190151/https://www.openslr.org/54/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/54/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

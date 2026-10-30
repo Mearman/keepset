@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr125"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Faroese Speech corpus approved for release in July 2022",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr125",
+  "licence": {
+    "kind": "custom",
+    "name": "CC BY 4.0",
+    "url": "https://www.openslr.org/125/"
+  },
+  "name": "Basic LAnguage Resource Kit 1.0 for Faroese",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4332,
+        "sha256": "79ddba42cb951b5077e09cdbf10f31c9eae52dd65133e1c6899fefc91a9bbe65",
+        "timestamp": "20260516203250",
+        "url": "https://web.archive.org/web/20260516203250/https://www.openslr.org/125/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/125/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

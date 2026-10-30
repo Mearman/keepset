@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr101"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Pronunciation scoring dataset, labeled independently by five human experts",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr101",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution 4.0 International (CC BY 4.0)",
+    "url": "https://www.openslr.org/101/"
+  },
+  "name": "speechocean762",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3549,
+        "sha256": "cbc483e9fe69623d8466540901d81fbc349418402c375208842af0b988eb8863",
+        "timestamp": "20260617191107",
+        "url": "https://web.archive.org/web/20260617191107/https://www.openslr.org/101/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/101/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

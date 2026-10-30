@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr162"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "A 63-minute recording featuring natural conversations among multiple speakers in a realistic acoustic environment, with noticeable background noise. The dataset was created for use in audio forensics, multi-speaker separation, and speech enhancement research as part of an undergraduate project.",
+  "domain": "Speech / Audio Forensics / Signal Processing",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr162",
+  "licence": {
+    "kind": "custom",
+    "name": "MIT License",
+    "url": "https://www.openslr.org/162/"
+  },
+  "name": "Rasheed Mudasiru",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3933,
+        "sha256": "fa8eea42457a17e69f7adc5bce9058b9a34ddb0d32e5db284a429cfe73eb8f12",
+        "timestamp": "20260418043246",
+        "url": "https://web.archive.org/web/20260418043246/https://www.openslr.org/162/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/162/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

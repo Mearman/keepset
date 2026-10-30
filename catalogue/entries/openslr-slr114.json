@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr114"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Russian ASR dataset (1240 hours) with trained acoustic and language models",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 3
+  },
+  "id": "openslr-slr114",
+  "licence": {
+    "kind": "custom",
+    "name": "https://github.com/sberdevices/golos/blob/master/license/en_us.pdf",
+    "url": "https://www.openslr.org/114/"
+  },
+  "name": "Golos",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 7102,
+        "sha256": "4b7dd71c6ee1c06d9ee1931deb00ce4e0cbaab78d123b030176c2c3959bf6990",
+        "timestamp": "20260918164827",
+        "url": "https://web.archive.org/web/20260918164827/https://www.openslr.org/114/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/114/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

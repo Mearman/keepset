@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr69"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Data set which contains recordings of Catalan.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 6
+  },
+  "id": "openslr-slr69",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 4.0 International",
+    "url": "https://www.openslr.org/69/"
+  },
+  "name": "Crowdsourced high-quality Catalan speech data set.",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 6044,
+        "sha256": "af5f9cbf72654c00b9a037673a54a18f10b4f660d4827a75e700029ad8c92a3a",
+        "timestamp": "20260516210847",
+        "url": "https://web.archive.org/web/20260516210847/https://www.openslr.org/69/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/69/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

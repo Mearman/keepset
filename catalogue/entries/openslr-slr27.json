@@ -1,0 +1,57 @@
+{
+  "aliases": [
+    "slr27"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Cantab Research Language models for the TEDLIUM database",
+  "domain": "Text",
+  "expectedCounts": {
+    "nodes": 2
+  },
+  "id": "openslr-slr27",
+  "licence": {
+    "kind": "unrecorded"
+  },
+  "name": "Cantab-TEDLIUM Release 1.1 (February 2015)",
+  "namespace": [
+    "openslr",
+    "text"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4611,
+        "sha256": "b69f9197d6036bb069f4169b3daf9efba7bf712e9bc2cc976825a06352ce291a",
+        "timestamp": "20260418042249",
+        "url": "https://web.archive.org/web/20260418042249/https://www.openslr.org/27/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/27/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

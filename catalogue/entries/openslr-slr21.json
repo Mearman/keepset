@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr21"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "A list of words in Spanish with frequency derived from a large corpus (Spanish Gigaword).",
+  "domain": "Text",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr21",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0 US)",
+    "url": "https://www.openslr.org/21/"
+  },
+  "name": "Spanish Word list",
+  "namespace": [
+    "openslr",
+    "text"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3155,
+        "sha256": "aeb1ac090b40b69c7c450dea16863240e54ccdb75365a0056a2c09c44f306ae9",
+        "timestamp": "20260418044648",
+        "url": "https://web.archive.org/web/20260418044648/https://www.openslr.org/21/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/21/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

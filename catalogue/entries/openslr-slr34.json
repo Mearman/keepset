@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr34"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "A pronouncing dictionary for the Spanish language.",
+  "domain": "Text",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr34",
+  "licence": {
+    "kind": "custom",
+    "name": "apache 2.0",
+    "url": "https://www.openslr.org/34/"
+  },
+  "name": "Santiago Spanish Lexicon",
+  "namespace": [
+    "openslr",
+    "text"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 2961,
+        "sha256": "f05c2f43a63d24c028ebc1229894d7b05aae6a73ec461778549347b1f7214bfb",
+        "timestamp": "20260315164711",
+        "url": "https://web.archive.org/web/20260315164711/https://www.openslr.org/34/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/34/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

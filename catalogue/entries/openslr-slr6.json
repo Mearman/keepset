@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr6"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "English and Czech data, mirrored from the Vystadial project",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 2
+  },
+  "id": "openslr-slr6",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0 US)",
+    "url": "https://www.openslr.org/6/"
+  },
+  "name": "Vystadial",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4207,
+        "sha256": "c92cd5bfe3e2859d44b2b4e860084a29b3553464093b543074d17a350432c3de",
+        "timestamp": "20260516211314",
+        "url": "https://web.archive.org/web/20260516211314/https://www.openslr.org/6/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/6/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

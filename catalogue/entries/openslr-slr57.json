@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr57"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Recordings of African Accented French speech.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr57",
+  "licence": {
+    "kind": "custom",
+    "name": "Apache 2.0",
+    "url": "https://www.openslr.org/57/"
+  },
+  "name": "African Accented French",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3798,
+        "sha256": "eafac2b7c24d974debc48c7d99e5d4e54a3d8800499a19b4d4b3336833a5e729",
+        "timestamp": "20260516210821",
+        "url": "https://web.archive.org/web/20260516210821/https://www.openslr.org/57/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/57/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr2"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "A mirror of the OpenFst toolkit",
+  "domain": "Software",
+  "expectedCounts": {
+    "nodes": 10
+  },
+  "id": "openslr-slr2",
+  "licence": {
+    "kind": "custom",
+    "name": "Apache 2.0",
+    "url": "https://www.openslr.org/2/"
+  },
+  "name": "OpenFST",
+  "namespace": [
+    "openslr",
+    "software"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 8396,
+        "sha256": "9ce9e222be7c8c4788eaeaa1857b993e1250d05414a204c64b358e94691aa05f",
+        "timestamp": "20260617184704",
+        "url": "https://web.archive.org/web/20260617184704/https://www.openslr.org/2/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/2/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

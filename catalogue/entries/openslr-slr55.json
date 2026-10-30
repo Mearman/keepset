@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr55"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "A Chinese Language Model Adaptation Dataset (CLMAD).",
+  "domain": "Text",
+  "expectedCounts": {
+    "nodes": 2
+  },
+  "id": "openslr-slr55",
+  "licence": {
+    "kind": "custom",
+    "name": "Creative Commons BY-NC-ND 3.0 (attribution/non-commercial/no-derivatives).",
+    "url": "https://www.openslr.org/55/"
+  },
+  "name": "CLMAD",
+  "namespace": [
+    "openslr",
+    "text"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4235,
+        "sha256": "db0ff6d48284f9f693ce88eedcf3a64ff2ca603a21fe053beeec3843fae84678",
+        "timestamp": "20260315175451",
+        "url": "https://web.archive.org/web/20260315175451/https://www.openslr.org/55/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/55/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr127"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Tamil transcribed speech corpus for ASR",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr127",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution 2.0 Generic (CC BY 2.0)",
+    "url": "https://www.openslr.org/127/"
+  },
+  "name": "IISc-MILE Tamil ASR Corpus",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4014,
+        "sha256": "8d7d7028b8f5bedb37927e6e83d98c2da837240c201dd92a463b6fc28031b1d3",
+        "timestamp": "20260516203726",
+        "url": "https://web.archive.org/web/20260516203726/https://www.openslr.org/127/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/127/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

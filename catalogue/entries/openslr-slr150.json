@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr150"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "English multi-channel far field meeting data used in the CHiME-6 Challenge. It is derived from CHiME-5 by fixing some array synchronization errors.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 6
+  },
+  "id": "openslr-slr150",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 4.0 (CC BY-SA 4.0 International)",
+    "url": "https://www.openslr.org/150/"
+  },
+  "name": "CHiME-6",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 6309,
+        "sha256": "f366b60105e1aede49a4b05440e4b88ff9cf259dc7d2b7a5083a6d4afb281251",
+        "timestamp": "20260516211923",
+        "url": "https://web.archive.org/web/20260516211923/https://www.openslr.org/150/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/150/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

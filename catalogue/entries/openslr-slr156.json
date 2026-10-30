@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr156"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "A short-term time-varying speaker verificaition dataset",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr156",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0 US)",
+    "url": "https://www.openslr.org/156/"
+  },
+  "name": "SMIIP-TV dataset",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 5498,
+        "sha256": "c7c14b367a53a437f9a99321760bcbe5e06a7d8bba77a98bdc5dde0a6f9ac626",
+        "timestamp": "20260516200124",
+        "url": "https://web.archive.org/web/20260516200124/https://www.openslr.org/156/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/156/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr11"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Language modelling resources, for use with the LibriSpeech ASR corpus",
+  "domain": "Text",
+  "expectedCounts": {
+    "nodes": 9
+  },
+  "id": "openslr-slr11",
+  "licence": {
+    "kind": "custom",
+    "name": "Public domain",
+    "url": "https://www.openslr.org/11/"
+  },
+  "name": "LibriSpeech language models, vocabulary and G2P models",
+  "namespace": [
+    "openslr",
+    "text"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 6529,
+        "sha256": "5d3f03dc15f30757294b8e2e5f5ecc2097c384ea565c44cc5ba50fae0f0c7d91",
+        "timestamp": "20261021155536",
+        "url": "https://web.archive.org/web/20261021155536/https://www.openslr.org/11/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/11/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

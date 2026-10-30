@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr120"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "A Free Mandarin Supplemental Speech Corpus to HI-MIA Database, whose contents are negative samples for wake-up words \"Hi, Mia\".",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 2
+  },
+  "id": "openslr-slr120",
+  "licence": {
+    "kind": "custom",
+    "name": "CC BY-SA 4.0",
+    "url": "https://www.openslr.org/120/"
+  },
+  "name": "HI-MIA-CW",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4399,
+        "sha256": "51c706e5951b86581430b39ccbc29572070a4a6f54986e627834f18a45e926e6",
+        "timestamp": "20260114111951",
+        "url": "https://web.archive.org/web/20260114111951/https://www.openslr.org/120/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/120/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

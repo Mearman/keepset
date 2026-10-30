@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr53"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Bengali ASR training data set containing ~196K utterances.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 19
+  },
+  "id": "openslr-slr53",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 4.0 International",
+    "url": "https://www.openslr.org/53/"
+  },
+  "name": "Large Bengali ASR training data set",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 10711,
+        "sha256": "4461ca0d570581beae7ac4175924b6d89f93642e36d76503d4d29f0903458cee",
+        "timestamp": "20260516205027",
+        "url": "https://web.archive.org/web/20260516205027/https://www.openslr.org/53/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/53/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

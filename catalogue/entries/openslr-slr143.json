@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr143"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Nepali speech and corresponding text data in male and female voice",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr143",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 4.0 (CC BY-NC-SA 4.0)",
+    "url": "https://www.openslr.org/143/"
+  },
+  "name": "Nepali Text-to-Speech Data (Male and Female)",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3465,
+        "sha256": "9fbcc499e96852a5b6e86d4c14d7bde6152deb3641a7923a82675f2ab0448e93",
+        "timestamp": "20260617201458",
+        "url": "https://web.archive.org/web/20260617201458/https://www.openslr.org/143/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/143/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

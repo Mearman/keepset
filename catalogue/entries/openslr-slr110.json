@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr110"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Free EMOTIONAL single german speaker dataset (Neutral, Disgusted, Angry, Amused, Surprised, Sleepy, Drunk, Whispering) by Thorsten Müller (voice) and Dominik Kreutz (audio optimization) for TTS training",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr110",
+  "licence": {
+    "kind": "custom",
+    "name": "Creative Commons (CC0) Licence",
+    "url": "https://www.openslr.org/110/"
+  },
+  "name": "Thorsten Müller (German Emotional-TTS dataset)",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 5166,
+        "sha256": "53c1b86328955554a64293f550f036bad5f1ea77e57addc1f38d3c70f7d5fe06",
+        "timestamp": "20260516210132",
+        "url": "https://web.archive.org/web/20260516210132/https://www.openslr.org/110/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/110/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

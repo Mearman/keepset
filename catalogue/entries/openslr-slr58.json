@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr58"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Korean speech corpus generated from Korean language TEDx talks",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr58",
+  "licence": {
+    "kind": "custom",
+    "name": "Creative Commons BY-NC-ND 4.0 (attribution/non-commercial/no-derivatives)",
+    "url": "https://www.openslr.org/58/"
+  },
+  "name": "Pansori-TEDxKR",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 5495,
+        "sha256": "195faace812c1e26ae287cb52fc9dbf05087785ff1b5f54f641bd365551492a7",
+        "timestamp": "20260516211247",
+        "url": "https://web.archive.org/web/20260516211247/https://www.openslr.org/58/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/58/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

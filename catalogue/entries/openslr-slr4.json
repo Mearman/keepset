@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr4"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "A mirror of the sctk scoring software",
+  "domain": "Software",
+  "expectedCounts": {
+    "nodes": 5
+  },
+  "id": "openslr-slr4",
+  "licence": {
+    "kind": "custom",
+    "name": "Public domain",
+    "url": "https://www.openslr.org/4/"
+  },
+  "name": "sctk",
+  "namespace": [
+    "openslr",
+    "software"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 5600,
+        "sha256": "f11afc5b334f92c0c4891185293e2534e76e452263101d2c62a240d4281092e9",
+        "timestamp": "20260516200012",
+        "url": "https://web.archive.org/web/20260516200012/https://www.openslr.org/4/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/4/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

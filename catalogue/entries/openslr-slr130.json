@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr130"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Samrómur Icelandic Speech, 150 hours from people with Icelandic as a second language. Approved for release in July 2022",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 2
+  },
+  "id": "openslr-slr130",
+  "licence": {
+    "kind": "custom",
+    "name": "CC by 4.0",
+    "url": "https://www.openslr.org/130/"
+  },
+  "name": "Samrómur L2 22.09",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 5031,
+        "sha256": "74f8fa30074f702e68692282a1d98b7dc2fd70de0a16acec6afdb7a483af29a4",
+        "timestamp": "20260516211036",
+        "url": "https://web.archive.org/web/20260516211036/https://www.openslr.org/130/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/130/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

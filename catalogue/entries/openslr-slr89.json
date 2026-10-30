@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr89"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Yolóxochitl Mixtec Speech with Transcription",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 3
+  },
+  "id": "openslr-slr89",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-NonCommercial-ShareAlike 3.0 Unported (CC BY-NC-SA 3.0)",
+    "url": "https://www.openslr.org/89/"
+  },
+  "name": "Yoloxóchitl-Mixtec",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 6664,
+        "sha256": "b8a4ba79bd2eb2807b5bec6a03c02a4bcfbb4642cd6bb05dcac8b6e358e4a045",
+        "timestamp": "20260516212200",
+        "url": "https://web.archive.org/web/20260516212200/https://www.openslr.org/89/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/89/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

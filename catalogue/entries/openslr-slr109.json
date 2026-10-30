@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr109"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "A multi-speaker English dataset for training text-to-speech models",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr109",
+  "licence": {
+    "kind": "custom",
+    "name": "CC BY 4.0",
+    "url": "https://www.openslr.org/109/"
+  },
+  "name": "Hi-Fi Multi-Speaker English TTS Dataset (Hi-Fi TTS)",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3409,
+        "sha256": "827f1dd8cbbaf4cc56b41408d1d28fafe151e463b09e2296160df6bbf1b76d95",
+        "timestamp": "20260925222622",
+        "url": "https://web.archive.org/web/20260925222622/https://www.openslr.org/109/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/109/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

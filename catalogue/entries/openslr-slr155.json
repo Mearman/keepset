@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr155"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "The Santa Barbara Corpus of Spoken American English, mirrored from UCSB",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr155",
+  "licence": {
+    "kind": "custom",
+    "name": "Creative Commons Attribution-No Derivative Works 3.0 United States (CC BY-ND 3.0 US)",
+    "url": "https://www.openslr.org/155/"
+  },
+  "name": "SBCSAE",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3601,
+        "sha256": "bdcc47028014f3234bebf43df3127ef7f66a4deebee421d85b0c08c201c063f0",
+        "timestamp": "20260516204604",
+        "url": "https://web.archive.org/web/20260516204604/https://www.openslr.org/155/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/155/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr92"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Puebla Nahuatl Speech with Transcription",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 12
+  },
+  "id": "openslr-slr92",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-NonCommercial-ShareAlike 3.0 Unported (CC BY-NC-SA 3.0)",
+    "url": "https://www.openslr.org/92/"
+  },
+  "name": "Puebla-Nahuatl",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 10806,
+        "sha256": "70f790cdbbaab2be5aa813f01dfcb80dde7dba11769267bd178e97d8d8fe95dd",
+        "timestamp": "20260516200612",
+        "url": "https://web.archive.org/web/20260516200612/https://www.openslr.org/92/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/92/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

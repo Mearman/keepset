@@ -1,0 +1,58 @@
+{
+  "aliases": [
+    "slr132"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Arabic speech to text Quran data",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr132",
+  "licence": {
+    "id": "MIT",
+    "kind": "spdx"
+  },
+  "name": "Mohammed",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4789,
+        "sha256": "bf412e8e38d83af0ce7bffdb15005517faa3c23ec7174255db0b9b18cff07740",
+        "timestamp": "20260511054913",
+        "url": "https://web.archive.org/web/20260511054913/https://www.openslr.org/132/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/132/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

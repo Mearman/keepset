@@ -1,0 +1,55 @@
+{
+  "aliases": [
+    "slr121"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "A 10000+ Hours Multi-Domain Mandarin Corpus for Speech Recognition",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 0
+  },
+  "id": "openslr-slr121",
+  "licence": {
+    "kind": "custom",
+    "name": "Creative Commons Attribution 4.0 International License (CC BY 4.0)",
+    "url": "https://www.openslr.org/121/"
+  },
+  "name": "WenetSpeech",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4807,
+        "sha256": "a81b79ca2a78a024b87fc642081c6cfc93933a18178f872cca0697aac600ad95",
+        "timestamp": "20260511052147",
+        "url": "https://web.archive.org/web/20260511052147/https://www.openslr.org/121/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/121/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

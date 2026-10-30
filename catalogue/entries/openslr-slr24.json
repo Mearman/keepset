@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr24"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Iban language text and speech corpora for ASR",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr24",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 2.0 Generic (CC BY-SA 2.0)",
+    "url": "https://www.openslr.org/24/"
+  },
+  "name": "Iban",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4630,
+        "sha256": "e063a03af3fc017fe5b030b70726cc967f9796fd4e7880e846405c26c2c9fadd",
+        "timestamp": "20260511063218",
+        "url": "https://web.archive.org/web/20260511063218/https://www.openslr.org/24/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/24/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

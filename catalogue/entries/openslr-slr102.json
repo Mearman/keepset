@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr102"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "A crowdsourced open-source Kazakh speech corpus developed by ISSAI (330 hours)",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr102",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution 4.0 International (CC BY 4.0)",
+    "url": "https://www.openslr.org/102/"
+  },
+  "name": "Kazakh Speech Corpus (KSC)",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3871,
+        "sha256": "e237c0bbc6bcf18e69524293aed1e62547bf12760f7e4d067b51715f8d72bc37",
+        "timestamp": "20260418043539",
+        "url": "https://web.archive.org/web/20260418043539/https://www.openslr.org/102/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/102/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

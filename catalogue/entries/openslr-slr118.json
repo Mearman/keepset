@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr118"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Datasets for 1111 Hours Hindi ASR Challenge Closed, Self Supervised Closed and Open - 2022 (https://sites.google.com/view/gramvaaniasrchallenge/home)",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 9
+  },
+  "id": "openslr-slr118",
+  "licence": {
+    "kind": "custom",
+    "name": "The data released as a part of this challenge can be used freely for academic purposes, but permission for any commercial use of the data should be sought by writing to contact@gramvaani.org.",
+    "url": "https://www.openslr.org/118/"
+  },
+  "name": "1111 Hours Hindi ASR Challenge",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 11155,
+        "sha256": "5982ff5ef49ec814d81fedd0c3b44f7a875da9a9a5da602fcea0c429e5635773",
+        "timestamp": "20260524223051",
+        "url": "https://web.archive.org/web/20260524223051/https://www.openslr.org/118/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/118/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

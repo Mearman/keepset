@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr117"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Samrómur Icelandic Speech from children (ages 4-17 years) approved for release in September 2021",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr117",
+  "licence": {
+    "kind": "custom",
+    "name": "CC by 4.0",
+    "url": "https://www.openslr.org/117/"
+  },
+  "name": "Samrómur Children 21.09",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4455,
+        "sha256": "d2dfadaa2913d5180a45733dbb1402fe0c25c69c42742cd6dcfd777146fca13a",
+        "timestamp": "20260516203317",
+        "url": "https://web.archive.org/web/20260516203317/https://www.openslr.org/117/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/117/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

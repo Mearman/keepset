@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr26"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "A database of simulated room impulse responses",
+  "domain": "Audio",
+  "expectedCounts": {
+    "nodes": 2
+  },
+  "id": "openslr-slr26",
+  "licence": {
+    "kind": "custom",
+    "name": "Apache 2.0",
+    "url": "https://www.openslr.org/26/"
+  },
+  "name": "Simulated Room Impulse Response Database",
+  "namespace": [
+    "openslr",
+    "audio"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3252,
+        "sha256": "c99ba35a429fd614c16fe82f1cc609538c00d9dcc8075dd26b1a04a73a678877",
+        "timestamp": "20260914194542",
+        "url": "https://web.archive.org/web/20260914194542/https://www.openslr.org/26/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/26/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

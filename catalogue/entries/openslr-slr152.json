@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr152"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Judgments of perceived similarity between utterance pairs from dialogs, in English and Spanish.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 12
+  },
+  "id": "openslr-slr152",
+  "licence": {
+    "kind": "custom",
+    "name": "public domain (CC0 1.0 Universal)",
+    "url": "https://www.openslr.org/152/"
+  },
+  "name": "Pragmatic Similarity Judgments",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 12396,
+        "sha256": "4140318891c6e433b5af25d6d137b4eca6ac7b393eae20943bbe3f9eb833ef1c",
+        "timestamp": "20260418031744",
+        "url": "https://web.archive.org/web/20260418031744/https://www.openslr.org/152/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/152/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr15"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "A list linking speakers across NIST SRE corpra",
+  "domain": "Misc",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr15",
+  "licence": {
+    "kind": "custom",
+    "name": "Not copyrighted (derived from a work prepared by a US government employee in the course of their official duties)",
+    "url": "https://www.openslr.org/15/"
+  },
+  "name": "SRE Speaker List",
+  "namespace": [
+    "openslr",
+    "other"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 2805,
+        "sha256": "d56c9c3cb609b244829af143b9c40906fc358df643c75835beeaeafdcbaff18b",
+        "timestamp": "20260516200248",
+        "url": "https://web.archive.org/web/20260516200248/https://www.openslr.org/15/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/15/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

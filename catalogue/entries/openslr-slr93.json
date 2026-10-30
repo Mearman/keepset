@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr93"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Mandarin data, provided by Beijing Shell Shell Technology Co., Ltd.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr93",
+  "licence": {
+    "kind": "custom",
+    "name": "Apache License v.2.0",
+    "url": "https://www.openslr.org/93/"
+  },
+  "name": "AISHELL-3",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3858,
+        "sha256": "e6266a2e0b7784efedf4ce45756553640e75c5edeca0cc6f6ae2d1e3158afd26",
+        "timestamp": "20260521090148",
+        "url": "https://web.archive.org/web/20260521090148/https://www.openslr.org/93/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/93/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

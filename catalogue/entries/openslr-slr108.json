@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr108"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "French, Arabic, Turkish and Spanish media speech datasets",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 4
+  },
+  "id": "openslr-slr108",
+  "licence": {
+    "kind": "custom",
+    "name": "dataset is distributed under the Creative Commons Attribution 4.0 International License.",
+    "url": "https://www.openslr.org/108/"
+  },
+  "name": "MediaSpeech",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 5429,
+        "sha256": "6cd08f93dbe9d39b330a2c4e3778d0458b4c67d5f5f29d13f1339bcab2e5e515",
+        "timestamp": "20260322064516",
+        "url": "https://web.archive.org/web/20260322064516/https://www.openslr.org/108/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/108/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

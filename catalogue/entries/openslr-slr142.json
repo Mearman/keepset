@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr142"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Free speech dataset consisting of 24018 short audio clips of a single speaker reading sentences in Polish",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr142",
+  "licence": {
+    "kind": "custom",
+    "name": "CC0 1.0",
+    "url": "https://www.openslr.org/142/"
+  },
+  "name": "The MC Speech Dataset",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3653,
+        "sha256": "c82b0100d82e96fdf75a0182c125bc4061442e4ca0acccb8db0f64b79d555740",
+        "timestamp": "20260516211949",
+        "url": "https://web.archive.org/web/20260516211949/https://www.openslr.org/142/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/142/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

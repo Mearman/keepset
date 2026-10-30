@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr139"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Spoken dataset of books read in French, initially collected from audiocite.net (https://www.audiocite.net/) by the GETALP team (https://lig-getalp.imag.fr/) for the LeBenchmark project (http://lebenchmark.com/).",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 36
+  },
+  "id": "openslr-slr139",
+  "licence": {
+    "kind": "custom",
+    "name": "Depends on each audio file (CC BY (Public domain) or CC BY SA (Share alike) or CC BY ND (No modification) or CC BY NC (No commercial use) or combination of the above)",
+    "url": "https://www.openslr.org/139/"
+  },
+  "name": "Audiocite.net",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 19778,
+        "sha256": "1ce921063aeec3ed230dd01a66f37ea8c4f4d71026a12feaa649ed0d49298ffa",
+        "timestamp": "20260516204753",
+        "url": "https://web.archive.org/web/20260516204753/https://www.openslr.org/139/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/139/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

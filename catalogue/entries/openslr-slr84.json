@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr84"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Dutch cursive, 16-18th century handwritings, pages and lines, for (un)supervised AI and other research.",
+  "domain": "Handwriting",
+  "expectedCounts": {
+    "nodes": 2
+  },
+  "id": "openslr-slr84",
+  "licence": {
+    "kind": "custom",
+    "name": "CC-BY-NC-ND (details in LICENSE.txt)",
+    "url": "https://www.openslr.org/84/"
+  },
+  "name": "ScribbleLens",
+  "namespace": [
+    "openslr",
+    "other"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 5624,
+        "sha256": "a5d85b9c6cf8add0816f161bf83f9ff6aa04d11b490d5e8ac42245d26e90817e",
+        "timestamp": "20251225091725",
+        "url": "https://web.archive.org/web/20251225091725/https://www.openslr.org/84/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/84/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

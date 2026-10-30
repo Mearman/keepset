@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr13"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "A database of recordings of real-world sounds and measured room impulse responses",
+  "domain": "Speech + Software",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr13",
+  "licence": {
+    "kind": "custom",
+    "name": "Research and development use only",
+    "url": "https://www.openslr.org/13/"
+  },
+  "name": "RWCP Sound Scene Database",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3457,
+        "sha256": "083e5ed242e121977f9946e622178c2b1901b88b7953f9f0db535a3f76c64752",
+        "timestamp": "20260516195552",
+        "url": "https://web.archive.org/web/20260516195552/https://www.openslr.org/13/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/13/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

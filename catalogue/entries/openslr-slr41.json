@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr41"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Multi-speaker TTS data for Javanese (jv-ID)",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 3
+  },
+  "id": "openslr-slr41",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 4.0 (CC BY-SA 4.0)",
+    "url": "https://www.openslr.org/41/"
+  },
+  "name": "High quality TTS data for Javanese.",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4540,
+        "sha256": "b3e24f04708f2d938e55da00f0305a4a082e4801a854ae594e13bda0748260db",
+        "timestamp": "20260430070829",
+        "url": "https://web.archive.org/web/20260430070829/https://www.openslr.org/41/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/41/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

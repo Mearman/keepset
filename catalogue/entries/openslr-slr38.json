@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr38"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "A free Chinese Mandarin corpus by Surfingtech (www.surfing.ai), containing utterances from 855 speakers, 102600 utterances;",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 1
+  },
+  "id": "openslr-slr38",
+  "licence": {
+    "kind": "custom",
+    "name": "Creative Common BY-NC-ND 4.0 (Attribution-NonCommercial-NoDerivatives 4.0 International)",
+    "url": "https://www.openslr.org/38/"
+  },
+  "name": "Free ST Chinese Mandarin Corpus",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3678,
+        "sha256": "9de1527e98a8f4ad8f4c43fc00e37df45244f3a901d5a89547f4ac2f6b4a9fcd",
+        "timestamp": "20260516195936",
+        "url": "https://web.archive.org/web/20260516195936/https://www.openslr.org/38/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/38/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

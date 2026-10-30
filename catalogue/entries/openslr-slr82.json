@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr82"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "A Free Chinese Speaker Recognition Corpus Released by CSLT@Tsinghua University",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 4
+  },
+  "id": "openslr-slr82",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 4.0 International",
+    "url": "https://www.openslr.org/82/"
+  },
+  "name": "CN-Celeb",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 6334,
+        "sha256": "0373c0e7387b2166edb032348b7d90dc8b11418acf78ed8a96d1b3a3e22bcbb0",
+        "timestamp": "20251212150739",
+        "url": "https://web.archive.org/web/20251212150739/https://www.openslr.org/82/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/82/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

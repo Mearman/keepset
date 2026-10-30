@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr32"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Multi-speaker TTS data for four South African languages, Afrikaans, Sesotho, Setswana and isiXhosa.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 4
+  },
+  "id": "openslr-slr32",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)",
+    "url": "https://www.openslr.org/32/"
+  },
+  "name": "High quality TTS data for four South African languages (af, st, tn, xh)",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4969,
+        "sha256": "3ca2c50aedc64bc376a495aa79b15334fd921f9ba015f42116efde72c479aeb1",
+        "timestamp": "20260616120602",
+        "url": "https://web.archive.org/web/20260616120602/https://www.openslr.org/32/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/32/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

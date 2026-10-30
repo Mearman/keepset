@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr16"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Acoustic speech data and meta-data from The AMI corpus.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 10
+  },
+  "id": "openslr-slr16",
+  "licence": {
+    "kind": "custom",
+    "name": "THE CREATIVE COMMONS ATTRIBUTION-NONCOMMERCIAL-SHAREALIKE v2.0 LICENCE (modified, look for more details in the licence file and/or the AMI webpage)",
+    "url": "https://www.openslr.org/16/"
+  },
+  "name": "The AMI Corpus",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 7926,
+        "sha256": "4c13e5bf561abb2fc4f4133fc1bd631b71ace21feb3fa04d8d841e17fcf8ff85",
+        "timestamp": "20260516200438",
+        "url": "https://web.archive.org/web/20260516200438/https://www.openslr.org/16/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/16/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

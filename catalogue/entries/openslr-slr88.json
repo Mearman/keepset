@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr88"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "French Expressive Speech Database with Social Attitudes",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 2
+  },
+  "id": "openslr-slr88",
+  "licence": {
+    "kind": "custom",
+    "name": "Creative Commons (BY/NC/ND) Licence",
+    "url": "https://www.openslr.org/88/"
+  },
+  "name": "Att-HACK",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4046,
+        "sha256": "0fbbbbf4cc6e849d0b6de489fd282ab32000643e30cd163a83c025b2956b4e08",
+        "timestamp": "20261015165320",
+        "url": "https://web.archive.org/web/20261015165320/https://www.openslr.org/88/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/88/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

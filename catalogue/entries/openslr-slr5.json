@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr5"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "A mirror of the Mississippi State transcripts and lexicon for Switchboard.",
+  "domain": "Text",
+  "expectedCounts": {
+    "nodes": 2
+  },
+  "id": "openslr-slr5",
+  "licence": {
+    "kind": "custom",
+    "name": "Unrestricted",
+    "url": "https://www.openslr.org/5/"
+  },
+  "name": "MSU Switchboard transcipts",
+  "namespace": [
+    "openslr",
+    "text"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4937,
+        "sha256": "8d15d8fc6a442842e33acc62a08d5c93b64d54a6df313994f8bd825abf80ef36",
+        "timestamp": "20251019195220",
+        "url": "https://web.archive.org/web/20251019195220/https://www.openslr.org/5/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/5/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

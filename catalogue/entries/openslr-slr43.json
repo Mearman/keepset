@@ -1,0 +1,59 @@
+{
+  "aliases": [
+    "slr43"
+  ],
+  "category": "resources/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/resources-v1/openslr-resource.json"
+  },
+  "description": "Multi-speaker TTS data for Nepali (ne-NP)",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 2
+  },
+  "id": "openslr-slr43",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 4.0 (CC BY-SA 4.0)",
+    "url": "https://www.openslr.org/43/"
+  },
+  "name": "High quality TTS data for Nepali.",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "openslr-resource"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4075,
+        "sha256": "e2fc85c11c7472180eba6de974cc2600f20dd38104d88c9463acec76a4364a06",
+        "timestamp": "20260418043232",
+        "url": "https://web.archive.org/web/20260418043232/https://www.openslr.org/43/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/43/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

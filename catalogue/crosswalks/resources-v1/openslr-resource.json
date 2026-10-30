@@ -1,0 +1,32 @@
+{
+  "oneWay": [],
+  "rules": [
+    {
+      "from": "meta",
+      "op": "move",
+      "to": "meta"
+    },
+    {
+      "from": "nodes[].id",
+      "op": "move",
+      "to": "nodes[].id"
+    },
+    {
+      "from": "nodes[].url",
+      "op": "move",
+      "to": "nodes[].url"
+    },
+    {
+      "from": "nodes[].size",
+      "op": "move",
+      "to": "nodes[].size"
+    },
+    {
+      "from": "nodes[].description",
+      "op": "move",
+      "to": "nodes[].description"
+    }
+  ],
+  "source": "openslr-resource",
+  "target": "resources/v1"
+}
