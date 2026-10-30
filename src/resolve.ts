@@ -29,21 +29,43 @@ export interface ResolveOptions {
   readonly signal?: AbortSignal;
 }
 
+/** The first and second byte of gzip data. */
+const GZIP_FIRST_BYTE = 0x1f;
+const GZIP_SECOND_BYTE = 0x8b;
+
+/** The extensions of URLs that name a compressed file or archive, whose bytes are the file itself even when the server labels them `Content-Encoding: gzip`: a recipe unpacks them with its archive kind. */
+const COMPRESSED_FILE_EXTENSIONS: ReadonlySet<string> = new Set(["gz", "tgz", "bz2", "tbz2", "zip", "xz", "zst", "7z"]);
+
 /**
- * Requests one URL's bytes through the port.
+ * Whether a response's bytes are a gzip transport encoding of the page and not a compressed file: the server labels them `Content-Encoding: gzip`, they are gzip data, and the URL does not name a compressed file. A browser's platform `fetch` has undone the encoding by then, so its bytes are not gzip data and are left alone; the Node downloader hands the encoding over as served, and the Wayback Machine replays a capture gzip-encoded or plain as its cache stands, so the decoded page is the one form a pinned hash can name.
+ * @param url - The URL requested.
+ * @param response - The server's answer.
+ * @param bytes - The body.
+ * @returns True when the body is to be gunzipped.
+ */
+function isTransportGzip(url: string, response: Response, bytes: Uint8Array): boolean {
+  const extension = new URL(url).pathname.split(".").at(-1)?.toLowerCase() ?? "";
+
+  return response.headers.get("content-encoding")?.toLowerCase() === "gzip" && bytes[0] === GZIP_FIRST_BYTE && bytes[1] === GZIP_SECOND_BYTE && !COMPRESSED_FILE_EXTENSIONS.has(extension);
+}
+
+/**
+ * Requests one URL's bytes through the port, with a gzip transport encoding undone.
  * @param port - The network port.
  * @param url - The URL.
  * @param signal - Aborts the request.
  * @returns The bytes.
  * @throws KeepsetError when the server does not answer successfully.
+ * @throws TypeError when a gzip transport encoding is not valid gzip data.
  */
 async function bytesOf(port: FetchPort, url: string, signal: AbortSignal | undefined): Promise<Uint8Array> {
   const response = await port(url, signal === undefined ? {} : { signal });
   if (!response.ok) {
     throw new KeepsetError(`${url} answered ${String(response.status)} ${response.statusText}`);
   }
+  const bytes = new Uint8Array(await response.arrayBuffer());
 
-  return new Uint8Array(await response.arrayBuffer());
+  return isTransportGzip(url, response, bytes) ? new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"))).arrayBuffer()) : bytes;
 }
 
 /**

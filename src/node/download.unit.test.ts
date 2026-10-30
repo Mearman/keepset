@@ -81,6 +81,10 @@ describe("downloadRaw", () => {
     expect(new Uint8Array(await response.arrayBuffer())).toEqual(new Uint8Array(gzipped));
   });
 
+  it("reports the server's Content-Encoding on the response, so a caller can tell a transport encoding from a compressed file", async () => {
+    expect((await downloadRaw(`${base}/labelled.gz`, {})).headers.get("content-encoding")).toBe("gzip");
+  });
+
   it("follows redirects to the final response", async () => {
     const hops = 3;
     const response = await downloadRaw(`${base}/hop/${String(hops)}`, {});
