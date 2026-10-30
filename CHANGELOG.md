@@ -1,3 +1,13 @@
+# [0.69.0](https://github.com/Mearman/keepset/compare/v0.68.0...v0.69.0) (2026-10-30)
+
+
+### Features
+
+* **catalogue:** add the transcripts of the OpenSLR corpora that publish them as tables ([c3ee482](https://github.com/Mearman/keepset/commit/c3ee482c439924640e0554efb91303e3d72dea76))
+* **categories:** add speech/v1, a speech corpus as its utterances ([c2be80e](https://github.com/Mearman/keepset/commit/c2be80e0c3840342087edd6ac05f794464307e9d))
+* **parsers:** let a recipe name the columns of a table with no header row ([3bed31e](https://github.com/Mearman/keepset/commit/3bed31e8be58d9eedfd6089fb604637ef1502af7))
+* **parsers:** read a table that never quotes a field ([53e346e](https://github.com/Mearman/keepset/commit/53e346e439a87a0aabc228e51931193999f290df))
+
 # [0.68.0](https://github.com/Mearman/keepset/compare/v0.67.0...v0.68.0) (2026-10-30)
 
 
