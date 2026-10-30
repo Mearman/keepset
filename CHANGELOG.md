@@ -1,3 +1,11 @@
+# [0.66.0](https://github.com/Mearman/keepset/compare/v0.65.0...v0.66.0) (2026-10-30)
+
+
+### Features
+
+* **catalogue:** add the Project Gutenberg catalogue ([6db4542](https://github.com/Mearman/keepset/commit/6db4542483981102e938b31a553c4f236bf35db6))
+* **targets:** add the texts/v1 category ([aad1385](https://github.com/Mearman/keepset/commit/aad138522ec86fe21d4c8ca7d8e13e5f800b9ece))
+
 # [0.65.0](https://github.com/Mearman/keepset/compare/v0.64.0...v0.65.0) (2026-10-27)
 
 
