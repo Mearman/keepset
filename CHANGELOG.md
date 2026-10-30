@@ -1,3 +1,18 @@
+# [0.67.0](https://github.com/Mearman/keepset/compare/v0.66.0...v0.67.0) (2026-10-30)
+
+
+### Bug Fixes
+
+* **fetch:** undo a gzip transport encoding of a page ([b8d0bab](https://github.com/Mearman/keepset/commit/b8d0bab8b19fe79ff17689764e39e8e3c272236e))
+
+
+### Features
+
+* **catalogue:** add the OpenSLR resources ([7960ab5](https://github.com/Mearman/keepset/commit/7960ab51af1fb2db9eab3118936dd935f274c63f))
+* **parsers:** keep a link's address in a resource's description ([bf48ed7](https://github.com/Mearman/keepset/commit/bf48ed7f6de13cee6bb78d5ba028a8143af48723))
+* **parsers:** read OpenSLR resource pages ([2a0eaf1](https://github.com/Mearman/keepset/commit/2a0eaf11e5a30cf073b4a54b9a2c4887c546dc6a))
+* **targets:** add the resources/v1 category ([c564a08](https://github.com/Mearman/keepset/commit/c564a081e897f8353dc656a097e059774933c864))
+
 # [0.66.0](https://github.com/Mearman/keepset/compare/v0.65.0...v0.66.0) (2026-10-30)
 
 
