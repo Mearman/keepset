@@ -304,6 +304,18 @@ globalStyle(".snapshot-link", {
   gap: "0.125rem",
 });
 
+/* A dataset's star sits before its name in the listing and after it in the entry page's heading, and stays on the name's line. */
+globalStyle(".star-name", {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: "0.25rem",
+});
+
+globalStyle(".star-mount", {
+  display: "inline-flex",
+  verticalAlign: "middle",
+});
+
 /* The link that skips the site header is off screen until the keyboard focuses it. */
 globalStyle(".skip-link", {
   position: "absolute",

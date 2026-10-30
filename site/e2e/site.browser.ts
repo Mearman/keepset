@@ -128,6 +128,23 @@ test("a source the page cannot read offers the file drop, and the dropped file p
   await expect(page.locator(".preview-meta")).toContainText("divorce");
 });
 
+test("a star set on an entry page survives a reload and shows in the listing's starred filter", async ({ page }) => {
+  await page.goto("/datasets/divorce/");
+  const star = page.getByRole("button", { name: /^Star / });
+  await expect(star).toHaveAttribute("aria-pressed", "false");
+  await star.click();
+  await expect(star).toHaveAttribute("aria-pressed", "true");
+  await page.reload();
+  await expect(page.getByRole("button", { name: /^Star / })).toHaveAttribute("aria-pressed", "true");
+
+  await page.goto("/");
+  const badge = page.locator("#island-root .mantine-Badge-root");
+  await expect(badge).toBeVisible();
+  await page.getByRole("button", { name: "Starred (1)" }).click();
+  await expect(badge).toHaveText(/^1 of /);
+  await expect(page.locator("#island-root tbody tr").filter({ has: page.locator("code", { hasText: /^divorce$/ }) })).toHaveCount(1);
+});
+
 test("a pinned snapshot's page link and raw link each copy their own URL", async ({ page, context }) => {
   await context.grantPermissions(["clipboard-read", "clipboard-write"]);
   await page.goto("/datasets/divorce/");

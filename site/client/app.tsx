@@ -10,7 +10,9 @@ import { useWindowVirtualizer } from "@tanstack/react-virtual";
 import { type ColumnDef, createSortedRowModel, rowSortingFeature, tableFeatures, useTable } from "@tanstack/react-table";
 import { entitiesText, entityTotal, sizeText, type Dimensions } from "../dimensions";
 import { listingColumnWidths } from "../listing-columns";
+import { registerServiceWorker } from "./service-worker";
 import { siteRoot } from "./site-root";
+import { StarToggle, useStarred } from "./star";
 import "../styles.css";
 
 /** A row of search-index.json, as site/build-site.ts writes it. */
@@ -72,6 +74,8 @@ function Listing({ records }: { readonly records: readonly SearchRecord[] }): Re
   const [kind, setKind] = useState<string | null>(null);
   const [domain, setDomain] = useState<string | null>(null);
   const [bounds, setBounds] = useState<EntityBounds>({ min: undefined, max: undefined });
+  const [onlyStarred, setOnlyStarred] = useState(false);
+  const starred = useStarred();
 
   const kinds = useMemo(() => [...new Set(records.map((record) => record.kind))].sort(), [records]);
   const domains = useMemo(() => [...new Set(records.flatMap((record) => (record.domain === undefined ? [] : [record.domain])))].sort(), [records]);
@@ -80,6 +84,9 @@ function Listing({ records }: { readonly records: readonly SearchRecord[] }): Re
     const needle = text.trim().toLowerCase();
 
     return records.filter((record) => {
+      if (onlyStarred && !starred.has(record.id)) {
+        return false;
+      }
       if (kind !== null && record.kind !== kind) {
         return false;
       }
@@ -96,11 +103,17 @@ function Listing({ records }: { readonly records: readonly SearchRecord[] }): Re
 
       return haystack.some((field) => field.toLowerCase().includes(needle));
     });
-  }, [records, text, kind, domain, bounds]);
+  }, [records, text, kind, domain, bounds, onlyStarred, starred]);
 
   // Column definitions are written as plain literals against the hook's own column type, not built through createColumnHelper: the helper infers each accessor over its own value type, which does not inter-type with the widened union under exactOptionalPropertyTypes. The order matches the static table's Name, Id, Kind, Domain so the two views of the listing read the same way.
   const columns: readonly ColumnDef<ListingFeatures, SearchRecord>[] = [
-    { accessorKey: "name", header: "Name", cell: (info) => <a href={`datasets/${info.row.original.id}/`}>{info.row.original.name}</a> },
+    { accessorKey: "name", header: "Name", cell: (info) => (
+        <span className="star-name">
+          <StarToggle id={info.row.original.id} name={info.row.original.name} />
+          <a href={`datasets/${info.row.original.id}/`}>{info.row.original.name}</a>
+        </span>
+      ),
+    },
     { accessorKey: "id", header: "Id", cell: (info) => <code>{info.row.original.id}</code> },
     { accessorKey: "kind", header: "Kind" },
     { accessorKey: "domain", header: "Domain" },
@@ -138,6 +151,9 @@ function Listing({ records }: { readonly records: readonly SearchRecord[] }): Re
             <NumberInput key={key} className="island-bound" aria-label={`${key === "min" ? "Minimum" : "Maximum"} entities`} placeholder={key} min={0} allowNegative={false} allowDecimal={false} value={bounds[key] ?? ""} onChange={(value) => { setBounds((current) => ({ ...current, [key]: typeof value === "number" ? value : undefined })); }} />
           ))}
         </div>
+        <Button aria-pressed={onlyStarred} color={onlyStarred ? "yellow" : "gray"} variant={onlyStarred ? "light" : "default"} onClick={() => { setOnlyStarred((current) => !current); }}>
+          Starred ({String(starred.size)})
+        </Button>
         <Badge variant="light" size="lg">
           {String(filtered.length)} of {String(records.length)}
         </Badge>
@@ -285,6 +301,16 @@ for (const mount of document.querySelectorAll<HTMLElement>("[data-copy-text]")) 
   );
 }
 
-if ("serviceWorker" in navigator) {
-  void navigator.serviceWorker.register(`${root}sw.js`, { scope: root === "" ? "./" : root });
+for (const mount of document.querySelectorAll<HTMLElement>("[data-star-id]")) {
+  const { starId, starName } = mount.dataset;
+  if (starId === undefined || starName === undefined) {
+    throw new Error("a star mount has no dataset to star");
+  }
+  createRoot(mount).render(
+    <MantineProvider defaultColorScheme="auto">
+      <StarToggle id={starId} name={starName} />
+    </MantineProvider>,
+  );
 }
+
+registerServiceWorker(root);
