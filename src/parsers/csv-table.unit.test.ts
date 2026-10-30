@@ -56,6 +56,21 @@ describe("the csv-table parser", () => {
     expect(parseNative(utf8("case,status\nx-1,open\n"), table({ idColumn: "case" })).nodes).toEqual([{ id: "x-1", status: "open" }]);
   });
 
+  it("names the columns of a file with no header row from the recipe, so its first record is a row", () => {
+    const options = table({ delimiter: "tab", idColumn: "file_id", headerNames: ["file_id", "text"] });
+    expect(parseNative(utf8("a1\thello\nb2\tworld\n"), options).nodes).toEqual([
+      { id: "a1", text: "hello" },
+      { id: "b2", text: "world" },
+    ]);
+    expect(parseNative(utf8("# comment\na1\thello\n"), { ...options, skipLines: 1 }).nodes).toEqual([{ id: "a1", text: "hello" }]);
+    expect(parseNative(utf8(""), options).nodes).toEqual([]);
+  });
+
+  it("reports a row whose width differs from the names the recipe gives", () => {
+    const error = parseError(() => parseNative(utf8("a1\thello\tmore\n"), table({ delimiter: "tab", idColumn: "file_id", headerNames: ["file_id", "text"] })));
+    expect(error.message).toContain("the row has 3 fields, the header has 2");
+  });
+
   it("makes an empty cell null in every row, so every row carries every column", () => {
     expect(parseNative(utf8("a,b,c\n1,,3\n,,\n"), table()).nodes).toEqual([
       { id: "1", a: "1", b: null, c: "3" },
