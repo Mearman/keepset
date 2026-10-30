@@ -1,3 +1,10 @@
+# [0.72.0](https://github.com/Mearman/keepset/compare/v0.71.0...v0.72.0) (2026-10-30)
+
+
+### Features
+
+* **catalogue:** add the transcripts of three OpenSLR corpora that ship them as utterance lines ([c3e26b4](https://github.com/Mearman/keepset/commit/c3e26b42d0c6ec2c5b5d3acec6b665d26b5e47db))
+
 # [0.71.0](https://github.com/Mearman/keepset/compare/v0.70.0...v0.71.0) (2026-10-30)
 
 
