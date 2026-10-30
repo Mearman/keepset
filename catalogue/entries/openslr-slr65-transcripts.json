@@ -1,0 +1,108 @@
+{
+  "aliases": [
+    "slr65-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].text",
+        "op": "move",
+        "to": "nodes[].text"
+      }
+    ],
+    "source": "csv-table",
+    "target": "speech/v1"
+  },
+  "description": "The transcripts of Crowdsourced high-quality Tamil multi-speaker speech data set: one record per utterance with its identifier and text. It carries none of the audio, which the download list of openslr-slr65 gives.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "instances": 2
+  },
+  "id": "openslr-slr65-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 4.0 International",
+    "url": "https://www.openslr.org/65/"
+  },
+  "name": "Crowdsourced high-quality Tamil multi-speaker speech data set transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "files": [
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "line_index_female.tsv",
+        "source": 0
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "line_index_male.tsv",
+        "source": 1
+      }
+    ],
+    "parser": {
+      "delimiter": "tab",
+      "encoding": "utf-8",
+      "format": "csv-table",
+      "headerNames": [
+        "file_id",
+        "text"
+      ],
+      "idColumn": "file_id",
+      "numericColumns": [],
+      "skipLines": 0,
+      "unquoted": true
+    },
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 447414,
+        "sha256": "533be052af53b1c52028a15dd4e41896d274de21bd84bb59e8bf6bbfe535be22",
+        "timestamp": "20210927122819",
+        "url": "https://web.archive.org/web/20210927122819/https://www.openslr.org/resources/65/line_index_female.tsv"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/resources/65/line_index_female.tsv"
+    },
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 380966,
+        "sha256": "1a0c01afbc8f53538f860903e70461c494bdfb94a0ab8c379324cec0cb4e6a2e",
+        "timestamp": "20210927132200",
+        "url": "https://web.archive.org/web/20210927132200/https://www.openslr.org/resources/65/line_index_male.tsv"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/resources/65/line_index_male.tsv"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "text"
+  ]
+}

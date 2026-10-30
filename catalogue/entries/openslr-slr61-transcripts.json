@@ -1,0 +1,144 @@
+{
+  "aliases": [
+    "slr61-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].text",
+        "op": "move",
+        "to": "nodes[].text"
+      }
+    ],
+    "source": "csv-table",
+    "target": "speech/v1"
+  },
+  "description": "The transcripts of Crowdsourced high-quality Argentinian Spanish speech data set: one record per utterance with its identifier and text. It carries none of the audio, which the download list of openslr-slr61 gives.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "instances": 4
+  },
+  "id": "openslr-slr61-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 4.0 International",
+    "url": "https://www.openslr.org/61/"
+  },
+  "name": "Crowdsourced high-quality Argentinian Spanish speech data set transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "files": [
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "line_index_female.tsv",
+        "source": 0
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "line_index_male.tsv",
+        "source": 1
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "es_es_line_index_weather.tsv",
+        "source": 2
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "es_ar_line_index_weather.tsv",
+        "source": 3
+      }
+    ],
+    "parser": {
+      "delimiter": "tab",
+      "encoding": "utf-8",
+      "format": "csv-table",
+      "headerNames": [
+        "file_id",
+        "text"
+      ],
+      "idColumn": "file_id",
+      "numericColumns": [],
+      "skipLines": 0,
+      "unquoted": true
+    },
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 294085,
+        "sha256": "b1ecaea981f29623b9f07a35cb6b90b1dc97fc655d9a17a3cb39e825b37dc9e2",
+        "timestamp": "20200124052333",
+        "url": "https://web.archive.org/web/20200124052333/https://www.openslr.org/resources/61/line_index_female.tsv"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/resources/61/line_index_female.tsv"
+    },
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 139328,
+        "sha256": "cd3e47467638e14c6173e8eb82058e97f512b231e116e364d9f3967c2f839826",
+        "timestamp": "20200124052403",
+        "url": "https://web.archive.org/web/20200124052403/https://www.openslr.org/resources/61/line_index_male.tsv"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/resources/61/line_index_male.tsv"
+    },
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4680,
+        "sha256": "67e11ef94627221f601b80efd2e7aacd71c78c3852a6c49ddaf4a130f003aae9",
+        "timestamp": "20200123050407",
+        "url": "https://web.archive.org/web/20200123050407/https://www.openslr.org/resources/61/es_es_line_index_weather.tsv"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/resources/61/es_es_line_index_weather.tsv"
+    },
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4770,
+        "sha256": "940e758ae3c6416f29b46ccc48e8511f86cf6b77e9c8aaadfdf881963159c18d",
+        "timestamp": "20200123050402",
+        "url": "https://web.archive.org/web/20200123050402/https://www.openslr.org/resources/61/es_ar_line_index_weather.tsv"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/resources/61/es_ar_line_index_weather.tsv"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "text"
+  ]
+}

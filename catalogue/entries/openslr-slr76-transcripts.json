@@ -1,0 +1,108 @@
+{
+  "aliases": [
+    "slr76-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].text",
+        "op": "move",
+        "to": "nodes[].text"
+      }
+    ],
+    "source": "csv-table",
+    "target": "speech/v1"
+  },
+  "description": "The transcripts of Crowdsourced high-quality Basque speech data set: one record per utterance with its identifier and text. It carries none of the audio, which the download list of openslr-slr76 gives.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "instances": 2
+  },
+  "id": "openslr-slr76-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 4.0 International",
+    "url": "https://www.openslr.org/76/"
+  },
+  "name": "Crowdsourced high-quality Basque speech data set transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "files": [
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "line_index_female.tsv",
+        "source": 0
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "line_index_male.tsv",
+        "source": 1
+      }
+    ],
+    "parser": {
+      "delimiter": "tab",
+      "encoding": "utf-8",
+      "format": "csv-table",
+      "headerNames": [
+        "file_id",
+        "text"
+      ],
+      "idColumn": "file_id",
+      "numericColumns": [],
+      "skipLines": 0,
+      "unquoted": true
+    },
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 312937,
+        "sha256": "201d03e6ddd02306accda4a153ad9542ab9177409f1fc0078e0a4a9daf0f0de5",
+        "timestamp": "20210724032922",
+        "url": "https://web.archive.org/web/20210724032922/https://www.openslr.org/resources/76/line_index_female.tsv"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/resources/76/line_index_female.tsv"
+    },
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 266625,
+        "sha256": "b915cb46020a644eb48628536194b1f191d7976528d64a5e02ce6c62399c2434",
+        "timestamp": "20210724043017",
+        "url": "https://web.archive.org/web/20210724043017/https://www.openslr.org/resources/76/line_index_male.tsv"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/resources/76/line_index_male.tsv"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "text"
+  ]
+}
