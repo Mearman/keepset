@@ -1,3 +1,15 @@
+# [0.86.0](https://github.com/Mearman/keepset/compare/v0.85.0...v0.86.0) (2026-10-31)
+
+
+### Features
+
+* **catalogue:** add the Deeply Nonverbal Vocalization clips ([8045179](https://github.com/Mearman/keepset/commit/80451792189b9c8807561cdcccdc3e83c3f606ea))
+* **catalogue:** add the SEOUL CORPUS transcripts ([5bbd053](https://github.com/Mearman/keepset/commit/5bbd053d2680dff1bbf0d8e1944b397b2af6ae2e))
+* **parsers:** read CHAT transcript files ([0715600](https://github.com/Mearman/keepset/commit/07156000cc3202bdb2029c1e599c1ad5fee31950))
+* **parsers:** read JSON records nested beneath keys ([fb0fc5e](https://github.com/Mearman/keepset/commit/fb0fc5ea23d60794525a41ac026c7c78068123c4))
+* **parsers:** read lists of option lines ([fa826b7](https://github.com/Mearman/keepset/commit/fa826b745a63a215f81b8d225777bdf84914d82a))
+* **parsers:** read Praat TextGrid files, including those zipped inside a tarball ([816ddfc](https://github.com/Mearman/keepset/commit/816ddfc6c9ba11d36142d6a16401ddb2891b8b89))
+
 # [0.85.0](https://github.com/Mearman/keepset/compare/v0.84.0...v0.85.0) (2026-10-31)
 
 
