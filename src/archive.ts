@@ -327,25 +327,30 @@ export function sheetToCsv(bytes: Uint8Array, archive: Readonly<SheetArchive>): 
 }
 
 /**
- * Unpacks downloaded bytes into every file a multi-file format's selector matches, gunzipping each when the layout's `inner` says so. The paths stay the archive's own, so a gunzipped `edge.csv.gz` keeps its name.
+ * Unpacks downloaded bytes into every file a multi-file format's selector matches, gunzipping each when the layout's `inner` is `gzip` and, when it is an archive kind with its own selector, unpacking each matched member into the files that selector matches. The paths stay the archive's own, so a gunzipped `edge.csv.gz` keeps its name, and a file of an inner archive is filed under its member's path and its own joined by `/`.
  * @param bytes - The downloaded bytes.
  * @param archive - The recipe's archive layout, which selects files with `files`.
- * @returns Each matching file, in path order.
- * @throws ArchiveError when the bytes, or a file `inner` gunzips, are not well-formed, or the selector matches no member.
+ * @returns Each matching file, in path order (the outer members in path order, and the files of each in path order).
+ * @throws ArchiveError when the bytes, or a member `inner` reads, are not well-formed, or a selector matches no member.
  */
 export function unpackFiles(bytes: Uint8Array, archive: FilesArchive): Member[] {
   const files = [...unpackMembers(bytes, { kind: archive.kind, members: archive.files })];
-  if (archive.inner === undefined) {
+  const { inner } = archive;
+  if (inner === undefined) {
     return files;
   }
-
-  return files.map((file) => {
+  const inside = <Result>(file: Member, read: () => Result): Result => {
     try {
-      return { path: file.path, bytes: gunzip(file.bytes) };
+      return read();
     } catch (error) {
       throw new ArchiveError(`member ${file.path}: ${error instanceof Error ? error.message : String(error)}`, { cause: error });
     }
-  });
+  };
+  if (inner.kind === "gzip") {
+    return files.map((file) => ({ path: file.path, bytes: inside(file, () => gunzip(file.bytes)) }));
+  }
+
+  return files.flatMap((file) => inside(file, () => [...unpackMembers(file.bytes, { kind: inner.kind, members: inner.files })]).map((member) => ({ path: `${file.path}/${member.path}`, bytes: member.bytes })));
 }
 
 /** How many compressed bytes are fed to the gzip stream at a time: enough to keep the stream's per-call cost small, few enough that the decompressed bytes it yields stay a bounded multiple of it. */
