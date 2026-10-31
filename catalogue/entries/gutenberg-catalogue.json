@@ -57,12 +57,27 @@
         "from": "nodes[].Bookshelves",
         "op": "move",
         "to": "nodes[].collections"
+      },
+      {
+        "from": "nodes[].textUrl",
+        "op": "move",
+        "to": "nodes[].textUrl"
+      },
+      {
+        "from": "nodes[].htmlUrl",
+        "op": "move",
+        "to": "nodes[].htmlUrl"
+      },
+      {
+        "from": "nodes[].epubUrl",
+        "op": "move",
+        "to": "nodes[].epubUrl"
       }
     ],
     "source": "csv-table",
     "target": "texts/v1"
   },
-  "description": "The catalogue of Project Gutenberg's free ebooks: one record per work, with title, language, authors, subjects, issue date, type, Library of Congress classification and bookshelves. It describes the works and does not contain their texts.",
+  "description": "The catalogue of Project Gutenberg's free ebooks: one record per work, with title, language, authors, subjects, issue date, type, Library of Congress classification and bookshelves, and for a text the URLs of its plain text, HTML and EPUB files, built from the work's ebook number. It describes the works and where their files are, and does not contain their texts.",
   "domain": "Library catalogue",
   "expectedCounts": {
     "nodes": 79576
@@ -96,6 +111,32 @@
         "Bookshelves"
       ],
       "delimiter": "comma",
+      "derivedColumns": [
+        {
+          "name": "textUrl",
+          "template": "https://www.gutenberg.org/cache/epub/{Text}/pg{Text}.txt",
+          "when": {
+            "column": "Type",
+            "equals": "Text"
+          }
+        },
+        {
+          "name": "htmlUrl",
+          "template": "https://www.gutenberg.org/cache/epub/{Text}/pg{Text}-images.html",
+          "when": {
+            "column": "Type",
+            "equals": "Text"
+          }
+        },
+        {
+          "name": "epubUrl",
+          "template": "https://www.gutenberg.org/cache/epub/{Text}/pg{Text}.epub",
+          "when": {
+            "column": "Type",
+            "equals": "Text"
+          }
+        }
+      ],
       "encoding": "utf-8",
       "format": "csv-table",
       "idColumn": "Text",
@@ -129,6 +170,9 @@
     "issued",
     "type",
     "classification",
-    "collections"
+    "collections",
+    "textUrl",
+    "htmlUrl",
+    "epubUrl"
   ]
 }
