@@ -1,0 +1,100 @@
+{
+  "aliases": [
+    "slr8-lexicon"
+  ],
+  "category": "lexicon/v1",
+  "citations": [],
+  "crosswalk": {
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].word",
+        "op": "move",
+        "to": "nodes[].word"
+      },
+      {
+        "from": "nodes[].pronunciation",
+        "op": "move",
+        "to": "nodes[].pronunciation"
+      }
+    ],
+    "source": "lexicon-lines",
+    "target": "lexicon/v1"
+  },
+  "description": "Sprakbanken lexicons (lexicon): the Danish pronunciation lexicons, with and without normalisation. It carries the entries and none of the data they describe.",
+  "domain": "Text",
+  "expectedCounts": {
+    "instances": 2
+  },
+  "id": "openslr-slr8-lexicon",
+  "licence": {
+    "kind": "custom",
+    "name": "Unrestricted",
+    "url": "https://www.openslr.org/8/"
+  },
+  "name": "Sprakbanken lexicons (lexicon)",
+  "namespace": [
+    "openslr",
+    "text"
+  ],
+  "properties": {},
+  "recipe": {
+    "files": [
+      {
+        "archive": {
+          "kind": "tar.gz",
+          "members": {
+            "pattern": "lexicon\\.txt"
+          }
+        },
+        "path": "lexicon-da.tgz",
+        "source": 0
+      },
+      {
+        "archive": {
+          "kind": "tar.gz",
+          "members": {
+            "pattern": "lexicon\\.txt"
+          }
+        },
+        "path": "lexicon-da-nonorm.tgz",
+        "source": 1
+      }
+    ],
+    "parser": {
+      "commentPrefixes": [],
+      "encoding": "utf-8",
+      "format": "lexicon-lines"
+    },
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/8/lexicon-da.tgz"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/8/lexicon-da-nonorm.tgz"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "word",
+    "pronunciation"
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "category": "audio/v1",
+  "citations": [],
+  "crosswalk": {
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      }
+    ],
+    "source": "none",
+    "target": "audio/v1"
+  },
+  "description": "Aachen Impulse Response Database (annotations). No recipe reads it. The archive holds impulse responses as MATLAB files and no annotation table; each response is identified by its file name only.",
+  "domain": "Audio",
+  "expectedCounts": {},
+  "id": "openslr-slr20-clips",
+  "licence": {
+    "kind": "unrecorded"
+  },
+  "name": "Aachen Impulse Response Database (annotations)",
+  "namespace": [
+    "openslr",
+    "audio"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "The archive holds impulse responses as MATLAB files and no annotation table; each response is identified by its file name only.",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3284,
+        "sha256": "d9234314c957b6f71aa8c22d10da0c5f12f5093e6fba342b0be4f76d60663e2e",
+        "timestamp": "20260617201357",
+        "url": "https://web.archive.org/web/20260617201357/https://www.openslr.org/20/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/20/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

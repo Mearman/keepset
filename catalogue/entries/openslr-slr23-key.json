@@ -1,0 +1,57 @@
+{
+  "category": "speakers/v1",
+  "citations": [],
+  "crosswalk": {
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      }
+    ],
+    "source": "none",
+    "target": "speakers/v1"
+  },
+  "description": "NIST LRE 2007 Key (speaker list). No recipe reads it. The key table has rows of different widths (29, 30 and 31 columns) after a comment header, which the table parser does not read.",
+  "domain": "Misc",
+  "expectedCounts": {},
+  "id": "openslr-slr23-key",
+  "licence": {
+    "kind": "custom",
+    "name": "Not copyrighted (derived from a work prepared by a US government employee in the course of their official duties)",
+    "url": "https://www.openslr.org/23/"
+  },
+  "name": "NIST LRE 2007 Key (speaker list)",
+  "namespace": [
+    "openslr",
+    "other"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "The key table has rows of different widths (29, 30 and 31 columns) after a comment header, which the table parser does not read.",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 2693,
+        "sha256": "66d4ed9c679f6dccb0b76251742cf06055f4baaf85315273fd95742f5f0f44a0",
+        "timestamp": "20260516211610",
+        "url": "https://web.archive.org/web/20260516211610/https://www.openslr.org/23/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/23/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

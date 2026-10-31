@@ -1,0 +1,118 @@
+{
+  "aliases": [
+    "slr48-splits"
+  ],
+  "category": "splits/v1",
+  "citations": [],
+  "crosswalk": {
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].document",
+        "op": "move",
+        "to": "nodes[].document"
+      },
+      {
+        "from": "nodes[].line",
+        "op": "move",
+        "to": "nodes[].line"
+      }
+    ],
+    "source": "csv-table",
+    "target": "splits/v1"
+  },
+  "description": "MADCAT Arabic data splits (splits): the MADCAT Arabic handwriting lines assigned to the training, development and test splits, one instance per split file. It carries the entries and none of the data they describe.",
+  "domain": "Other",
+  "expectedCounts": {
+    "instances": 3
+  },
+  "id": "openslr-slr48-splits",
+  "licence": {
+    "kind": "custom",
+    "name": "Apache 2.0",
+    "url": "https://www.openslr.org/48/"
+  },
+  "name": "MADCAT Arabic data splits (splits)",
+  "namespace": [
+    "openslr",
+    "other"
+  ],
+  "properties": {},
+  "recipe": {
+    "files": [
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "madcat.dev.raw.lineid",
+        "source": 0
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "madcat.test.raw.lineid",
+        "source": 1
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "madcat.train.raw.lineid",
+        "source": 2
+      }
+    ],
+    "parser": {
+      "columns": [
+        "document",
+        "line"
+      ],
+      "delimiter": "space",
+      "encoding": "utf-8",
+      "format": "csv-table",
+      "headerNames": [
+        "document",
+        "line"
+      ],
+      "idColumn": null,
+      "numericColumns": [],
+      "skipLines": 0,
+      "unquoted": true
+    },
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/48/madcat.dev.raw.lineid"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/48/madcat.test.raw.lineid"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/48/madcat.train.raw.lineid"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "document",
+    "line"
+  ]
+}
