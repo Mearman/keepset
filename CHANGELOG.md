@@ -1,3 +1,10 @@
+## [0.96.1](https://github.com/Mearman/keepset/compare/v0.96.0...v0.96.1) (2026-10-31)
+
+
+### Bug Fixes
+
+* **archive:** verify every gzip member's CRC-32 and length ([8918dd2](https://github.com/Mearman/keepset/commit/8918dd27c3ac90feeb1652ac967667b7665e8cac))
+
 # [0.96.0](https://github.com/Mearman/keepset/compare/v0.95.0...v0.96.0) (2026-10-31)
 
 
