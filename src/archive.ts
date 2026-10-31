@@ -371,22 +371,24 @@ function* tarChunks(bytes: Uint8Array, kind: "tar" | "tar.gz" | "tar.bz2"): Gene
     return;
   }
   const produced: Uint8Array[] = [];
+  let emitted = 0;
   const stream = new Gunzip((chunk) => {
     produced.push(chunk);
+    emitted += chunk.length;
   });
-  try {
-    for (let start = 0; start < bytes.length; start += GZIP_FEED_BYTES) {
+  for (let start = 0; start < Math.max(bytes.length, 1); start += GZIP_FEED_BYTES) {
+    try {
       stream.push(bytes.subarray(start, start + GZIP_FEED_BYTES), start + GZIP_FEED_BYTES >= bytes.length);
+    } catch (error) {
+      // A tar.gz written by tar ends its first gzip member and may then carry padding that is not another member; the stream rejects it only after the whole member is out. What it emitted is all the archive holds, and the tar reader checks that it is a whole archive, so a stream that failed before emitting anything is the only one that is not gzip data.
+      if (emitted === 0) {
+        throw new ArchiveError(`not valid gzip data: ${error instanceof Error ? error.message : String(error)}`, { cause: error });
+      }
       yield* produced.splice(0);
+
+      return;
     }
-    if (bytes.length === 0) {
-      stream.push(bytes, true);
-    }
-  } catch (error) {
-    if (error instanceof ArchiveError) {
-      throw error;
-    }
-    throw new ArchiveError(`not valid gzip data: ${error instanceof Error ? error.message : String(error)}`, { cause: error });
+    yield* produced.splice(0);
   }
 }
 
