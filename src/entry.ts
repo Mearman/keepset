@@ -384,10 +384,13 @@ export const ParserSchema = z.discriminatedUnion("format", [
       encoding: EncodingSchema,
       /** A regular expression the file's whole path matches, with one capture group: the recording's id. */
       idPattern: MemberPatternSchema,
-      /** The name of the tier whose annotations are the rows, as the file spells it; every file must have a tier of the name, and where several share it all are read. Absent, every tier of every file is read, which is the form for files whose tier names differ from file to file (one tier per speaker or channel). */
+      /** The name of the tier whose annotations are the rows, as the file spells it; every file must have a tier of the name, and where several share it all are read. At most one of `tier` and `tierPattern` is given. */
       tier: z.string().min(1).optional(),
+      /** A regular expression a tier's whole name matches, for a corpus whose tiers are named for the speakers and so differ from file to file: every tier it matches is read, and every file must have at least one. At most one of `tier` and `tierPattern` is given. */
+      tierPattern: MemberPatternSchema.optional(),
     })
-    .strict(),
+    .strict()
+    .refine((parser) => parser.tier === undefined || parser.tierPattern === undefined, { message: "give at most one of tier and tierPattern, or neither to read every tier", path: ["tier"] }),
   z
     .object({
       format: z.literal("member-text"),

@@ -264,6 +264,11 @@ describe("an archive that selects one file or every file", () => {
     expect(issues(entry(textGrid, { ...nested, inner: { kind: "gzip", files: { extensions: [".TextGrid"] } } }))).not.toBe("");
     expect(issues(entry(textGrid, { ...nested, inner: { kind: "zip", files: { extensions: [".TextGrid"] }, inner: { kind: "gzip" } } }))).not.toBe("");
     expect(issues(entry({ ...textGrid, tier: "" }, nested))).not.toBe("");
+    const unnamed = { format: textGrid.format, encoding: textGrid.encoding, idPattern: textGrid.idPattern };
+    expect(issues(entry({ ...unnamed, tierPattern: "P\\d+" }, nested))).toBe("");
+    expect(issues(entry(unnamed, nested))).toBe("");
+    expect(issues(entry({ ...textGrid, tierPattern: "P\\d+" }, nested))).not.toBe("");
+    expect(issues(entry({ ...unnamed, tierPattern: "(" }, nested))).not.toBe("");
     expect(issues(entry({ ...textGrid, encoding: "utf-16" }, nested))).not.toBe("");
   });
 
