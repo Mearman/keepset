@@ -1,3 +1,11 @@
+# [0.84.0](https://github.com/Mearman/keepset/compare/v0.83.0...v0.84.0) (2026-10-31)
+
+
+### Features
+
+* **catalogue:** add the Primewords transcripts ([18c3a7a](https://github.com/Mearman/keepset/commit/18c3a7a4fecca5b1be2318efda603913025ad94e))
+* **catalogue:** add the Samrómur Unverified transcripts ([2d5f8e7](https://github.com/Mearman/keepset/commit/2d5f8e737e2bf5a644974292ee3245797bf95d72))
+
 # [0.83.0](https://github.com/Mearman/keepset/compare/v0.82.1...v0.83.0) (2026-10-31)
 
 
