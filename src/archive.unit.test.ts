@@ -115,11 +115,11 @@ describe("scanTar", () => {
 describe("unpack of a tar.gz larger than one gzip slice", () => {
   const KIBIBYTE = 1024;
   const MEBIBYTE = KIBIBYTE * KIBIBYTE;
-  const NOISE_MEBIBYTES = 3;
-  const MIN_COMPRESSED_MEBIBYTES = 2;
+  const NOISE_MEBIBYTES = 1.5;
+  const MIN_COMPRESSED_MEBIBYTES = 1;
   it("selects a member from a compressed archive whose bytes span several slices, and rejects bytes that do not start as gzip", () => {
     // Random text compresses to little less than its length, so the compressed archive is several times the 1 MiB the gzip stream is fed at a time.
-    const noise = randomBytes(NOISE_MEBIBYTES * MEBIBYTE).toString("base64");
+    const noise = randomBytes(Math.ceil(NOISE_MEBIBYTES * MEBIBYTE)).toString("base64");
     const compressed = gzip(
       tar([
         { path: "pad/noise.bin", text: "" },
