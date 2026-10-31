@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { EntrySchema, parseEntry, SourceSchema, waybackUrl } from "./entry";
+import { EntrySchema, MULTI_FILE_FORMATS, parseEntry, SourceSchema, waybackUrl } from "./entry";
 import { CatalogueSyntaxError } from "./errors";
 import { serialise } from "./serialise";
 import { arcgisEntry, deadEntry, everyEntryShape, graphCollectionEntry, liveEntry, ogbEntry, taskCollectionEntry, taskEntry } from "./test-support/entries";
@@ -235,7 +235,7 @@ describe("an archive that selects one file or every file", () => {
 
   it("gives a files archive only to a multi-file parser, and a multi-file parser only a files archive", () => {
     expect(issues(ogbEntry)).toBe("");
-    expect(issues({ ...ogbEntry, recipe: { ...ogbEntry.recipe, parser: liveEntry.recipe.parser } })).toMatch(/a files archive is read by a multi-file parser \(ogb, member-text, nxt-words, eaf, textgrid, option-list, chat, mtedx, stm, musan-annotations\)/);
+    expect(issues({ ...ogbEntry, recipe: { ...ogbEntry.recipe, parser: liveEntry.recipe.parser } })).toContain(`a files archive is read by a multi-file parser (${[...MULTI_FILE_FORMATS].join(", ")})`);
     expect(issues({ ...ogbEntry, recipe: { ...ogbEntry.recipe, archive: { kind: "zip", member: { path: "raw/edge.csv.gz" }, inner: { kind: "gzip" } } } })).toMatch(/a files archive is read by a multi-file parser/);
     expect(issues({ ...ogbEntry, recipe: { ...ogbEntry.recipe, archive: { kind: "zip", members: { extensions: [".gz"] } } } })).toMatch(/a files archive is read by a multi-file parser/);
     expect(issues({ ...ogbEntry, recipe: { ...ogbEntry.recipe, archive: { ...ogbEntry.recipe.archive, inner: { kind: "zip", member: { path: "x" } } } } })).not.toBe("");
