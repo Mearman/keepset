@@ -44,7 +44,7 @@
   "description": "The transcripts of the Totonac conversations as their ELAN files give them: each record is an annotation, named by the recording and the annotation's identifier in its file, with its text, the tier it is on (a speaker's, or a translation) and its start and end in milliseconds, null for an annotation that refers to another and has no times of its own. It carries none of the audio, which the download list of openslr-slr107 gives.",
   "domain": "Speech",
   "expectedCounts": {
-    "nodes": 0
+    "nodes": 12228
   },
   "id": "openslr-slr107-transcripts",
   "licence": {

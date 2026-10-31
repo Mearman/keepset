@@ -61,7 +61,7 @@
   "description": "The recordings of MUSAN that its annotation files list: each record is a recording named by its identifier, with the kind of sound as its label (music, speech or noise), the source directory it is filed under, and for music its genres, whether it has vocals, its artist and for Western art music its composer, and for speech the speaker's gender and the language, null for what a kind does not have. It carries none of the audio, which is in the download of openslr-slr17.",
   "domain": "Audio",
   "expectedCounts": {
-    "nodes": 0
+    "nodes": 854
   },
   "id": "openslr-slr17-clips",
   "licence": {

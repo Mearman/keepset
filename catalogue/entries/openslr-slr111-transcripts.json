@@ -44,7 +44,7 @@
   "description": "The transcripts of AISHELL-4: one instance for each of the four archives of the download (the three training sets and the test set), and in it each record is a stretch of speech, named by the meeting's recording and its position in the recording's TextGrid, with its text, its speaker (the tier it is on, a speaker's number and sex) and its start and end in seconds. It carries none of the audio, which the download list of openslr-slr111 gives.",
   "domain": "Speech",
   "expectedCounts": {
-    "instances": 0
+    "instances": 4
   },
   "id": "openslr-slr111-transcripts",
   "licence": {

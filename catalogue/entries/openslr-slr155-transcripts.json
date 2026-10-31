@@ -44,7 +44,7 @@
   "description": "The transcripts of SBCSAE: each record is a turn of a conversation, named by the conversation and the turn's position in it, with its speaker, its text as the corpus transcribes it (its conversation analysis marks kept) and the times of its first and last time marks in milliseconds, null for a turn with none. It carries none of the audio, which the download list of openslr-slr155 gives.",
   "domain": "Speech",
   "expectedCounts": {
-    "nodes": 0
+    "nodes": 45238
   },
   "id": "openslr-slr155-transcripts",
   "licence": {
