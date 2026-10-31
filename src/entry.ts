@@ -4,6 +4,7 @@ import { CategoryIdSchema, countedKeys, isStreamable, type CategoryId } from "./
 import { define } from "./define";
 import { namesOf } from "./names";
 import { CatalogueSyntaxError, type SyntaxIssue } from "./errors";
+import { readTemplate, templateColumns } from "./parsers/column-template";
 import { recordOf } from "./record";
 import { JsonScalarSchema } from "./targets/json-scalar";
 
@@ -206,6 +207,47 @@ const EncodingSchema = z.enum(["utf-8", "latin1"]);
 /** A column of a table as the table parser names it: the header with every run of characters outside letters, digits and underscore replaced by one underscore, so it is a valid segment of a crossmap path. */
 export const ColumnNameSchema = z.string().regex(/^[A-Za-z](?:[A-Za-z0-9_]*[A-Za-z0-9])?$/, { message: "must be a column name as the parser spells it: letters, digits and underscores, starting with a letter and not ending with an underscore" });
 
+/** A column a table parser derives: its name, the template its cells are built from, and optionally the one value of another column the rows must hold for it to have a value. */
+const DerivedColumnSchema = z
+  .object({
+    name: ColumnNameSchema,
+    template: z.string().min(1),
+    /** Set on a column that only some rows can have, such as the address of a file only one kind of record has: a row whose `column` cell is not exactly `equals` has null for the derived column. */
+    when: z.object({ column: ColumnNameSchema, equals: z.string().min(1) }).strict().optional(),
+  })
+  .strict();
+
+/**
+ * Reports the ways a table parser's derived columns are wrong without its table: a name given twice or taken by the row's id, a template that is not one, a placeholder that is not a column name and, when the recipe names the header's columns itself, a placeholder or condition naming none of them. Against a file's own header the parser checks the rest.
+ * @param derived - The recipe's derived columns.
+ * @param headerNames - The recipe's names for a file with no header row, if it gives them.
+ * @param ctx - Where the issues are added.
+ */
+function addDerivedColumnIssues(derived: readonly z.infer<typeof DerivedColumnSchema>[], headerNames: readonly string[] | undefined, ctx: z.RefinementCtx): void {
+  const seen = new Set<string>();
+  for (const [index, { name, template, when }] of derived.entries()) {
+    if (name === "id" || seen.has(name)) {
+      ctx.addIssue({ code: "custom", path: ["derivedColumns", index, "name"], message: name === "id" ? "id is the row's id, so no derived column is named it" : `the derived column ${name} is given twice` });
+    }
+    seen.add(name);
+    if (when !== undefined && headerNames !== undefined && !headerNames.includes(when.column)) {
+      ctx.addIssue({ code: "custom", path: ["derivedColumns", index, "when"], message: `the condition of ${name} names the column ${when.column}, which the recipe's header names do not include` });
+    }
+    const reading = readTemplate(template);
+    if (reading.problem !== undefined) {
+      ctx.addIssue({ code: "custom", path: ["derivedColumns", index, "template"], message: `the template of ${name} has ${reading.problem}` });
+      continue;
+    }
+    for (const column of templateColumns(reading.parts)) {
+      if (!ColumnNameSchema.safeParse(column).success) {
+        ctx.addIssue({ code: "custom", path: ["derivedColumns", index, "template"], message: `the template of ${name} has the placeholder ${JSON.stringify(column)}, which is not a column name` });
+      } else if (headerNames !== undefined && !headerNames.includes(column)) {
+        ctx.addIssue({ code: "custom", path: ["derivedColumns", index, "template"], message: `the template of ${name} names the column ${column}, which the recipe's header names do not include` });
+      }
+    }
+  }
+}
+
 /** The parser that reads the unpacked file into the dataset's native JSON shape, with the options that format needs. Every option is stated in the entry, so a recipe reads the same way wherever it runs. */
 export const ParserSchema = z.discriminatedUnion("format", [
   z
@@ -377,11 +419,16 @@ export const ParserSchema = z.discriminatedUnion("format", [
       unquoted: z.literal(true).optional(),
       /** Cell texts, besides the empty cell, that stand for a missing value (`NA`): such a cell is null in every column, numeric or not. */
       nullValues: z.array(z.string().min(1)).optional(),
+      /** Columns each row gains, built from other columns of the same row: a name, and a template of text with `{column}` placeholders, each replaced by that header column's cell as the file writes it, trimmed and not scaled (the id column included). A derived column is null in a row where a column its template names is empty or its `when` condition fails, is kept whatever `columns` lists, and is an ordinary column to the crosswalk. */
+      derivedColumns: z.array(DerivedColumnSchema).min(1).optional(),
     })
     .strict()
     .refine((parser) => new Set(parser.numericColumns.map((numeric) => numeric.column)).size === parser.numericColumns.length, { message: "a column may be declared numeric once", path: ["numericColumns"] })
     .refine((parser) => parser.columns === undefined || new Set(parser.columns).size === parser.columns.length, { message: "a column may be listed once", path: ["columns"] })
-    .refine((parser) => parser.headerNames === undefined || new Set(parser.headerNames).size === parser.headerNames.length, { message: "a header name may be given once", path: ["headerNames"] }),
+    .refine((parser) => parser.headerNames === undefined || new Set(parser.headerNames).size === parser.headerNames.length, { message: "a header name may be given once", path: ["headerNames"] })
+    .superRefine((parser, ctx) => {
+      addDerivedColumnIssues(parser.derivedColumns ?? [], parser.headerNames, ctx);
+    }),
   z
     .object({
       format: z.literal("lexicon-lines"),

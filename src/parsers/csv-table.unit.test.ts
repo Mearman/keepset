@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { Parser } from "../entry";
+import { ParserSchema, type Parser } from "../entry";
 import { NativeParseError } from "../errors";
 import { columnName, columnNames, headerCells, parseCsvTable } from "./csv-table";
 import { decodePieces, parseNative } from "./parse-native";
@@ -274,5 +274,76 @@ describe("the csv-table parser", () => {
     expect(parseError(() => [...decodePieces(INVALID_UTF8, table(), 1)]).message).toMatch(/not valid utf-8/);
     expect([...decodePieces(bytesOf("caf\u00e9"), table({ encoding: "latin1" }), 2)].join("")).toBe("caf\u00e9");
   });
+});
 
+describe("the csv-table parser's derived columns", () => {
+  const base = { format: "csv-table", encoding: "utf-8", delimiter: "comma", skipLines: 0, idColumn: "Text", numericColumns: [] } as const;
+
+  it("fills a template from the cells of the row, the id column included, as the file writes them", () => {
+    const options = table({ idColumn: "Text", derivedColumns: [{ name: "plainTextUrl", template: "https://example.org/{Text}/pg{Text}-{Lang}.txt" }] });
+    expect(parseNative(utf8("Text#,Lang\n12,en\n7,de\n"), options).nodes).toEqual([
+      { id: "12", Lang: "en", plainTextUrl: "https://example.org/12/pg12-en.txt" },
+      { id: "7", Lang: "de", plainTextUrl: "https://example.org/7/pg7-de.txt" },
+    ]);
+  });
+
+  it("inserts a cell verbatim, with no encoding, trimmed and not scaled when the column is numeric", () => {
+    const options = table({ numericColumns: [{ column: "size", factor: 60 }], derivedColumns: [{ name: "path", template: "{name}/{size}" }] });
+    expect(parseNative(utf8("name,size\n a.b-c_d~e , 2 \n"), options).nodes).toEqual([{ id: "1", name: "a.b-c_d~e", size: 120, path: "a.b-c_d~e/2" }]);
+  });
+
+  it("is null in a row where a column the template names is empty or a missing-value text", () => {
+    const options = table({ nullValues: ["NA"], derivedColumns: [{ name: "path", template: "{a}/{b}" }] });
+    expect(parseNative(utf8("a,b\nx,y\nx,\nNA,y\n"), options).nodes.map((row) => row["path"])).toEqual(["x/y", null, null]);
+  });
+
+  it("is null in a row where the condition's column is not exactly the value, and is built where it is", () => {
+    const options = table({ derivedColumns: [{ name: "path", template: "{n}", when: { column: "kind", equals: "Text" } }] });
+    expect(parseNative(utf8("n,kind\n1,Text\n2,Sound\n3,text\n"), options).nodes.map((row) => row["path"])).toEqual(["1", null, null]);
+  });
+
+  it("is kept whatever columns the recipe lists, and is built from columns it does not keep", () => {
+    const options = table({ columns: ["name"], derivedColumns: [{ name: "path", template: "{name}-{hidden}" }] });
+    expect(parseNative(utf8("name,hidden,other\na,b,c\n"), options).nodes).toEqual([{ id: "1", name: "a", path: "a-b" }]);
+  });
+
+  it("names the line and the column when a template or condition names a column the header lacks", () => {
+    const missing = parseError(() => parseNative(utf8("a,b\n1,2\n"), table({ derivedColumns: [{ name: "path", template: "{a}/{missing}" }] })));
+    expect(missing.message).toContain("names the column missing, which the header does not have");
+    expect(missing.line).toBe(1);
+    const condition = parseError(() => parseNative(utf8("a,b\n1,2\n"), table({ derivedColumns: [{ name: "path", template: "{a}", when: { column: "kind", equals: "x" } }] })));
+    expect(condition.message).toContain("names the column kind, which the header does not have");
+  });
+
+  it("refuses a name a header column already has", () => {
+    const clash = parseError(() => parseNative(utf8("a,b\n1,2\n"), table({ derivedColumns: [{ name: "b", template: "{a}" }] })));
+    expect(clash.message).toContain("the derived column b has the name of a column the header has");
+  });
+
+  it("is read the same however the text is cut into pieces", () => {
+    const options = table({ idColumn: "Text", derivedColumns: [{ name: "url", template: "u/{Text}" }] });
+    const text = "Text#,Lang\n12,en\n7,de\n";
+    const pieces = Array.from(text, (char) => char);
+    expect(parseCsvTable(pieces, options)).toEqual(parseCsvTable(text, options));
+  });
+
+  it("is accepted by the recipe schema and refused for what no table could satisfy", () => {
+    const accepts = (derivedColumns: unknown): boolean => ParserSchema.safeParse({ ...base, derivedColumns }).success;
+    expect(accepts([{ name: "url", template: "https://example.org/{Text}.txt", when: { column: "Type", equals: "Text" } }])).toBe(true);
+    expect(accepts([])).toBe(false);
+    expect(accepts([{ name: "url", template: "https://example.org/" }])).toBe(false);
+    expect(accepts([{ name: "url", template: "{Text}}" }])).toBe(false);
+    expect(accepts([{ name: "url", template: "{not a column}" }])).toBe(false);
+    expect(accepts([{ name: "url", template: "{}" }])).toBe(false);
+    expect(accepts([{ name: "id", template: "{Text}" }])).toBe(false);
+    expect(accepts([{ name: "url", template: "{Text}" }, { name: "url", template: "{Text}/2" }])).toBe(false);
+    expect(accepts([{ name: "bad name", template: "{Text}" }])).toBe(false);
+  });
+
+  it("is checked against the header names a recipe with no header row gives", () => {
+    const accepts = (derivedColumns: unknown): boolean => ParserSchema.safeParse({ ...base, headerNames: ["Text", "Lang"], derivedColumns }).success;
+    expect(accepts([{ name: "url", template: "{Lang}", when: { column: "Text", equals: "1" } }])).toBe(true);
+    expect(accepts([{ name: "url", template: "{Other}" }])).toBe(false);
+    expect(accepts([{ name: "url", template: "{Lang}", when: { column: "Other", equals: "1" } }])).toBe(false);
+  });
 });
