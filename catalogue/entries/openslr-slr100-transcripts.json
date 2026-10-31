@@ -5,67 +5,11 @@
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "oneWay": [],
-    "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
-      {
-        "from": "nodes[].text",
-        "op": "move",
-        "to": "nodes[].text"
-      },
-      {
-        "from": "nodes[].speaker",
-        "op": "move",
-        "to": "nodes[].speaker"
-      },
-      {
-        "from": "nodes[].audio",
-        "op": "move",
-        "to": "nodes[].audio"
-      },
-      {
-        "from": "nodes[].duration",
-        "op": "move",
-        "to": "nodes[].duration"
-      },
-      {
-        "from": "nodes[].split",
-        "op": "move",
-        "to": "nodes[].split"
-      },
-      {
-        "from": "nodes[].language",
-        "op": "move",
-        "to": "nodes[].language"
-      },
-      {
-        "from": "nodes[].start",
-        "op": "move",
-        "to": "nodes[].start"
-      },
-      {
-        "from": "nodes[].end",
-        "op": "move",
-        "to": "nodes[].end"
-      }
-    ],
-    "source": "mtedx",
-    "target": "speech/v1"
+    "file": "crosswalks/speech-v1/id-text.json"
   },
-  "description": "The transcripts of Multilingual TEDx for its eight monolingual archives: one instance for each language, each record being a segment of a talk with its identifier, text, talk, audio file, start, end, duration and split. The archives of translation pairs repeat the source language's transcripts beside a translation, and the IWSLT 2021 test sets are not read. It carries none of the audio, which the download list of openslr-slr100 gives.",
+  "description": "The transcripts of Multilingual TEDx. No recipe reads them. Its transcripts are Multilingual TEDx's transcript and segment files, inside archives that total about 221 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
   "domain": "Speech",
-  "expectedCounts": {
-    "instances": 0
-  },
+  "expectedCounts": {},
   "id": "openslr-slr100-transcripts",
   "licence": {
     "kind": "custom",
@@ -79,147 +23,24 @@
   ],
   "properties": {},
   "recipe": {
-    "files": [
-      {
-        "archive": {
-          "files": {
-            "pattern": "[^/]+/data/(?:train|valid|test)/txt/(?:segments|(?:train|valid|test)\\.yaml|(?:train|valid|test)\\.[a-z]{2})"
-          },
-          "kind": "tar.gz"
-        },
-        "path": "mtedx_es.tgz",
-        "source": 0
-      },
-      {
-        "archive": {
-          "files": {
-            "pattern": "[^/]+/data/(?:train|valid|test)/txt/(?:segments|(?:train|valid|test)\\.yaml|(?:train|valid|test)\\.[a-z]{2})"
-          },
-          "kind": "tar.gz"
-        },
-        "path": "mtedx_fr.tgz",
-        "source": 1
-      },
-      {
-        "archive": {
-          "files": {
-            "pattern": "[^/]+/data/(?:train|valid|test)/txt/(?:segments|(?:train|valid|test)\\.yaml|(?:train|valid|test)\\.[a-z]{2})"
-          },
-          "kind": "tar.gz"
-        },
-        "path": "mtedx_pt.tgz",
-        "source": 2
-      },
-      {
-        "archive": {
-          "files": {
-            "pattern": "[^/]+/data/(?:train|valid|test)/txt/(?:segments|(?:train|valid|test)\\.yaml|(?:train|valid|test)\\.[a-z]{2})"
-          },
-          "kind": "tar.gz"
-        },
-        "path": "mtedx_it.tgz",
-        "source": 3
-      },
-      {
-        "archive": {
-          "files": {
-            "pattern": "[^/]+/data/(?:train|valid|test)/txt/(?:segments|(?:train|valid|test)\\.yaml|(?:train|valid|test)\\.[a-z]{2})"
-          },
-          "kind": "tar.gz"
-        },
-        "path": "mtedx_ru.tgz",
-        "source": 4
-      },
-      {
-        "archive": {
-          "files": {
-            "pattern": "[^/]+/data/(?:train|valid|test)/txt/(?:segments|(?:train|valid|test)\\.yaml|(?:train|valid|test)\\.[a-z]{2})"
-          },
-          "kind": "tar.gz"
-        },
-        "path": "mtedx_el.tgz",
-        "source": 5
-      },
-      {
-        "archive": {
-          "files": {
-            "pattern": "[^/]+/data/(?:train|valid|test)/txt/(?:segments|(?:train|valid|test)\\.yaml|(?:train|valid|test)\\.[a-z]{2})"
-          },
-          "kind": "tar.gz"
-        },
-        "path": "mtedx_ar.tgz",
-        "source": 6
-      },
-      {
-        "archive": {
-          "files": {
-            "pattern": "[^/]+/data/(?:train|valid|test)/txt/(?:segments|(?:train|valid|test)\\.yaml|(?:train|valid|test)\\.[a-z]{2})"
-          },
-          "kind": "tar.gz"
-        },
-        "path": "mtedx_de.tgz",
-        "source": 7
-      }
-    ],
-    "parser": {
-      "encoding": "utf-8",
-      "format": "mtedx"
-    },
-    "status": "fetchable"
+    "reason": "Its transcripts are Multilingual TEDx's transcript and segment files, inside archives that total about 221 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+    "status": "not-fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-31",
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 14008,
+        "sha256": "cbd4edf9a03dc6af217426043b269fdf2be5640cec10876ec05891e54c247206",
+        "timestamp": "20260616123453",
+        "url": "https://web.archive.org/web/20260616123453/https://www.openslr.org/100/"
+      },
       "status": "live",
-      "url": "https://www.openslr.org/resources/100/mtedx_es.tgz"
-    },
-    {
-      "retrieved": "2026-10-31",
-      "status": "live",
-      "url": "https://www.openslr.org/resources/100/mtedx_fr.tgz"
-    },
-    {
-      "retrieved": "2026-10-31",
-      "status": "live",
-      "url": "https://www.openslr.org/resources/100/mtedx_pt.tgz"
-    },
-    {
-      "retrieved": "2026-10-31",
-      "status": "live",
-      "url": "https://www.openslr.org/resources/100/mtedx_it.tgz"
-    },
-    {
-      "retrieved": "2026-10-31",
-      "status": "live",
-      "url": "https://www.openslr.org/resources/100/mtedx_ru.tgz"
-    },
-    {
-      "retrieved": "2026-10-31",
-      "status": "live",
-      "url": "https://www.openslr.org/resources/100/mtedx_el.tgz"
-    },
-    {
-      "retrieved": "2026-10-31",
-      "status": "live",
-      "url": "https://www.openslr.org/resources/100/mtedx_ar.tgz"
-    },
-    {
-      "retrieved": "2026-10-31",
-      "status": "live",
-      "url": "https://www.openslr.org/resources/100/mtedx_de.tgz"
+      "url": "https://www.openslr.org/100/"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": [
-    "text",
-    "speaker",
-    "audio",
-    "duration",
-    "split",
-    "language",
-    "start",
-    "end"
-  ]
+  "tags": []
 }

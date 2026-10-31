@@ -5,37 +5,11 @@
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "oneWay": [],
-    "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
-      {
-        "from": "nodes[].original_text",
-        "op": "move",
-        "to": "nodes[].text"
-      },
-      {
-        "from": "nodes[].normalized_text",
-        "op": "move",
-        "to": "nodes[].normalized_text"
-      }
-    ],
-    "source": "csv-table",
-    "target": "speech/v1"
+    "file": "crosswalks/speech-v1/id-text.json"
   },
-  "description": "The transcripts of LibriTTS-R: one instance for each subset archive, its chapters' transcript tables read together, each record being an utterance with its identifier, its text as the book prints it and its normalised text. It carries none of the audio, which the download list of openslr-slr141 gives.",
+  "description": "The transcripts of LibriTTS-R. No recipe reads them. Its transcripts are LibriTTS-R's per-chapter `.trans.tsv` files, inside archives that total about 87 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
   "domain": "Speech",
-  "expectedCounts": {
-    "instances": 0
-  },
+  "expectedCounts": {},
   "id": "openslr-slr141-transcripts",
   "licence": {
     "kind": "custom",
@@ -49,147 +23,24 @@
   ],
   "properties": {},
   "recipe": {
-    "files": [
-      {
-        "archive": {
-          "concatenate": true,
-          "files": {
-            "pattern": "(?:\\./)?LibriTTS_R/[^/]+/\\d+/\\d+/\\d+_\\d+\\.trans\\.tsv"
-          },
-          "kind": "tar.gz"
-        },
-        "path": "dev_clean.tar.gz",
-        "source": 0
-      },
-      {
-        "archive": {
-          "concatenate": true,
-          "files": {
-            "pattern": "(?:\\./)?LibriTTS_R/[^/]+/\\d+/\\d+/\\d+_\\d+\\.trans\\.tsv"
-          },
-          "kind": "tar.gz"
-        },
-        "path": "dev_other.tar.gz",
-        "source": 1
-      },
-      {
-        "archive": {
-          "concatenate": true,
-          "files": {
-            "pattern": "(?:\\./)?LibriTTS_R/[^/]+/\\d+/\\d+/\\d+_\\d+\\.trans\\.tsv"
-          },
-          "kind": "tar.gz"
-        },
-        "path": "test_clean.tar.gz",
-        "source": 2
-      },
-      {
-        "archive": {
-          "concatenate": true,
-          "files": {
-            "pattern": "(?:\\./)?LibriTTS_R/[^/]+/\\d+/\\d+/\\d+_\\d+\\.trans\\.tsv"
-          },
-          "kind": "tar.gz"
-        },
-        "path": "test_other.tar.gz",
-        "source": 3
-      },
-      {
-        "archive": {
-          "concatenate": true,
-          "files": {
-            "pattern": "(?:\\./)?LibriTTS_R/[^/]+/\\d+/\\d+/\\d+_\\d+\\.trans\\.tsv"
-          },
-          "kind": "tar.gz"
-        },
-        "path": "train_clean_100.tar.gz",
-        "source": 4
-      },
-      {
-        "archive": {
-          "concatenate": true,
-          "files": {
-            "pattern": "(?:\\./)?LibriTTS_R/[^/]+/\\d+/\\d+/\\d+_\\d+\\.trans\\.tsv"
-          },
-          "kind": "tar.gz"
-        },
-        "path": "train_clean_360.tar.gz",
-        "source": 5
-      },
-      {
-        "archive": {
-          "concatenate": true,
-          "files": {
-            "pattern": "(?:\\./)?LibriTTS_R/[^/]+/\\d+/\\d+/\\d+_\\d+\\.trans\\.tsv"
-          },
-          "kind": "tar.gz"
-        },
-        "path": "train_other_500.tar.gz",
-        "source": 6
-      }
-    ],
-    "parser": {
-      "columns": [
-        "original_text",
-        "normalized_text"
-      ],
-      "delimiter": "tab",
-      "encoding": "utf-8",
-      "format": "csv-table",
-      "headerNames": [
-        "utterance_id",
-        "original_text",
-        "normalized_text"
-      ],
-      "idColumn": "utterance_id",
-      "numericColumns": [],
-      "skipLines": 0,
-      "unquoted": true
-    },
-    "status": "fetchable"
+    "reason": "Its transcripts are LibriTTS-R's per-chapter `.trans.tsv` files, inside archives that total about 87 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+    "status": "not-fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-31",
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 8094,
+        "sha256": "6b0262043e82cadfce2bdb514b09f17d04a20895f0deb4eae8a74e9ade83ba60",
+        "timestamp": "20261001072614",
+        "url": "https://web.archive.org/web/20261001072614/https://www.openslr.org/141/"
+      },
       "status": "live",
-      "url": "https://www.openslr.org/resources/141/dev_clean.tar.gz"
-    },
-    {
-      "retrieved": "2026-10-31",
-      "status": "live",
-      "url": "https://www.openslr.org/resources/141/dev_other.tar.gz"
-    },
-    {
-      "retrieved": "2026-10-31",
-      "status": "live",
-      "url": "https://www.openslr.org/resources/141/test_clean.tar.gz"
-    },
-    {
-      "retrieved": "2026-10-31",
-      "status": "live",
-      "url": "https://www.openslr.org/resources/141/test_other.tar.gz"
-    },
-    {
-      "retrieved": "2026-10-31",
-      "status": "live",
-      "url": "https://www.openslr.org/resources/141/train_clean_100.tar.gz"
-    },
-    {
-      "retrieved": "2026-10-31",
-      "status": "live",
-      "url": "https://www.openslr.org/resources/141/train_clean_360.tar.gz"
-    },
-    {
-      "retrieved": "2026-10-31",
-      "status": "live",
-      "url": "https://www.openslr.org/resources/141/train_other_500.tar.gz"
+      "url": "https://www.openslr.org/141/"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": [
-    "text",
-    "normalized_text"
-  ]
+  "tags": []
 }

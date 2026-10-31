@@ -5,13 +5,11 @@
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "file": "crosswalks/speech-v1/utterance-lines.json"
+    "file": "crosswalks/speech-v1/id-text.json"
   },
-  "description": "The transcripts of Multilingual LibriSpeech (MLS) for every language but English: one instance for each language's opus archive, its training, development and test transcript files read together, each record being an utterance with its identifier and text. The archives are hosted by the corpus's authors and not on openslr.org. English is left out, as its transcripts are too many for the one document the recipe reads for each language. It carries none of the audio, which the corpus's own download links give.",
+  "description": "The transcripts of Multilingual LibriSpeech (MLS). No recipe reads them. Its transcripts are Multilingual LibriSpeech's `transcripts.txt` files, inside archives that total about 220 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
   "domain": "Speech",
-  "expectedCounts": {
-    "instances": 0
-  },
+  "expectedCounts": {},
   "id": "openslr-slr94-transcripts",
   "licence": {
     "kind": "custom",
@@ -25,132 +23,24 @@
   ],
   "properties": {},
   "recipe": {
-    "files": [
-      {
-        "archive": {
-          "concatenate": true,
-          "files": {
-            "pattern": "mls_[a-z]+_opus/(?:train|dev|test)/transcripts\\.txt"
-          },
-          "kind": "tar.gz"
-        },
-        "path": "mls_dutch_opus.tar.gz",
-        "source": 0
-      },
-      {
-        "archive": {
-          "concatenate": true,
-          "files": {
-            "pattern": "mls_[a-z]+_opus/(?:train|dev|test)/transcripts\\.txt"
-          },
-          "kind": "tar.gz"
-        },
-        "path": "mls_french_opus.tar.gz",
-        "source": 1
-      },
-      {
-        "archive": {
-          "concatenate": true,
-          "files": {
-            "pattern": "mls_[a-z]+_opus/(?:train|dev|test)/transcripts\\.txt"
-          },
-          "kind": "tar.gz"
-        },
-        "path": "mls_german_opus.tar.gz",
-        "source": 2
-      },
-      {
-        "archive": {
-          "concatenate": true,
-          "files": {
-            "pattern": "mls_[a-z]+_opus/(?:train|dev|test)/transcripts\\.txt"
-          },
-          "kind": "tar.gz"
-        },
-        "path": "mls_italian_opus.tar.gz",
-        "source": 3
-      },
-      {
-        "archive": {
-          "concatenate": true,
-          "files": {
-            "pattern": "mls_[a-z]+_opus/(?:train|dev|test)/transcripts\\.txt"
-          },
-          "kind": "tar.gz"
-        },
-        "path": "mls_polish_opus.tar.gz",
-        "source": 4
-      },
-      {
-        "archive": {
-          "concatenate": true,
-          "files": {
-            "pattern": "mls_[a-z]+_opus/(?:train|dev|test)/transcripts\\.txt"
-          },
-          "kind": "tar.gz"
-        },
-        "path": "mls_portuguese_opus.tar.gz",
-        "source": 5
-      },
-      {
-        "archive": {
-          "concatenate": true,
-          "files": {
-            "pattern": "mls_[a-z]+_opus/(?:train|dev|test)/transcripts\\.txt"
-          },
-          "kind": "tar.gz"
-        },
-        "path": "mls_spanish_opus.tar.gz",
-        "source": 6
-      }
-    ],
-    "parser": {
-      "encoding": "utf-8",
-      "format": "utterance-lines"
-    },
-    "status": "fetchable"
+    "reason": "Its transcripts are Multilingual LibriSpeech's `transcripts.txt` files, inside archives that total about 220 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+    "status": "not-fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-31",
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 9521,
+        "sha256": "d19576a2e4bb9d1fc3e0f92bae6bef328180db237cfb94131e5f6af51681c7aa",
+        "timestamp": "20261011033114",
+        "url": "https://web.archive.org/web/20261011033114/https://www.openslr.org/94/"
+      },
       "status": "live",
-      "url": "https://dl.fbaipublicfiles.com/mls/mls_dutch_opus.tar.gz"
-    },
-    {
-      "retrieved": "2026-10-31",
-      "status": "live",
-      "url": "https://dl.fbaipublicfiles.com/mls/mls_french_opus.tar.gz"
-    },
-    {
-      "retrieved": "2026-10-31",
-      "status": "live",
-      "url": "https://dl.fbaipublicfiles.com/mls/mls_german_opus.tar.gz"
-    },
-    {
-      "retrieved": "2026-10-31",
-      "status": "live",
-      "url": "https://dl.fbaipublicfiles.com/mls/mls_italian_opus.tar.gz"
-    },
-    {
-      "retrieved": "2026-10-31",
-      "status": "live",
-      "url": "https://dl.fbaipublicfiles.com/mls/mls_polish_opus.tar.gz"
-    },
-    {
-      "retrieved": "2026-10-31",
-      "status": "live",
-      "url": "https://dl.fbaipublicfiles.com/mls/mls_portuguese_opus.tar.gz"
-    },
-    {
-      "retrieved": "2026-10-31",
-      "status": "live",
-      "url": "https://dl.fbaipublicfiles.com/mls/mls_spanish_opus.tar.gz"
+      "url": "https://www.openslr.org/94/"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": [
-    "text"
-  ]
+  "tags": []
 }
