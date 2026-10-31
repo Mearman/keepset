@@ -1,3 +1,10 @@
+# [0.75.0](https://github.com/Mearman/keepset/compare/v0.74.0...v0.75.0) (2026-10-31)
+
+
+### Features
+
+* **catalogue:** add the transcripts of OpenSLR corpora whose tables sit inside archives ([5b9fd3a](https://github.com/Mearman/keepset/commit/5b9fd3aadb064cc4a083fd52cb402a9338556b76))
+
 # [0.74.0](https://github.com/Mearman/keepset/compare/v0.73.1...v0.74.0) (2026-10-31)
 
 
