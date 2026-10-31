@@ -368,7 +368,7 @@ export const ParserSchema = z.discriminatedUnion("format", [
       encoding: z.literal("utf-8"),
       /** `lines` is a file of one JSON record per line (as speech manifests are written), `array` a file that is one JSON array of records. */
       layout: z.enum(["lines", "array"]),
-      /** The field whose value is each record's id, as a string or a number, or the fields whose values are joined with `/` into it when no one field is unique (a transcript line has no id of its own but its session, speaker and start time together name it); a record must hold each. */
+      /** The field whose value is each record's id, as a string or a number, or the fields whose values are joined with `/` into it when no one field is unique (a transcript line has no id of its own but its session, speaker and start time together name it); a record must hold each, and any of them may also be kept as a field. */
       idField: z.union([ColumnNameSchema, z.array(ColumnNameSchema).min(2)]),
       /** The fields kept besides the id, each a string, a number or null (also where a record lacks it); any other field of a record is left out. */
       fields: z.array(ColumnNameSchema).min(1),
@@ -376,7 +376,7 @@ export const ParserSchema = z.discriminatedUnion("format", [
       numericFields: z.array(ColumnNameSchema).optional(),
     })
     .strict()
-    .refine((parser) => !(typeof parser.idField === "string" ? [parser.idField] : parser.idField).some((field) => parser.fields.includes(field)) && new Set(parser.fields).size === parser.fields.length, { message: "the id field is the row's id, so it is not listed among the fields, and a field may be listed once", path: ["fields"] })
+    .refine((parser) => !(typeof parser.idField === "string" && parser.fields.includes(parser.idField)) && new Set(parser.fields).size === parser.fields.length, { message: "a single id field is the row's id, so it is not listed among the fields, and a field may be listed once", path: ["fields"] })
     .refine((parser) => (parser.numericFields ?? []).every((field) => parser.fields.includes(field)), { message: "a numeric field must be among the fields kept", path: ["numericFields"] }),
   z
     .object({

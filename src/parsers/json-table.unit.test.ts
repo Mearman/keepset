@@ -51,8 +51,8 @@ describe("the json-table parser", () => {
   });
 
   it("joins several id fields with a slash into the row's id, and refuses a record missing one of them", () => {
-    const options = parser({ layout: "array", idField: ["session_id", "speaker", "start_time"], fields: ["words"] });
-    expect(parseJsonTable('[{"session_id": "S01", "speaker": "P05", "start_time": "00:00:01.2", "words": "hello"}]', options).nodes).toEqual([{ id: "S01/P05/00:00:01.2", words: "hello" }]);
+    const options = parser({ layout: "array", idField: ["session_id", "speaker", "start_time"], fields: ["words", "speaker"] });
+    expect(parseJsonTable('[{"session_id": "S01", "speaker": "P05", "start_time": "00:00:01.2", "words": "hello"}]', options).nodes).toEqual([{ id: "S01/P05/00:00:01.2", words: "hello", speaker: "P05" }]);
     expect(() => parseJsonTable('[{"session_id": "S01", "speaker": "P05", "words": "hello"}]', options)).toThrow(/id field session_id, speaker, start_time is missing/);
   });
 
