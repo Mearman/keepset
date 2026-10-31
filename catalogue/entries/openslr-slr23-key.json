@@ -13,14 +13,161 @@
         "from": "nodes[].id",
         "op": "move",
         "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].seg_lng",
+        "op": "move",
+        "to": "nodes[].language"
+      },
+      {
+        "from": "nodes[].file",
+        "op": "move",
+        "to": "nodes[].file"
+      },
+      {
+        "from": "nodes[].chan",
+        "op": "move",
+        "to": "nodes[].chan"
+      },
+      {
+        "from": "nodes[].cut",
+        "op": "move",
+        "to": "nodes[].cut"
+      },
+      {
+        "from": "nodes[].nom_dur",
+        "op": "move",
+        "to": "nodes[].nom_dur"
+      },
+      {
+        "from": "nodes[].corpus",
+        "op": "move",
+        "to": "nodes[].corpus"
+      },
+      {
+        "from": "nodes[].spkr_id",
+        "op": "move",
+        "to": "nodes[].name"
+      },
+      {
+        "from": "nodes[].sex",
+        "op": "move",
+        "to": "nodes[].gender"
+      },
+      {
+        "from": "nodes[].yob",
+        "op": "move",
+        "to": "nodes[].yob"
+      },
+      {
+        "from": "nodes[].age",
+        "op": "move",
+        "to": "nodes[].age"
+      },
+      {
+        "from": "nodes[].edu",
+        "op": "move",
+        "to": "nodes[].edu"
+      },
+      {
+        "from": "nodes[].esl_age",
+        "op": "move",
+        "to": "nodes[].esl_age"
+      },
+      {
+        "from": "nodes[].native_lang",
+        "op": "move",
+        "to": "nodes[].native_lang"
+      },
+      {
+        "from": "nodes[].second_lang",
+        "op": "move",
+        "to": "nodes[].second_lang"
+      },
+      {
+        "from": "nodes[].occupation",
+        "op": "move",
+        "to": "nodes[].occupation"
+      },
+      {
+        "from": "nodes[].country_born",
+        "op": "move",
+        "to": "nodes[].country_born"
+      },
+      {
+        "from": "nodes[].country_raised",
+        "op": "move",
+        "to": "nodes[].country_raised"
+      },
+      {
+        "from": "nodes[].state_born",
+        "op": "move",
+        "to": "nodes[].state_born"
+      },
+      {
+        "from": "nodes[].state_raised",
+        "op": "move",
+        "to": "nodes[].state_raised"
+      },
+      {
+        "from": "nodes[].city_born",
+        "op": "move",
+        "to": "nodes[].city_born"
+      },
+      {
+        "from": "nodes[].city_raised",
+        "op": "move",
+        "to": "nodes[].city_raised"
+      },
+      {
+        "from": "nodes[].smoker",
+        "op": "move",
+        "to": "nodes[].smoker"
+      },
+      {
+        "from": "nodes[].ethnicity",
+        "op": "move",
+        "to": "nodes[].ethnicity"
+      },
+      {
+        "from": "nodes[].height",
+        "op": "move",
+        "to": "nodes[].height"
+      },
+      {
+        "from": "nodes[].weight",
+        "op": "move",
+        "to": "nodes[].weight"
+      },
+      {
+        "from": "nodes[].loc",
+        "op": "move",
+        "to": "nodes[].loc"
+      },
+      {
+        "from": "nodes[].phn_type",
+        "op": "move",
+        "to": "nodes[].phn_type"
+      },
+      {
+        "from": "nodes[].topic",
+        "op": "move",
+        "to": "nodes[].topic"
+      },
+      {
+        "from": "nodes[].type",
+        "op": "move",
+        "to": "nodes[].type"
       }
     ],
-    "source": "none",
+    "source": "csv-table",
     "target": "speakers/v1"
   },
-  "description": "NIST LRE 2007 Key (speaker list). No recipe reads it. The key table has rows of different widths (29, 30 and 31 columns) after a comment header, which the table parser does not read.",
+  "description": "NIST LRE 2007 Key (speaker list): the key of the NIST LRE 2007 test segments: a line per segment with its language or dialect, the conversation and side it was cut from, and the speaker's sex, year of birth and self-reported background. It carries the entries and none of the data they describe.",
   "domain": "Misc",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "nodes": 7590
+  },
   "id": "openslr-slr23-key",
   "licence": {
     "kind": "custom",
@@ -34,24 +181,125 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "The key table has rows of different widths (29, 30 and 31 columns) after a comment header, which the table parser does not read.",
-    "status": "not-fetchable"
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "columns": [
+        "seg_lng",
+        "file",
+        "chan",
+        "cut",
+        "nom_dur",
+        "corpus",
+        "spkr_id",
+        "sex",
+        "yob",
+        "age",
+        "edu",
+        "esl_age",
+        "native_lang",
+        "second_lang",
+        "occupation",
+        "country_born",
+        "country_raised",
+        "state_born",
+        "state_raised",
+        "city_born",
+        "city_raised",
+        "smoker",
+        "ethnicity",
+        "height",
+        "weight",
+        "loc",
+        "phn_type",
+        "topic",
+        "type"
+      ],
+      "delimiter": "tab",
+      "encoding": "latin1",
+      "format": "csv-table",
+      "headerNames": [
+        "seg_id",
+        "seg_lng",
+        "file",
+        "chan",
+        "cut",
+        "nom_dur",
+        "corpus",
+        "spkr_id",
+        "sex",
+        "yob",
+        "age",
+        "edu",
+        "esl_age",
+        "native_lang",
+        "second_lang",
+        "occupation",
+        "country_born",
+        "country_raised",
+        "state_born",
+        "state_raised",
+        "city_born",
+        "city_raised",
+        "smoker",
+        "ethnicity",
+        "height",
+        "weight",
+        "loc",
+        "phn_type",
+        "topic",
+        "type"
+      ],
+      "idColumn": "seg_id",
+      "nullValues": [
+        "n/a"
+      ],
+      "numericColumns": [],
+      "skipLines": 57
+    },
+    "source": 0,
+    "status": "fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 2693,
-        "sha256": "66d4ed9c679f6dccb0b76251742cf06055f4baaf85315273fd95742f5f0f44a0",
-        "timestamp": "20260516211610",
-        "url": "https://web.archive.org/web/20260516211610/https://www.openslr.org/23/"
-      },
+      "retrieved": "2026-10-31",
       "status": "live",
-      "url": "https://www.openslr.org/23/"
+      "url": "https://www.openslr.org/resources/23/lre07_key.txt"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "name",
+    "gender",
+    "language",
+    "file",
+    "chan",
+    "cut",
+    "nom_dur",
+    "corpus",
+    "yob",
+    "age",
+    "edu",
+    "esl_age",
+    "native_lang",
+    "second_lang",
+    "occupation",
+    "country_born",
+    "country_raised",
+    "state_born",
+    "state_raised",
+    "city_born",
+    "city_raised",
+    "smoker",
+    "ethnicity",
+    "height",
+    "weight",
+    "loc",
+    "phn_type",
+    "topic",
+    "type"
+  ]
 }
