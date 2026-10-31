@@ -14191,6 +14191,14 @@
       "evidence": "a recipe reads this URL as a paged query, so a capture of the URL is not the data",
       "reason": "paged-api",
       "url": "https://utility.arcgis.com/usrsvcs/servers/931a175b8eaa4abebf1379743e6d71c1/rest/services/Environmental_Resources/Weed_Abatement/FeatureServer/0"
+    },
+    {
+      "entries": [
+        "gutenberg-texts"
+      ],
+      "evidence": "Content-Length 11322987679",
+      "reason": "size-limit",
+      "url": "https://www.gutenberg.org/cache/epub/feeds/txt-files.tar.zip"
     }
   ],
   "verified": [

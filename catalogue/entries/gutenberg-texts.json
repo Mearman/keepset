@@ -1,0 +1,91 @@
+{
+  "aliases": [
+    "pg-texts",
+    "gutenberg-txt"
+  ],
+  "category": "corpus/v1",
+  "citations": [
+    {
+      "text": "Project Gutenberg. (n.d.). Retrieved October 31, 2026, from https://www.gutenberg.org.",
+      "url": "https://www.gutenberg.org"
+    }
+  ],
+  "crosswalk": {
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].text",
+        "op": "move",
+        "to": "nodes[].text"
+      }
+    ],
+    "source": "member-text",
+    "target": "corpus/v1"
+  },
+  "description": "The plain text of Project Gutenberg's free ebooks, from the zipped tar of every .txt file that Project Gutenberg rebuilds weekly for bulk use: one document per ebook, its id the ebook number and its text the UTF-8 file exactly as Project Gutenberg distributes it, its licence header and footer included and nothing trimmed. Titles, authors and languages are in the Project Gutenberg catalogue entry under the same ids. The archive is far larger than one document can hold, so it is streamed a book at a time.",
+  "domain": "Text",
+  "expectedCounts": {
+    "nodes": 0
+  },
+  "id": "gutenberg-texts",
+  "licence": {
+    "kind": "custom",
+    "name": "Public domain in the United States for most ebooks, a copyrighted ebook saying so in its header; the Project Gutenberg License, included in each ebook, governs the Project Gutenberg trademark (as Project Gutenberg states it)",
+    "url": "https://www.gutenberg.org/policy/permission.html"
+  },
+  "name": "Project Gutenberg texts",
+  "namespace": [
+    "gutenberg"
+  ],
+  "properties": {
+    "downloadBytes": 11322987679,
+    "encoding": "utf-8",
+    "format": "text/plain"
+  },
+  "recipe": {
+    "archive": {
+      "files": {
+        "path": "txt-files.tar"
+      },
+      "inner": {
+        "files": {
+          "pattern": "cache/epub/[0-9]+/pg[0-9]+\\.txt"
+        },
+        "kind": "tar"
+      },
+      "kind": "zip"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "member-text",
+      "idPattern": "txt-files\\.tar/cache/epub/([0-9]+)/pg\\1\\.txt",
+      "verbatim": true
+    },
+    "source": 0,
+    "status": "fetchable",
+    "stream": true
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.gutenberg.org/cache/epub/feeds/txt-files.tar.zip"
+    }
+  ],
+  "subjects": [
+    "literature"
+  ],
+  "tags": [
+    "text"
+  ]
+}
