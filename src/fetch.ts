@@ -134,16 +134,15 @@ async function reading<Result>(stored: StoredSource, read: () => Promise<Result>
 }
 
 /**
- * Parses one file of a collection into its native document, naming the file when it fails.
+ * Parses one instance of a collection into its native document, naming the instance when it fails.
  * @param id - The instance's id.
- * @param bytes - The file's bytes.
- * @param parser - The recipe's parser.
+ * @param parse - Reads the instance's native document from its file, or from the several files a multi-file format reads together.
  * @returns The instance's native document, with only its own header values as `meta`.
- * @throws KeepsetError naming the instance when the file does not parse.
+ * @throws KeepsetError naming the instance when it does not parse.
  */
-function parseInstance(id: string, bytes: Uint8Array, parser: Parser): { readonly id: string; readonly native: NativeWithMeta } {
+function parseInstance(id: string, parse: () => NativeDocument): { readonly id: string; readonly native: NativeWithMeta } {
   try {
-    const parsed = parseNative(bytes, parser);
+    const parsed = parse();
 
     return { id, native: { ...parsed, meta: "meta" in parsed ? parsed.meta : {} } };
   } catch (error) {
@@ -152,7 +151,7 @@ function parseInstance(id: string, bytes: Uint8Array, parser: Parser): { readonl
 }
 
 /**
- * Unpacks and parses a source of one archive or file into instances, each member let go once it is parsed.
+ * Unpacks and parses a source of one archive or file into instances, each member let go once it is parsed. A `files` archive gives one instance, which a multi-file format reads from every file the archive selects.
  * @param stored - The kept source.
  * @param archive - Its archive layout.
  * @param parser - The recipe's parser.
@@ -175,20 +174,22 @@ async function instancesOf(stored: StoredSource, archive: Archive, parser: Parse
   if ("members" in archive) {
     const instances: { readonly id: string; readonly native: NativeWithMeta }[] = [];
     for await (const member of unpackMembers(stored, archive)) {
-      instances.push(parseInstance(named(member.path), member.bytes, parser));
+      instances.push(parseInstance(named(member.path), () => parseNative(member.bytes, parser)));
     }
 
     return instances;
   }
   if ("parts" in archive) {
-    throw new ArchiveError(`an instance is read from one file or from matching members, not from the named parts ${archive.parts.map((part) => part.name).join(", ")}`);
+    throw new ArchiveError(`an instance is read from one file, from matching members or from the files a multi-file format reads together, not from the named parts ${archive.parts.map((part) => part.name).join(", ")}`);
   }
   if ("files" in archive) {
-    throw new ArchiveError("an instance is read from one file or from matching members, not from every file a multi-file format's files selector matches");
+    const files = await unpackFiles(stored, archive);
+
+    return [parseInstance(named(undefined), () => parseNativeFiles(files, parser))];
   }
   const unpacked = await unpack(stored, archive);
 
-  return [parseInstance(named(unpacked.member), unpacked.bytes, parser)];
+  return [parseInstance(named(unpacked.member), () => parseNative(unpacked.bytes, parser))];
 }
 
 /**

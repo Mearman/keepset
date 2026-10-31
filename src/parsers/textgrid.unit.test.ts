@@ -157,6 +157,13 @@ item []:
     expect(() => parseTextGrid([file("b.TextGrid", utf8(short))], parser({ tier: "phones" }))).toThrow(/has no tier named phones/);
   });
 
+  it("reads every tier when the recipe names none, and refuses a file with no tier at all", () => {
+    const every: TextGridParser = { format: "textgrid", encoding: "utf-8", idPattern: "(?:.*/)?([^/]+)\\.TextGrid" };
+    expect(parseTextGrid([file("b.TextGrid", utf8(long))], every).nodes.map((row) => row.id)).toEqual(["b/1.1", "b/2.2", "b/2.3", "b/3.1"]);
+    const noTiers = 'File type = "ooTextFile short"\n"TextGrid"\n\n0\n1\n<absent>\n';
+    expect(() => parseTextGrid([file("b.TextGrid", utf8(noTiers))], every)).toThrow(/has no tier$/);
+  });
+
   it("refuses text that is not a TextGrid, a tier of another class, a file that ends early or runs on, a repeated id and a path the pattern misses", () => {
     const run = (text: string): NativeParseError => {
       try {

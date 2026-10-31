@@ -248,6 +248,15 @@ describe("an archive that selects one file or every file", () => {
     expect(issues(entry({ ...textGrid, encoding: "utf-16" }, nested))).not.toBe("");
   });
 
+  it("gives a files recipe's multi-file parser only files archives, and its single-file parser none", () => {
+    const filesEntry = (parser: unknown, archive: unknown): unknown => ({ ...ogbEntry, expectedCounts: {}, recipe: { status: "fetchable", files: [{ path: "split", source: 0, archive }], parser } });
+    const textGrid = { format: "textgrid", encoding: "utf-8", idPattern: "(?:.*/)?([^/]+)\\.TextGrid" };
+    expect(issues(filesEntry(textGrid, { kind: "tar.gz", files: { pattern: "near/[^/]+\\.TextGrid" } }))).toBe("");
+    expect(issues(filesEntry({ ...textGrid, tier: "c1" }, { kind: "tar.gz", files: { pattern: "near/[^/]+\\.TextGrid" } }))).toBe("");
+    expect(issues(filesEntry(textGrid, { kind: "tar.gz", members: { pattern: "near/[^/]+\\.TextGrid" } }))).toMatch(/a files archive is read by/);
+    expect(issues(filesEntry(liveEntry.recipe.parser, { kind: "tar.gz", files: { pattern: ".*" } }))).toMatch(/a files archive is read by/);
+  });
+
   it("gives a nested json-table layout levels and no id field, and any other layout an id field and no levels", () => {
     const table = { format: "json-table", encoding: "utf-8", layout: "nested", levels: ["class", "file"], fields: ["speakerID"] };
     const entry = (parser: unknown): unknown => ({ ...liveEntry, recipe: { ...liveEntry.recipe, parser } });

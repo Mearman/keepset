@@ -333,8 +333,8 @@ export const ParserSchema = z.discriminatedUnion("format", [
       encoding: EncodingSchema,
       /** A regular expression the file's whole path matches, with one capture group: the recording's id. */
       idPattern: MemberPatternSchema,
-      /** The name of the tier whose annotations are the rows, as the file spells it; every file must have a tier of the name, and where several share it all are read. */
-      tier: z.string().min(1),
+      /** The name of the tier whose annotations are the rows, as the file spells it; every file must have a tier of the name, and where several share it all are read. Absent, every tier of every file is read, which is the form for files whose tier names differ from file to file (one tier per speaker or channel). */
+      tier: z.string().min(1).optional(),
     })
     .strict(),
   z
@@ -497,7 +497,14 @@ export const FilesRecipeSchema = z
       .refine((files) => new Set(files.map((file) => file.path)).size === files.length, { message: "each file's path must be unique" }),
     parser: ParserSchema,
   })
-  .strict();
+  .strict()
+  .superRefine((recipe, ctx) => {
+    for (const [index, file] of recipe.files.entries()) {
+      if (("files" in file.archive) !== MULTI_FILE_FORMATS.has(recipe.parser.format)) {
+        ctx.addIssue({ code: "custom", path: ["files", index, "archive"], message: `a files archive is read by a multi-file parser (${[...MULTI_FILE_FORMATS].join(", ")}), and such a parser reads only a files archive` });
+      }
+    }
+  });
 
 /** How to obtain the dataset: a fetchable recipe that downloads one source, one that downloads each file of a collection, or a statement that no declarative recipe exists yet and why. The fetchable shapes share their status and are told apart by `files`, so this is a union of strict objects. */
 export const RecipeSchema = z.union([SourceRecipeSchema, FilesRecipeSchema, z.object({ status: z.literal("not-fetchable"), reason: z.string().min(1) }).strict()]);
