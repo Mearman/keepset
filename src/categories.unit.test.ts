@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { CategoryIdSchema, countTarget, getCategory, getCollectionTarget, getTarget, kindOf, listCategories } from "./categories";
 import { KeepsetError, UnknownCategoryError } from "./errors";
 import { AudioV1Schema } from "./targets/audio-v1";
+import { CorpusV1Schema } from "./targets/corpus-v1";
 import { GraphV1Schema } from "./targets/graph-v1";
 import { LexiconV1Schema } from "./targets/lexicon-v1";
 import { ResourcesV1Schema } from "./targets/resources-v1";
@@ -49,14 +50,14 @@ describe("the category registry", () => {
   it("rejects an unknown category id with an error naming the known ones", () => {
     expect(() => getTarget("graph/v2")).toThrow(UnknownCategoryError);
     expect(() => getTarget("graph/v2")).toThrow(KeepsetError);
-    expect(() => getTarget("graph/v2")).toThrow(/known categories are audio\/v1, graph\/v1, lexicon\/v1, resources\/v1, speakers\/v1, speech\/v1, splits\/v1, tasks\/v1, texts\/v1/);
+    expect(() => getTarget("graph/v2")).toThrow(/known categories are audio\/v1, corpus\/v1, graph\/v1, lexicon\/v1, resources\/v1, speakers\/v1, speech\/v1, splits\/v1, tasks\/v1, texts\/v1/);
   });
 
   it("holds the removed ids out of the registry: the registry is graph/v1, resources/v1, speech/v1, tasks/v1 and texts/v1, and or/v1 and or-set/v1 are unknown", () => {
-    expect(listCategories().map((category) => category.id)).toEqual(["audio/v1", "graph/v1", "lexicon/v1", "resources/v1", "speakers/v1", "speech/v1", "splits/v1", "tasks/v1", "texts/v1"]);
+    expect(listCategories().map((category) => category.id)).toEqual(["audio/v1", "corpus/v1", "graph/v1", "lexicon/v1", "resources/v1", "speakers/v1", "speech/v1", "splits/v1", "tasks/v1", "texts/v1"]);
     for (const removed of ["or/v1", "or-set/v1"]) {
       expect(() => getTarget(removed)).toThrow(UnknownCategoryError);
-      expect(() => getCategory(removed)).toThrow(/known categories are audio\/v1, graph\/v1, lexicon\/v1, resources\/v1, speakers\/v1, speech\/v1, splits\/v1, tasks\/v1, texts\/v1$/);
+      expect(() => getCategory(removed)).toThrow(/known categories are audio\/v1, corpus\/v1, graph\/v1, lexicon\/v1, resources\/v1, speakers\/v1, speech\/v1, splits\/v1, tasks\/v1, texts\/v1$/);
     }
   });
 
@@ -314,6 +315,43 @@ describe("a collection of any category", () => {
     }
     expect(getCollectionTarget("tasks/v1").safeParse({ ...orSet, nodes: [] }).success).toBe(false);
     expect(getCollectionTarget("tasks/v1").safeParse({ instances: [] }).success).toBe(false);
+  });
+});
+
+const textCorpus = {
+  meta: { name: "Library texts", encoding: "utf-8" },
+  nodes: [
+    { id: "10000", text: "The Project Gutenberg eBook of The Magna Carta\r\n\r\n  Indented, with trailing space \r\n", title: "The Magna Carta", language: "en", format: "text/plain", encoding: "utf-8" },
+    { id: "10001", text: "", title: null, extraColumn: "kept as given" },
+  ],
+};
+
+describe("the corpus/v1 target", () => {
+  it("accepts a representative corpus, keeping each text exactly as given, an empty text, null optional fields and any further field", () => {
+    expect(CorpusV1Schema.parse(textCorpus)).toEqual(textCorpus);
+    expect(CorpusV1Schema.is({ meta: {}, nodes: [] })).toBe(true);
+  });
+
+  it("rejects a document without an id or a text, and a duplicate id", () => {
+    expect(CorpusV1Schema.is({ ...textCorpus, nodes: [{ text: "x" }] })).toBe(false);
+    expect(CorpusV1Schema.is({ ...textCorpus, nodes: [{ id: "a" }] })).toBe(false);
+    expect(CorpusV1Schema.is({ ...textCorpus, nodes: [{ id: "a", text: null }] })).toBe(false);
+    const result = CorpusV1Schema.safeParse({ ...textCorpus, nodes: [{ id: "a", text: "x" }, { id: "a", text: "y" }] });
+    expect(result.success).toBe(false);
+    expect(JSON.stringify(result.error?.issues)).toMatch(/duplicate node id/);
+  });
+
+  it("rejects an empty or non-text descriptive field, a non-scalar meta value and any key beyond meta and nodes", () => {
+    for (const field of [{ title: "" }, { language: 5 }, { format: [] }, { encoding: "" }, { text: 3 }]) {
+      expect(CorpusV1Schema.is({ ...textCorpus, nodes: [{ id: "a", text: "x", ...field }] })).toBe(false);
+    }
+    expect(CorpusV1Schema.is({ ...textCorpus, meta: { nested: { a: 1 } } })).toBe(false);
+    expect(CorpusV1Schema.is({ ...textCorpus, edges: [] })).toBe(false);
+  });
+
+  it("counts its nodes and is streamed a node at a time", () => {
+    expect(countTarget("corpus/v1", CorpusV1Schema.parse(textCorpus))).toEqual(new Map([["nodes", textCorpus.nodes.length]]));
+    expect(getCategory("corpus/v1").streamed.node.safeParse(textCorpus.nodes[0]).success).toBe(true);
   });
 });
 
