@@ -236,6 +236,19 @@ describe("an archive that selects one file or every file", () => {
     expect(issues({ ...ogbEntry, recipe: { ...ogbEntry.recipe, parser: { ...memberText, idPattern: "(" }, archive: { kind: "tar.gz", files: { pattern: ".*\\.txt" } } } })).not.toBe("");
   });
 
+  it("gives a nested json-table layout levels and no id field, and any other layout an id field and no levels", () => {
+    const table = { format: "json-table", encoding: "utf-8", layout: "nested", levels: ["class", "file"], fields: ["speakerID"] };
+    const entry = (parser: unknown): unknown => ({ ...liveEntry, recipe: { ...liveEntry.recipe, parser } });
+    expect(issues(entry(table))).toBe("");
+    expect(issues(entry({ ...table, idField: "id" }))).toMatch(/names a record by its keys/);
+    expect(issues(entry({ ...table, layout: "array", idField: "id" }))).toMatch(/levels name the keys above the records of a nested layout/);
+    expect(issues(entry({ ...table, layout: "array", levels: undefined }))).toMatch(/names a record by its keys/);
+    expect(issues(entry({ ...table, levels: undefined }))).toMatch(/levels name the keys/);
+    expect(issues(entry({ ...table, levels: ["class", "class"] }))).toMatch(/must not repeat another level/);
+    expect(issues(entry({ ...table, levels: ["class", "speakerID"] }))).toMatch(/must not repeat another level/);
+    expect(issues(entry({ ...table, levels: ["id"] }))).toMatch(/must not repeat another level/);
+  });
+
   it("accepts edge-list where conditions, and refuses an empty list or an empty value", () => {
     const withWhere = (where: unknown): unknown => ({ ...liveEntry, recipe: { ...liveEntry.recipe, parser: { ...liveEntry.recipe.parser, where } } });
     expect(issues(withWhere([{ column: 12, equals: "physical" }]))).toBe("");

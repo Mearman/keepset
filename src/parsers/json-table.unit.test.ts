@@ -13,6 +13,15 @@ const parser = (options: Partial<Extract<Parser, { format: "json-table" }>> = {}
   ...options,
 });
 
+const nestedParser = (options: Partial<Extract<Parser, { format: "json-table" }>> = {}): Extract<Parser, { format: "json-table" }> => ({
+  format: "json-table",
+  encoding: "utf-8",
+  layout: "nested",
+  levels: ["class", "file"],
+  fields: ["speakerID", "age"],
+  ...options,
+});
+
 describe("the json-table parser", () => {
   it("reads one record per line, keeping the id as text and the fields it is told to, and leaving the rest out", () => {
     const text = '{"audio_filepath": "a/1.wav", "duration": 2.5, "text": "hello", "extra": {"nested": true}}\n\n{"audio_filepath": "a/2.wav", "text": "world", "duration": null}\n';
@@ -83,5 +92,33 @@ describe("the json-table parser", () => {
 
   it("is what parseNative runs for the format", () => {
     expect(parseNative(new TextEncoder().encode('{"audio_filepath": "a", "text": "x", "duration": 1}'), parser()).nodes).toEqual([{ id: "a", text: "x", duration: 1 }]);
+  });
+
+  it("reads a nested document, naming a record by its keys and giving the row the key at each level under the level's name", () => {
+    const text = '\ufeff{"coughing": {"a.wav": {"speakerID": "S1", "age": 19, "extra": true}, "b.wav": {"speakerID": "S2"}}, "crying": {"c.wav": {"speakerID": "S3", "age": 30}}}';
+    expect(parseJsonTable(text, nestedParser()).nodes).toEqual([
+      { id: "coughing/a.wav", class: "coughing", file: "a.wav", speakerID: "S1", age: 19 },
+      { id: "coughing/b.wav", class: "coughing", file: "b.wav", speakerID: "S2", age: null },
+      { id: "crying/c.wav", class: "crying", file: "c.wav", speakerID: "S3", age: 30 },
+    ]);
+    expect(parseJsonTable('{"k": {"x": 1}, "m": {}}', nestedParser({ levels: ["name"], fields: ["x"] })).nodes).toEqual([
+      { id: "k", name: "k", x: 1 },
+      { id: "m", name: "m", x: null },
+    ]);
+  });
+
+  it("refuses a nested document whose value above the records is not an object, or whose record is not", () => {
+    expect(() => parseJsonTable("[1]", nestedParser())).toThrow(/document is not an object/);
+    expect(() => parseJsonTable('{"coughing": []}', nestedParser())).toThrow(/beneath coughing is not an object/);
+    expect(() => parseJsonTable('{"coughing": {"a.wav": 3}}', nestedParser())).toThrow(/record is not an object/);
+    expect(() => parseJsonTable('{"coughing": {"a.wav": {"speakerID": {"x": 1}}}}', nestedParser())).toThrow(/field speakerID holds object/);
+  });
+
+  it("refuses a nested id read from keys that joins two records to one id", () => {
+    expect(() => parseJsonTable('{"a": {"b/c": {"speakerID": "S1"}}, "a/b": {"c": {"speakerID": "S2"}}}', nestedParser())).toThrow(/id a\/b\/c is used twice with different content/);
+  });
+
+  it("is what parseNative runs for a nested document", () => {
+    expect(parseNative(new TextEncoder().encode('{"c": {"a.wav": {"speakerID": "S1", "age": 2}}}'), nestedParser()).nodes).toEqual([{ id: "c/a.wav", class: "c", file: "a.wav", speakerID: "S1", age: 2 }]);
   });
 });
