@@ -1,3 +1,10 @@
+# [0.83.0](https://github.com/Mearman/keepset/compare/v0.82.1...v0.83.0) (2026-10-31)
+
+
+### Features
+
+* **catalogue:** add the transcripts of three large OpenSLR archives and record two it cannot read ([beabc4e](https://github.com/Mearman/keepset/commit/beabc4e865901f1551ed68c6fc50f41141def329))
+
 ## [0.82.1](https://github.com/Mearman/keepset/compare/v0.82.0...v0.82.1) (2026-10-31)
 
 
