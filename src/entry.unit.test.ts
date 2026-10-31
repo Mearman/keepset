@@ -227,10 +227,13 @@ describe("an archive that selects one file or every file", () => {
 
   it("gives a files archive only to a multi-file parser, and a multi-file parser only a files archive", () => {
     expect(issues(ogbEntry)).toBe("");
-    expect(issues({ ...ogbEntry, recipe: { ...ogbEntry.recipe, parser: liveEntry.recipe.parser } })).toMatch(/a files archive is read by a multi-file parser \(ogb\)/);
+    expect(issues({ ...ogbEntry, recipe: { ...ogbEntry.recipe, parser: liveEntry.recipe.parser } })).toMatch(/a files archive is read by a multi-file parser \(ogb, member-text\)/);
     expect(issues({ ...ogbEntry, recipe: { ...ogbEntry.recipe, archive: { kind: "zip", member: { path: "raw/edge.csv.gz" }, inner: { kind: "gzip" } } } })).toMatch(/a files archive is read by a multi-file parser/);
     expect(issues({ ...ogbEntry, recipe: { ...ogbEntry.recipe, archive: { kind: "zip", members: { extensions: [".gz"] } } } })).toMatch(/a files archive is read by a multi-file parser/);
     expect(issues({ ...ogbEntry, recipe: { ...ogbEntry.recipe, archive: { ...ogbEntry.recipe.archive, inner: { kind: "zip", member: { path: "x" } } } } })).not.toBe("");
+    const memberText = { format: "member-text", encoding: "utf-8", idPattern: "(?:.*/)?([^/]+)\\.txt" };
+    expect(issues({ ...ogbEntry, recipe: { ...ogbEntry.recipe, parser: memberText, archive: { kind: "tar.gz", files: { pattern: ".*\\.txt" } } } })).toBe("");
+    expect(issues({ ...ogbEntry, recipe: { ...ogbEntry.recipe, parser: { ...memberText, idPattern: "(" }, archive: { kind: "tar.gz", files: { pattern: ".*\\.txt" } } } })).not.toBe("");
   });
 
   it("accepts edge-list where conditions, and refuses an empty list or an empty value", () => {
