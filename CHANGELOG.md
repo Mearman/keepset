@@ -1,3 +1,10 @@
+# [0.74.0](https://github.com/Mearman/keepset/compare/v0.73.1...v0.74.0) (2026-10-31)
+
+
+### Features
+
+* **parsers:** read a table from one small text file per recording ([3d3a0e1](https://github.com/Mearman/keepset/commit/3d3a0e1abc7fc8169f7b7dc37a5963c865072be6))
+
 ## [0.73.1](https://github.com/Mearman/keepset/compare/v0.73.0...v0.73.1) (2026-10-31)
 
 
