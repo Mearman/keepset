@@ -13,14 +13,56 @@
         "from": "nodes[].id",
         "op": "move",
         "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].label",
+        "op": "move",
+        "to": "nodes[].label"
+      },
+      {
+        "from": "nodes[].source",
+        "op": "move",
+        "to": "nodes[].source"
+      },
+      {
+        "from": "nodes[].genre",
+        "op": "move",
+        "to": "nodes[].genre"
+      },
+      {
+        "from": "nodes[].vocals",
+        "op": "move",
+        "to": "nodes[].vocals"
+      },
+      {
+        "from": "nodes[].artist",
+        "op": "move",
+        "to": "nodes[].artist"
+      },
+      {
+        "from": "nodes[].composer",
+        "op": "move",
+        "to": "nodes[].composer"
+      },
+      {
+        "from": "nodes[].gender",
+        "op": "move",
+        "to": "nodes[].gender"
+      },
+      {
+        "from": "nodes[].language",
+        "op": "move",
+        "to": "nodes[].language"
       }
     ],
-    "source": "none",
+    "source": "musan-annotations",
     "target": "audio/v1"
   },
-  "description": "MUSAN (annotations). No recipe reads it. The annotations are inside an 11 GB archive of recordings, more than a fetch holds in memory (see https://github.com/Mearman/keepset/issues/212).",
+  "description": "The recordings of MUSAN that its annotation files list: each record is a recording named by its identifier, with the kind of sound as its label (music, speech or noise), the source directory it is filed under, and for music its genres, whether it has vocals, its artist and for Western art music its composer, and for speech the speaker's gender and the language, null for what a kind does not have. It carries none of the audio, which is in the download of openslr-slr17.",
   "domain": "Audio",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "nodes": 854
+  },
   "id": "openslr-slr17-clips",
   "licence": {
     "kind": "custom",
@@ -34,24 +76,37 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "The annotations are inside an 11 GB archive of recordings, more than a fetch holds in memory (see https://github.com/Mearman/keepset/issues/212).",
-    "status": "not-fetchable"
+    "archive": {
+      "files": {
+        "pattern": "musan/(?:music|speech|noise)/[^/]+/ANNOTATIONS"
+      },
+      "kind": "tar.gz"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "musan-annotations"
+    },
+    "source": 0,
+    "status": "fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 2909,
-        "sha256": "4cf0be3b3ffd0ac78499998adaec48909d16431a0717575beee80cf175520fbc",
-        "timestamp": "20260418033341",
-        "url": "https://web.archive.org/web/20260418033341/https://www.openslr.org/17/"
-      },
+      "retrieved": "2026-10-31",
       "status": "live",
-      "url": "https://www.openslr.org/17/"
+      "url": "https://www.openslr.org/resources/17/musan.tar.gz"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "label",
+    "source",
+    "genre",
+    "vocals",
+    "artist",
+    "composer",
+    "gender",
+    "language"
+  ]
 }

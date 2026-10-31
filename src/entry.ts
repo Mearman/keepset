@@ -142,7 +142,7 @@ export const ArchiveMemberSchema = z.union([
 export type ArchiveMember = z.infer<typeof ArchiveMemberSchema>;
 
 /** The archive kinds that hold several files, from which a recipe selects one (`member`) or every one a selector matches (`members`). */
-const FileArchiveKindSchema = z.enum(["zip", "tar", "tar.gz", "tar.bz2", "7z"]);
+const FileArchiveKindSchema = z.enum(["zip", "tar", "tar.gz", "tar.bz2", "7z", "tar.xz"]);
 
 /** An archive a collection is read from: every file a selector matches, at least one. With `inner` of kind `xlsx`, every matched member is a workbook and each of its sheets, in the workbook's order, is one file of the collection: the sheet's CSV, at the path of the member and the sheet's name joined by `/`, for an instance format laid out on a sheet. `sheets` is a regular expression a sheet's whole name must match for the sheet to be read (every sheet when it is absent), and it must match at least one sheet of every workbook. With `inner` of a file archive kind and its own `members` selector, every matched member is an archive in its turn and each file that selector matches, at least one in each, is one file of the collection, at the member's path and the file's path joined by `/` (a download whose one wanted member is a tarball of the instance files). */
 export const CollectionArchiveSchema = z
@@ -153,7 +153,7 @@ export const CollectionArchiveSchema = z
   })
   .strict();
 
-/** An archive whose dataset is spread over several of its files, which a parser of a multi-file format (`ogb`, `member-text`, `nxt-words`, `eaf`, `textgrid`, `option-list`, `chat`, `mtedx`) reads together into one document: every file the `files` selector matches, at least one, in path order, each gunzipped first when `inner` is `gzip` (an OGB dataset zip holds its tables as `.csv.gz` files). When `inner` is a file archive kind with its own `files` selector, each matched member is an archive in its turn and the files are those its selector matches, at least one in each, filed under the member's path and the file's path joined by `/` (a tarball that holds its annotations as one zip). With `concatenate`, the files are instead one file for a parser that reads one: their texts one after another in path order, a line break added after a file that does not end with one, so a transcript table split over a file for each chapter is read as the one table it is. */
+/** An archive whose dataset is spread over several of its files, which a parser of a multi-file format (`ogb`, `member-text`, `nxt-words`, `eaf`, `textgrid`, `option-list`, `chat`, `mtedx`, `stm`, `musan-annotations`) reads together into one document: every file the `files` selector matches, at least one, in path order, each gunzipped first when `inner` is `gzip` (an OGB dataset zip holds its tables as `.csv.gz` files). When `inner` is a file archive kind with its own `files` selector, each matched member is an archive in its turn and the files are those its selector matches, at least one in each, filed under the member's path and the file's path joined by `/` (a tarball that holds its annotations as one zip). With `concatenate`, the files are instead one file for a parser that reads one: their texts one after another in path order, a line break added after a file that does not end with one, so a transcript table split over a file for each chapter is read as the one table it is. */
 export const FilesArchiveSchema = z
   .object({
     kind: FileArchiveKindSchema,
@@ -186,11 +186,12 @@ export const PartsArchiveSchema = z
   .strict();
 export type PartsArchive = z.infer<typeof PartsArchiveSchema>;
 
-/** How the downloaded bytes unpack into the file the parser reads, the named files a parser of a parts format reads together into one document (`parts`, such as the split files of a triples download or an HGB dataset's nodes and links), the files a parser of a multi-file format reads together into one document (`files`, such as an OGB raw directory), or for a collection the files it reads one by one. A `members` selector gives every member it matches, at least one, in path order. `gzip` and `bzip2` are one compressed file, `tar.gz` and `tar.bz2` a tar archive compressed with them, and `7z` a 7z archive, solid or not, which is decoded once from its start for every member selected and read only where the platform gives a 7z reader (Node does, the browser does not). A member that is an archive in its turn (a contest bundle that ships its problems as a zip inside the zip, a spreadsheet inside a zip) is unpacked by `inner`. A spreadsheet (`xlsx`, `xls` or `ods`) is read as the CSV of its named sheet, with dates as ISO 8601 text, for the `csv-table` or `edge-list` parser. A point shapefile (`shapefile`) is a zip whose `member` selects the `.shp`, read with the `.dbf`, `.prj` and `.cpg` of the same name beside it as the CSV of its attribute table with each point's stored coordinates and its WGS84 position, for the `csv-table` parser. */
+/** How the downloaded bytes unpack into the file the parser reads, the named files a parser of a parts format reads together into one document (`parts`, such as the split files of a triples download or an HGB dataset's nodes and links), the files a parser of a multi-file format reads together into one document (`files`, such as an OGB raw directory), or for a collection the files it reads one by one. A `members` selector gives every member it matches, at least one, in path order. `gzip`, `bzip2` and `xz` are one compressed file, `tar.gz`, `tar.bz2` and `tar.xz` a tar archive compressed with them, and `7z` a 7z archive, solid or not, which is decoded once from its start for every member selected; xz and 7z are read only where the platform gives a decoder or reader (Node does, the browser does not). A member that is an archive in its turn (a contest bundle that ships its problems as a zip inside the zip, a spreadsheet inside a zip) is unpacked by `inner`. A spreadsheet (`xlsx`, `xls` or `ods`) is read as the CSV of its named sheet, with dates as ISO 8601 text, for the `csv-table` or `edge-list` parser. A point shapefile (`shapefile`) is a zip whose `member` selects the `.shp`, read with the `.dbf`, `.prj` and `.cpg` of the same name beside it as the CSV of its attribute table with each point's stored coordinates and its WGS84 position, for the `csv-table` parser. */
 export const ArchiveSchema = z.union([
   z.object({ kind: z.literal("none") }).strict(),
   z.object({ kind: z.literal("gzip") }).strict(),
   z.object({ kind: z.literal("bzip2") }).strict(),
+  z.object({ kind: z.literal("xz") }).strict(),
   z.object({ kind: FileArchiveKindSchema, member: ArchiveMemberSchema, inner: InnerArchiveSchema.optional() }).strict(),
   CollectionArchiveSchema,
   PartsArchiveSchema,
@@ -368,6 +369,10 @@ export const ParserSchema = z.discriminatedUnion("format", [
   z.object({ format: z.literal("chat"), encoding: z.literal("utf-8"), idPattern: MemberPatternSchema }).strict(),
   /** A Multilingual TEDx (mTEDx) language directory: each split's line-aligned `segments`, `<split>.yaml` and `<split>.<language>` files, read from the several files a `files` archive selects. */
   z.object({ format: z.literal("mtedx"), encoding: z.literal("utf-8") }).strict(),
+  /** NIST STM files, which are UTF-8 in the corpora that use them: each segment line is a row, read from the several files a `files` archive selects. */
+  z.object({ format: z.literal("stm"), encoding: z.literal("utf-8"), idPattern: MemberPatternSchema }).strict(),
+  /** The `ANNOTATIONS` files of the MUSAN corpus, read from the several files a `files` archive selects. */
+  z.object({ format: z.literal("musan-annotations"), encoding: z.literal("utf-8") }).strict(),
   z
     .object({
       format: z.literal("option-list"),
@@ -384,10 +389,13 @@ export const ParserSchema = z.discriminatedUnion("format", [
       encoding: EncodingSchema,
       /** A regular expression the file's whole path matches, with one capture group: the recording's id. */
       idPattern: MemberPatternSchema,
-      /** The name of the tier whose annotations are the rows, as the file spells it; every file must have a tier of the name, and where several share it all are read. Absent, every tier of every file is read, which is the form for files whose tier names differ from file to file (one tier per speaker or channel). */
+      /** The name of the tier whose annotations are the rows, as the file spells it; every file must have a tier of the name, and where several share it all are read. At most one of `tier` and `tierPattern` is given. */
       tier: z.string().min(1).optional(),
+      /** A regular expression a tier's whole name matches, for a corpus whose tiers are named for the speakers and so differ from file to file: every tier it matches is read, and every file must have at least one. At most one of `tier` and `tierPattern` is given. */
+      tierPattern: MemberPatternSchema.optional(),
     })
-    .strict(),
+    .strict()
+    .refine((parser) => parser.tier === undefined || parser.tierPattern === undefined, { message: "give at most one of tier and tierPattern, or neither to read every tier", path: ["tier"] }),
   z
     .object({
       format: z.literal("member-text"),
@@ -507,7 +515,7 @@ export const PagingSchema = z.discriminatedUnion("kind", [
 export type Paging = z.infer<typeof PagingSchema>;
 
 /** The parser formats that read a dataset spread over several files of one archive, and so the only ones a `files` archive is given to. */
-export const MULTI_FILE_FORMATS: ReadonlySet<Parser["format"]> = new Set(["ogb", "member-text", "nxt-words", "eaf", "textgrid", "option-list", "chat", "mtedx"]);
+export const MULTI_FILE_FORMATS: ReadonlySet<Parser["format"]> = new Set(["ogb", "member-text", "nxt-words", "eaf", "textgrid", "option-list", "chat", "mtedx", "stm", "musan-annotations"]);
 /** The multi-file formats that read each file of a files archive into one row of its own, so a streamed recipe can hand the files to them one at a time. */
 export type StreamedFileFormat = Extract<Parser["format"], "member-text">;
 export const STREAMED_FILE_FORMATS: ReadonlySet<Parser["format"]> = new Set<StreamedFileFormat>(["member-text"]);

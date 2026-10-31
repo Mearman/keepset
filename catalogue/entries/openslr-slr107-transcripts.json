@@ -5,11 +5,47 @@
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "file": "crosswalks/speech-v1/id-text.json"
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].text",
+        "op": "move",
+        "to": "nodes[].text"
+      },
+      {
+        "from": "nodes[].tier",
+        "op": "move",
+        "to": "nodes[].tier"
+      },
+      {
+        "from": "nodes[].start",
+        "op": "move",
+        "to": "nodes[].start"
+      },
+      {
+        "from": "nodes[].end",
+        "op": "move",
+        "to": "nodes[].end"
+      }
+    ],
+    "source": "eaf",
+    "target": "speech/v1"
   },
-  "description": "The transcripts of Totonac Resources. No recipe reads them. Its transcripts are the Totonac ELAN annotation files, whose location in the archive is not settled, inside archives that total about 4 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "description": "The transcripts of the Totonac conversations as their ELAN files give them: each record is an annotation, named by the recording and the annotation's identifier in its file, with its text, the tier it is on (a speaker's, or a translation) and its start and end in milliseconds, null for an annotation that refers to another and has no times of its own. It carries none of the audio, which the download list of openslr-slr107 gives.",
   "domain": "Speech",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "nodes": 12228
+  },
   "id": "openslr-slr107-transcripts",
   "licence": {
     "kind": "custom",
@@ -23,24 +59,34 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "Its transcripts are the Totonac ELAN annotation files, whose location in the archive is not settled, inside archives that total about 4 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
-    "status": "not-fetchable"
+    "archive": {
+      "files": {
+        "pattern": "Conversaciones/(?:[^/]+/)*[^/]+\\.eaf"
+      },
+      "kind": "tar.gz"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "eaf",
+      "idPattern": "Conversaciones/(?:[^/]+/)*([^/]+)\\.eaf"
+    },
+    "source": 0,
+    "status": "fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 6517,
-        "sha256": "2150a4d96989e81fb0de9b8374a59212126e2d5a3893b219558e79ed053668fc",
-        "timestamp": "20251206042616",
-        "url": "https://web.archive.org/web/20251206042616/https://www.openslr.org/107/"
-      },
+      "retrieved": "2026-10-31",
       "status": "live",
-      "url": "https://www.openslr.org/107/"
+      "url": "https://www.openslr.org/resources/107/Totonac_Corpus.tgz"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "text",
+    "tier",
+    "start",
+    "end"
+  ]
 }

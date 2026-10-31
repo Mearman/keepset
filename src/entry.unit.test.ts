@@ -235,7 +235,7 @@ describe("an archive that selects one file or every file", () => {
 
   it("gives a files archive only to a multi-file parser, and a multi-file parser only a files archive", () => {
     expect(issues(ogbEntry)).toBe("");
-    expect(issues({ ...ogbEntry, recipe: { ...ogbEntry.recipe, parser: liveEntry.recipe.parser } })).toMatch(/a files archive is read by a multi-file parser \(ogb, member-text, nxt-words, eaf, textgrid, option-list, chat, mtedx\)/);
+    expect(issues({ ...ogbEntry, recipe: { ...ogbEntry.recipe, parser: liveEntry.recipe.parser } })).toMatch(/a files archive is read by a multi-file parser \(ogb, member-text, nxt-words, eaf, textgrid, option-list, chat, mtedx, stm, musan-annotations\)/);
     expect(issues({ ...ogbEntry, recipe: { ...ogbEntry.recipe, archive: { kind: "zip", member: { path: "raw/edge.csv.gz" }, inner: { kind: "gzip" } } } })).toMatch(/a files archive is read by a multi-file parser/);
     expect(issues({ ...ogbEntry, recipe: { ...ogbEntry.recipe, archive: { kind: "zip", members: { extensions: [".gz"] } } } })).toMatch(/a files archive is read by a multi-file parser/);
     expect(issues({ ...ogbEntry, recipe: { ...ogbEntry.recipe, archive: { ...ogbEntry.recipe.archive, inner: { kind: "zip", member: { path: "x" } } } } })).not.toBe("");
@@ -264,6 +264,11 @@ describe("an archive that selects one file or every file", () => {
     expect(issues(entry(textGrid, { ...nested, inner: { kind: "gzip", files: { extensions: [".TextGrid"] } } }))).not.toBe("");
     expect(issues(entry(textGrid, { ...nested, inner: { kind: "zip", files: { extensions: [".TextGrid"] }, inner: { kind: "gzip" } } }))).not.toBe("");
     expect(issues(entry({ ...textGrid, tier: "" }, nested))).not.toBe("");
+    const unnamed = { format: textGrid.format, encoding: textGrid.encoding, idPattern: textGrid.idPattern };
+    expect(issues(entry({ ...unnamed, tierPattern: "P\\d+" }, nested))).toBe("");
+    expect(issues(entry(unnamed, nested))).toBe("");
+    expect(issues(entry({ ...textGrid, tierPattern: "P\\d+" }, nested))).not.toBe("");
+    expect(issues(entry({ ...unnamed, tierPattern: "(" }, nested))).not.toBe("");
     expect(issues(entry({ ...textGrid, encoding: "utf-16" }, nested))).not.toBe("");
   });
 

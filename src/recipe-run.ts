@@ -1,7 +1,8 @@
 import { type Entry, rawSnapshotUrl, type Source } from "./entry";
 import { KeepsetError, RecipeError, type RecipeStep } from "./errors";
 import type { JsonScalar } from "./targets/json-scalar";
-import type { Download } from "./fetch";
+import type { UnpackOptions } from "./archive";
+import type { Download, FetchOptions } from "./fetch";
 import type { StoredSource } from "./source-bytes";
 
 /**
@@ -81,4 +82,13 @@ export function countWarnings(entry: Entry, counts: ReadonlyMap<string, number>)
   return Object.entries(entry.expectedCounts)
     .filter(([key, expected]) => counts.get(key) !== expected)
     .map(([key, expected]) => `${key}: the entry records ${String(expected)}, the fetched result has ${String(counts.get(key))}`);
+}
+
+/**
+ * What the archive readers are given of a fetch's options: its 7z reader, its xz decoder and its abort signal.
+ * @param options - The fetch's options.
+ * @returns The options unpacking takes.
+ */
+export function unpackOptionsOf(options: Readonly<FetchOptions>): UnpackOptions {
+  return { ...(options.sevenZip === undefined ? {} : { sevenZip: options.sevenZip }), ...(options.xz === undefined ? {} : { xz: options.xz }), ...(options.signal === undefined ? {} : { signal: options.signal }) };
 }

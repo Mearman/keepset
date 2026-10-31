@@ -12,7 +12,7 @@ import type { FetchPort } from "../fetch";
 import { bytesSource, type StoredSource, type StorePort } from "../source-bytes";
 import { fixtureIndex, liveEntry } from "../test-support/entries";
 import { allowance } from "../test-support/allowance";
-import { lazyGzip, lazyTar, rechunk, retainedBufferBytes } from "../test-support/streams";
+import { lazyGzip, lazyTar, lazyXz, rechunk, retainedBufferBytes } from "../test-support/streams";
 import { sevenZip as sevenZipBytes, sevenZipFolder, type SevenZipSettings } from "../test-support/seven-zip";
 import { fileStore } from "./file-store";
 import { fetchEntry } from "./fetch-dataset";
@@ -87,12 +87,26 @@ function* withCorruptCrc(pieces: Readonly<Iterable<Uint8Array>>): Generator<Uint
   yield held;
 }
 
+/** The compressed tar kinds a source is streamed through. */
+type TarKind = "tar.gz" | "tar.xz";
+
+/** A writer that compresses a stream of pieces lazily, as one of the tar kinds. */
+type Compressor = (pieces: Readonly<Iterable<Uint8Array>>) => Generator<Uint8Array, void, undefined>;
+
+/** Each compressed tar kind with its writer. */
+const COMPRESSIONS: readonly (readonly [TarKind, Compressor])[] = [
+  ["tar.gz", lazyGzip],
+  ["tar.xz", lazyXz],
+];
+
 /**
- * Fetches a karate excerpt from a tar.gz whose filler member is several times the memory budget, made and hashed as the fetch pulls it, with what the process retains measured as the source is downloaded and as it is read back.
- * @param corrupt - Whether the gzip trailer's CRC-32 is corrupted on the way.
+ * Fetches a karate excerpt from a compressed tar whose filler member is several times the memory budget, made and hashed as the fetch pulls it, with what the process retains measured as the source is downloaded and as it is read back.
+ * @param kind - The archive kind the source is compressed as.
+ * @param compress - The writer that compresses the tar's pieces lazily as that kind.
+ * @param corrupt - Whether the gzip trailer's CRC-32 is corrupted on the way, which only a `tar.gz` has.
  * @returns What the fetch gave, or the error it failed with, the source's hash and length, how many pieces were pulled, and the most the process retained.
  */
-async function fetchLargeTarGz(corrupt: boolean): Promise<{ readonly outcome: PromiseSettledResult<Awaited<ReturnType<typeof fetchEntry>>>; readonly sha256: string; readonly byteLength: number; readonly pulled: number; readonly peak: number }> {
+async function fetchLargeTar(kind: TarKind, compress: Compressor, corrupt: boolean): Promise<{ readonly outcome: PromiseSettledResult<Awaited<ReturnType<typeof fetchEntry>>>; readonly sha256: string; readonly byteLength: number; readonly pulled: number; readonly peak: number }> {
   const peak = new Peak();
   const hash = createHash("sha256");
   let byteLength = 0;
@@ -100,8 +114,8 @@ async function fetchLargeTarGz(corrupt: boolean): Promise<{ readonly outcome: Pr
     { path: "net/filler.bin", size: FILLER_BYTES, bytes: (_offset: number, length: number): Uint8Array => randomBytes(length) },
     { path: "net/karate.txt", size: karate.length, bytes: (offset: number, length: number): Uint8Array => new TextEncoder().encode(karate.slice(offset, offset + length)) },
   ];
-  const gzipped = lazyGzip(lazyTar(members, PIECE_BYTES));
-  const pieces = rechunk(corrupt ? withCorruptCrc(gzipped) : gzipped, PIECE_BYTES);
+  const compressed = compress(lazyTar(members, PIECE_BYTES));
+  const pieces = rechunk(corrupt ? withCorruptCrc(compressed) : compressed, PIECE_BYTES);
   let index = 0;
   // The archive is made as the fetch pulls it and hashed here as it goes, so neither side of the test holds it.
   const body = new ReadableStream<Uint8Array>(
@@ -144,7 +158,7 @@ async function fetchLargeTarGz(corrupt: boolean): Promise<{ readonly outcome: Pr
     },
     hold: async (bytes) => files.hold(bytes),
   };
-  const entry = { ...liveEntry, expectedCounts: { nodes: 3, edges: 3 }, recipe: { ...liveEntry.recipe, archive: { kind: "tar.gz", member: { path: "karate.txt" } } } };
+  const entry = { ...liveEntry, expectedCounts: { nodes: 3, edges: 3 }, recipe: { ...liveEntry.recipe, archive: { kind, member: { path: "karate.txt" } } } };
   await peak.start();
   const [outcome] = await Promise.allSettled([fetchEntry(datasetWith(entry), { fetch, store, now })]);
 
@@ -152,10 +166,10 @@ async function fetchLargeTarGz(corrupt: boolean): Promise<{ readonly outcome: Pr
 }
 
 describe("a fetch of a source larger than memory", () => {
-  it(
-    "downloads, hashes, decompresses, verifies and scans a tar.gz far larger than the memory budget while retaining less than it, and keeps only the selected member",
-    async () => {
-      const { outcome, sha256, byteLength, pulled, peak } = await fetchLargeTarGz(false);
+  it.each(COMPRESSIONS)(
+    "downloads, hashes, decompresses, verifies and scans a %s far larger than the memory budget while retaining less than it, and keeps only the selected member",
+    async (kind, compress) => {
+      const { outcome, sha256, byteLength, pulled, peak } = await fetchLargeTar(kind, compress, false);
       if (outcome.status === "rejected") {
         throw outcome.reason;
       }
@@ -171,7 +185,7 @@ describe("a fetch of a source larger than memory", () => {
   it(
     "refuses the same tar.gz when its gzip trailer's CRC-32 does not match, after reading it all within the memory budget, rather than handing on the member it found",
     async () => {
-      const { outcome, byteLength, peak } = await fetchLargeTarGz(true);
+      const { outcome, byteLength, peak } = await fetchLargeTar("tar.gz", lazyGzip, true);
       expect(outcome.status).toBe("rejected");
       if (outcome.status === "rejected") {
         expect(String(outcome.reason)).toMatch(/the gzip stream fails its checksum/);

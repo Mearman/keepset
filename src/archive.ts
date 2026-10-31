@@ -105,10 +105,10 @@ export function readsByRanges(archive: Archive): boolean {
 }
 
 /**
- * Unpacks a source into the one file the parser reads. A member with an `inner` archive is unpacked again by that layout, and the path reported is the outer member's, joined by `/` to the inner member's or the inner sheet's name when the inner layout selects one, as though the inner archive were a directory. A tar archive is read as it arrives, a zip by the ranges its directory names and a 7z archive by the platform's 7z reader, so only the selected member is ever held; a plain or compressed file and a workbook are read whole, as their parsers read them.
+ * Unpacks a source into the one file the parser reads. A member with an `inner` archive is unpacked again by that layout, and the path reported is the outer member's, joined by `/` to the inner member's or the inner sheet's name when the inner layout selects one, as though the inner archive were a directory. A tar archive is read as it arrives, a zip by the ranges its directory names and a 7z archive by the platform's 7z reader, so only the selected member is ever held; a plain or compressed file (gzip, bzip2 or xz) and a workbook are read whole, as their parsers read them.
  * @param input - The downloaded bytes, held in memory or kept anywhere.
  * @param archive - The recipe's archive layout.
- * @param options - The platform's 7z reader and the abort signal, which only a 7z archive needs.
+ * @param options - The platform's 7z reader and xz decoder and the abort signal, each needed only by an archive of its own kind.
  * @returns The file's bytes, and its member path for a multi-file archive.
  * @throws ArchiveError when the bytes, or a member's bytes that an `inner` layout reads, are not a well-formed archive of the stated kind or a selector does not match exactly one member.
  */
@@ -122,6 +122,9 @@ export async function unpack(input: Uint8Array | Readonly<SourceBytes>, archive:
   }
   if (archive.kind === "bzip2") {
     return { bytes: bunzip2(await source.bytes()) };
+  }
+  if (archive.kind === "xz") {
+    return { bytes: await unxzWhole(source, options) };
   }
   if ("sheet" in archive) {
     return { bytes: sheetToCsv(await source.bytes(), archive), member: archive.sheet };
@@ -148,7 +151,7 @@ export async function unpack(input: Uint8Array | Readonly<SourceBytes>, archive:
  * Unpacks the one member a file archive's selector matches.
  * @param source - The archive.
  * @param archive - A file archive layout and its selector.
- * @param options - The platform's 7z reader and the abort signal, which only a 7z archive needs.
+ * @param options - The platform's 7z reader and xz decoder and the abort signal, each needed only by an archive of its own kind.
  * @returns The member's bytes and path.
  * @throws ArchiveError when the bytes are not a well-formed archive of the stated kind or the selector does not match exactly one member.
  */
@@ -215,7 +218,7 @@ export interface Member {
  * Unpacks a source into every file a collection's selector matches, or, with an `inner` layout, into the files inside each matched member. An `xlsx` layout gives every sheet of every matched workbook that its `sheets` pattern matches as the sheet's CSV, at the member's path and the sheet's name joined by `/`, sheets in the workbook's order. A file archive layout unpacks each matched member as an archive in its turn and gives every file its `members` selector matches, at the member's path and the file's path joined by `/`, in path order. Members are in path order. The files are given one at a time: a zip member is read and inflated only when it is reached, so a reader that lets each file go before taking the next holds one member's bytes, never every member at once; a tar archive is read once as it arrives, keeping only the members the selector matches (the outer archive's other members, however large, are never held), and a matched member that is itself an archive is held while its own files are given.
  * @param input - The downloaded bytes, held in memory or kept anywhere.
  * @param archive - The recipe's archive layout, which selects members with `members`.
- * @param options - The platform's 7z reader and the abort signal, which only a 7z archive needs.
+ * @param options - The platform's 7z reader and xz decoder and the abort signal, each needed only by an archive of its own kind.
  * @returns Each file.
  * @throws ArchiveError when the bytes are not a well-formed archive of the stated kind, the selector matches no member (at the first file taken), a member an `xlsx` layout reads is not a workbook or has no sheet the pattern matches, or a member an archive layout reads is not a well-formed archive of the stated kind or holds no file the inner selector matches (at that member).
  */
@@ -255,7 +258,7 @@ export async function* unpackMembers(input: Uint8Array | Readonly<SourceBytes>, 
  * Unpacks every member a collection's selector matches, one at a time.
  * @param source - The archive.
  * @param archive - The recipe's archive layout.
- * @param options - The platform's 7z reader and the abort signal, which only a 7z archive needs.
+ * @param options - The platform's 7z reader and xz decoder and the abort signal, each needed only by an archive of its own kind.
  * @returns Each matching member, in path order.
  * @throws ArchiveError when the bytes are not a well-formed archive of the stated kind or the selector matches no member, at the first member taken.
  */
@@ -277,7 +280,7 @@ export interface Part extends Member {
  * Unpacks a source into the files a parts archive names, each the one member its selector matches.
  * @param input - The downloaded bytes, held in memory or kept anywhere.
  * @param archive - The recipe's archive layout, which names its parts.
- * @param options - The platform's 7z reader and the abort signal, which only a 7z archive needs.
+ * @param options - The platform's 7z reader and xz decoder and the abort signal, each needed only by an archive of its own kind.
  * @returns Each part, in the order the recipe names them.
  * @throws ArchiveError when the bytes are not a well-formed archive of the stated kind or a part's selector does not match exactly one member.
  */
@@ -303,7 +306,7 @@ interface Selection<Choice extends { readonly path: string }> {
  * @param source - The archive.
  * @param kind - The archive kind.
  * @param selection - What the choice is made by: `candidate`, given a member path, whether the choice may take it, and `choose`, given every member path, the members to read, in the order wanted, each naming its path.
- * @param options - The platform's 7z reader and the abort signal, which only a 7z archive needs.
+ * @param options - The platform's 7z reader and xz decoder and the abort signal, each needed only by an archive of its own kind.
  * @returns Each choice with the bytes of the member it names, in the order chosen.
  * @throws ArchiveError when the bytes are not a well-formed archive of the stated kind or a chosen member cannot be read; whatever `choose` throws.
  */
@@ -333,7 +336,7 @@ async function* readMembers<Choice extends { readonly path: string }>(
 
     return;
   }
-  const { paths, members } = await scanTar(tarChunks(source.chunks(), kind), candidate);
+  const { paths, members } = await scanTar(tarChunks(source.chunks(), kind, options), candidate);
   for (const choice of choose(paths)) {
     const found = members.find((member) => member.path === choice.path);
     if (found === undefined) {
@@ -377,9 +380,13 @@ export interface SevenZipPort {
   readonly extract: (source: Readonly<SourceBytes>, paths: readonly string[], signal?: AbortSignal) => Promise<ExtractedMembers>;
 }
 
-/** What unpacking may be given beside the archive: the platform's 7z reader, without which a 7z archive is refused, and an abort signal for a reader that runs long. */
+/** A decoder of xz compressed data, given the compressed bytes as chunks, in order, and giving the decompressed bytes as chunks, in order, without holding either whole. It is a port because the decoder is WebAssembly that only the Node entry point carries; where none is supplied, a recipe whose archive is xz compressed fails at its extract step with an error that says so. */
+export type XzPort = (compressed: Readonly<AsyncIterable<Uint8Array>>) => AsyncIterable<Uint8Array>;
+
+/** What unpacking may be given beside the archive: the platform's 7z reader, without which a 7z archive is refused, its xz decoder, without which an xz compressed archive is refused, and an abort signal for a reader that runs long. */
 export interface UnpackOptions {
   readonly sevenZip?: SevenZipPort;
+  readonly xz?: XzPort;
   readonly signal?: AbortSignal;
 }
 
@@ -441,7 +448,7 @@ export function sheetToCsv(bytes: Uint8Array, archive: Readonly<SheetArchive>): 
  * Unpacks a source into every file a multi-file format's selector matches, gunzipping each when the layout's `inner` is `gzip` and, when it is an archive kind with its own selector, unpacking each matched member into the files that selector matches. The paths stay the archive's own, so a gunzipped `edge.csv.gz` keeps its name, and a file of an inner archive is filed under its member's path and its own joined by `/`.
  * @param input - The downloaded bytes, held in memory or kept anywhere.
  * @param archive - The recipe's archive layout, which selects files with `files`.
- * @param options - The platform's 7z reader and the abort signal, which only a 7z archive needs.
+ * @param options - The platform's 7z reader and xz decoder and the abort signal, each needed only by an archive of its own kind.
  * @returns Each matching file, in path order (the outer members in path order, and the files of each in path order).
  * @throws ArchiveError when the bytes, or a member `inner` reads, are not well-formed, or a selector matches no member.
  */
@@ -485,14 +492,15 @@ interface Reached {
  * @param chunks - The tar's bytes, which may be compressed.
  * @param kind - The tar kind.
  * @param files - The selector.
+ * @param options - The platform's xz decoder, which only a `tar.xz` archive needs.
  * @returns Each matching file, in the order the archive holds them.
- * @throws ArchiveError when the bytes are not a well-formed archive of the kind or the selector matches no member, listing the members.
+ * @throws ArchiveError when the bytes are not a well-formed archive of the kind, no xz decoder is given for a `tar.xz`, or the selector matches no member, listing the members.
  */
-async function* streamTarFiles(chunks: Readonly<AsyncIterable<Uint8Array> | Iterable<Uint8Array>>, kind: "tar" | "tar.gz" | "tar.bz2", files: ArchiveMember): AsyncGenerator<Member, void, undefined> {
+async function* streamTarFiles(chunks: Readonly<AsyncIterable<Uint8Array> | Iterable<Uint8Array>>, kind: "tar" | "tar.gz" | "tar.bz2" | "tar.xz", files: ArchiveMember, options: Readonly<UnpackOptions> | undefined): AsyncGenerator<Member, void, undefined> {
   const scanner = new TarScanner((path) => selects(path, files));
   const asMember = (member: Readonly<TarMember>): Member => ({ path: member.path, bytes: member.data });
   let matched = 0;
-  for await (const chunk of tarChunks(chunks, kind)) {
+  for await (const chunk of tarChunks(chunks, kind, options)) {
     scanner.push(chunk);
     const completed = scanner.take();
     matched += completed.length;
@@ -535,15 +543,16 @@ async function* within(path: string, files: Readonly<AsyncIterable<Member>>): As
  * The members of a files archive its outer selector matches, as `streamFiles` reaches them: a zip's in path order, each read only when it is reached, and a tar's in archive order as the scan completes each.
  * @param source - The archive.
  * @param archive - Its layout.
+ * @param options - The platform's xz decoder, which only a `tar.xz` archive needs.
  * @returns Each matching member.
  * @throws ArchiveError when the bytes are not a well-formed archive of the stated kind or the selector matches no member.
  */
-async function* reachMembers(source: Readonly<SourceBytes>, archive: FilesArchive): AsyncGenerator<Reached, void, undefined> {
+async function* reachMembers(source: Readonly<SourceBytes>, archive: FilesArchive, options: Readonly<UnpackOptions> | undefined): AsyncGenerator<Reached, void, undefined> {
   if (archive.kind === "7z") {
     throw new ArchiveError("a 7z archive is read from the file the store kept and cannot be streamed a file at a time");
   }
   if (archive.kind !== "zip") {
-    for await (const member of streamTarFiles(source.chunks(), archive.kind, archive.files)) {
+    for await (const member of streamTarFiles(source.chunks(), archive.kind, archive.files, options)) {
       yield { path: member.path, chunks: () => [member.bytes], bytes: async () => Promise.resolve(member.bytes) };
     }
 
@@ -567,12 +576,13 @@ async function* reachMembers(source: Readonly<SourceBytes>, archive: FilesArchiv
  * Unpacks a source into every file a multi-file format's selector matches, as `unpackFiles` does, but hands each file on as soon as it is read rather than collecting them, so a reader that lets each file go before taking the next reads an archive of any size in the memory of one file. A zip's members are taken in path order and read one at a time, and a member that is a tar archive in its turn (a tar zipped whole) is inflated and scanned as it is read, never held whole; a tar archive is scanned once as it arrives. The files of a tar are therefore handed on in the order the tar holds them, not in path order, since sorting them would mean holding them all. A member that is a gzip file or a zip in its turn is held whole, being one file, or an archive whose directory is at its end.
  * @param input - The downloaded bytes, held in memory or kept anywhere.
  * @param archive - The recipe's archive layout, which selects files with `files`.
+ * @param options - The platform's xz decoder, which only a `tar.xz` archive needs.
  * @returns Each matching file, filed as `unpackFiles` files it.
  * @throws ArchiveError when the bytes, or a member `inner` reads, are not well-formed, or a selector matches no member (for a tar, once it has been read to its end), after the files before the fault.
  */
-export async function* streamFiles(input: Uint8Array | Readonly<SourceBytes>, archive: FilesArchive): AsyncGenerator<Member, void, undefined> {
+export async function* streamFiles(input: Uint8Array | Readonly<SourceBytes>, archive: FilesArchive, options?: Readonly<UnpackOptions>): AsyncGenerator<Member, void, undefined> {
   const { inner } = archive;
-  for await (const member of reachMembers(asSource(input), archive)) {
+  for await (const member of reachMembers(asSource(input), archive, options)) {
     if (inner === undefined) {
       yield { path: member.path, bytes: await member.bytes() };
       continue;
@@ -591,7 +601,7 @@ export async function* streamFiles(input: Uint8Array | Readonly<SourceBytes>, ar
     if (inner.kind === "7z") {
       throw new ArchiveError(`member ${member.path}: a 7z archive inside an archive cannot be streamed a file at a time`);
     }
-    const files = inner.kind === "zip" ? unpackMembers(await member.bytes(), { kind: "zip", members: inner.files }) : streamTarFiles(member.chunks(), inner.kind, inner.files);
+    const files = inner.kind === "zip" ? unpackMembers(await member.bytes(), { kind: "zip", members: inner.files }) : streamTarFiles(member.chunks(), inner.kind, inner.files, options);
     for await (const file of within(member.path, files)) {
       yield { path: `${member.path}/${file.path}`, bytes: file.bytes };
     }
@@ -622,20 +632,68 @@ export function concatenateFiles(files: readonly Member[]): Uint8Array {
   return joined;
 }
 
+/**
+ * Gives chunks held in memory or arriving as a stream as the stream a decoder port reads.
+ * @param chunks - The chunks, in order.
+ * @returns The same chunks, as an async iterable.
+ */
+async function* asyncChunks(chunks: Readonly<AsyncIterable<Uint8Array> | Iterable<Uint8Array>>): AsyncGenerator<Uint8Array, void, undefined> {
+  yield* chunks;
+}
+
+/**
+ * The xz decoder a recipe needs.
+ * @param options - What the reader was given.
+ * @returns The decoder.
+ * @throws ArchiveError when none was given, as in a browser, which does not bundle the WebAssembly decoder.
+ */
+function xzOf(options: Readonly<UnpackOptions> | undefined): XzPort {
+  if (options?.xz === undefined) {
+    throw new ArchiveError("this archive is xz compressed, and no xz decoder is available here: the Node entry point (keepset/node) carries one, and the browser entry point does not read xz");
+  }
+
+  return options.xz;
+}
+
+/**
+ * Decompresses xz data, whole, as the document kinds read a compressed file.
+ * @param source - The compressed file.
+ * @param options - What the reader was given.
+ * @returns The decompressed bytes.
+ * @throws ArchiveError when no decoder is available or the data is not valid xz.
+ */
+async function unxzWhole(source: Readonly<SourceBytes>, options: Readonly<UnpackOptions> | undefined): Promise<Uint8Array> {
+  const pieces = await collect(xzOf(options)(source.chunks()));
+  const whole = new Uint8Array(pieces.reduce((total, piece) => total + piece.length, 0));
+  let offset = 0;
+  for (const piece of pieces) {
+    whole.set(piece, offset);
+    offset += piece.length;
+  }
+
+  return whole;
+}
+
 /** How many compressed bytes are fed to the gzip stream at a time. Everything a feed decompresses to is collected before any of it is yielded, so what is held of the decompressed archive at once is the feed times the data's compression ratio; a mebibyte keeps the stream's per-call cost small and that output a few mebibytes for the text and media archives recipes read. */
 const KIBIBYTE = 1024;
 const GZIP_FEED_BYTES = KIBIBYTE * KIBIBYTE;
 
 /**
- * The bytes of a tar archive, which may be compressed, as chunks, decompressed as the archive's chunks arrive, so neither the compressed nor the decompressed archive is ever held whole: `tar.gz` is gunzipped a feed at a time and `tar.bz2` a bzip2 block at a time, and `tar` is yielded as it arrives.
+ * The bytes of a tar archive, which may be compressed, as chunks, decompressed as the archive's chunks arrive, so neither the compressed nor the decompressed archive is ever held whole: `tar.gz` is gunzipped a feed at a time, `tar.bz2` a bzip2 block at a time and `tar.xz` as the xz decoder gives it, and `tar` is yielded as it arrives.
  * @param chunks - The archive's bytes, in order: a source's chunks, or a member's as it is inflated.
  * @param kind - The archive kind.
+ * @param options - The platform's xz decoder, which only a `tar.xz` archive needs.
  * @returns The tar's bytes, in order, cut anywhere.
- * @throws ArchiveError when the bytes are not valid gzip or bzip2 data, as `GunzipStream` and `Bunzip2Stream` report: a corrupted or truncated compressed archive fails once its fault is reached, after the bytes before it.
+ * @throws ArchiveError when the bytes are not valid gzip, bzip2 or xz data, as `GunzipStream`, `Bunzip2Stream` and the xz decoder report: a corrupted or truncated compressed archive fails once its fault is reached, after the bytes before it; or when `tar.xz` is read with no xz decoder.
  */
-async function* tarChunks(chunks: Readonly<AsyncIterable<Uint8Array> | Iterable<Uint8Array>>, kind: "tar" | "tar.gz" | "tar.bz2"): AsyncGenerator<Uint8Array, void, undefined> {
+async function* tarChunks(chunks: Readonly<AsyncIterable<Uint8Array> | Iterable<Uint8Array>>, kind: "tar" | "tar.gz" | "tar.bz2" | "tar.xz", options: Readonly<UnpackOptions> | undefined): AsyncGenerator<Uint8Array, void, undefined> {
   if (kind === "tar") {
     yield* chunks;
+
+    return;
+  }
+  if (kind === "tar.xz") {
+    yield* xzOf(options)(asyncChunks(chunks));
 
     return;
   }

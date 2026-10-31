@@ -5,11 +5,57 @@
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "file": "crosswalks/speech-v1/id-text.json"
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].text",
+        "op": "move",
+        "to": "nodes[].text"
+      },
+      {
+        "from": "nodes[].speaker",
+        "op": "move",
+        "to": "nodes[].speaker"
+      },
+      {
+        "from": "nodes[].start",
+        "op": "move",
+        "to": "nodes[].start"
+      },
+      {
+        "from": "nodes[].end",
+        "op": "move",
+        "to": "nodes[].end"
+      },
+      {
+        "from": "nodes[].channel",
+        "op": "move",
+        "to": "nodes[].channel"
+      },
+      {
+        "from": "nodes[].label",
+        "op": "move",
+        "to": "nodes[].label"
+      }
+    ],
+    "source": "stm",
+    "target": "speech/v1"
   },
-  "description": "The transcripts of Kallaama. No recipe reads them. Its transcripts are Kallaama's STM files, inside archives that total about 12 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "description": "The transcripts of Kallaama: one instance for each of the three archives of the download (Wolof, Pulaar and Sereer), and in it each record is a speaker's turn in a radio programme, named by the recording and the turn's line in its STM file, with its text, speaker, channel, start and end in seconds and the label field of its line (the labels the file's header declares). Stretches the files mark as untranscribed gaps or excluded from scoring are left out. The archives also hold an expert's corrected copies of a subset of the files in a separate checked_transcriptions folder under the same file names, which are not read, so each recording appears once. It carries none of the audio, which the download list of openslr-slr151 gives.",
   "domain": "Speech",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "instances": 3
+  },
   "id": "openslr-slr151-transcripts",
   "licence": {
     "kind": "custom",
@@ -23,24 +69,71 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "Its transcripts are Kallaama's STM files, inside archives that total about 12 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
-    "status": "not-fetchable"
+    "files": [
+      {
+        "archive": {
+          "files": {
+            "pattern": "(?!.*/checked_transcriptions/).*/stm_format/[^/]+\\.stm"
+          },
+          "kind": "tar.gz"
+        },
+        "path": "speech_dataset_wol.tar.gz",
+        "source": 0
+      },
+      {
+        "archive": {
+          "files": {
+            "pattern": "(?!.*/checked_transcriptions/).*/stm_format/[^/]+\\.stm"
+          },
+          "kind": "tar.gz"
+        },
+        "path": "speech_dataset_fuc.tar.gz",
+        "source": 1
+      },
+      {
+        "archive": {
+          "files": {
+            "pattern": "(?!.*/checked_transcriptions/).*/stm_format/[^/]+\\.stm"
+          },
+          "kind": "tar.gz"
+        },
+        "path": "speech_dataset_srr.tar.gz",
+        "source": 2
+      }
+    ],
+    "parser": {
+      "encoding": "utf-8",
+      "format": "stm",
+      "idPattern": "(?:[^/]+/)*stm_format/([^/]+)\\.stm"
+    },
+    "status": "fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 5621,
-        "sha256": "d8753e454c02943e26c9f1d5904e0222370dbbe6cea2d4cef8c01617e6d04376",
-        "timestamp": "20260227144749",
-        "url": "https://web.archive.org/web/20260227144749/https://www.openslr.org/151/"
-      },
+      "retrieved": "2026-10-31",
       "status": "live",
-      "url": "https://www.openslr.org/151/"
+      "url": "https://www.openslr.org/resources/151/speech_dataset_wol.tar.gz"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/151/speech_dataset_fuc.tar.gz"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/151/speech_dataset_srr.tar.gz"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "text",
+    "speaker",
+    "start",
+    "end",
+    "channel",
+    "label"
+  ]
 }
