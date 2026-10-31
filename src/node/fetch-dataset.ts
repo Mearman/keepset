@@ -34,7 +34,7 @@ const storeOf = (options: NodeStoreOption): StorePort => options.store ?? (optio
 const defaults = (options: NodeFetchOptions): FetchOptions => ({ ...options, fetch: options.fetch ?? downloadRaw, store: storeOf(options) });
 
 /**
- * Fetches a dataset of the bundled catalogue by id, with Node's own downloader and digest. See `../fetch`'s `fetchEntry` for what a fetch does.
+ * Fetches a dataset of the bundled catalogue by id, with Node's own downloader and file store. See `../fetch`'s `fetchEntry` for what a fetch does.
  * @param id - The entry id.
  * @param options - The ports to override, an abort signal and the clock.
  * @returns The fetched dataset.
@@ -44,7 +44,7 @@ export async function fetchDataset(id: string, options: NodeFetchOptions = {}): 
 }
 
 /**
- * Fetches a dataset object, with Node's own downloader and digest.
+ * Fetches a dataset object, with Node's own downloader and file store.
  * @param dataset - A dataset from any catalogue.
  * @param options - The ports to override, an abort signal and the clock.
  * @returns The fetched dataset.
