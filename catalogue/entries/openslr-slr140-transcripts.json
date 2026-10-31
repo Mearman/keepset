@@ -5,11 +5,32 @@
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "file": "crosswalks/speech-v1/id-text.json"
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].text",
+        "op": "move",
+        "to": "nodes[].text"
+      }
+    ],
+    "source": "json-table",
+    "target": "speech/v1"
   },
-  "description": "The transcripts of Kazakh Speech Dataset (KSD). No recipe reads them. Its transcripts are the Kazakh Speech Dataset's JSON files, inside archives that total about 56 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "description": "The transcripts of Kazakh Speech Dataset (KSD): one instance per zip of the distribution, each record being an utterance with its audio path as identifier and its text. It carries none of the audio, which the download list of openslr-slr140 gives.",
   "domain": "Speech",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "instances": 0
+  },
   "id": "openslr-slr140-transcripts",
   "licence": {
     "kind": "custom",
@@ -23,24 +44,85 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "Its transcripts are the Kazakh Speech Dataset's JSON files, inside archives that total about 56 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
-    "status": "not-fetchable"
+    "files": [
+      {
+        "archive": {
+          "kind": "zip",
+          "members": {
+            "pattern": "audio[0-9]+/train\\.json"
+          }
+        },
+        "path": "audio2.zip",
+        "source": 0
+      },
+      {
+        "archive": {
+          "kind": "zip",
+          "members": {
+            "pattern": "audio[0-9]+/train\\.json"
+          }
+        },
+        "path": "audio3.zip",
+        "source": 1
+      },
+      {
+        "archive": {
+          "kind": "zip",
+          "members": {
+            "pattern": "audio[0-9]+/train\\.json"
+          }
+        },
+        "path": "audio4.zip",
+        "source": 2
+      },
+      {
+        "archive": {
+          "kind": "zip",
+          "members": {
+            "pattern": "audio[0-9]+/train\\.json"
+          }
+        },
+        "path": "audio5.zip",
+        "source": 3
+      }
+    ],
+    "parser": {
+      "encoding": "utf-8",
+      "fields": [
+        "text"
+      ],
+      "format": "json-table",
+      "idField": "wav",
+      "layout": "array"
+    },
+    "status": "fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 5455,
-        "sha256": "d2b7ad47e91f23c41b4c653a9aaf0380dc02fb0d8964e3a7fab1d28c049f976a",
-        "timestamp": "20260911131307",
-        "url": "https://web.archive.org/web/20260911131307/https://www.openslr.org/140/"
-      },
+      "retrieved": "2026-10-31",
       "status": "live",
-      "url": "https://www.openslr.org/140/"
+      "url": "https://www.openslr.org/resources/140/audio2.zip"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/140/audio3.zip"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/140/audio4.zip"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/140/audio5.zip"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "text"
+  ]
 }
