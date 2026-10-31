@@ -1,14 +1,22 @@
 import { createHash, randomBytes } from "node:crypto";
+import { createWriteStream } from "node:fs";
+import { mkdir, mkdtemp, open, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { Readable } from "node:stream";
+import { pipeline } from "node:stream/promises";
 import { zipSync } from "fflate";
 import { describe, expect, it } from "vitest";
 import { createCatalogue, type Dataset } from "../catalogue";
 import type { FetchPort } from "../fetch";
-import type { StoredSource, StorePort } from "../source-bytes";
+import { bytesSource, type StoredSource, type StorePort } from "../source-bytes";
 import { fixtureIndex, liveEntry } from "../test-support/entries";
 import { allowance } from "../test-support/allowance";
 import { lazyGzip, lazyTar, rechunk, retainedBufferBytes } from "../test-support/streams";
+import { sevenZip as sevenZipBytes, sevenZipFolder, type SevenZipSettings } from "../test-support/seven-zip";
 import { fileStore } from "./file-store";
 import { fetchEntry } from "./fetch-dataset";
+import { sevenZipReader, type SevenZipRun } from "./seven-zip";
 
 const KIBIBYTE = 1024;
 const MEBIBYTE = KIBIBYTE * KIBIBYTE;
@@ -115,6 +123,93 @@ describe("a fetch of a source larger than memory", () => {
     expect(index).toBeGreaterThan(MEASURE_EVERY);
     expect(peak.most).toBeLessThan(MEMORY_BUDGET);
   }, FETCH_TIMEOUT_MILLISECONDS);
+});
+
+describe("a fetch of a solid 7z archive larger than memory", () => {
+  /** The time one mebibyte of the filler may take through the whole pipeline here (written to disk, compressed with LZMA, read back as the download, hashed, kept, and decoded by 7-Zip in its worker), set as far above an unloaded host's need as the tar.gz test's allowance and scaled by the work LZMA adds: compressing with it costs several times what gzipping does, so the allowance is ten of the tar.gz test's. */
+  const LZMA_WORK_FACTOR = 10;
+  const MILLISECONDS_PER_SOLID_MEBIBYTE = LZMA_WORK_FACTOR * MILLISECONDS_PER_FILLER_MEBIBYTE;
+  const SOLID_TIMEOUT_MILLISECONDS = (FILLER_BYTES / MEBIBYTE) * MILLISECONDS_PER_SOLID_MEBIBYTE;
+
+  it(
+    "downloads, hashes and decodes a solid 7z far larger than the memory budget while retaining less than it in the process and in 7-Zip's heap, and keeps only the selected member",
+    async () => {
+      const folder = await mkdtemp(join(tmpdir(), "keepset-large-7z-"));
+      try {
+        const input = join(folder, "in");
+        await mkdir(join(input, "net"), { recursive: true });
+        // The filler goes first in the solid block and the selected member after it, so reaching the member decodes all of the filler; it is written a piece at a time, so neither it nor the archive is held.
+        const pieces = function* (): Generator<Uint8Array, void, undefined> {
+          for (let offset = 0; offset < FILLER_BYTES; offset += PIECE_BYTES) {
+            yield randomBytes(PIECE_BYTES);
+          }
+        };
+        await pipeline(Readable.from(pieces()), createWriteStream(join(input, "net", "a-filler.bin")));
+        await writeFile(join(input, "net", "karate.txt"), karate);
+        const archivePath = join(folder, "net.7z");
+        // A mebibyte's dictionary, which the decoder holds whole, so the filler is many dictionaries long and the window wraps over it.
+        const settings: SevenZipSettings = { solid: true, method: "LZMA", dictionaryBytes: MEBIBYTE, level: 1 };
+        await sevenZipFolder(input, archivePath, settings);
+
+        const runs: SevenZipRun[] = [];
+        const sevenZip = sevenZipReader({
+          observe: (run) => {
+            runs.push(run);
+          },
+        });
+        // 7-Zip's heap before it reads anything large: what listing a one-member archive grows it to.
+        await sevenZip.list(bytesSource(await sevenZipBytes([{ path: "one.txt", bytes: new TextEncoder().encode(karate) }], settings)));
+        const baseline = runs.at(-1)?.heapBytes ?? expect.unreachable("7-Zip reported its heap");
+
+        const peak = new Peak();
+        const hash = createHash("sha256");
+        let byteLength = 0;
+        let index = 0;
+        const archive = await open(archivePath, "r");
+        const archiveSize = (await archive.stat()).size;
+        const body = new ReadableStream<Uint8Array>(
+          {
+            async pull(controller) {
+              await peak.measure(index);
+              index += 1;
+              const piece = new Uint8Array(PIECE_BYTES);
+              const { bytesRead } = await archive.read(piece, 0, PIECE_BYTES, byteLength);
+              if (bytesRead === 0) {
+                controller.close();
+
+                return;
+              }
+              const chunk = piece.subarray(0, bytesRead);
+              hash.update(chunk);
+              byteLength += bytesRead;
+              controller.enqueue(chunk);
+            },
+          },
+          { highWaterMark: 0 },
+        );
+        const fetch: FetchPort = async (requested) => Promise.resolve(requested === liveEntry.sources[0]?.url ? new Response(body) : new Response(null, { status: 404 }));
+        const entry = { ...liveEntry, expectedCounts: { nodes: 3, edges: 3 }, recipe: { ...liveEntry.recipe, archive: { kind: "7z", member: { path: "karate.txt" } } } };
+        await peak.start();
+        const fetched = await fetchEntry(datasetWith(entry), { fetch, sevenZip, now });
+        await peak.measure(0);
+        await archive.close();
+        expect(fetched.data).toMatchObject({ nodes: [{ id: "1" }, { id: "2" }, { id: "3" }] });
+        expect(fetched.provenance).toMatchObject({ sha256: hash.digest("hex"), byteLength: archiveSize, member: "net/karate.txt" });
+        expect(archiveSize).toBeGreaterThan(FILLER_BYTES);
+        expect(index).toBeGreaterThan(MEASURE_EVERY);
+        expect(peak.most).toBeLessThan(MEMORY_BUDGET);
+        // The fetch listed the archive and extracted the member, each in 7-Zip's own heap, which grew by less than the budget while decoding the whole solid block.
+        const fetchRuns = runs.slice(1);
+        expect(fetchRuns.map((run) => run.args[0])).toEqual(["l", "x"]);
+        for (const run of fetchRuns) {
+          expect(run.heapBytes - baseline).toBeLessThan(MEMORY_BUDGET);
+        }
+      } finally {
+        await rm(folder, { recursive: true, force: true });
+      }
+    },
+    SOLID_TIMEOUT_MILLISECONDS,
+  );
 });
 
 describe("a fetch of a zip by ranges", () => {

@@ -93,9 +93,10 @@ async function spool(body: Readonly<ReadableStream<Uint8Array>>, directory: stri
   const discard = async (): Promise<void> => {
     await rm(folder, { recursive: true, force: true });
   };
+  const path = join(folder, "source");
   let handle: FileHandle;
   try {
-    handle = await open(join(folder, "source"), "w+");
+    handle = await open(path, "w+");
   } catch (error) {
     await discard();
     throw error;
@@ -114,12 +115,13 @@ async function spool(body: Readonly<ReadableStream<Uint8Array>>, directory: stri
     throw error;
   }
 
-  return fileSource({ handle, size, chunkBytes, received: { sha256: hash.digest("hex"), byteLength: size }, discard });
+  return fileSource({ handle, path, size, chunkBytes, received: { sha256: hash.digest("hex"), byteLength: size }, discard });
 }
 
-/** A file a body was written to: the open file, its length, how many bytes it is read back at a time, the record of what arrived, and what deletes it. */
+/** A file a body was written to: the open file, its path, its length, how many bytes it is read back at a time, the record of what arrived, and what deletes it. */
 interface KeptFile {
   readonly handle: FileHandle;
+  readonly path: string;
   readonly size: number;
   readonly chunkBytes: number;
   readonly received: Received;
@@ -132,7 +134,7 @@ interface KeptFile {
  * @returns The source.
  */
 function fileSource(file: KeptFile): StoredSource {
-  const { handle, size, chunkBytes, received, discard } = file;
+  const { handle, path, size, chunkBytes, received, discard } = file;
   const read = async (range: Readonly<ByteRange>): Promise<Uint8Array> => {
     assertWithin(range, size);
 
@@ -141,6 +143,7 @@ function fileSource(file: KeptFile): StoredSource {
 
   return {
     size,
+    file: path,
     chunks: () => inTurn(piecesOf(size, chunkBytes), read),
     read,
     async bytes() {

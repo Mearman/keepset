@@ -7,6 +7,7 @@ import { fetchDataset as fetchCore, fetchEntry as fetchEntryCore, type FetchOpti
 import type { NodeSink, StreamedDataset } from "./stream-dataset";
 import { downloadRaw } from "./download";
 import { fileStore } from "./file-store";
+import { sevenZipReader } from "./seven-zip";
 import { requestCapture as requestCaptureCore } from "../resolve";
 import { type DigestPort, memoryStore, type StorePort } from "../source-bytes";
 import { isStreamed, roundTripTable, streamTable } from "./stream-dataset";
@@ -20,6 +21,8 @@ export { memoryStore } from "../source-bytes";
 export type { NodeSink, StreamedDataset, StreamedNode } from "./stream-dataset";
 export { downloadRaw, type DownloadInit, STALL_MILLISECONDS, DOWNLOAD_ATTEMPTS, RETRY_DELAY_MILLISECONDS } from "./download";
 export { fileStore, type FileStoreOptions, RANGED_MIN_BYTES, READ_CHUNK_BYTES } from "./file-store";
+export { sevenZipReader, type SevenZipReaderOptions, type SevenZipRun } from "./seven-zip";
+export type { ExtractedMembers, SevenZipPort } from "../archive";
 
 /** Where a Node fetch keeps what it downloads: a store of its own, or a digest of its own, which hashes bytes held whole and so keeps every source in memory as `memoryStore` does; with neither, Node's `fileStore`, which keeps a source in a temporary file and hashes it as it arrives. */
 type NodeStoreOption = { readonly store?: StorePort; readonly digest?: never } | { readonly digest?: DigestPort; readonly store?: never };
@@ -30,8 +33,8 @@ export type NodeFetchOptions = Omit<FetchOptions, "fetch" | "store"> & NodeStore
 /** The store a Node fetch keeps its sources in. */
 const storeOf = (options: NodeStoreOption): StorePort => options.store ?? (options.digest === undefined ? fileStore() : memoryStore(options.digest));
 
-/** The Node defaults of the ports: the raw downloader and the file store. */
-const defaults = (options: NodeFetchOptions): FetchOptions => ({ ...options, fetch: options.fetch ?? downloadRaw, store: storeOf(options) });
+/** The Node defaults of the ports: the raw downloader, the file store and 7-Zip as the 7z reader. */
+const defaults = (options: NodeFetchOptions): FetchOptions => ({ ...options, fetch: options.fetch ?? downloadRaw, store: storeOf(options), sevenZip: options.sevenZip ?? sevenZipReader() });
 
 /**
  * Fetches a dataset of the bundled catalogue by id, with Node's own downloader and file store. See `../fetch`'s `fetchEntry` for what a fetch does.
