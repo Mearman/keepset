@@ -2,6 +2,7 @@ import { z } from "zod";
 import { UnknownCategoryError } from "./errors";
 import { GraphV1Schema, type GraphV1 } from "./targets/graph-v1";
 import { COLLECTION_COUNTED, collectionOf, type Collection } from "./targets/collection";
+import { CorpusDocumentSchema, CorpusMetaSchema, CorpusV1Schema, type CorpusDocument, type CorpusV1 } from "./targets/corpus-v1";
 import { ClipSchema, AudioMetaSchema, AudioV1Schema, type Clip, type AudioV1 } from "./targets/audio-v1";
 import { LexiconEntrySchema, LexiconMetaSchema, LexiconV1Schema, type LexiconEntry, type LexiconV1 } from "./targets/lexicon-v1";
 import { SpeakerSchema, SpeakersMetaSchema, SpeakersV1Schema, type Speaker, type SpeakersV1 } from "./targets/speakers-v1";
@@ -13,7 +14,7 @@ import { TextSchema, TextsMetaSchema, TextsV1Schema, type Text, type TextsV1 } f
 import type { JsonScalar } from "./targets/json-scalar";
 
 /** Every category id the registry knows. A category id is `<kind>/v<version>`: the kind of data, and the version of its normalisation target, so a breaking change to a target is a new category rather than an edit to an old one. */
-export const CategoryIdSchema = z.enum(["audio/v1", "graph/v1", "lexicon/v1", "resources/v1", "speakers/v1", "speech/v1", "splits/v1", "tasks/v1", "texts/v1"]);
+export const CategoryIdSchema = z.enum(["audio/v1", "corpus/v1", "graph/v1", "lexicon/v1", "resources/v1", "speakers/v1", "speech/v1", "splits/v1", "tasks/v1", "texts/v1"]);
 export type CategoryId = z.infer<typeof CategoryIdSchema>;
 
 /** The normalisation target each category resolves to, keyed by category id. */
@@ -27,6 +28,7 @@ export interface CategoryTargets {
   readonly "lexicon/v1": LexiconV1;
   readonly "speakers/v1": SpeakersV1;
   readonly "splits/v1": SplitsV1;
+  readonly "corpus/v1": CorpusV1;
 }
 
 /** The normalised shape of any category: what `fetchDataset` can resolve to. */
@@ -48,6 +50,7 @@ export interface StreamedNodes {
   readonly "lexicon/v1": LexiconEntry;
   readonly "speakers/v1": Speaker;
   readonly "splits/v1": Split;
+  readonly "corpus/v1": CorpusDocument;
 }
 
 /** The categories that can be streamed. */
@@ -72,6 +75,19 @@ interface CategoryOf<Id extends CategoryId> {
 /** A category, or with no argument any of them: a union over the ids, so each category keeps its own target and counted keys. */
 export type Category<Id extends CategoryId = CategoryId> = Id extends CategoryId ? CategoryOf<Id> : never;
 
+/** The shape each streamable category's streamed result is checked against, keyed by category id, so a lookup by a generic id keeps that category's own node type. */
+const streamedShapes: { readonly [Id in StreamableId]: StreamedShape<StreamedNodes[Id]> } = {
+  "tasks/v1": { meta: TasksMetaSchema, node: TaskSchema },
+  "texts/v1": { meta: TextsMetaSchema, node: TextSchema },
+  "resources/v1": { meta: ResourcesMetaSchema, node: ResourceFileSchema },
+  "speech/v1": { meta: SpeechMetaSchema, node: UtteranceSchema },
+  "audio/v1": { meta: AudioMetaSchema, node: ClipSchema },
+  "lexicon/v1": { meta: LexiconMetaSchema, node: LexiconEntrySchema },
+  "speakers/v1": { meta: SpeakersMetaSchema, node: SpeakerSchema },
+  "splits/v1": { meta: SplitsMetaSchema, node: SplitSchema },
+  "corpus/v1": { meta: CorpusMetaSchema, node: CorpusDocumentSchema },
+};
+
 /** The registry. Adding a category is adding its id to `CategoryIdSchema` and its entry here, with its target schema beside graph/v1's in src/targets/: the mapped type makes the compiler reject a registry that misses an id or has one too many. */
 const registry: { readonly [Id in CategoryId]: CategoryOf<Id> } = {
   "graph/v1": {
@@ -88,7 +104,7 @@ const registry: { readonly [Id in CategoryId]: CategoryOf<Id> } = {
     target: TasksV1Schema,
     collection: collectionOf(TasksV1Schema),
     counted: ["nodes"],
-    streamed: { meta: TasksMetaSchema, node: TaskSchema },
+    streamed: streamedShapes["tasks/v1"],
   },
   "texts/v1": {
     id: "texts/v1",
@@ -96,7 +112,7 @@ const registry: { readonly [Id in CategoryId]: CategoryOf<Id> } = {
     target: TextsV1Schema,
     collection: collectionOf(TextsV1Schema),
     counted: ["nodes"],
-    streamed: { meta: TextsMetaSchema, node: TextSchema },
+    streamed: streamedShapes["texts/v1"],
   },
   "resources/v1": {
     id: "resources/v1",
@@ -104,7 +120,7 @@ const registry: { readonly [Id in CategoryId]: CategoryOf<Id> } = {
     target: ResourcesV1Schema,
     collection: collectionOf(ResourcesV1Schema),
     counted: ["nodes"],
-    streamed: { meta: ResourcesMetaSchema, node: ResourceFileSchema },
+    streamed: streamedShapes["resources/v1"],
   },
   "speech/v1": {
     id: "speech/v1",
@@ -112,7 +128,7 @@ const registry: { readonly [Id in CategoryId]: CategoryOf<Id> } = {
     target: SpeechV1Schema,
     collection: collectionOf(SpeechV1Schema),
     counted: ["nodes"],
-    streamed: { meta: SpeechMetaSchema, node: UtteranceSchema },
+    streamed: streamedShapes["speech/v1"],
   },
   "audio/v1": {
     id: "audio/v1",
@@ -120,7 +136,7 @@ const registry: { readonly [Id in CategoryId]: CategoryOf<Id> } = {
     target: AudioV1Schema,
     collection: collectionOf(AudioV1Schema),
     counted: ["nodes"],
-    streamed: { meta: AudioMetaSchema, node: ClipSchema },
+    streamed: streamedShapes["audio/v1"],
   },
   "lexicon/v1": {
     id: "lexicon/v1",
@@ -128,7 +144,7 @@ const registry: { readonly [Id in CategoryId]: CategoryOf<Id> } = {
     target: LexiconV1Schema,
     collection: collectionOf(LexiconV1Schema),
     counted: ["nodes"],
-    streamed: { meta: LexiconMetaSchema, node: LexiconEntrySchema },
+    streamed: streamedShapes["lexicon/v1"],
   },
   "speakers/v1": {
     id: "speakers/v1",
@@ -136,7 +152,7 @@ const registry: { readonly [Id in CategoryId]: CategoryOf<Id> } = {
     target: SpeakersV1Schema,
     collection: collectionOf(SpeakersV1Schema),
     counted: ["nodes"],
-    streamed: { meta: SpeakersMetaSchema, node: SpeakerSchema },
+    streamed: streamedShapes["speakers/v1"],
   },
   "splits/v1": {
     id: "splits/v1",
@@ -144,7 +160,15 @@ const registry: { readonly [Id in CategoryId]: CategoryOf<Id> } = {
     target: SplitsV1Schema,
     collection: collectionOf(SplitsV1Schema),
     counted: ["nodes"],
-    streamed: { meta: SplitsMetaSchema, node: SplitSchema },
+    streamed: streamedShapes["splits/v1"],
+  },
+  "corpus/v1": {
+    id: "corpus/v1",
+    description: "A text corpus as { meta, nodes }: a flat record of scalar metadata and nodes carrying at least an id and the document's full text, one per document, with optional title, language, format and encoding.",
+    target: CorpusV1Schema,
+    collection: collectionOf(CorpusV1Schema),
+    counted: ["nodes"],
+    streamed: streamedShapes["corpus/v1"],
   },
 };
 
@@ -202,7 +226,7 @@ export function isStreamable(id: CategoryId): id is StreamableId {
  * @returns Its meta and node schemas.
  */
 export function getStreamedShape<Id extends StreamableId>(id: Id): StreamedShape<StreamedNodes[Id]> {
-  return registry[id].streamed;
+  return streamedShapes[id];
 }
 
 /**
