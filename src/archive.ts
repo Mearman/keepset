@@ -622,8 +622,6 @@ export function concatenateFiles(files: readonly Member[]): Uint8Array {
   return joined;
 }
 
-/** How many compressed bytes are fed to the gzip stream at a time. The stream decompresses each feed into one array before it hands any of it on, so what a feed yields, which is what is held of the decompressed archive at once, is the feed times the data's compression ratio; a mebibyte keeps the stream's per-call cost small and that output a few mebibytes for the text and media archives recipes read. */
-
 /** How many compressed bytes are fed to the gzip stream at a time. Everything a feed decompresses to is collected before any of it is yielded, so what is held of the decompressed archive at once is the feed times the data's compression ratio; a mebibyte keeps the stream's per-call cost small and that output a few mebibytes for the text and media archives recipes read. */
 const KIBIBYTE = 1024;
 const GZIP_FEED_BYTES = KIBIBYTE * KIBIBYTE;
