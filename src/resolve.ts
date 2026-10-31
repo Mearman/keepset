@@ -3,6 +3,7 @@
 import { KeepsetError, UnreachableSourceError } from "./errors";
 import { rawSnapshotUrl, type Source } from "./entry";
 import type { Download, FetchPort, Provenance } from "./fetch";
+import { emptyBody, type StoredSource, type StorePort } from "./source-bytes";
 
 /** The availability API, which answers with the closest capture of a URL as JSON and, unlike the replay endpoints, sends CORS headers, so a browser can ask it. */
 const AVAILABILITY_URL = "https://archive.org/wayback/available";
@@ -16,16 +17,18 @@ const CAPTURED_OK = "200";
 /** Where a resolved source's bytes came from, in the order the chain tries them. */
 export type Tier = "pinned snapshot" | "closest snapshot" | "live source";
 
-/** What the chain resolved: the bytes, the URL they were requested from and the tier that gave them. */
+/** What the chain resolved: the source the store kept, the URL it was requested from and the tier that gave it. */
 export interface Resolved {
-  readonly bytes: Uint8Array;
+  readonly source: StoredSource;
   readonly url: string;
   readonly tier: Tier;
 }
 
-/** What the chain needs from outside: the network port and an abort signal. */
+/** What the chain needs from outside: the network port, the store that keeps what arrives, whether the reader reads the source by ranges, and an abort signal. */
 export interface ResolveOptions {
   readonly port: FetchPort;
+  readonly store: StorePort;
+  readonly randomAccess: boolean;
   readonly signal?: AbortSignal;
 }
 
@@ -40,39 +43,109 @@ const COMPRESSED_FILE_EXTENSIONS: ReadonlySet<string> = new Set(["gz", "tgz", "b
  * Whether a response's bytes are a gzip transport encoding of the page and not a compressed file: the server labels them `Content-Encoding: gzip`, they are gzip data, and the URL does not name a compressed file. A browser's platform `fetch` has undone the encoding by then, so its bytes are not gzip data and are left alone; the Node downloader hands the encoding over as served, and the Wayback Machine replays a capture gzip-encoded or plain as its cache stands, so the decoded page is the one form a pinned hash can name.
  * @param url - The URL requested.
  * @param response - The server's answer.
- * @param bytes - The body.
+ * @param head - The body's first bytes, at least `GZIP_MAGIC_LENGTH` of them unless the body is shorter.
  * @returns True when the body is to be gunzipped.
  */
-function isTransportGzip(url: string, response: Response, bytes: Uint8Array): boolean {
+function isTransportGzip(url: string, response: Response, head: Uint8Array): boolean {
   const extension = new URL(url).pathname.split(".").at(-1)?.toLowerCase() ?? "";
 
-  return response.headers.get("content-encoding")?.toLowerCase() === "gzip" && bytes[0] === GZIP_FIRST_BYTE && bytes[1] === GZIP_SECOND_BYTE && !COMPRESSED_FILE_EXTENSIONS.has(extension);
+  return response.headers.get("content-encoding")?.toLowerCase() === "gzip" && head[0] === GZIP_FIRST_BYTE && head[1] === GZIP_SECOND_BYTE && !COMPRESSED_FILE_EXTENSIONS.has(extension);
+}
+
+/** How many bytes of a body tell gzip data from anything else: its two magic bytes. */
+const GZIP_MAGIC_LENGTH = 2;
+
+/**
+ * Reads the start of a body without losing it: the chunks read are put back in front of the rest.
+ * @param body - The body.
+ * @returns The first chunks' bytes, at least `GZIP_MAGIC_LENGTH` of them unless the body is shorter, and the whole body again.
+ */
+async function peek(body: Readonly<ReadableStream<Uint8Array<ArrayBuffer>>>): Promise<{ readonly head: Uint8Array; readonly body: ReadableStream<Uint8Array<ArrayBuffer>> }> {
+  const reader = body.getReader();
+  const read: Uint8Array<ArrayBuffer>[] = [];
+  // Reads chunks by recursion until there are enough bytes to tell gzip data, or the body has ended.
+  const readHead = async (length: number): Promise<{ readonly length: number; readonly done: boolean }> => {
+    if (length >= GZIP_MAGIC_LENGTH) {
+      return { length, done: false };
+    }
+    const next = await reader.read();
+    if (next.done) {
+      return { length, done: true };
+    }
+    read.push(next.value);
+
+    return readHead(length + next.value.length);
+  };
+  const { length, done } = await readHead(0);
+  const head = new Uint8Array(length);
+  let at = 0;
+  for (const chunk of read) {
+    head.set(chunk, at);
+    at += chunk.length;
+  }
+
+  return {
+    head,
+    body: new ReadableStream<Uint8Array<ArrayBuffer>>({
+      start(controller) {
+        for (const chunk of read.splice(0)) {
+          controller.enqueue(chunk);
+        }
+        if (done) {
+          controller.close();
+        }
+      },
+      async pull(controller) {
+        const next = await reader.read();
+        if (next.done) {
+          controller.close();
+        } else {
+          controller.enqueue(next.value);
+        }
+      },
+      async cancel(reason) {
+        await reader.cancel(reason);
+      },
+    }),
+  };
 }
 
 /** The warning the Wayback Machine replays with a capture that stopped at its size limit (`299 wayback content truncated by "length"`): such a capture holds a prefix of the file and not the file. */
 const TRUNCATED_CAPTURE_WARNING = /\btruncated\b/i;
 
 /**
- * Requests one URL's bytes through the port, with a gzip transport encoding undone.
- * @param port - The network port.
+ * Requests one URL through the port and keeps what arrives in the store, with a gzip transport encoding undone on the way.
  * @param url - The URL.
- * @param signal - Aborts the request.
- * @returns The bytes.
+ * @param options - The network port, the store, whether the reader reads by ranges, and the abort signal.
+ * @returns The kept source.
  * @throws KeepsetError when the server does not answer successfully, or says the bytes are a truncated capture.
  * @throws TypeError when a gzip transport encoding is not valid gzip data.
  */
-async function bytesOf(port: FetchPort, url: string, signal: AbortSignal | undefined): Promise<Uint8Array> {
+async function keep(url: string, options: Readonly<ResolveOptions>): Promise<StoredSource> {
+  const { port, store, randomAccess, signal } = options;
   const response = await port(url, signal === undefined ? {} : { signal });
   if (!response.ok) {
+    // The body is never read, so its connection is let go of now rather than whenever the response is collected.
+    await response.body?.cancel();
     throw new KeepsetError(`${url} answered ${String(response.status)} ${response.statusText}`);
   }
   // A truncated capture is a prefix of the file, so reading it would hand a recipe a file that ends partway through a record; the chain moves on to the next tier instead.
   if (TRUNCATED_CAPTURE_WARNING.test(response.headers.get("warning") ?? "")) {
+    // The body is never read, so its connection is let go of now rather than whenever the response is collected.
+    await response.body?.cancel();
     throw new KeepsetError(`${url} is a truncated capture`);
   }
-  const bytes = new Uint8Array(await response.arrayBuffer());
+  const { head, body } = await peek(response.body ?? emptyBody());
+  const transportGzip = isTransportGzip(url, response, head);
+  const headers = new Headers(response.headers);
+  if (transportGzip) {
+    // The decoded body is not the bytes these described.
+    headers.delete("content-encoding");
+    headers.delete("content-length");
+  }
+  const kept = new Response(transportGzip ? body.pipeThrough(new DecompressionStream("gzip")) : body, { status: response.status, statusText: response.statusText, headers });
 
-  return isTransportGzip(url, response, bytes) ? new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"))).arrayBuffer()) : bytes;
+  return store.keep(kept, { url, port, randomAccess, ...(signal === undefined ? {} : { signal }) });
 }
 
 /**
@@ -85,6 +158,9 @@ async function bytesOf(port: FetchPort, url: string, signal: AbortSignal | undef
 async function closestCapture(port: FetchPort, url: string, signal: AbortSignal | undefined): Promise<string | undefined> {
   const response = await port(`${AVAILABILITY_URL}?${new URLSearchParams({ url }).toString()}`, signal === undefined ? {} : { signal });
   if (!response.ok) {
+    // The body is never read, so its connection is let go of now rather than whenever the response is collected.
+    await response.body?.cancel();
+
     return undefined;
   }
   const answer: unknown = await response.json();
@@ -106,8 +182,8 @@ async function closestCapture(port: FetchPort, url: string, signal: AbortSignal 
 /**
  * Resolves a source's bytes through the chain: its pinned snapshot, the closest capture the Archive names, then (for a live source) the live URL.
  * @param source - The entry's source.
- * @param options - The network port and the abort signal.
- * @returns The bytes with the URL and tier they came from.
+ * @param options - The network port, the store, whether the reader reads by ranges, and the abort signal.
+ * @returns The kept source with the URL and tier it came from, which the caller closes once it is read.
  * @throws UnreachableSourceError when every tier that was tried failed without an HTTP answer, and KeepsetError otherwise, either naming every tier that was tried and why it gave nothing, when none gave the bytes; the abort's own reason when the signal aborts.
  */
 export async function resolveSource(source: Source, options: Readonly<ResolveOptions>): Promise<Resolved> {
@@ -121,7 +197,7 @@ export async function resolveSource(source: Source, options: Readonly<ResolveOpt
   };
   const tryUrl = async (url: string, tier: Tier): Promise<Resolved | undefined> => {
     try {
-      return { bytes: await bytesOf(port, url, signal), url, tier };
+      return { source: await keep(url, options), url, tier };
     } catch (error) {
       if (signal?.aborted === true) {
         throw error;

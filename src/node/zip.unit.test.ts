@@ -18,24 +18,24 @@ const UNKNOWN_METHOD = 99;
 const ENCRYPTED_FLAG = 1;
 
 describe("unzipEntries", () => {
-  it("reads the entries a filter accepts from an ordinary zip, deflated or stored, and tells the filter their names and sizes first", () => {
+  it("reads the entries a filter accepts from an ordinary zip, deflated or stored, and tells the filter their names and sizes first", async () => {
     const archive = zip([
       { path: "dir/a.txt", text: "alpha ".repeat(REPEATS) },
       { path: "b.txt", text: "beta" },
     ]);
     const seen: string[] = [];
-    const files = unzipEntries(archive, (entry) => {
+    const files = (await unzipEntries(archive, (entry) => {
       seen.push(`${entry.name}:${String(entry.originalSize)}`);
 
       return entry.name === "dir/a.txt";
-    });
+    }));
     expect(seen).toEqual([`dir/a.txt:${String(REPEATED_SIZE)}`, "b.txt:4"]);
     expect(Object.keys(files)).toEqual(["dir/a.txt"]);
     expect(text(files["dir/a.txt"] ?? new Uint8Array())).toBe("alpha ".repeat(REPEATS));
   });
 
-  it("reads a zip64 archive whose sizes and offsets are in extra fields", () => {
-    const files = unzipEntries(zip64("net/out.txt", encode("zip64 data")), () => true);
+  it("reads a zip64 archive whose sizes and offsets are in extra fields", async () => {
+    const files = await unzipEntries(zip64("net/out.txt", encode("zip64 data")), () => true);
     expect(Object.keys(files)).toEqual(["net/out.txt"]);
     expect(text(files["net/out.txt"] ?? new Uint8Array())).toBe("zip64 data");
   });
@@ -48,13 +48,13 @@ describe("unzipEntries", () => {
     expect(() => readU64(view, SECOND_FIELD)).toThrow(ArchiveError);
   });
 
-  it("refuses bytes that are not a zip, an encrypted member, a compression method it does not read, and a directory that points at no local header", () => {
-    expect(() => unzipEntries(encode("not a zip at all, long enough to hold the fixed record sizes"), () => true)).toThrow(/no end of central directory/);
-    expect(() => unzipEntries(zip64("a.txt", encode("x"), { method: 0, flags: ENCRYPTED_FLAG }), () => true)).toThrow(/encrypted/);
-    expect(() => unzipEntries(zip64("a.txt", encode("x"), { method: UNKNOWN_METHOD, flags: 0 }), () => true)).toThrow(/compression method 99/);
+  it("refuses bytes that are not a zip, an encrypted member, a compression method it does not read, and a directory that points at no local header", async () => {
+    await expect(unzipEntries(encode("not a zip at all, long enough to hold the fixed record sizes"), () => true)).rejects.toThrow(/no end of central directory/);
+    await expect(unzipEntries(zip64("a.txt", encode("x"), { method: 0, flags: ENCRYPTED_FLAG }), () => true)).rejects.toThrow(/encrypted/);
+    await expect(unzipEntries(zip64("a.txt", encode("x"), { method: UNKNOWN_METHOD, flags: 0 }), () => true)).rejects.toThrow(/compression method 99/);
     const broken = zip64("a.txt", encode("x"));
     broken[0] = 0;
-    expect(() => unzipEntries(broken, () => true)).toThrow(/local header/);
-    expect(unzipEntries(broken, () => false)).toEqual({});
+    await expect(unzipEntries(broken, () => true)).rejects.toThrow(/local header/);
+    expect(await unzipEntries(broken, () => false)).toEqual({});
   });
 });

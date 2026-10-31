@@ -6,32 +6,32 @@ import { ArchiveError, KeepsetError, RecipeError } from "./errors";
 import type { NativeDocument } from "./parsers/native";
 import { parseNative, parseNativeFiles, parseNativeParts } from "./parsers/parse-native";
 import type { JsonScalar } from "./targets/json-scalar";
-import { unpack, unpackFiles, unpackMembers, unpackParts, type Unpacked } from "./archive";
+import { readsByRanges, unpack, unpackFiles, unpackMembers, unpackParts, type Unpacked } from "./archive";
 import { downloadPaged } from "./paged";
 import { metaOf, sourceRecord, sourceUrl, step } from "./recipe-run";
 import { resolveSource } from "./resolve";
+import type { ByteRange, StoredSource, StorePort } from "./source-bytes";
 import type { Archive, Entry, FilesRecipe, Parser, Snapshot, Source } from "./entry";
 
-/** The network port a recipe downloads through: `downloadRaw` by default, which returns the bytes exactly as served, or a stand-in under test. */
-export type FetchPort = (url: string, init: { readonly signal?: AbortSignal }) => Promise<Response>;
+/** The network port a recipe downloads through: `downloadRaw` by default, which returns the bytes exactly as served, or a stand-in under test. A `range` asks for those bytes of the file only; a port may answer 206 with them or 200 with the whole file, and the reader tells which from the status. */
+export type FetchPort = (url: string, init: { readonly signal?: AbortSignal; readonly range?: ByteRange }) => Promise<Response>;
 
-/** The digest port a provenance record hashes its bytes through: SHA-256 as hex. Node's `crypto` by default, or SubtleCrypto where the platform has no `node:crypto` (the browser entry point's default). */
-export type DigestPort = (bytes: Uint8Array) => Promise<string>;
-
-/** What a fetch takes beyond the dataset: the network port and the digest port every entry point supplies its own of, an abort signal and the clock that dates the provenance record. */
+/** What a fetch takes beyond the dataset: the network port and the store every entry point supplies its own of (the store keeps what arrives and hashes it as it arrives), an abort signal and the clock that dates the provenance record. */
 export interface FetchOptions {
   readonly fetch: FetchPort;
-  readonly digest: DigestPort;
+  readonly store: StorePort;
   readonly signal?: AbortSignal;
   readonly now?: () => Date;
 }
 
-/** One download a result's bytes came from: the entry's source, the URL actually requested (the snapshot's for a dead source) and exactly which bytes arrived. */
+/** One download a result's bytes came from: the entry's source, the URL actually requested (the snapshot's for a dead source) and exactly which bytes arrived, hashed in the order they arrived. A source read by ranged requests rather than downloaded whole (a zip too large to download, whose directory and selected members are all a recipe reads) also records the ranges and the whole file's size, so its hash is told apart from a whole file's. */
 export interface Download {
   readonly source: { readonly url: string; readonly status: Source["status"]; readonly snapshot?: Snapshot };
   readonly fetchedUrl: string;
   readonly sha256: string;
   readonly byteLength: number;
+  readonly ranges?: readonly ByteRange[];
+  readonly size?: number;
 }
 
 /** What every provenance record says: which entry and catalogue produced the result, its category, and when it was fetched. */
@@ -107,22 +107,30 @@ function withId(document: unknown, id: string | undefined): unknown {
 }
 
 /**
- * The record of one download: the source, the URL requested and a hash of exactly the bytes that arrived.
+ * The record of one download: the source, the URL requested and a hash of exactly the bytes that arrived. Read once the source has been read, as a source read by ranges goes on arriving while it is read.
  * @param source - The entry's source.
  * @param fetchedUrl - The URL requested.
- * @param bytes - The bytes.
+ * @param stored - What the store kept.
  * @returns The download record.
  */
+async function downloadOf(source: Source, fetchedUrl: string, stored: StoredSource): Promise<Download> {
+  const { sha256, byteLength, ranges, size } = await stored.received();
+
+  return { source: sourceRecord(source), fetchedUrl, sha256, byteLength, ...(ranges === undefined ? {} : { ranges }), ...(size === undefined ? {} : { size }) };
+}
+
 /**
- * The record of one download: the source, the URL requested and a hash of exactly the bytes that arrived.
- * @param source - The entry's source.
- * @param fetchedUrl - The URL requested.
- * @param bytes - The bytes.
- * @param digest - The digest port.
- * @returns The download record.
+ * Reads a kept source and lets it go, whether the reading succeeds or fails.
+ * @param stored - The kept source.
+ * @param read - The reading.
+ * @returns What the reading returns.
  */
-async function downloadOf(source: Source, fetchedUrl: string, bytes: Uint8Array, digest: DigestPort): Promise<Download> {
-  return { source: sourceRecord(source), fetchedUrl, sha256: await digest(bytes), byteLength: bytes.byteLength };
+async function reading<Result>(stored: StoredSource, read: () => Promise<Result>): Promise<Result> {
+  try {
+    return await read();
+  } finally {
+    await stored.close();
+  }
 }
 
 /**
@@ -144,14 +152,14 @@ function parseInstance(id: string, bytes: Uint8Array, parser: Parser): { readonl
 }
 
 /**
- * Unpacks and parses the bytes of one archive or file into instances, each member let go once it is parsed.
- * @param bytes - The bytes.
- * @param archive - Their archive layout.
+ * Unpacks and parses a source of one archive or file into instances, each member let go once it is parsed.
+ * @param stored - The kept source.
+ * @param archive - Its archive layout.
  * @param parser - The recipe's parser.
  * @param prefix - The path the instance ids are filed under, joined to each member's path, or undefined to use the member's path alone.
  * @returns The instances, in member order.
  */
-function instancesOf(bytes: Uint8Array, archive: Archive, parser: Parser, prefix: string | undefined): { readonly id: string; readonly native: NativeWithMeta }[] {
+async function instancesOf(stored: StoredSource, archive: Archive, parser: Parser, prefix: string | undefined): Promise<{ readonly id: string; readonly native: NativeWithMeta }[]> {
   const named = (member: string | undefined): string => {
     if (prefix === undefined) {
       // A collection read from one download is always of `members`, which name every instance.
@@ -165,7 +173,12 @@ function instancesOf(bytes: Uint8Array, archive: Archive, parser: Parser, prefix
     return member === undefined ? prefix : `${prefix}/${member}`;
   };
   if ("members" in archive) {
-    return Array.from(unpackMembers(bytes, archive), (member) => parseInstance(named(member.path), member.bytes, parser));
+    const instances: { readonly id: string; readonly native: NativeWithMeta }[] = [];
+    for await (const member of unpackMembers(stored, archive)) {
+      instances.push(parseInstance(named(member.path), member.bytes, parser));
+    }
+
+    return instances;
   }
   if ("parts" in archive) {
     throw new ArchiveError(`an instance is read from one file or from matching members, not from the named parts ${archive.parts.map((part) => part.name).join(", ")}`);
@@ -173,7 +186,7 @@ function instancesOf(bytes: Uint8Array, archive: Archive, parser: Parser, prefix
   if ("files" in archive) {
     throw new ArchiveError("an instance is read from one file or from matching members, not from every file a multi-file format's files selector matches");
   }
-  const unpacked = unpack(bytes, archive);
+  const unpacked = await unpack(stored, archive);
 
   return [parseInstance(named(unpacked.member), unpacked.bytes, parser)];
 }
@@ -185,24 +198,24 @@ function instancesOf(bytes: Uint8Array, archive: Archive, parser: Parser, prefix
  * @returns The instances.
  * @throws RecipeError naming the entry and the step that failed.
  */
-function extractAndParse<Result>(entryId: string, run: () => Result): Result {
+async function extractAndParse<Result>(entryId: string, run: () => Promise<Result>): Promise<Result> {
   try {
-    return run();
+    return await run();
   } catch (error) {
     throw new RecipeError(entryId, error instanceof ArchiveError ? "extract" : "parse", error instanceof Error ? error.message : String(error), { cause: error });
   }
 }
 
 /**
- * Runs a files recipe: downloads each file in turn (a dead file from its own pinned snapshot), unpacks it and parses it into its instances, so only one file's bytes are held at a time.
+ * Runs a files recipe: downloads each file in turn (a dead file from its own pinned snapshot), unpacks it and parses it into its instances, so only one file's bytes are kept at a time.
  * @param dataset - The dataset.
  * @param recipe - Its files recipe.
- * @param options - The network port, abort signal and clock.
+ * @param options - The network port, store, abort signal and clock.
  * @returns The instances and the provenance of every file.
  */
 async function runFiles(dataset: Dataset, recipe: FilesRecipe, options: FetchOptions): Promise<NativeRun> {
   const { entry } = dataset;
-  const { fetch: port, digest: digestPort, signal, now = () => new Date() } = options;
+  const { fetch: port, store, signal, now = () => new Date() } = options;
   const retrievedAt = now().toISOString();
   const read = async (index: number): Promise<readonly { readonly documents: readonly { readonly id: string; readonly native: NativeWithMeta }[]; readonly download: FileDownload }[]> => {
     const file = recipe.files[index];
@@ -213,11 +226,15 @@ async function runFiles(dataset: Dataset, recipe: FilesRecipe, options: FetchOpt
     if (source === undefined) {
       throw new RecipeError(entry.id, "recipe", `file ${file.path} names source ${String(file.source)}, which the entry does not have`);
     }
-    const resolved = await step(entry.id, "download", async () => resolveSource(source, { port, ...(signal === undefined ? {} : { signal }) }));
-    const { bytes, url: fetchedUrl } = resolved;
-    const documents = extractAndParse(entry.id, () => instancesOf(bytes, file.archive, recipe.parser, file.path));
+    const resolved = await step(entry.id, "download", async () => resolveSource(source, { port, store, randomAccess: readsByRanges(file.archive), ...(signal === undefined ? {} : { signal }) }));
+    const { source: stored, url: fetchedUrl } = resolved;
+    const one = await reading(stored, async () => {
+      const documents = await extractAndParse(entry.id, async () => instancesOf(stored, file.archive, recipe.parser, file.path));
 
-    return [{ documents, download: { ...(await downloadOf(source, fetchedUrl, bytes, digestPort)), path: file.path, instances: documents.map((document) => document.id) } }, ...(await read(index + 1))];
+      return { documents, download: { ...(await downloadOf(source, fetchedUrl, stored)), path: file.path, instances: documents.map((document) => document.id) } };
+    });
+
+    return [one, ...(await read(index + 1))];
   };
   const files = await read(0);
   const documents = files.flatMap((file) => file.documents);
@@ -235,12 +252,12 @@ async function runFiles(dataset: Dataset, recipe: FilesRecipe, options: FetchOpt
 /**
  * Runs a recipe's download, extract and parse steps, and builds the native documents the crosswalk receives.
  * @param dataset - The dataset.
- * @param options - The network port, abort signal and clock.
+ * @param options - The network port, store, abort signal and clock.
  * @returns The native documents and the provenance of their bytes.
  */
 async function runToNative(dataset: Dataset, options: FetchOptions): Promise<NativeRun> {
   const { entry } = dataset;
-  const { fetch: fetchPort, digest: digestPort, signal, now = () => new Date() } = options;
+  const { fetch: fetchPort, store, signal, now = () => new Date() } = options;
   const { recipe } = entry;
   if (recipe.status === "not-fetchable") {
     throw new RecipeError(entry.id, "recipe", `the entry has no fetchable recipe: ${recipe.reason}`);
@@ -256,44 +273,47 @@ async function runToNative(dataset: Dataset, options: FetchOptions): Promise<Nat
     throw new RecipeError(entry.id, "recipe", `the recipe names source ${String(recipe.source)}, which the entry does not have`);
   }
   const retrievedAt = now().toISOString();
+  const { archive } = recipe;
   // A paged query is not a file anyone archives (a capture of the URL is not the data), so a paged source is read directly; every other source goes through the chain of pinned snapshot, closest capture and live URL.
   const resolved = await step(entry.id, "download", async () =>
     recipe.paging === undefined
-      ? resolveSource(source, { port: fetchPort, ...(signal === undefined ? {} : { signal }) })
-      : { bytes: await downloadPaged(sourceUrl(source), recipe.paging, fetchPort, signal), url: sourceUrl(source) },
+      ? resolveSource(source, { port: fetchPort, store, randomAccess: readsByRanges(archive), ...(signal === undefined ? {} : { signal }) })
+      : { source: await store.hold(await downloadPaged(sourceUrl(source), recipe.paging, fetchPort, signal)), url: sourceUrl(source) },
   );
-  const { bytes, url: fetchedUrl } = resolved;
+  const { source: stored, url: fetchedUrl } = resolved;
   const provenanceOf = async (extra: Pick<DownloadProvenance, "member" | "members">): Promise<DownloadProvenance> => ({
     entryId: entry.id,
     catalogue: dataset.catalogue,
     category: entry.category,
     retrievedAt,
-    ...(await downloadOf(source, fetchedUrl, bytes, digestPort)),
+    ...(await downloadOf(source, fetchedUrl, stored)),
     ...extra,
   });
-  const { archive } = recipe;
-  if ("members" in archive) {
-    const documents = extractAndParse(entry.id, () => instancesOf(bytes, archive, recipe.parser, undefined));
 
-    return { collection: true, documents, provenance: await provenanceOf({ members: documents.map((document) => document.id) }) };
-  }
-  if ("parts" in archive) {
-    const parts = await step(entry.id, "extract", () => unpackParts(bytes, archive));
-    const parsed = await step(entry.id, "parse", () => parseNativeParts(parts, recipe.parser));
+  return reading(stored, async () => {
+    if ("members" in archive) {
+      const documents = await extractAndParse(entry.id, async () => instancesOf(stored, archive, recipe.parser, undefined));
 
-    return { collection: false, documents: [{ id: undefined, native: { ...parsed, meta: metaOf(entry) } }], provenance: await provenanceOf({ members: parts.map((part) => part.path) }) };
-  }
-  if ("files" in archive) {
-    const files = await step(entry.id, "extract", () => unpackFiles(bytes, archive));
-    const parsed = await step(entry.id, "parse", () => parseNativeFiles(files, recipe.parser));
+      return { collection: true, documents, provenance: await provenanceOf({ members: documents.map((document) => document.id) }) };
+    }
+    if ("parts" in archive) {
+      const parts = await step(entry.id, "extract", async () => unpackParts(stored, archive));
+      const parsed = await step(entry.id, "parse", () => parseNativeParts(parts, recipe.parser));
 
-    return { collection: false, documents: [{ id: undefined, native: { ...parsed, meta: metaOf(entry) } }], provenance: await provenanceOf({ members: files.map((file) => file.path) }) };
-  }
-  const unpacked: Unpacked = await step(entry.id, "extract", () => unpack(bytes, archive));
-  const parsed = await step(entry.id, "parse", () => parseNative(unpacked.bytes, recipe.parser));
-  const native = { ...parsed, meta: { ...("meta" in parsed ? parsed.meta : {}), ...metaOf(entry) } };
+      return { collection: false, documents: [{ id: undefined, native: { ...parsed, meta: metaOf(entry) } }], provenance: await provenanceOf({ members: parts.map((part) => part.path) }) };
+    }
+    if ("files" in archive) {
+      const files = await step(entry.id, "extract", async () => unpackFiles(stored, archive));
+      const parsed = await step(entry.id, "parse", () => parseNativeFiles(files, recipe.parser));
 
-  return { collection: false, documents: [{ id: undefined, native }], provenance: await provenanceOf(unpacked.member === undefined ? {} : { member: unpacked.member }) };
+      return { collection: false, documents: [{ id: undefined, native: { ...parsed, meta: metaOf(entry) } }], provenance: await provenanceOf({ members: files.map((file) => file.path) }) };
+    }
+    const unpacked: Unpacked = await step(entry.id, "extract", async () => unpack(stored, archive));
+    const parsed = await step(entry.id, "parse", () => parseNative(unpacked.bytes, recipe.parser));
+    const native = { ...parsed, meta: { ...("meta" in parsed ? parsed.meta : {}), ...metaOf(entry) } };
+
+    return { collection: false, documents: [{ id: undefined, native }], provenance: await provenanceOf(unpacked.member === undefined ? {} : { member: unpacked.member }) };
+  });
 }
 
 /**

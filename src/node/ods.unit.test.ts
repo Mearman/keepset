@@ -56,10 +56,10 @@ describe("sheetToCsv for an OpenDocument spreadsheet", () => {
 });
 
 describe("unpack for a spreadsheet inside an archive", () => {
-  it("reads the sheet of the member an extension selects, naming the member and the sheet", () => {
+  it("reads the sheet of the member an extension selects, naming the member and the sheet", async () => {
     const spreadsheet = odsSpreadsheet({ tblAllData: `<table:table-row>${string("DATE")}</table:table-row>` });
     const bundle = zipSync({ "202607 Historic Flood Warnings Documentation.odt": new TextEncoder().encode("documentation"), "202607 Historic Flood Warnings EA Only.ods": spreadsheet });
-    const unpacked = unpack(bundle, { kind: "zip", member: { extensions: [".ods"] }, inner: { kind: "ods", sheet: "tblAllData" } });
+    const unpacked = await unpack(bundle, { kind: "zip", member: { extensions: [".ods"] }, inner: { kind: "ods", sheet: "tblAllData" } });
     expect(text(unpacked.bytes)).toBe("DATE\n");
     expect(unpacked.member).toBe("202607 Historic Flood Warnings EA Only.ods/tblAllData");
   });

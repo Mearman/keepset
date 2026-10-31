@@ -1,4 +1,4 @@
-/* The Node entry point (`keepset/node`): the platform-neutral fetch core with Node's own downloader and digest preset, and the streamed reading beside it, which holds a paged table a page at a time and so lives with the platform it streams on. */
+/* The Node entry point (`keepset/node`): the platform-neutral fetch core with Node's own downloader and file store preset, and the streamed reading beside it, which holds a paged table a page at a time and so lives with the platform it streams on. */
 
 
 import type { Dataset } from "../catalogue";
@@ -6,25 +6,32 @@ import { getDataset } from "../bundled";
 import { fetchDataset as fetchCore, fetchEntry as fetchEntryCore, type FetchOptions, type FetchPort, roundTripEntry as roundTripEntryCore } from "../fetch";
 import type { NodeSink, StreamedDataset } from "./stream-dataset";
 import { downloadRaw } from "./download";
-import { sha256Hex } from "./sha256";
+import { fileStore } from "./file-store";
 import { requestCapture as requestCaptureCore } from "../resolve";
+import { type DigestPort, memoryStore, type StorePort } from "../source-bytes";
 import { isStreamed, roundTripTable, streamTable } from "./stream-dataset";
 
 
-export type { DigestPort, Download, DownloadProvenance, FetchedDataset, FetchOptions, FetchPort, FilesProvenance, Provenance, RoundTripReport } from "../fetch";
+export type { Download, DownloadProvenance, FetchedDataset, FetchOptions, FetchPort, FilesProvenance, Provenance, RoundTripReport } from "../fetch";
+export type { ByteRange, DigestPort, KeepRequest, Received, SourceBytes, StoredSource, StorePort } from "../source-bytes";
 export { downloadUrl } from "../fetch";
 export { captureRequestsFor } from "../resolve";
+export { memoryStore } from "../source-bytes";
 export type { NodeSink, StreamedDataset, StreamedNode } from "./stream-dataset";
 export { downloadRaw, type DownloadInit, STALL_MILLISECONDS, DOWNLOAD_ATTEMPTS, RETRY_DELAY_MILLISECONDS } from "./download";
+export { fileStore, type FileStoreOptions, RANGED_MIN_BYTES, READ_CHUNK_BYTES } from "./file-store";
 
-/** Node's own SHA-256, which needs no promise to answer and reads a download of any size. */
-const nodeDigest: FetchOptions["digest"] = async (bytes) => await Promise.resolve(sha256Hex(bytes));
+/** Where a Node fetch keeps what it downloads: a store of its own, or a digest of its own, which hashes bytes held whole and so keeps every source in memory as `memoryStore` does; with neither, Node's `fileStore`, which keeps a source in a temporary file and hashes it as it arrives. */
+type NodeStoreOption = { readonly store?: StorePort; readonly digest?: never } | { readonly digest?: DigestPort; readonly store?: never };
 
 /** What a fetch may be given beyond the dataset in Node: every port is optional, with Node's own as the default. */
-export type NodeFetchOptions = Omit<FetchOptions, "fetch" | "digest"> & { readonly fetch?: FetchPort; readonly digest?: FetchOptions["digest"]; readonly signal?: AbortSignal; readonly now?: () => Date };
+export type NodeFetchOptions = Omit<FetchOptions, "fetch" | "store"> & NodeStoreOption & { readonly fetch?: FetchPort; readonly signal?: AbortSignal; readonly now?: () => Date };
 
-/** The Node defaults of the ports: the raw downloader and the synchronous digest. */
-const defaults = (options: NodeFetchOptions): FetchOptions => ({ ...options, fetch: options.fetch ?? downloadRaw, digest: options.digest ?? nodeDigest });
+/** The store a Node fetch keeps its sources in. */
+const storeOf = (options: NodeStoreOption): StorePort => options.store ?? (options.digest === undefined ? fileStore() : memoryStore(options.digest));
+
+/** The Node defaults of the ports: the raw downloader and the file store. */
+const defaults = (options: NodeFetchOptions): FetchOptions => ({ ...options, fetch: options.fetch ?? downloadRaw, store: storeOf(options) });
 
 /**
  * Fetches a dataset of the bundled catalogue by id, with Node's own downloader and digest. See `../fetch`'s `fetchEntry` for what a fetch does.

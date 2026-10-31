@@ -1,9 +1,11 @@
+import { createHash } from "node:crypto";
 import { describe, expect, it, vi } from "vitest";
 import { CAPTURE_HAND_OFF_MILLISECONDS, captureRequestFor, captureRequestsFor, requestCapture, resolveSource } from "./resolve";
 import { KeepsetError, UnreachableSourceError } from "./errors";
 import { snapshotOf } from "../scripts/sources/entries";
 import type { Source } from "./entry";
 import type { FetchPort } from "./fetch";
+import { memoryStore } from "./source-bytes";
 
 const URL_LIVE = "https://x.example/data.csv";
 const PIN = "20240101000000";
@@ -29,13 +31,16 @@ function served(table: Readonly<Record<string, string | Response>>): { readonly 
   return { port, requested };
 }
 
+/** Where the chain keeps what a tier gives: in memory, hashed whole, as a reader that reads from the first byte to the last asks. */
+const keeping = { store: memoryStore(async (bytes) => Promise.resolve(createHash("sha256").update(bytes).digest("hex"))), randomAccess: false } as const;
+
 const closestAnswer = (timestamp: string): Response => Response.json({ archived_snapshots: { closest: { available: true, status: "200", timestamp } } });
 
 describe("resolveSource", () => {
   it("reads a pinned snapshot first, and asks nothing else", async () => {
     const { port, requested } = served({ [raw(PIN)]: "pinned" });
-    const resolved = await resolveSource(live({ snapshot: snapshotOf(PIN, URL_LIVE) }), { port });
-    expect(new TextDecoder().decode(resolved.bytes)).toBe("pinned");
+    const resolved = await resolveSource(live({ snapshot: snapshotOf(PIN, URL_LIVE) }), { port, ...keeping });
+    expect(new TextDecoder().decode(await resolved.source.bytes())).toBe("pinned");
     expect(resolved.tier).toBe("pinned snapshot");
     expect(resolved.url).toBe(raw(PIN));
     expect(requested).toEqual([raw(PIN)]);
@@ -43,53 +48,53 @@ describe("resolveSource", () => {
 
   it("falls to the closest capture the Archive names when there is no pin", async () => {
     const { port, requested } = served({ [availability()]: closestAnswer(CLOSEST), [raw(CLOSEST)]: "captured" });
-    const resolved = await resolveSource(live(), { port });
-    expect(new TextDecoder().decode(resolved.bytes)).toBe("captured");
+    const resolved = await resolveSource(live(), { port, ...keeping });
+    expect(new TextDecoder().decode(await resolved.source.bytes())).toBe("captured");
     expect(resolved.tier).toBe("closest snapshot");
     expect(requested).toEqual([availability(), raw(CLOSEST)]);
   });
 
   it("falls to the closest capture when the pin does not serve, and to the live URL last", async () => {
     const { port, requested } = served({ [availability()]: Response.json({ archived_snapshots: {} }), [URL_LIVE]: "live bytes" });
-    const resolved = await resolveSource(live({ snapshot: snapshotOf(PIN, URL_LIVE) }), { port });
-    expect(new TextDecoder().decode(resolved.bytes)).toBe("live bytes");
+    const resolved = await resolveSource(live({ snapshot: snapshotOf(PIN, URL_LIVE) }), { port, ...keeping });
+    expect(new TextDecoder().decode(await resolved.source.bytes())).toBe("live bytes");
     expect(resolved.tier).toBe("live source");
     expect(requested).toEqual([raw(PIN), availability(), URL_LIVE]);
   });
 
   it("does not request the closest capture twice when it is the pin that failed", async () => {
     const { port, requested } = served({ [availability()]: closestAnswer(PIN), [URL_LIVE]: "live bytes" });
-    await resolveSource(live({ snapshot: snapshotOf(PIN, URL_LIVE) }), { port });
+    await resolveSource(live({ snapshot: snapshotOf(PIN, URL_LIVE) }), { port, ...keeping });
     expect(requested.filter((url) => url === raw(PIN))).toHaveLength(1);
   });
 
   it("never reads the live URL of a dead source, and names every tier that failed", async () => {
     const { port, requested } = served({});
-    await expect(resolveSource(dead(), { port })).rejects.toThrow(KeepsetError);
-    await expect(resolveSource(dead(), { port })).rejects.toThrow(/pinned snapshot/);
+    await expect(resolveSource(dead(), { port, ...keeping })).rejects.toThrow(KeepsetError);
+    await expect(resolveSource(dead(), { port, ...keeping })).rejects.toThrow(/pinned snapshot/);
     expect(requested).not.toContain(URL_LIVE);
   });
 
   it("treats an availability API that refuses as no capture, not as a failure of the fetch", async () => {
     const { port } = served({ [availability()]: new Response(null, { status: 429 }), [URL_LIVE]: "live bytes" });
-    expect((await resolveSource(live(), { port })).tier).toBe("live source");
+    expect((await resolveSource(live(), { port, ...keeping })).tier).toBe("live source");
   });
 
   it("ignores a closest capture whose page did not answer 200", async () => {
     const closestError = Response.json({ archived_snapshots: { closest: { available: true, status: "404", timestamp: CLOSEST } } });
     const { port, requested } = served({ [availability()]: closestError, [URL_LIVE]: "live bytes" });
-    await resolveSource(live(), { port });
+    await resolveSource(live(), { port, ...keeping });
     expect(requested).not.toContain(raw(CLOSEST));
   });
 
   it("passes over a capture the Archive says it truncated, to the next tier, and names it when no tier remains", async () => {
     const truncated = (): Response => new Response("prefix of the file", { status: OK, headers: { warning: '299 wayback content truncated by "length"' } });
     const { port, requested } = served({ [availability()]: closestAnswer(CLOSEST), [raw(CLOSEST)]: truncated(), [URL_LIVE]: "whole file" });
-    const resolved = await resolveSource(live(), { port });
-    expect(new TextDecoder().decode(resolved.bytes)).toBe("whole file");
+    const resolved = await resolveSource(live(), { port, ...keeping });
+    expect(new TextDecoder().decode(await resolved.source.bytes())).toBe("whole file");
     expect(resolved.tier).toBe("live source");
     expect(requested).toEqual([availability(), raw(CLOSEST), URL_LIVE]);
-    await expect(resolveSource(dead(), { port: served({ [raw(PIN)]: truncated(), [availability()]: Response.json({ archived_snapshots: {} }) }).port })).rejects.toThrow(/truncated capture/);
+    await expect(resolveSource(dead(), { port: served({ [raw(PIN)]: truncated(), [availability()]: Response.json({ archived_snapshots: {} }) }).port, ...keeping })).rejects.toThrow(/truncated capture/);
   });
 
   it("rethrows an abort instead of trying the next tier", async () => {
@@ -97,7 +102,7 @@ describe("resolveSource", () => {
     const reason = new Error("stop");
     controller.abort(reason);
     const port: FetchPort = async () => Promise.reject(reason);
-    await expect(resolveSource(live({ snapshot: snapshotOf(PIN, URL_LIVE) }), { port, signal: controller.signal })).rejects.toBe(reason);
+    await expect(resolveSource(live({ snapshot: snapshotOf(PIN, URL_LIVE) }), { port, signal: controller.signal, ...keeping })).rejects.toBe(reason);
   });
 });
 
@@ -108,21 +113,21 @@ describe("resolveSource's transport encodings", () => {
 
   it("undoes a gzip transport encoding of a page, so a capture replayed gzip-encoded and one replayed plain give the same bytes", async () => {
     const { port } = served({ [raw(PIN)]: await gzipLabelled(page) });
-    expect(new TextDecoder().decode((await resolveSource(live({ snapshot: snapshotOf(PIN, URL_LIVE) }), { port })).bytes)).toBe(page);
+    expect(new TextDecoder().decode(await (await resolveSource(live({ snapshot: snapshotOf(PIN, URL_LIVE) }), { port, ...keeping })).source.bytes())).toBe(page);
     const plain = served({ [raw(PIN)]: page });
-    expect(new TextDecoder().decode((await resolveSource(live({ snapshot: snapshotOf(PIN, URL_LIVE) }), { port: plain.port })).bytes)).toBe(page);
+    expect(new TextDecoder().decode(await (await resolveSource(live({ snapshot: snapshotOf(PIN, URL_LIVE) }), { port: plain.port, ...keeping })).source.bytes())).toBe(page);
   });
 
   it("leaves a compressed file as published, even when the server labels it gzip-encoded", async () => {
     const file = "https://x.example/data.csv.gz";
     const bytes = await gzipped(page);
     const port: FetchPort = async () => Promise.resolve(new Response(bytes, { status: OK, headers: { "content-encoding": "gzip" } }));
-    expect((await resolveSource({ url: file, retrieved: "2026-10-01", status: "live" }, { port })).bytes).toEqual(bytes);
+    expect(await (await resolveSource({ url: file, retrieved: "2026-10-01", status: "live" }, { port, ...keeping })).source.bytes()).toEqual(bytes);
   });
 
   it("leaves bytes that are not gzip data alone when the label says gzip, as after a browser's platform fetch has decoded them", async () => {
     const port: FetchPort = async () => Promise.resolve(new Response(page, { status: OK, headers: { "content-encoding": "gzip" } }));
-    expect(new TextDecoder().decode((await resolveSource({ url: URL_LIVE, retrieved: "2026-10-01", status: "live" }, { port })).bytes)).toBe(page);
+    expect(new TextDecoder().decode(await (await resolveSource({ url: URL_LIVE, retrieved: "2026-10-01", status: "live" }, { port, ...keeping })).source.bytes())).toBe(page);
   });
 });
 
@@ -154,12 +159,12 @@ describe("captureRequestFor", () => {
 describe("resolveSource's failure kinds", () => {
   it("throws UnreachableSourceError when no tier got an HTTP answer", async () => {
     const port: FetchPort = async () => Promise.reject(new TypeError("Failed to fetch"));
-    await expect(resolveSource(live(), { port })).rejects.toBeInstanceOf(UnreachableSourceError);
+    await expect(resolveSource(live(), { port, ...keeping })).rejects.toBeInstanceOf(UnreachableSourceError);
   });
 
   it("throws a plain KeepsetError when a host answered with an error", async () => {
     const { port } = served({});
-    const error = await resolveSource(dead(), { port }).catch((caught: unknown) => caught);
+    const error = await resolveSource(dead(), { port, ...keeping }).catch((caught: unknown) => caught);
     expect(error).toBeInstanceOf(KeepsetError);
     expect(error).not.toBeInstanceOf(UnreachableSourceError);
   });

@@ -8,12 +8,20 @@ import { DOWNLOAD_ATTEMPTS, downloadRaw } from "./download";
 
 const gzipped = gzipSync("1 2\n");
 
-const STATUS = { ok: 200, movedPermanently: 301, found: 302, notFound: 404, notAcceptable: 406 } as const;
+const STATUS = { ok: 200, partialContent: 206, movedPermanently: 301, found: 302, notFound: 404, notAcceptable: 406 } as const;
+
+/** The body a connection breaks in the middle of, where it breaks, and the strong entity tag a host that reads ranges gives it. */
+const DIGITS_REPEATED = 10;
+const BROKEN_BODY = new TextEncoder().encode("0123456789".repeat(DIGITS_REPEATED));
+const BREAK_AT = 40;
+const ETAG = '"v1"';
 
 /** A local server standing in for the hosts recipes download from: no test touches the network. */
 let server: Server;
 let base: string;
 const drops = new Map<string, number>();
+/** The range and validator headers each request of a breaking path carried, by path. */
+const breaks = new Map<string, { readonly range: string | undefined; readonly ifRange: string | string[] | undefined }[]>();
 
 beforeAll(async () => {
   server = createServer((request, response) => {
@@ -54,6 +62,34 @@ beforeAll(async () => {
         request.socket.destroy();
       } else {
         response.end("recovered");
+      }
+    } else if (path.startsWith("/breaks/")) {
+      // Sends the start of the body and drops the connection, then answers the next request as the kind of host the path names: one that reads ranges and resumes, one that does not and sends the whole file again, and one whose file changed, which answers a resumption whole.
+      const [, , kind, name] = path.split("/");
+      const key = `${kind ?? ""}/${name ?? ""}`;
+      const tries = (breaks.get(key)?.length ?? 0) + 1;
+      breaks.set(key, [...(breaks.get(key) ?? []), { range: request.headers.range, ifRange: request.headers["if-range"] }]);
+      const ranges = kind === "resumes" || kind === "changes" ? { "accept-ranges": "bytes", etag: ETAG } : {};
+      if (tries === 1) {
+        response.writeHead(STATUS.ok, { "content-length": String(BROKEN_BODY.length), ...ranges });
+        response.write(BROKEN_BODY.subarray(0, BREAK_AT), () => {
+          request.socket.destroy();
+        });
+      } else if (kind === "resumes") {
+        response.writeHead(STATUS.partialContent, { "content-range": `bytes ${String(BREAK_AT)}-${String(BROKEN_BODY.length - 1)}/${String(BROKEN_BODY.length)}`, ...ranges });
+        response.end(BROKEN_BODY.subarray(BREAK_AT));
+      } else {
+        response.writeHead(STATUS.ok, ranges);
+        response.end(BROKEN_BODY);
+      }
+    } else if (path === "/ranged") {
+      const match = /^bytes=(\d+)-(\d+)$/.exec(request.headers.range ?? "");
+      if (match === null) {
+        response.end(BROKEN_BODY);
+      } else {
+        const [first, last] = [Number(match[1]), Number(match[2])];
+        response.writeHead(STATUS.partialContent, { "content-range": `bytes ${String(first)}-${String(last)}/${String(BROKEN_BODY.length)}` });
+        response.end(BROKEN_BODY.subarray(first, last + 1));
       }
     } else if (path === "/stalls-mid-body") {
       // Answers, sends the start of a body and then goes silent, as a dead connection does in the middle of a large download.
@@ -112,7 +148,8 @@ describe("downloadRaw", () => {
   it("gives up a connection that sends nothing, before the answer and in the middle of a body", async () => {
     const stallMilliseconds = 50;
     await expect(downloadRaw(`${base}/slow`, { stallMilliseconds, retryDelayMilliseconds: 1 })).rejects.toThrow(/sent nothing for 50 milliseconds/);
-    await expect(downloadRaw(`${base}/stalls-mid-body`, { stallMilliseconds, retryDelayMilliseconds: 1 })).rejects.toThrow(/sent nothing for 50 milliseconds/);
+    // The body streams, so a stall in the middle of it fails the reading of the body, once the tries that resume it are used up.
+    await expect(downloadRaw(`${base}/stalls-mid-body`, { stallMilliseconds, retryDelayMilliseconds: 1 }).then(async (response) => response.arrayBuffer())).rejects.toThrow(/sent nothing for 50 milliseconds/);
   });
 
   it("tries again when the connection drops, waits between tries, and gives up after the tries", async () => {
@@ -122,6 +159,30 @@ describe("downloadRaw", () => {
     expect(drops.get("flaky")).toBe(DOWNLOAD_ATTEMPTS);
     await expect(downloadRaw(`${base}/drops/hopeless/9`, { retryDelayMilliseconds })).rejects.toThrow();
     expect(drops.get("hopeless")).toBe(DOWNLOAD_ATTEMPTS);
+  });
+
+  it("resumes a body whose connection breaks from the byte it broke at, asking only for the rest when the host reads ranges", async () => {
+    const response = await downloadRaw(`${base}/breaks/resumes/one`, { retryDelayMilliseconds: 1 });
+    expect(new Uint8Array(await response.arrayBuffer())).toEqual(BROKEN_BODY);
+    expect(breaks.get("resumes/one")).toEqual([
+      { range: undefined, ifRange: undefined },
+      { range: `bytes=${String(BREAK_AT)}-`, ifRange: ETAG },
+    ]);
+  });
+
+  it("skips the bytes already delivered when a host that does not read ranges sends the whole file again", async () => {
+    const response = await downloadRaw(`${base}/breaks/restarts/one`, { retryDelayMilliseconds: 1 });
+    expect(new Uint8Array(await response.arrayBuffer())).toEqual(BROKEN_BODY);
+  });
+
+  it("gives the download up rather than join two files when a host that reads ranges answers the resumption whole", async () => {
+    const response = await downloadRaw(`${base}/breaks/changes/one`, { retryDelayMilliseconds: 1 });
+    await expect(response.arrayBuffer()).rejects.toThrow(/answered 200 OK when the download was resumed at byte 40, so the file may have changed/);
+  });
+
+  it("asks for a range when given one, and passes the partial answer through", async () => {
+    const response = await downloadRaw(`${base}/ranged`, { range: { offset: 3, length: 4 } });
+    expect([response.status, response.headers.get("content-range"), await response.text()]).toEqual([STATUS.partialContent, "bytes 3-6/100", "3456"]);
   });
 
   it("does not try again for a failure that is not the connection's", async () => {

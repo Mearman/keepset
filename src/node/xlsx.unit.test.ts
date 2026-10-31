@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { ArchiveError } from "../errors";
-import { workbook } from "../test-support/archives";
+import { collect, workbook } from "../test-support/archives";
 import { zipSync } from "fflate";
 import { sheetToCsv, unpack, unpackMembers } from "../archive";
 import { sheetNames } from "./xlsx";
@@ -85,8 +85,8 @@ describe("sheetToCsv", () => {
 });
 
 describe("unpack for a workbook", () => {
-  it("yields the sheet as CSV and names the sheet as the member", () => {
-    const unpacked = unpack(workbook({ sheets: { Data: `<row r="1"><c r="A1" t="inlineStr"><is><t>x</t></is></c></row>` } }), { kind: "xlsx", sheet: "Data" });
+  it("yields the sheet as CSV and names the sheet as the member", async () => {
+    const unpacked = await unpack(workbook({ sheets: { Data: `<row r="1"><c r="A1" t="inlineStr"><is><t>x</t></is></c></row>` } }), { kind: "xlsx", sheet: "Data" });
     expect(text(unpacked.bytes)).toBe("x\n");
     expect(unpacked.member).toBe("Data");
   });
@@ -100,9 +100,9 @@ describe("unpackMembers for the sheets of workbooks", () => {
     "notes.docx": new TextEncoder().encode("not a workbook"),
   });
 
-  it("names the sheets in the workbook's order and yields each matched workbook's sheets as CSV, members in path order", () => {
+  it("names the sheets in the workbook's order and yields each matched workbook's sheets as CSV, members in path order", async () => {
     expect(sheetNames(workbook({ sheets: { A2: "", A1: "" } }))).toEqual(["A2", "A1"]);
-    const files = [...unpackMembers(archive, { kind: "zip", members: { extensions: [".xlsm"] }, inner: { kind: "xlsx" } })];
+    const files = await collect(unpackMembers(archive, { kind: "zip", members: { extensions: [".xlsm"] }, inner: { kind: "xlsx" } }));
     expect(files.map((file) => [file.path, text(file.bytes)])).toEqual([
       ["MSMTW/J.xlsm/J1", "j1\n"],
       ["MSMTW/J.xlsm/J5", "j5\n"],
@@ -111,9 +111,9 @@ describe("unpackMembers for the sheets of workbooks", () => {
     ]);
   });
 
-  it("reads only the sheets the pattern matches in full, and refuses a workbook left with none and a member that is not a workbook", () => {
-    expect([...unpackMembers(archive, { kind: "zip", members: { extensions: [".xlsm"] }, inner: { kind: "xlsx", sheets: "(?!J5$).+" } })].map((file) => file.path)).toEqual(["MSMTW/J.xlsm/J1", "SSSTW/A.xlsm/A2", "SSSTW/A.xlsm/A1"]);
-    expect(() => [...unpackMembers(archive, { kind: "zip", members: { extensions: [".xlsm"] }, inner: { kind: "xlsx", sheets: "A." } })]).toThrow(/MSMTW\/J.xlsm has no sheet matching A\./);
-    expect(() => [...unpackMembers(archive, { kind: "zip", members: { extensions: [".docx"] }, inner: { kind: "xlsx" } })]).toThrow(/member notes.docx: not a valid workbook/);
+  it("reads only the sheets the pattern matches in full, and refuses a workbook left with none and a member that is not a workbook", async () => {
+    expect((await collect(unpackMembers(archive, { kind: "zip", members: { extensions: [".xlsm"] }, inner: { kind: "xlsx", sheets: "(?!J5$).+" } }))).map((file) => file.path)).toEqual(["MSMTW/J.xlsm/J1", "SSSTW/A.xlsm/A2", "SSSTW/A.xlsm/A1"]);
+    await expect(collect(unpackMembers(archive, { kind: "zip", members: { extensions: [".xlsm"] }, inner: { kind: "xlsx", sheets: "A." } }))).rejects.toThrow(/MSMTW\/J.xlsm has no sheet matching A\./);
+    await expect(collect(unpackMembers(archive, { kind: "zip", members: { extensions: [".docx"] }, inner: { kind: "xlsx" } }))).rejects.toThrow(/member notes.docx: not a valid workbook/);
   });
 });

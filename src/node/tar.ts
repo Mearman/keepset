@@ -202,12 +202,21 @@ export class TarScanner {
   }
 
   /**
-   * Ends the archive.
-   * @throws ArchiveError when the archive ends inside a member.
+   * Ends the archive. An archive may end without its end-of-archive blocks, as one a tool cut at a member's end does, but never part of the way through a header, a member's data or its padding, which is where a download or a decompression cut short ends.
+   * @throws ArchiveError when the archive ends inside a header, a member or a member's padding.
    */
   public end(): void {
     if (this.entry !== undefined) {
       throw new ArchiveError(`tar member at byte ${String(this.entry.start)} runs past the end of the archive`);
+    }
+    if (this.finished) {
+      return;
+    }
+    if (this.padding > 0) {
+      throw new ArchiveError(`the padding of the tar member before byte ${String(this.position + this.padding)} runs past the end of the archive`);
+    }
+    if (this.queue.size > 0) {
+      throw new ArchiveError(`tar header at byte ${String(this.position)} runs past the end of the archive`);
     }
   }
 
@@ -328,28 +337,18 @@ function join(parts: readonly Uint8Array[], size: number): Uint8Array {
 }
 
 /**
- * Reads a tar archive that arrives in chunks, keeping the data of the regular files `keep` accepts.
+ * Reads a tar archive that arrives in chunks, keeping the data of the regular files `keep` accepts: the archive is read as the chunks arrive, so it is held only a chunk at a time beside the files kept.
  * @param chunks - The archive's bytes, in order, cut anywhere.
  * @param keep - Given a regular file's path, whether to keep its data.
  * @returns The path of every regular file and the kept files with their data.
- * @throws ArchiveError when a header checksum fails or a member runs past the end of the archive.
+ * @throws ArchiveError when a header checksum fails or a member runs past the end of the archive; whatever the chunks' source throws.
  */
-export function scanTar(chunks: Readonly<Iterable<Uint8Array>>, keep: (path: string) => boolean): { readonly paths: readonly string[]; readonly members: readonly TarMember[] } {
+export async function scanTar(chunks: AsyncIterable<Uint8Array> | Iterable<Uint8Array>, keep: (path: string) => boolean): Promise<{ readonly paths: readonly string[]; readonly members: readonly TarMember[] }> {
   const scanner = new TarScanner(keep);
-  for (const chunk of chunks) {
+  for await (const chunk of chunks) {
     scanner.push(chunk);
   }
   scanner.end();
 
   return { paths: scanner.paths, members: scanner.members };
-}
-
-/**
- * Lists the regular files of a tar archive (ustar, with GNU long names and pax path records), verifying each header's checksum.
- * @param bytes - The archive.
- * @returns Every regular file, with its full path.
- * @throws ArchiveError when a header checksum fails or a member runs past the end of the archive.
- */
-export function readTar(bytes: Uint8Array): TarMember[] {
-  return [...scanTar([bytes], () => true).members];
 }

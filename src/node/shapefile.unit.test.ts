@@ -160,7 +160,7 @@ describe("pointShapefileToCsv", () => {
 });
 
 describe("unpack for a shapefile", () => {
-  it("reads the .shp the selector names with the parts of exactly the same name beside it, whatever the case of their extensions", () => {
+  it("reads the .shp the selector names with the parts of exactly the same name beside it, whatever the case of their extensions", async () => {
     const archive = zipSync({
       "dataset/LAYER.shp": parts().shp,
       "dataset/LAYER.DBF": parts().dbf,
@@ -170,14 +170,14 @@ describe("unpack for a shapefile", () => {
       "dataset/LAYER_2.dbf": dbf([{ name: "other", type: "C", length: 1 }], [{ values: ["z"] }]),
       "dataset/metadata.xml": encode("<metadata/>"),
     });
-    const unpacked = unpack(archive, { kind: "shapefile", member: { extensions: [".shp"] } });
+    const unpacked = await unpack(archive, { kind: "shapefile", member: { extensions: [".shp"] } });
     expect(unpacked.member).toBe("dataset/LAYER.shp");
     expect(text(unpacked.bytes).startsWith("id,reg_libell,")).toBe(true);
   });
 
-  it("refuses a member that is not a .shp and a shapefile missing a part", () => {
+  it("refuses a member that is not a .shp and a shapefile missing a part", async () => {
     const archive = zipSync({ "LAYER.shp": parts().shp, "LAYER.dbf": parts().dbf, "LAYER.prj": parts().prj });
-    expect(() => unpack(archive, { kind: "shapefile", member: { path: "LAYER.dbf" } })).toThrow(/LAYER.dbf is not a .shp/);
-    expect(() => unpack(archive, { kind: "shapefile", member: { path: "LAYER.shp" } })).toThrow(/expected one .cpg beside LAYER.shp, found 0/);
+    await expect(unpack(archive, { kind: "shapefile", member: { path: "LAYER.dbf" } })).rejects.toThrow(/LAYER.dbf is not a .shp/);
+    await expect(unpack(archive, { kind: "shapefile", member: { path: "LAYER.shp" } })).rejects.toThrow(/expected one .cpg beside LAYER.shp, found 0/);
   });
 });

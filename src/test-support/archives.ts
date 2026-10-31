@@ -30,6 +30,29 @@ export interface ArchiveFile {
 }
 
 /**
+ * Writes a ustar header block, with a correct checksum.
+ * @param path - The member's path, cut to the name field's length.
+ * @param size - The size of the data that follows.
+ * @param type - The type flag: `0` a regular file, `5` a directory, `L` a GNU long-name record.
+ * @returns The header.
+ */
+export function tarHeader(path: string, size: number, type: string): Uint8Array {
+  const header = new Uint8Array(BLOCK);
+  writeField(header, HEADER.name, path);
+  writeField(header, HEADER.mode, octal(FILE_MODE, HEADER.mode));
+  writeField(header, HEADER.size, octal(size, HEADER.size));
+  writeField(header, HEADER.type, type);
+  writeField(header, HEADER.magic, "ustar\0");
+  writeField(header, HEADER.version, "00");
+  header.fill(CHECKSUM_FILL, HEADER.checksum.offset, HEADER.checksum.offset + HEADER.checksum.length);
+  const sum = header.reduce((total, byte) => total + byte, 0);
+  // The checksum field is six octal digits, a NUL and a space.
+  writeField(header, HEADER.checksum, `${sum.toString(OCTAL).padStart(HEADER.checksum.length - 2, "0")}\0 `);
+
+  return header;
+}
+
+/**
  * Writes a ustar archive, with a correct checksum on every header and a GNU long-name record before any path longer than the name field holds.
  * @param files - The members.
  * @returns The archive bytes.
@@ -37,18 +60,7 @@ export interface ArchiveFile {
 export function tar(files: readonly ArchiveFile[]): Uint8Array {
   const blocks: Uint8Array[] = [];
   const member = (path: string, data: Uint8Array, type: string): void => {
-    const header = new Uint8Array(BLOCK);
-    writeField(header, HEADER.name, path);
-    writeField(header, HEADER.mode, octal(FILE_MODE, HEADER.mode));
-    writeField(header, HEADER.size, octal(data.length, HEADER.size));
-    writeField(header, HEADER.type, type);
-    writeField(header, HEADER.magic, "ustar\0");
-    writeField(header, HEADER.version, "00");
-    header.fill(CHECKSUM_FILL, HEADER.checksum.offset, HEADER.checksum.offset + HEADER.checksum.length);
-    const sum = header.reduce((total, byte) => total + byte, 0);
-    // The checksum field is six octal digits, a NUL and a space.
-    writeField(header, HEADER.checksum, `${sum.toString(OCTAL).padStart(HEADER.checksum.length - 2, "0")}\0 `);
-    blocks.push(header);
+    blocks.push(tarHeader(path, data.length, type));
     const padded = new Uint8Array(Math.ceil(data.length / BLOCK) * BLOCK);
     padded.set(data);
     blocks.push(padded);
@@ -69,6 +81,20 @@ export function tar(files: readonly ArchiveFile[]): Uint8Array {
   }
 
   return out;
+}
+
+/**
+ * Collects what an async iterable yields, as a test reads an archive reader's members.
+ * @param items - The iterable.
+ * @returns Every item, in order.
+ */
+export async function collect<Item>(items: Readonly<AsyncIterable<Item>>): Promise<Item[]> {
+  const collected: Item[] = [];
+  for await (const item of items) {
+    collected.push(item);
+  }
+
+  return collected;
 }
 
 /**

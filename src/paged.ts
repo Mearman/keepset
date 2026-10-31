@@ -30,6 +30,8 @@ function arcgisError(value: unknown): string | undefined {
 async function getJson(port: FetchPort, url: string, signal: AbortSignal | undefined): Promise<unknown> {
   const response = await port(url, signal === undefined ? {} : { signal });
   if (!response.ok) {
+    // The body is never read, so its connection is let go of now rather than whenever the response is collected.
+    await response.body?.cancel();
     throw new KeepsetError(`${url} answered ${String(response.status)} ${response.statusText}`);
   }
   let body: unknown;
@@ -154,6 +156,8 @@ function recordsIn(bytes: Uint8Array): number {
 async function getBytes(port: FetchPort, url: string, signal: AbortSignal | undefined): Promise<Uint8Array> {
   const response = await port(url, signal === undefined ? {} : { signal });
   if (!response.ok) {
+    // The body is never read, so its connection is let go of now rather than whenever the response is collected.
+    await response.body?.cancel();
     throw new KeepsetError(`${url} answered ${String(response.status)} ${response.statusText}`);
   }
 
