@@ -1,3 +1,10 @@
+## [0.76.2](https://github.com/Mearman/keepset/compare/v0.76.1...v0.76.2) (2026-10-31)
+
+
+### Bug Fixes
+
+* **archive:** read zip archives larger than 4 GiB ([1c54640](https://github.com/Mearman/keepset/commit/1c5464077baee1d9683fe889af064ba9fb8e95aa))
+
 ## [0.76.1](https://github.com/Mearman/keepset/compare/v0.76.0...v0.76.1) (2026-10-31)
 
 
