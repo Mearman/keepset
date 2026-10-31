@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { getDataset } from "../bundled";
 import { gzip, tar, tarHeader, zip } from "../test-support/archives";
+import { fixtureBytes, QURAN_TAR_XZ_BASE64 } from "../test-support/xz-fixtures";
 import { fetchEntry, type FetchPort } from "./fetch-dataset";
 
 /** The tar block size, which pads every member. */
@@ -263,5 +264,17 @@ describe("the openslr-slr151-transcripts recipe", () => {
     expect(instances.map((instance) => instance.id)).toEqual(["speech_dataset_wol.tar.gz", "speech_dataset_fuc.tar.gz", "speech_dataset_srr.tar.gz"]);
     expect(instances[1]?.nodes).toMatchObject([{ id: "fuc_4110/3", text: "maɗe puɗata :fra a", speaker: "locuteur2", channel: "1", start: 0, end: 3.214, label: "o,f1,male" }]);
     expect(instances[1]?.nodes).toHaveLength(1);
+  });
+});
+
+describe("the openslr-slr132-transcripts recipe", () => {
+  it("reads the transcript table from the tar.xz archive, leaving out the audio and the other members", async () => {
+    const { data } = await fetchEntry(getDataset("openslr-slr132-transcripts"), { fetch: serving({ [download("132", "Quran_Speech_Dataset.tar.xz")]: fixtureBytes(QURAN_TAR_XZ_BASE64) }) });
+    expect(data).toMatchObject({
+      nodes: [
+        { id: "audio_data/reader_1/001001.mp3", text: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ", duration: 6.552 },
+        { id: "audio_data/reader_2/001002.mp3", text: "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ", duration: 4.1 },
+      ],
+    });
   });
 });
