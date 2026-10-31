@@ -499,6 +499,9 @@ export type Paging = z.infer<typeof PagingSchema>;
 
 /** The parser formats that read a dataset spread over several files of one archive, and so the only ones a `files` archive is given to. */
 export const MULTI_FILE_FORMATS: ReadonlySet<Parser["format"]> = new Set(["ogb", "member-text", "nxt-words", "eaf", "textgrid", "option-list", "chat"]);
+/** The multi-file formats that read each file of a files archive into one row of its own, so a streamed recipe can hand the files to them one at a time. */
+export type StreamedFileFormat = Extract<Parser["format"], "member-text">;
+export const STREAMED_FILE_FORMATS: ReadonlySet<Parser["format"]> = new Set<StreamedFileFormat>(["member-text"]);
 /** The parser formats that read a document from named parts, and the part names each requires (none for a format whose part names are its own, such as the splits of a triples download). */
 const PART_FORMATS: ReadonlyMap<Parser["format"], readonly string[] | undefined> = new Map([
   ["kg-triples", undefined],
@@ -513,7 +516,7 @@ export const SourceRecipeSchema = z
     paging: PagingSchema.optional(),
     archive: ArchiveSchema,
     parser: ParserSchema,
-    /** Set on a table too large for a fetch to hold as one document: `fetchDataset` refuses it, and `streamDataset` reads it a page at a time, handing on each page's nodes as they are checked. A streamed recipe reads a CSV paged source with no archive through the `csv-table` parser, for a category whose target is meta and nodes. */
+    /** Set on a dataset too large for a fetch to hold as one document: `fetchDataset` refuses it, and `streamDataset` reads it a page at a time, handing on each page's nodes as they are checked. A streamed recipe reads a CSV paged source with no archive through the `csv-table` parser, a page of rows at a time, or a `files` archive with no paging through a parser that reads each file into one row (`member-text`), a file at a time, for a category whose target is meta and nodes. */
     stream: z.literal(true).optional(),
   })
   .strict()
@@ -574,7 +577,7 @@ export function readsCollection(recipe: Recipe): boolean {
 }
 
 /**
- * Reports the ways a fetchable recipe's parts disagree with each other: a streamed recipe that is not a CSV paged source read by the `csv-table` parser with no archive, for a category that can be streamed, and a Socrata selection that leaves out the id column or a column the parser keeps.
+ * Reports the ways a fetchable recipe's parts disagree with each other: a streamed recipe that is neither a CSV paged source read by the `csv-table` parser with no archive nor a files archive with no paging read file by file, for a category that can be streamed, and a Socrata selection that leaves out the id column or a column the parser keeps.
  * @param recipe - The fetchable recipe.
  * @param category - The entry's category.
  * @param ctx - The refinement context to report to.
@@ -582,8 +585,10 @@ export function readsCollection(recipe: Recipe): boolean {
 function addRecipeIssues(recipe: SourceRecipe, category: CategoryId, ctx: z.core.$RefinementCtx): void {
   const { paging, parser } = recipe;
   if (recipe.stream === true) {
-    if (paging === undefined || paging.kind === "arcgis-query" || recipe.archive.kind !== "none" || parser.format !== "csv-table") {
-      ctx.addIssue({ code: "custom", path: ["recipe", "stream"], message: "a streamed recipe reads a CSV paged source (Socrata, CKAN or OpenFEMA) with no archive through the csv-table parser" });
+    const pagedTable = paging !== undefined && paging.kind !== "arcgis-query" && recipe.archive.kind === "none" && parser.format === "csv-table";
+    const fileByFile = paging === undefined && "files" in recipe.archive && STREAMED_FILE_FORMATS.has(parser.format);
+    if (!pagedTable && !fileByFile) {
+      ctx.addIssue({ code: "custom", path: ["recipe", "stream"], message: `a streamed recipe reads a CSV paged source (Socrata, CKAN or OpenFEMA) with no archive through the csv-table parser, or a files archive with no paging through a parser that reads each file into one row (${[...STREAMED_FILE_FORMATS].join(", ")})` });
     }
     if (!isStreamable(category)) {
       ctx.addIssue({ code: "custom", path: ["recipe", "stream"], message: `${category} has no streamed form, as its target is not meta and nodes alone` });

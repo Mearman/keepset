@@ -328,8 +328,38 @@ export const filesCollectionEntry = {
   expectedCounts: { instances: 4 },
 } as const;
 
+/** A fetchable corpus/v1 entry streamed a file at a time: a zip holding one tar, as a library zips its whole collection, whose text files are the documents, each read verbatim by the `member-text` parser with its id from its path. */
+export const streamedCorpusEntry = {
+  id: "library-texts",
+  name: "Library texts",
+  tags: [],
+  category: "corpus/v1",
+  sources: [{ url: "https://example.org/data/texts.tar.zip", retrieved: "2026-10-31", status: "live" }],
+  licence: { kind: "unrecorded" },
+  citations: [],
+  recipe: {
+    status: "fetchable",
+    source: 0,
+    archive: { kind: "zip", files: { path: "texts.tar" }, inner: { kind: "tar", files: { pattern: "texts/[0-9]+\\.txt" } } },
+    parser: { format: "member-text", encoding: "utf-8", idPattern: "texts\\.tar/texts/([0-9]+)\\.txt", verbatim: true },
+    stream: true,
+  },
+  crosswalk: {
+    source: "member-text",
+    target: "corpus/v1",
+    rules: [
+      { op: "move", from: "meta", to: "meta" },
+      { op: "move", from: "nodes[].id", to: "nodes[].id" },
+      { op: "move", from: "nodes[].text", to: "nodes[].text" },
+    ],
+    oneWay: [],
+  },
+  expectedCounts: {},
+  properties: {},
+} as const;
+
 /** Every entry shape, one entry of each category as well: for the tests that check the entry schema, its generated JSON Schema and serialisation, which the catalogue fixtures (graph entries only) do not need to carry. */
-export const everyEntryShape = [...representativeEntries, taskEntry, taskCollectionEntry, filesCollectionEntry, graphCollectionEntry, ogbEntry, arcgisEntry, socrataEntry, streamedEntry, ckanEntry, openFemaEntry];
+export const everyEntryShape = [...representativeEntries, taskEntry, taskCollectionEntry, filesCollectionEntry, graphCollectionEntry, ogbEntry, arcgisEntry, socrataEntry, streamedEntry, ckanEntry, openFemaEntry, streamedCorpusEntry];
 
 /** A catalogue manifest for fixture catalogues. */
 export const fixtureManifest = {

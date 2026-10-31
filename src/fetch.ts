@@ -8,7 +8,7 @@ import { parseNative, parseNativeFiles, parseNativeParts } from "./parsers/parse
 import type { JsonScalar } from "./targets/json-scalar";
 import { readsByRanges, type SevenZipPort, unpack, unpackFiles, unpackMembers, unpackParts, type Unpacked, type UnpackOptions } from "./archive";
 import { downloadPaged } from "./paged";
-import { countWarnings, metaOf, sourceRecord, sourceUrl, step } from "./recipe-run";
+import { countWarnings, downloadOf, metaOf, sourceUrl, step } from "./recipe-run";
 import { resolveSource } from "./resolve";
 import type { ByteRange, StoredSource, StorePort } from "./source-bytes";
 import type { Archive, Entry, FilesRecipe, Parser, Snapshot, Source } from "./entry";
@@ -118,19 +118,6 @@ interface NativeRun {
  */
 function withId(document: unknown, id: string | undefined): unknown {
   return typeof document === "object" && document !== null && !Array.isArray(document) ? { ...document, id } : document;
-}
-
-/**
- * The record of one download: the source, the URL requested and a hash of exactly the bytes that arrived. Read once the source has been read, as a source read by ranges goes on arriving while it is read.
- * @param source - The entry's source.
- * @param fetchedUrl - The URL requested.
- * @param stored - What the store kept.
- * @returns The download record.
- */
-async function downloadOf(source: Source, fetchedUrl: string, stored: StoredSource): Promise<Download> {
-  const { sha256, byteLength, ranges, size } = await stored.received();
-
-  return { source: sourceRecord(source), fetchedUrl, sha256, byteLength, ...(ranges === undefined ? {} : { ranges }), ...(size === undefined ? {} : { size }) };
 }
 
 /**

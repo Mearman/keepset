@@ -2,6 +2,7 @@ import { type Entry, rawSnapshotUrl, type Source } from "./entry";
 import { KeepsetError, RecipeError, type RecipeStep } from "./errors";
 import type { JsonScalar } from "./targets/json-scalar";
 import type { Download } from "./fetch";
+import type { StoredSource } from "./source-bytes";
 
 /**
  * The URL a recipe downloads a source from, as `downloadUrl` gives it. A dead source is fetched from its pinned snapshot in the Wayback Machine's `id_` form, which serves the archived bytes as they were captured rather than wrapped in the archive's page chrome.
@@ -28,6 +29,19 @@ export function sourceUrl(source: Source): string {
  */
 export function sourceRecord(source: Source): Download["source"] {
   return { url: source.url, status: source.status, ...(source.snapshot === undefined ? {} : { snapshot: source.snapshot }) };
+}
+
+/**
+ * The record of one download: the source, the URL requested and a hash of exactly the bytes that arrived. Read once the source has been read, as a source read by ranges goes on arriving while it is read.
+ * @param source - The entry's source.
+ * @param fetchedUrl - The URL requested.
+ * @param stored - What the store kept.
+ * @returns The download record.
+ */
+export async function downloadOf(source: Source, fetchedUrl: string, stored: Pick<StoredSource, "received">): Promise<Download> {
+  const { sha256, byteLength, ranges, size } = await stored.received();
+
+  return { source: sourceRecord(source), fetchedUrl, sha256, byteLength, ...(ranges === undefined ? {} : { ranges }), ...(size === undefined ? {} : { size }) };
 }
 
 /**

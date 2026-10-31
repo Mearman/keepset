@@ -1,6 +1,6 @@
-import { inflateSync } from "fflate";
+import { Inflate, inflateSync } from "fflate";
 import { ArchiveError } from "../errors";
-import { inTurn } from "../in-turn";
+import { inTurn, piecesOf } from "../in-turn";
 import { asSource, type SourceBytes } from "../source-bytes";
 
 /** The signatures of the zip structures this reader finds, as the little-endian 32-bit values they are stored as. */
@@ -241,6 +241,24 @@ export async function listZip(input: Uint8Array | SourceBytes): Promise<ZipEntry
  */
 export async function readZipEntry(input: Uint8Array | SourceBytes, entry: ZipEntry): Promise<Uint8Array> {
   const source = asSource(input);
+  const start = await dataStart(source, entry);
+  const data = await readRange(source, start, entry.size, `the data of ${entry.name}`);
+  if (entry.compression === STORED) {
+    // A copy, so a member its reader keeps does not hold the larger range or file it was read from.
+    return data.slice();
+  }
+
+  return inflateSync(data, { out: new Uint8Array(entry.originalSize) });
+}
+
+/**
+ * Where an entry's data starts, once the entry is known to be one this reader can read: past its local header, whose name and extra field may differ in length from the central directory's.
+ * @param source - The archive.
+ * @param entry - The entry, as `listZip` gives it.
+ * @returns The offset of the entry's first byte of data.
+ * @throws ArchiveError for an encrypted entry, a compression method other than stored and deflate, or a local header that is not there.
+ */
+async function dataStart(source: SourceBytes, entry: ZipEntry): Promise<number> {
   if ((entry.flags & FLAG_ENCRYPTED) !== 0) {
     throw new ArchiveError(`zip member ${entry.name} is encrypted`);
   }
@@ -251,14 +269,62 @@ export async function readZipEntry(input: Uint8Array | SourceBytes, entry: ZipEn
   if (local?.getUint32(0, true) !== ZIP_SIGNATURES.localHeader) {
     throw new ArchiveError(`not a valid zip archive: the local header of ${entry.name} is not at byte ${String(entry.offset)}`);
   }
-  const start = entry.offset + LOCAL_HEADER_LENGTH + local.getUint16(LOCAL.nameLength, true) + local.getUint16(LOCAL.extraLength, true);
-  const data = await readRange(source, start, entry.size, `the data of ${entry.name}`);
-  if (entry.compression === STORED) {
-    // A copy, so a member its reader keeps does not hold the larger range or file it was read from.
-    return data.slice();
-  }
 
-  return inflateSync(data, { out: new Uint8Array(entry.originalSize) });
+  return entry.offset + LOCAL_HEADER_LENGTH + local.getUint16(LOCAL.nameLength, true) + local.getUint16(LOCAL.extraLength, true);
+}
+
+/** How many compressed bytes a streamed read takes from the source and feeds the inflater at a time. The inflater hands on each feed's output in one array, so what a feed yields, which is what is held of the member at once, is the feed times the data's compression ratio; a mebibyte keeps the per-call cost small and that output a few mebibytes, as the gzip stream's feed does. */
+const KIBIBYTE = 1024;
+export const INFLATE_FEED_BYTES = KIBIBYTE * KIBIBYTE;
+
+/**
+ * Reads one entry's bytes a piece at a time, inflating a deflated entry as its compressed bytes are read, so a member far larger than memory (a tar archive zipped whole) is read in the memory of one piece. The pieces joined are exactly what `readZipEntry` gives.
+ * @param input - The archive, held in memory or kept anywhere.
+ * @param entry - The entry, as `listZip` gives it.
+ * @param feedBytes - How many compressed bytes are read and fed at a time; only a test changes it.
+ * @returns The entry's uncompressed bytes, in order, cut anywhere.
+ * @throws ArchiveError for an encrypted entry, a compression method other than stored and deflate, a local header that is not there, data that runs past the end of the archive, data that is not valid deflate data, or data that does not inflate to the size the directory states.
+ */
+export async function* readZipEntryChunks(input: Uint8Array | SourceBytes, entry: ZipEntry, feedBytes: number = INFLATE_FEED_BYTES): AsyncGenerator<Uint8Array, void, undefined> {
+  const source = asSource(input);
+  const start = await dataStart(source, entry);
+  if (start + entry.size > source.size) {
+    throw new ArchiveError(`not a valid zip archive: the data of ${entry.name} at byte ${String(start)} runs past the end of the archive`);
+  }
+  const produced: Uint8Array[] = [];
+  let emitted = 0;
+  const inflater =
+    entry.compression === DEFLATE
+      ? new Inflate((chunk) => {
+          produced.push(chunk);
+          emitted += chunk.length;
+        })
+      : undefined;
+  const feed = (piece: Uint8Array, final: boolean): void => {
+    try {
+      inflater?.push(piece, final);
+    } catch (error) {
+      throw new ArchiveError(`zip member ${entry.name} is not valid deflate data: ${error instanceof Error ? error.message : String(error)}`, { cause: error });
+    }
+  };
+  let read = 0;
+  for await (const bytes of inTurn(piecesOf(entry.size, feedBytes), async (piece) => source.read({ offset: start + piece.offset, length: piece.length }))) {
+    read += bytes.length;
+    if (inflater === undefined) {
+      emitted += bytes.length;
+      yield bytes;
+      continue;
+    }
+    feed(bytes, read === entry.size);
+    yield* produced.splice(0);
+  }
+  if (inflater !== undefined && entry.size === 0) {
+    // An empty deflated entry is told so with an empty last piece, which the inflater refuses as a stream with no end.
+    feed(new Uint8Array(0), true);
+  }
+  if (emitted !== entry.originalSize) {
+    throw new ArchiveError(`zip member ${entry.name} gives ${String(emitted)} bytes, not the ${String(entry.originalSize)} its directory entry states`);
+  }
 }
 
 /**

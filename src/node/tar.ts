@@ -192,6 +192,14 @@ export class TarScanner {
   public constructor(private readonly keep: (path: string) => boolean) {}
 
   /**
+   * Takes the kept files read so far, so a reader that hands each on as it completes holds only the files not yet taken.
+   * @returns The kept files completed since the last take, in archive order.
+   */
+  public take(): TarMember[] {
+    return this.members.splice(0);
+  }
+
+  /**
    * Reads the next chunk of the archive.
    * @param chunk - The bytes that follow those already pushed.
    * @throws ArchiveError when a header checksum fails.
