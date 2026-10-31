@@ -5,11 +5,47 @@
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "file": "crosswalks/speech-v1/id-text.json"
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].text",
+        "op": "move",
+        "to": "nodes[].text"
+      },
+      {
+        "from": "nodes[].tier",
+        "op": "move",
+        "to": "nodes[].speaker"
+      },
+      {
+        "from": "nodes[].start",
+        "op": "move",
+        "to": "nodes[].start"
+      },
+      {
+        "from": "nodes[].end",
+        "op": "move",
+        "to": "nodes[].end"
+      }
+    ],
+    "source": "textgrid",
+    "target": "speech/v1"
   },
-  "description": "The transcripts of AISHELL-4. No recipe reads them. Its transcripts are AISHELL-4's TextGrid files, inside archives that total about 51 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "description": "The transcripts of AISHELL-4: one instance for each of the four archives of the download (the three training sets and the test set), and in it each record is a stretch of speech, named by the meeting's recording and its position in the recording's TextGrid, with its text, its speaker (the tier it is on, a speaker's number and sex) and its start and end in seconds. It carries none of the audio, which the download list of openslr-slr111 gives.",
   "domain": "Speech",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "instances": 0
+  },
   "id": "openslr-slr111-transcripts",
   "licence": {
     "kind": "custom",
@@ -23,24 +59,85 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "Its transcripts are AISHELL-4's TextGrid files, inside archives that total about 51 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
-    "status": "not-fetchable"
+    "files": [
+      {
+        "archive": {
+          "files": {
+            "pattern": "(?:test|train_[LMS])/TextGrid/[^/]+\\.TextGrid"
+          },
+          "kind": "tar.gz"
+        },
+        "path": "train_L.tar.gz",
+        "source": 0
+      },
+      {
+        "archive": {
+          "files": {
+            "pattern": "(?:test|train_[LMS])/TextGrid/[^/]+\\.TextGrid"
+          },
+          "kind": "tar.gz"
+        },
+        "path": "train_M.tar.gz",
+        "source": 1
+      },
+      {
+        "archive": {
+          "files": {
+            "pattern": "(?:test|train_[LMS])/TextGrid/[^/]+\\.TextGrid"
+          },
+          "kind": "tar.gz"
+        },
+        "path": "train_S.tar.gz",
+        "source": 2
+      },
+      {
+        "archive": {
+          "files": {
+            "pattern": "(?:test|train_[LMS])/TextGrid/[^/]+\\.TextGrid"
+          },
+          "kind": "tar.gz"
+        },
+        "path": "test.tar.gz",
+        "source": 3
+      }
+    ],
+    "parser": {
+      "encoding": "utf-8",
+      "format": "textgrid",
+      "idPattern": "[^/]+/TextGrid/([^/]+)\\.TextGrid",
+      "tierPattern": "\\d+-[MF]"
+    },
+    "status": "fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 5689,
-        "sha256": "dd73839fcd4ab9fd7a022e7463d52be8d0f787cb960eda51b602cead515953fa",
-        "timestamp": "20260217125114",
-        "url": "https://web.archive.org/web/20260217125114/https://www.openslr.org/111/"
-      },
+      "retrieved": "2026-10-31",
       "status": "live",
-      "url": "https://www.openslr.org/111/"
+      "url": "https://www.openslr.org/resources/111/train_L.tar.gz"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/111/train_M.tar.gz"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/111/train_S.tar.gz"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/111/test.tar.gz"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "text",
+    "speaker",
+    "start",
+    "end"
+  ]
 }
