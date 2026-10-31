@@ -1,0 +1,116 @@
+{
+  "aliases": [
+    "slr128-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].sentence",
+        "op": "move",
+        "to": "nodes[].text"
+      },
+      {
+        "from": "nodes[].speaker_id",
+        "op": "move",
+        "to": "nodes[].speaker"
+      },
+      {
+        "from": "nodes[].gender",
+        "op": "move",
+        "to": "nodes[].gender"
+      },
+      {
+        "from": "nodes[].filename",
+        "op": "move",
+        "to": "nodes[].audio"
+      },
+      {
+        "from": "nodes[].duration",
+        "op": "move",
+        "to": "nodes[].duration"
+      }
+    ],
+    "source": "csv-table",
+    "target": "speech/v1"
+  },
+  "description": "The transcripts of Samrómur Unverified 22.07: each record is an utterance with its text, speaker, gender, audio file and duration. It carries none of the audio, which the download list of openslr-slr128 gives.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "instances": 1
+  },
+  "id": "openslr-slr128-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "CC by 4.0",
+    "url": "https://www.openslr.org/128/"
+  },
+  "name": "Samrómur Unverified 22.07 transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "zip",
+      "members": {
+        "pattern": "samromur_unverified_22\\.07/metadata\\.tsv"
+      }
+    },
+    "parser": {
+      "columns": [
+        "sentence",
+        "speaker_id",
+        "gender",
+        "filename",
+        "duration"
+      ],
+      "delimiter": "tab",
+      "encoding": "utf-8",
+      "format": "csv-table",
+      "idColumn": "id",
+      "nullValues": [
+        "NAN"
+      ],
+      "numericColumns": [
+        {
+          "column": "duration",
+          "factor": 1
+        }
+      ],
+      "skipLines": 0
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/128/samromur_unverified_22.07.zip"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "text",
+    "speaker",
+    "gender",
+    "audio",
+    "duration"
+  ]
+}
