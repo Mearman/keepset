@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "slr159-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of AISHELL-5. No recipe reads them. Its transcripts are AISHELL-5's TextGrid files, inside archives that total about 59 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "domain": "Speech",
+  "expectedCounts": {},
+  "id": "openslr-slr159-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "CC BY-SA 4.0",
+    "url": "https://www.openslr.org/159/"
+  },
+  "name": "AISHELL-5 transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "Its transcripts are AISHELL-5's TextGrid files, inside archives that total about 59 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 6373,
+        "sha256": "422b6c918a87354a753385b6c1ff7379e0ed682b3f61a5156bca0b62bd82d1f8",
+        "timestamp": "20260521090148",
+        "url": "https://web.archive.org/web/20260521090148/https://www.openslr.org/159/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/159/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

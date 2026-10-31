@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "slr89-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of Yoloxóchitl-Mixtec. No recipe reads them. Its transcripts are the Mixtec transcription files, inside archives that total about 86 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "domain": "Speech",
+  "expectedCounts": {},
+  "id": "openslr-slr89-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-NonCommercial-ShareAlike 3.0 Unported (CC BY-NC-SA 3.0)",
+    "url": "https://www.openslr.org/89/"
+  },
+  "name": "Yoloxóchitl-Mixtec transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "Its transcripts are the Mixtec transcription files, inside archives that total about 86 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 6664,
+        "sha256": "b8a4ba79bd2eb2807b5bec6a03c02a4bcfbb4642cd6bb05dcac8b6e358e4a045",
+        "timestamp": "20260516212200",
+        "url": "https://web.archive.org/web/20260516212200/https://www.openslr.org/89/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/89/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

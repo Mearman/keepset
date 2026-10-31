@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "slr148-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of Tepetzintla Zacatlan Nahuatl Endangered Language. No recipe reads them. The files have been withdrawn from OpenSLR: every download returns HTTP 404, and the page says the corpus moved to the Mozilla Data Collective.",
+  "domain": "Speech",
+  "expectedCounts": {},
+  "id": "openslr-slr148-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)",
+    "url": "https://www.openslr.org/148/"
+  },
+  "name": "Tepetzintla Zacatlan Nahuatl Endangered Language transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "The files have been withdrawn from OpenSLR: every download returns HTTP 404, and the page says the corpus moved to the Mozilla Data Collective.",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 9422,
+        "sha256": "75fd566f15cc0df6a633e364042ea199192af6cde77ed4d957a2b6f214c2218f",
+        "timestamp": "20260516200203",
+        "url": "https://web.archive.org/web/20260516200203/https://www.openslr.org/148/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/148/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "slr109-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of Hi-Fi Multi-Speaker English TTS Dataset (Hi-Fi TTS). No recipe reads them. Its transcripts are Hi-Fi TTS's JSON manifests, inside archives that total about 41 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "domain": "Speech",
+  "expectedCounts": {},
+  "id": "openslr-slr109-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "CC BY 4.0",
+    "url": "https://www.openslr.org/109/"
+  },
+  "name": "Hi-Fi Multi-Speaker English TTS Dataset (Hi-Fi TTS) transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "Its transcripts are Hi-Fi TTS's JSON manifests, inside archives that total about 41 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3409,
+        "sha256": "827f1dd8cbbaf4cc56b41408d1d28fafe151e463b09e2296160df6bbf1b76d95",
+        "timestamp": "20260925222622",
+        "url": "https://web.archive.org/web/20260925222622/https://www.openslr.org/109/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/109/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

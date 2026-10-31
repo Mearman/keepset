@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "slr98-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of Deeply parent-child vocal interaction dataset. No recipe reads them. The corpus publishes no transcripts: the only data per recording is a category label (singing, reading, crying and so on) and speaker, age, sex and recording codes in a nested JSON file.",
+  "domain": "Speech",
+  "expectedCounts": {},
+  "id": "openslr-slr98-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)",
+    "url": "https://www.openslr.org/98/"
+  },
+  "name": "Deeply parent-child vocal interaction dataset transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "The corpus publishes no transcripts: the only data per recording is a category label (singing, reading, crying and so on) and speaker, age, sex and recording codes in a nested JSON file.",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 7093,
+        "sha256": "d35db21219d40cbfad88ace54f710b6e7163c927928347a5742ac94b82df81ef",
+        "timestamp": "20260418040605",
+        "url": "https://web.archive.org/web/20260418040605/https://www.openslr.org/98/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/98/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

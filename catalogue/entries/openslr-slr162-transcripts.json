@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "slr162-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of Rasheed Mudasiru. No recipe reads them. The archive is one conversation split into audio files with no transcripts or per-recording metadata.",
+  "domain": "Speech / Audio Forensics / Signal Processing",
+  "expectedCounts": {},
+  "id": "openslr-slr162-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "MIT License",
+    "url": "https://www.openslr.org/162/"
+  },
+  "name": "Rasheed Mudasiru transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "The archive is one conversation split into audio files with no transcripts or per-recording metadata.",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3933,
+        "sha256": "fa8eea42457a17e69f7adc5bce9058b9a34ddb0d32e5db284a429cfe73eb8f12",
+        "timestamp": "20260418043246",
+        "url": "https://web.archive.org/web/20260418043246/https://www.openslr.org/162/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/162/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

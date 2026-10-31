@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "slr85-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of HI-MIA. No recipe reads them. The corpus is for speaker verification and publishes no transcripts: its only labels are trial lists.",
+  "domain": "Speech",
+  "expectedCounts": {},
+  "id": "openslr-slr85-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Apache License v.2.0",
+    "url": "https://www.openslr.org/85/"
+  },
+  "name": "HI-MIA transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "The corpus is for speaker verification and publishes no transcripts: its only labels are trial lists.",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 5433,
+        "sha256": "4156e2ce486c894b6d6a930380af896e6bf37827f60f49f48574effc133bd198",
+        "timestamp": "20260521090148",
+        "url": "https://web.archive.org/web/20260521090148/https://www.openslr.org/85/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/85/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

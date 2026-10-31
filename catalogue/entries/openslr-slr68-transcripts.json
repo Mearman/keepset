@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "slr68-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of MAGICDATA Mandarin Chinese Read Speech Corpus. No recipe reads them. Its transcripts are MAGICDATA's `TRANS.txt` files, inside archives that total about 55 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "domain": "Speech",
+  "expectedCounts": {},
+  "id": "openslr-slr68-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-NonCommercial-NoDerivatives 4.0 International Public License (CC BY-NC-ND 4.0)",
+    "url": "https://www.openslr.org/68/"
+  },
+  "name": "MAGICDATA Mandarin Chinese Read Speech Corpus transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "Its transcripts are MAGICDATA's `TRANS.txt` files, inside archives that total about 55 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 6796,
+        "sha256": "e316110bda8fdf4cb763ba1b963cc2b5c9a5a084901ba73efc32be5b1e06194e",
+        "timestamp": "20260705094040",
+        "url": "https://web.archive.org/web/20260705094040/https://www.openslr.org/68/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/68/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

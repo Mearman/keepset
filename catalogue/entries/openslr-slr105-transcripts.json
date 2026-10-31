@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "slr105-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of nicolingua-0003-west-african-radio-corpus. No recipe reads them. The corpus is for unsupervised learning and publishes no transcripts: the only tags are language labels for a validation set, in a file inside a 16 GB archive.",
+  "domain": "Speech",
+  "expectedCounts": {},
+  "id": "openslr-slr105-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)",
+    "url": "https://www.openslr.org/105/"
+  },
+  "name": "nicolingua-0003-west-african-radio-corpus transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "The corpus is for unsupervised learning and publishes no transcripts: the only tags are language labels for a validation set, in a file inside a 16 GB archive.",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4058,
+        "sha256": "0b45bc05dd547814715c2a29386d5958e2238f6e8f07ed5cbbd02f9c8fda5401",
+        "timestamp": "20260108203211",
+        "url": "https://web.archive.org/web/20260108203211/https://www.openslr.org/105/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/105/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

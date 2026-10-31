@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "slr140-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of Kazakh Speech Dataset (KSD). No recipe reads them. Its transcripts are the Kazakh Speech Dataset's JSON files, inside archives that total about 56 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "domain": "Speech",
+  "expectedCounts": {},
+  "id": "openslr-slr140-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0 US)",
+    "url": "https://www.openslr.org/140/"
+  },
+  "name": "Kazakh Speech Dataset (KSD) transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "Its transcripts are the Kazakh Speech Dataset's JSON files, inside archives that total about 56 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 5455,
+        "sha256": "d2b7ad47e91f23c41b4c653a9aaf0380dc02fb0d8964e3a7fab1d28c049f976a",
+        "timestamp": "20260911131307",
+        "url": "https://web.archive.org/web/20260911131307/https://www.openslr.org/140/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/140/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

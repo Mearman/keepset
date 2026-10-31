@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "slr60-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of LibriTTS corpus. No recipe reads them. Its transcripts are LibriTTS's per-chapter `.trans.tsv` files, inside archives that total about 83 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "domain": "Speech",
+  "expectedCounts": {},
+  "id": "openslr-slr60-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "CC BY 4.0",
+    "url": "https://www.openslr.org/60/"
+  },
+  "name": "LibriTTS corpus transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "Its transcripts are LibriTTS's per-chapter `.trans.tsv` files, inside archives that total about 83 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 6919,
+        "sha256": "97ac18e6f47bc7fee9af08d5ba98915a5d69cc5479976b925dc19a5b418f5a86",
+        "timestamp": "20261020162908",
+        "url": "https://web.archive.org/web/20261020162908/https://www.openslr.org/60/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/60/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

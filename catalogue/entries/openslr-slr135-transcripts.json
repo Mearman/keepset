@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "slr135-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of Libri-Mixed-Speakers. No recipe reads them. The corpus is for counting speakers in mixed audio and publishes no transcripts: its only label is the speaker count in each file name.",
+  "domain": "Speech",
+  "expectedCounts": {},
+  "id": "openslr-slr135-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0 US)",
+    "url": "https://www.openslr.org/135/"
+  },
+  "name": "Libri-Mixed-Speakers transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "The corpus is for counting speakers in mixed audio and publishes no transcripts: its only label is the speaker count in each file name.",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4600,
+        "sha256": "c1da89d7ed9ef7d2efa92dcd3625974491a2464c16fd41734369b192273dc901",
+        "timestamp": "20260516203636",
+        "url": "https://web.archive.org/web/20260516203636/https://www.openslr.org/135/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/135/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

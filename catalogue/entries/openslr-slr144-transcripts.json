@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "slr144-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of SlideSpeech. No recipe reads them. The data is hosted on Alibaba cloud storage, not on OpenSLR: the OpenSLR directory holds only a description.",
+  "domain": "Audio-Visual Speech",
+  "expectedCounts": {},
+  "id": "openslr-slr144-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "CC BY-SA 4.0",
+    "url": "https://www.openslr.org/144/"
+  },
+  "name": "SlideSpeech transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "The data is hosted on Alibaba cloud storage, not on OpenSLR: the OpenSLR directory holds only a description.",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 5060,
+        "sha256": "d1aae5db78b8c5715ac8a7879bc3707a418f8b1f87a13a23ef904ea44d2eb0f5",
+        "timestamp": "20260516195025",
+        "url": "https://web.archive.org/web/20260516195025/https://www.openslr.org/144/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/144/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}
