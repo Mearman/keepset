@@ -362,6 +362,8 @@ export const ParserSchema = z.discriminatedUnion("format", [
       commentPrefixes: z.array(z.string().min(1)),
     })
     .strict(),
+  /** A word list written as one JSON object whose keys are the words and whose values are their counts: each word is a row with its count, in the order the file writes them. */
+  z.object({ format: z.literal("json-word-counts"), encoding: z.literal("utf-8") }).strict(),
   z
     .object({
       format: z.literal("json-table"),
