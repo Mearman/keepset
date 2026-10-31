@@ -1,3 +1,11 @@
+# [0.90.0](https://github.com/Mearman/keepset/compare/v0.89.0...v0.90.0) (2026-10-31)
+
+
+### Features
+
+* **cli:** print the target's counts and warnings from roundtrip ([0632f28](https://github.com/Mearman/keepset/commit/0632f28f2b22741ec3ae55170d4df761f0b9b131))
+* **fetch:** resolve the target from the documents a round trip checks ([5218aa5](https://github.com/Mearman/keepset/commit/5218aa5ffd9565020905b54b4d1b4a2ddda37936))
+
 # [0.89.0](https://github.com/Mearman/keepset/compare/v0.88.0...v0.89.0) (2026-10-31)
 
 
