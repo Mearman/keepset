@@ -1,3 +1,4 @@
+import { randomBytes } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -7,7 +8,7 @@ import { describe, expect, it } from "vitest";
 import { ArchiveError } from "./errors";
 import { bzip2, gzip, tar, zip } from "./test-support/archives";
 import { unpack, unpackFiles, unpackMembers } from "./archive";
-import { readTar } from "./node/tar";
+import { BLOCK, readTar, scanTar } from "./node/tar";
 
 const text = (bytes: Uint8Array): string => new TextDecoder().decode(bytes);
 const names = (members: readonly { readonly path: string }[]): string[] => members.map((member) => member.path);
@@ -61,6 +62,76 @@ describe("readTar", () => {
     const dataBlocks = 4;
     const bytes = tar([{ path: "a.txt", text: "x".repeat(block * dataBlocks) }]).subarray(0, block * 2);
     expect(() => readTar(bytes)).toThrow(/runs past the end/);
+  });
+});
+
+describe("scanTar", () => {
+  /** Directory depth that forces a GNU long-name record, a file longer than one block, and the chunk sizes that cut a header, its data and its padding at every offset a block boundary can fall near. */
+  const LONG_PATH_DEPTH = 30;
+  const LONG_FILE_BYTES = 1300;
+  const ODD_CHUNK = 7;
+  const THREE_BLOCKS_OF_CHUNK = 1000;
+  const CHUNK_SIZES = [1, ODD_CHUNK, BLOCK - 1, BLOCK, BLOCK + 1, THREE_BLOCKS_OF_CHUNK];
+  const PARTIAL_BYTES = 3;
+  const CUT_AT = BLOCK * 2 + PARTIAL_BYTES;
+  const TRUNCATED_CHUNK_SIZES = [1, BLOCK];
+  const archive = tar([
+    { path: "net/", text: "", type: "5" },
+    { path: "a.txt", text: "alpha" },
+    { path: `${"deep/".repeat(LONG_PATH_DEPTH)}long.txt`, text: "x".repeat(LONG_FILE_BYTES) },
+    { path: "empty.txt", text: "" },
+    { path: "b.txt", text: "beta" },
+  ]);
+  const cut = (size: number): Uint8Array[] => Array.from({ length: Math.ceil(archive.length / size) }, (_, index) => archive.subarray(index * size, (index + 1) * size));
+
+  it("gives the same paths and kept files however the archive is cut into chunks, including mid-header and mid-padding", () => {
+    const whole = scanTar([archive], (path) => path.endsWith("txt") && !path.includes("deep"));
+    expect(whole.paths).toEqual(["a.txt", `${"deep/".repeat(LONG_PATH_DEPTH)}long.txt`, "empty.txt", "b.txt"]);
+    expect(whole.members.map((member) => [member.path, text(member.data)])).toEqual([
+      ["a.txt", "alpha"],
+      ["empty.txt", ""],
+      ["b.txt", "beta"],
+    ]);
+    for (const size of CHUNK_SIZES) {
+      const chunked = scanTar(cut(size), (path) => path.endsWith("txt") && !path.includes("deep"));
+      expect(chunked.paths).toEqual(whole.paths);
+      expect(chunked.members.map((member) => [member.path, text(member.data)])).toEqual(whole.members.map((member) => [member.path, text(member.data)]));
+    }
+  });
+
+  it("keeps no data for a file it is not asked to keep", () => {
+    expect(scanTar([archive], () => false).members).toEqual([]);
+  });
+
+  it("rejects an archive that ends inside a member however it is cut", () => {
+    const truncated = archive.subarray(0, CUT_AT);
+    for (const size of [...TRUNCATED_CHUNK_SIZES, truncated.length]) {
+      const pieces = Array.from({ length: Math.ceil(truncated.length / size) }, (_, index) => truncated.subarray(index * size, (index + 1) * size));
+      expect(() => scanTar(pieces, () => true)).toThrow(/runs past the end/);
+    }
+  });
+});
+
+describe("unpack of a tar.gz larger than one gzip slice", () => {
+  const KIBIBYTE = 1024;
+  const MEBIBYTE = KIBIBYTE * KIBIBYTE;
+  const NOISE_MEBIBYTES = 3;
+  const MIN_COMPRESSED_MEBIBYTES = 2;
+  it("selects a member from a compressed archive whose bytes span several slices, and rejects bytes that do not start as gzip", () => {
+    // Random text compresses to little less than its length, so the compressed archive is several times the 1 MiB the gzip stream is fed at a time.
+    const noise = randomBytes(NOISE_MEBIBYTES * MEBIBYTE).toString("base64");
+    const compressed = gzip(
+      tar([
+        { path: "pad/noise.bin", text: "" },
+        { path: "pad/a.txt", text: "wanted" },
+        { path: "pad/big.bin", text: noise },
+      ]),
+    );
+    expect(compressed.length).toBeGreaterThan(MIN_COMPRESSED_MEBIBYTES * MEBIBYTE);
+    expect(text(unpack(compressed, { kind: "tar.gz", member: { extensions: [".txt"] } }).bytes)).toBe("wanted");
+    const corrupt = compressed.slice();
+    corrupt.set([0x00], 0);
+    expect(() => unpack(corrupt, { kind: "tar.gz", member: { extensions: [".txt"] } })).toThrow(ArchiveError);
   });
 });
 
