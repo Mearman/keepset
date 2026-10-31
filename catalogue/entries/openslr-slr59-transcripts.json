@@ -5,11 +5,13 @@
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "file": "crosswalks/speech-v1/id-text.json"
+    "file": "crosswalks/speech-v1/utterance-lines.json"
   },
-  "description": "The transcripts of ParlamentParla. No recipe reads them. Its transcripts are ParlamentParla's transcription files, inside archives that total about 27 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "description": "The transcripts of ParlamentParla: one instance for the clean archive and one for the other archive, each record being a segment with its identifier (the session, start and end that name its audio) and text. It carries none of the audio, which the download list of openslr-slr59 gives.",
   "domain": "Speech",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "instances": 0
+  },
   "id": "openslr-slr59-transcripts",
   "licence": {
     "kind": "custom",
@@ -23,24 +25,51 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "Its transcripts are ParlamentParla's transcription files, inside archives that total about 27 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
-    "status": "not-fetchable"
+    "files": [
+      {
+        "archive": {
+          "kind": "tar.gz",
+          "member": {
+            "path": "parlament_v1.0_clean.transcription"
+          }
+        },
+        "path": "parlament_v1.0_clean.tar.gz",
+        "source": 0
+      },
+      {
+        "archive": {
+          "kind": "tar.gz",
+          "member": {
+            "path": "parlament_v1.0_other.transcription"
+          }
+        },
+        "path": "parlament_v1.0_other.tar.gz",
+        "source": 1
+      }
+    ],
+    "parser": {
+      "encoding": "utf-8",
+      "format": "utterance-lines",
+      "layout": "sphinx"
+    },
+    "status": "fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 4551,
-        "sha256": "b2b9d2e538fb0442029ed752432b4f66bfc08f40faeb0a0b7a135c0750d61f5a",
-        "timestamp": "20260418051046",
-        "url": "https://web.archive.org/web/20260418051046/https://www.openslr.org/59/"
-      },
+      "retrieved": "2026-10-31",
       "status": "live",
-      "url": "https://www.openslr.org/59/"
+      "url": "https://www.openslr.org/resources/59/parlament_v1.0_clean.tar.gz"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/59/parlament_v1.0_other.tar.gz"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "text"
+  ]
 }

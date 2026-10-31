@@ -5,11 +5,13 @@
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "file": "crosswalks/speech-v1/id-text.json"
+    "file": "crosswalks/speech-v1/utterance-lines.json"
   },
-  "description": "The transcripts of Zeroth-Korean. No recipe reads them. Its transcripts are Zeroth-Korean's `.trans.txt` files, inside archives that total about 10 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "description": "The transcripts of Zeroth-Korean: the transcript files of its training and test data read together, each record being an utterance with its identifier and text. It carries none of the audio, which the download list of openslr-slr40 gives.",
   "domain": "Speech Corpus for Automatic Speech Recognition",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "nodes": 0
+  },
   "id": "openslr-slr40-transcripts",
   "licence": {
     "kind": "custom",
@@ -23,24 +25,31 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "Its transcripts are Zeroth-Korean's `.trans.txt` files, inside archives that total about 10 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
-    "status": "not-fetchable"
+    "archive": {
+      "concatenate": true,
+      "files": {
+        "pattern": "[^/]+_data_\\d+/\\d+/\\d+/\\d+_\\d+\\.trans\\.txt"
+      },
+      "kind": "tar.gz"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "utterance-lines"
+    },
+    "source": 0,
+    "status": "fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 3713,
-        "sha256": "3e7664fc9af1fc2852b04b4ee25c6d4fab2abc9c733c0d2dff7ce23d87f2b146",
-        "timestamp": "20260926145454",
-        "url": "https://web.archive.org/web/20260926145454/https://www.openslr.org/40/"
-      },
+      "retrieved": "2026-10-31",
       "status": "live",
-      "url": "https://www.openslr.org/40/"
+      "url": "https://www.openslr.org/resources/40/zeroth_korean.tar.gz"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "text"
+  ]
 }
