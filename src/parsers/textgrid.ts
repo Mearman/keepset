@@ -234,11 +234,11 @@ function tiersOf(text: string, position: number): Tier[] {
 }
 
 /**
- * Reads a corpus whose transcripts are Praat TextGrid files, in the long or the short text form, in UTF-8, UTF-16 or (for a file with no byte order mark) the recipe's encoding: each non-empty interval of the recipe's tier is a row, and so is each point of a point tier with a mark. A row's id is the file's id (the capture group of the recipe's `idPattern` on the file's path), a slash, the tier's 1-based position in the file, a full stop and the annotation's 1-based position in the tier, which names it even when several tiers share the tier's name. A row has the annotation's `text`, trimmed, and its `start` and `end` in seconds as the file states them (equal for a point). An empty interval is the grid's gap between annotations and is left out.
+ * Reads a corpus whose transcripts are Praat TextGrid files, in the long or the short text form, in UTF-8, UTF-16 or (for a file with no byte order mark) the recipe's encoding: each non-empty interval of the recipe's tier (of every tier when the recipe names none) is a row, and so is each point of a point tier with a mark. A row's id is the file's id (the capture group of the recipe's `idPattern` on the file's path), a slash, the tier's 1-based position in the file, a full stop and the annotation's 1-based position in the tier, which names it even when several tiers share the tier's name. A row has the annotation's `text`, trimmed, and its `start` and `end` in seconds as the file states them (equal for a point). An empty interval is the grid's gap between annotations and is left out.
  * @param files - The files a `files` archive selects, each with its path in the archive, in path order.
- * @param parser - The recipe's parser, which names the tier.
+ * @param parser - The recipe's parser, which names the tier, or none for every tier.
  * @returns The rows, in file and tier order.
- * @throws NativeParseError when a file is not a well-formed TextGrid, holds no tier of the recipe's name, two files give the same id, or a path does not match the pattern.
+ * @throws NativeParseError when a file is not a well-formed TextGrid, holds no tier of the recipe's name (or no tier at all when the recipe names none), two files give the same id, or a path does not match the pattern.
  */
 export function parseTextGrid(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Readonly<TextGridParser>): NativeTable {
   const seen = new Set<string>();
@@ -250,11 +250,12 @@ export function parseTextGrid(files: readonly { readonly path: string; readonly 
     }
     seen.add(stem);
     const tiers = tiersOf(decodeFile(file.bytes, parser), index + 1);
-    if (!tiers.some((tier) => tier.name === parser.tier)) {
-      throw new NativeParseError(FORMAT, index + 1, `the file ${file.path} has no tier named ${parser.tier}`);
+    const read = (tier: Tier): boolean => parser.tier === undefined || tier.name === parser.tier;
+    if (!tiers.some(read)) {
+      throw new NativeParseError(FORMAT, index + 1, parser.tier === undefined ? `the file ${file.path} has no tier` : `the file ${file.path} has no tier named ${parser.tier}`);
     }
     for (const [tierIndex, tier] of tiers.entries()) {
-      if (tier.name !== parser.tier) {
+      if (!read(tier)) {
         continue;
       }
       for (const [annotationIndex, annotation] of tier.annotations.entries()) {
