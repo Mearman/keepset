@@ -1,6 +1,7 @@
 import type { Parser } from "../entry";
 import { NativeParseError } from "../errors";
 import type { NativeRow, NativeTable } from "./native";
+import { memberId } from "./member-id";
 import { decode } from "./parse-native";
 
 type MemberTextParser = Extract<Parser, { format: "member-text" }>;
@@ -18,14 +19,10 @@ const BYTE_ORDER_MARK = "﻿";
  * @throws NativeParseError when a file's path does not match the pattern, two files give the same id, a file is not valid in the stated encoding, or the recipe's `line` is beyond the end of a file.
  */
 export function parseMemberText(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Readonly<MemberTextParser>): NativeTable {
-  const pattern = new RegExp(`^(?:${parser.idPattern})$`, "u");
   const seen = new Set<string>();
   const nodes: NativeRow[] = [];
   for (const [index, file] of files.entries()) {
-    const id = pattern.exec(file.path)?.[1];
-    if (id === undefined || id === "") {
-      throw new NativeParseError(FORMAT, index + 1, `the path ${file.path} gives no id by the pattern ${parser.idPattern}`);
-    }
+    const id = memberId(FORMAT, file.path, parser.idPattern, index + 1);
     if (seen.has(id)) {
       throw new NativeParseError(FORMAT, index + 1, `the id ${id} is given by two files`);
     }
