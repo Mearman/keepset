@@ -1,3 +1,10 @@
+## [0.80.2](https://github.com/Mearman/keepset/compare/v0.80.1...v0.80.2) (2026-10-31)
+
+
+### Bug Fixes
+
+* **archive:** read a tar.gz that has padding after its gzip member ([9d6548c](https://github.com/Mearman/keepset/commit/9d6548ce84a0fd4f388fa9dd9ce690986d7d0de8))
+
 ## [0.80.1](https://github.com/Mearman/keepset/compare/v0.80.0...v0.80.1) (2026-10-31)
 
 
