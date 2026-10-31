@@ -11,6 +11,7 @@ import { sevenZipReader } from "./seven-zip";
 import { requestCapture as requestCaptureCore } from "../resolve";
 import { type DigestPort, memoryStore, type StorePort } from "../source-bytes";
 import { isStreamed, roundTripTable, streamTable } from "./stream-dataset";
+import { unxz } from "./xz";
 
 
 export type { Download, DownloadProvenance, FetchedDataset, FetchOptions, FetchPort, FilesProvenance, Provenance, RoundTripReport } from "../fetch";
@@ -23,6 +24,8 @@ export { downloadRaw, type DownloadInit, STALL_MILLISECONDS, DOWNLOAD_ATTEMPTS, 
 export { fileStore, type FileStoreOptions, RANGED_MIN_BYTES, READ_CHUNK_BYTES } from "./file-store";
 export { sevenZipReader, type SevenZipReaderOptions, type SevenZipRun } from "./seven-zip";
 export type { ExtractedMembers, SevenZipPort } from "../archive";
+export { unxz } from "./xz";
+export type { XzPort } from "../archive";
 
 /** Where a Node fetch keeps what it downloads: a store of its own, or a digest of its own, which hashes bytes held whole and so keeps every source in memory as `memoryStore` does; with neither, Node's `fileStore`, which keeps a source in a temporary file and hashes it as it arrives. */
 type NodeStoreOption = { readonly store?: StorePort; readonly digest?: never } | { readonly digest?: DigestPort; readonly store?: never };
@@ -33,8 +36,8 @@ export type NodeFetchOptions = Omit<FetchOptions, "fetch" | "store"> & NodeStore
 /** The store a Node fetch keeps its sources in. */
 const storeOf = (options: NodeStoreOption): StorePort => options.store ?? (options.digest === undefined ? fileStore() : memoryStore(options.digest));
 
-/** The Node defaults of the ports: the raw downloader, the file store and 7-Zip as the 7z reader. */
-const defaults = (options: NodeFetchOptions): FetchOptions => ({ ...options, fetch: options.fetch ?? downloadRaw, store: storeOf(options), sevenZip: options.sevenZip ?? sevenZipReader() });
+/** The Node defaults of the ports: the raw downloader, the file store, 7-Zip as the 7z reader and the WebAssembly xz decoder, which Node alone carries. */
+const defaults = (options: NodeFetchOptions): FetchOptions => ({ ...options, fetch: options.fetch ?? downloadRaw, store: storeOf(options), sevenZip: options.sevenZip ?? sevenZipReader(), xz: options.xz ?? unxz });
 
 /**
  * Fetches a dataset of the bundled catalogue by id, with Node's own downloader and file store. See `../fetch`'s `fetchEntry` for what a fetch does.

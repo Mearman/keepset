@@ -208,6 +208,9 @@ importers:
       unbzip2-stream:
         specifier: 1.4.3
         version: 1.4.3
+      xz-decompress:
+        specifier: 0.2.3
+        version: 0.2.3
       zod:
         specifier: 4.6.6
         version: 4.6.6
@@ -3514,6 +3517,10 @@ packages:
     resolution: {integrity: sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==}
     engines: {node: '>=0.4'}
 
+  xz-decompress@0.2.3:
+    resolution: {integrity: sha512-O8v6HG8T0PrKBcpyWA13GkSYWFvncwzuzcLx5A7++l3HsE3atmoetXjIxrZ/JV/nbvSZ7WS4+3XvREZuVn+rEA==}
+    engines: {node: '>=16'}
+
   y18n@5.0.8:
     resolution: {integrity: sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==}
     engines: {node: '>=10'}
@@ -6580,6 +6587,8 @@ snapshots:
       strip-ansi: 7.2.0
 
   xtend@4.0.2: {}
+
+  xz-decompress@0.2.3: {}
 
   y18n@5.0.8: {}
 
