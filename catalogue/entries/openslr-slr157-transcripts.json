@@ -10,7 +10,7 @@
   "description": "The transcripts of Sagalee, an automatic speech recognition corpus of the Oromo language: each record is an utterance with its identifier and text, read from the text file beside each recording, filed by split and speaker, in the corpus's one solid 7z archive. It carries none of the audio, which is in the same archive.",
   "domain": "Speech",
   "expectedCounts": {
-    "nodes": 0
+    "nodes": 53573
   },
   "id": "openslr-slr157-transcripts",
   "licence": {
