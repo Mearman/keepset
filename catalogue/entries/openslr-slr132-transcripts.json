@@ -7,7 +7,7 @@
   "crosswalk": {
     "file": "crosswalks/speech-v1/id-text.json"
   },
-  "description": "The transcripts of Mohammed. No recipe reads them. Its transcripts are the Quran dataset's transcript table, inside archives that total about 24 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "description": "The transcripts of Mohammed (the Quran speech to text data). No recipe reads them: the transcript table and the verses' text are inside a tar archive compressed with xz, which keepset does not read.",
   "domain": "Speech",
   "expectedCounts": {},
   "id": "openslr-slr132-transcripts",
@@ -22,7 +22,7 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "Its transcripts are the Quran dataset's transcript table, inside archives that total about 24 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+    "reason": "Its transcript table (transcripts.tsv) and the text of every verse (all_ayat.json) are members of Quran_Speech_Dataset.tar.xz, a tar archive compressed as one xz stream, and keepset reads no xz compression (its archive kinds are plain, gzip and bzip2 files, tar archives with none of them or those two, zip archives and spreadsheets), so the recipe has nothing to select the table with.",
     "status": "not-fetchable"
   },
   "sources": [
