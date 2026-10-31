@@ -1,0 +1,127 @@
+{
+  "aliases": [
+    "slr87-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].speaker_id",
+        "op": "move",
+        "to": "nodes[].speaker"
+      },
+      {
+        "from": "nodes[].gender",
+        "op": "move",
+        "to": "nodes[].gender"
+      },
+      {
+        "from": "nodes[].age",
+        "op": "move",
+        "to": "nodes[].age"
+      },
+      {
+        "from": "nodes[].keyword_id",
+        "op": "move",
+        "to": "nodes[].keyword_id"
+      },
+      {
+        "from": "nodes[].distance",
+        "op": "move",
+        "to": "nodes[].distance"
+      },
+      {
+        "from": "nodes[].angle",
+        "op": "move",
+        "to": "nodes[].angle"
+      },
+      {
+        "from": "nodes[].noise_volume",
+        "op": "move",
+        "to": "nodes[].noise_volume"
+      },
+      {
+        "from": "nodes[].noise_type",
+        "op": "move",
+        "to": "nodes[].noise_type"
+      }
+    ],
+    "source": "json-table",
+    "target": "speech/v1"
+  },
+  "description": "The utterances of MobvoiHotwords as its manifests list them: one instance per manifest, each record being an utterance with its speaker, gender, age, keyword and recording conditions, there being no transcript. It carries none of the audio, which the download list of openslr-slr87 gives.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "instances": 6
+  },
+  "id": "openslr-slr87-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Apache License v.2.0",
+    "url": "https://www.openslr.org/87/"
+  },
+  "name": "MobvoiHotwords transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "tar.gz",
+      "members": {
+        "pattern": ".*/[np]_(dev|test|train)\\.json"
+      }
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "fields": [
+        "speaker_id",
+        "gender",
+        "age",
+        "keyword_id",
+        "distance",
+        "angle",
+        "noise_volume",
+        "noise_type"
+      ],
+      "format": "json-table",
+      "idField": "utt_id",
+      "layout": "array"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/87/mobvoi_hotword_dataset_resources.tgz"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "speaker",
+    "gender",
+    "age",
+    "keyword_id",
+    "distance",
+    "angle",
+    "noise_volume",
+    "noise_type"
+  ]
+}
