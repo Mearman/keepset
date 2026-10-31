@@ -40,7 +40,7 @@ npx keepset validate cora
 npx keepset roundtrip cora
 ```
 
-`namespaces [path]` lists the namespaces directly beneath a path (the outermost ones without one) with how many datasets each holds, and the site has a page for each, linked from every entry's namespace. `fetch` writes the normalised result with its provenance beside it; `validate` checks the entry against the entry schema and its crosswalk against crossmap's validation without the network; `roundtrip` fetches the dataset and checks that decoding the encoded native document gives it back. Exit status is 0 for an answer, 1 for a negative one (an invalid entry, a round trip that does not hold) and 2 for no answer (bad usage, an unknown or ambiguous name or namespace, a recipe that failed).
+`namespaces [path]` lists the namespaces directly beneath a path (the outermost ones without one) with how many datasets each holds, and the site has a page for each, linked from every entry's namespace. `fetch` writes the normalised result with its provenance beside it; `validate` checks the entry against the entry schema and its crosswalk against crossmap's validation without the network; `roundtrip` fetches the dataset once and checks that decoding the encoded native document gives it back, and resolves the same documents to the category's target as `fetch` does, so it also prints the target's counts and warns, as `fetch` does, of a recorded count that differs (one download is enough to verify an entry). Exit status is 0 for an answer, 1 for a negative one (an invalid entry, a round trip that does not hold) and 2 for no answer (bad usage, an unknown or ambiguous name or namespace, a recipe that failed).
 
 ## Names, aliases and namespaces
 
