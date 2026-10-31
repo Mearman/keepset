@@ -66,6 +66,13 @@ describe("the json-table parser", () => {
     expect(() => parseJsonTable('[{"id": "a", "length": "long"}]', options)).toThrow(/declared numeric but holds "long"/);
   });
 
+  it("reads an empty or blank string as a missing value, as an empty cell is in a delimited table", () => {
+    expect(parseJsonTable('{"audio_filepath": "a", "text": "", "duration": 2}\n{"audio_filepath": "b", "text": "  ", "duration": 3}', parser()).nodes).toEqual([
+      { id: "a", text: null, duration: 2 },
+      { id: "b", text: null, duration: 3 },
+    ]);
+  });
+
   it("is what parseNative runs for the format", () => {
     expect(parseNative(new TextEncoder().encode('{"audio_filepath": "a", "text": "x", "duration": 1}'), parser()).nodes).toEqual([{ id: "a", text: "x", duration: 1 }]);
   });
