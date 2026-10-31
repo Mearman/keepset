@@ -415,7 +415,7 @@ describe("unpackMembers when each selected member is an archive in its turn", ()
   const bundle = gzip(
     tar([
       { path: "decoy.tar.gz", text: "not an archive" },
-      { path: "wanted.tar.gz", text: inner },
+      { path: "wanted.tar.gz", bytes: inner },
     ]),
   );
   const select = { kind: "tar.gz", members: { path: "wanted.tar.gz" }, inner: { kind: "tar.gz", members: { pattern: "(?:dev|test)/text" } } } as const;
