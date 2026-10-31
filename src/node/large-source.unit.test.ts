@@ -5,6 +5,7 @@ import { createCatalogue, type Dataset } from "../catalogue";
 import type { FetchPort } from "../fetch";
 import type { StoredSource, StorePort } from "../source-bytes";
 import { fixtureIndex, liveEntry } from "../test-support/entries";
+import { allowance } from "../test-support/allowance";
 import { lazyGzip, lazyTar, rechunk, retainedBufferBytes } from "../test-support/streams";
 import { fileStore } from "./file-store";
 import { fetchEntry } from "./fetch-dataset";
@@ -22,9 +23,9 @@ const FILLER_BYTES = BUDGETS_OF_FILLER * MEMORY_BUDGET;
 const PIECES_PER_MEBIBYTE = 4;
 const PIECE_BYTES = MEBIBYTE / PIECES_PER_MEBIBYTE;
 const MEASURE_EVERY = 16;
-/** The time one mebibyte of the filler may take through the whole pipeline (generated, gzipped, hashed, written to the kept file, read back, gunzipped and scanned, with a garbage collection at each measurement), set far above what an unloaded host needs so a loaded runner does not fail the test, and scaled by the filler's size so a change to the budget changes the allowance with it. */
-const MILLISECONDS_PER_FILLER_MEBIBYTE = 500;
-const FETCH_TIMEOUT_MILLISECONDS = (FILLER_BYTES / MEBIBYTE) * MILLISECONDS_PER_FILLER_MEBIBYTE;
+/** The time one mebibyte of the filler takes through the whole pipeline (generated, gzipped, hashed, written to the kept file, read back, gunzipped and scanned, with a garbage collection at each measurement) alone on a quiet host, rounded up. */
+const QUIET_MILLISECONDS_PER_FILLER_MEBIBYTE = 70;
+const FETCH_TIMEOUT_MILLISECONDS = allowance((FILLER_BYTES / MEBIBYTE) * QUIET_MILLISECONDS_PER_FILLER_MEBIBYTE);
 
 const karate = "% karate excerpt\n1 2\n2 3\n3 1\n";
 const now = (): Date => new Date("2026-10-31T12:00:00.000Z");

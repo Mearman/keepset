@@ -5,6 +5,7 @@ import { unzipSync, zipSync } from "fflate";
 import { describe, expect, it } from "vitest";
 import { unpack, unpackMembers, unpackParts } from "./archive";
 import { BLOCK, scanTar } from "./node/tar";
+import { allowance } from "./test-support/allowance";
 import { bzip2, collect, gzip, tar, zip64 } from "./test-support/archives";
 import { chunkedSource } from "./test-support/streams";
 
@@ -22,6 +23,9 @@ const ODD_CHUNK_BYTES = ODD_CHUNK_KIBIBYTES * KIBIBYTE + ODD_CHUNK_PAST;
 const LARGE_CHUNK_KIBIBYTES = 64;
 const LARGE_CHUNK_BYTES = LARGE_CHUNK_KIBIBYTES * KIBIBYTE + 1;
 const CHUNK_SIZES = [BLOCK - 1, BLOCK + 1, ODD_CHUNK_BYTES, LARGE_CHUNK_BYTES];
+/** The time the slowest of the archive forms (a tar.bz2, whose decoder is written in JavaScript) takes for one of the tests below alone on a quiet host, rounded up. */
+const QUIET_FORM_MILLISECONDS = 500;
+const FORM_TIMEOUT_MILLISECONDS = allowance(QUIET_FORM_MILLISECONDS);
 /** How deep a path must be to need a GNU long-name record, past the ustar name field's hundred bytes. */
 const LONG_PATH_DEPTH = 30;
 
@@ -65,7 +69,7 @@ describe("the streamed tar reader against the whole-archive reference", () => {
     for (const members of streamed) {
       expect(members.map((member) => [member.path, text(member.bytes)])).toEqual(reference);
     }
-  });
+  }, FORM_TIMEOUT_MILLISECONDS);
 
   it.each(kinds)("selects one member and named parts of a $kind cut into chunks as the whole-archive reference does", async ({ kind, bytes, whole }) => {
     const [large] = (await scanTar([whole(bytes)], (path) => path === "suite/large.txt")).members;
