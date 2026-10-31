@@ -1,3 +1,10 @@
+# [0.87.0](https://github.com/Mearman/keepset/compare/v0.86.0...v0.87.0) (2026-10-31)
+
+
+### Features
+
+* **catalogue:** add the THCHS-30 transcripts ([46b31db](https://github.com/Mearman/keepset/commit/46b31db416ce75ac32a567b5af826b1f2dadc417))
+
 # [0.86.0](https://github.com/Mearman/keepset/compare/v0.85.0...v0.86.0) (2026-10-31)
 
 
