@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "slr146-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of CML-TTS Dataset. No recipe reads them. Its transcripts are CML-TTS's transcript files, inside archives that total about 384 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "domain": "Speech",
+  "expectedCounts": {},
+  "id": "openslr-slr146-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "CC-BY 4.0 license",
+    "url": "https://www.openslr.org/146/"
+  },
+  "name": "CML-TTS Dataset transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "Its transcripts are CML-TTS's transcript files, inside archives that total about 384 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 8362,
+        "sha256": "6cf30f567b74cc2c55d380809f55a2edef1216d088bc27d25672191baec9a0d1",
+        "timestamp": "20260516195759",
+        "url": "https://web.archive.org/web/20260516195759/https://www.openslr.org/146/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/146/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "slr151-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of Kallaama. No recipe reads them. Its transcripts are Kallaama's STM files, inside archives that total about 12 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "domain": "Speech",
+  "expectedCounts": {},
+  "id": "openslr-slr151-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Creative Commons Attribution 4.0 International (CC-BY-4.0)",
+    "url": "https://www.openslr.org/151/"
+  },
+  "name": "Kallaama transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "Its transcripts are Kallaama's STM files, inside archives that total about 12 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 5621,
+        "sha256": "d8753e454c02943e26c9f1d5904e0222370dbbe6cea2d4cef8c01617e6d04376",
+        "timestamp": "20260227144749",
+        "url": "https://web.archive.org/web/20260227144749/https://www.openslr.org/151/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/151/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

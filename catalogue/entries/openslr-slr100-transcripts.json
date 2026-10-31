@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "slr100-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of Multilingual TEDx. No recipe reads them. Its transcripts are Multilingual TEDx's transcript and segment files, inside archives that total about 221 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "domain": "Speech",
+  "expectedCounts": {},
+  "id": "openslr-slr100-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Creative Commons Attribution-NonCommercial-NoDerivs 4.0 (CC BY-NC-ND 4.0)",
+    "url": "https://www.openslr.org/100/"
+  },
+  "name": "Multilingual TEDx transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "Its transcripts are Multilingual TEDx's transcript and segment files, inside archives that total about 221 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 14008,
+        "sha256": "cbd4edf9a03dc6af217426043b269fdf2be5640cec10876ec05891e54c247206",
+        "timestamp": "20260616123453",
+        "url": "https://web.archive.org/web/20260616123453/https://www.openslr.org/100/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/100/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

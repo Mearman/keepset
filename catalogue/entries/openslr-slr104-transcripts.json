@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "slr104-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of Multilingual and code-switching ASR Challenge Dataset - sub-task2. No recipe reads them. Its transcripts are the challenge's transcript files, inside archives that total about 13 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "domain": "Speech",
+  "expectedCounts": {},
+  "id": "openslr-slr104-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "CC BY-SA 4.0",
+    "url": "https://www.openslr.org/104/"
+  },
+  "name": "Multilingual and code-switching ASR Challenge Dataset - sub-task2 transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "Its transcripts are the challenge's transcript files, inside archives that total about 13 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 5762,
+        "sha256": "cfc02250283c366f74f545e34e498b80c3397ed38738c8f7f2d55e0e2967e54f",
+        "timestamp": "20250720084726",
+        "url": "https://web.archive.org/web/20250720084726/https://www.openslr.org/104/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/104/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

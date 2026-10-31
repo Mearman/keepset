@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "slr147-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of Veracruz Orizaba Nahuatl Endangered Language. No recipe reads them. The files have been withdrawn from OpenSLR: every download returns HTTP 404, and the page says the corpus moved to the Mozilla Data Collective.",
+  "domain": "Speech",
+  "expectedCounts": {},
+  "id": "openslr-slr147-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)",
+    "url": "https://www.openslr.org/147/"
+  },
+  "name": "Veracruz Orizaba Nahuatl Endangered Language transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "The files have been withdrawn from OpenSLR: every download returns HTTP 404, and the page says the corpus moved to the Mozilla Data Collective.",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 8526,
+        "sha256": "94c0ad870dc1f764b05dd42d3d15af125904af7b05a8477448773872f43de650",
+        "timestamp": "20260516204644",
+        "url": "https://web.archive.org/web/20260516204644/https://www.openslr.org/147/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/147/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

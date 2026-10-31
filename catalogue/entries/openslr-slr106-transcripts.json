@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "slr106-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of nicolingua-0004-west-african-va-asr-corpus. No recipe reads them. The corpus publishes no free-text transcripts: its metadata table gives each recording a prompt class label, which is spelled out only by joining it with separate vocabulary tables.",
+  "domain": "Speech",
+  "expectedCounts": {},
+  "id": "openslr-slr106-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)",
+    "url": "https://www.openslr.org/106/"
+  },
+  "name": "nicolingua-0004-west-african-va-asr-corpus transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "The corpus publishes no free-text transcripts: its metadata table gives each recording a prompt class label, which is spelled out only by joining it with separate vocabulary tables.",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3744,
+        "sha256": "bcfd2f61d51db1cfe3784dfc2a79785b4fd8fe98cbe2d2af7f0a6ca4f41bf20a",
+        "timestamp": "20260516211153",
+        "url": "https://web.archive.org/web/20260516211153/https://www.openslr.org/106/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/106/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

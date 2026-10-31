@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "slr126-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of IISc-MILE Kannada ASR Corpus. No recipe reads them. Its transcripts are the Kannada corpus's per-utterance text files, inside archives that total about 28 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "domain": "Speech",
+  "expectedCounts": {},
+  "id": "openslr-slr126-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution 2.0 Generic (CC BY 2.0)",
+    "url": "https://www.openslr.org/126/"
+  },
+  "name": "IISc-MILE Kannada ASR Corpus transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "Its transcripts are the Kannada corpus's per-utterance text files, inside archives that total about 28 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4601,
+        "sha256": "d1d0d30cb479624e45cb27ae3e592e3ff8d09e9659d665a1d4cc0bcea8a5fb6e",
+        "timestamp": "20260616120235",
+        "url": "https://web.archive.org/web/20260616120235/https://www.openslr.org/126/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/126/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

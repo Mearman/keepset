@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "slr127-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of IISc-MILE Tamil ASR Corpus. No recipe reads them. Its transcripts are the Tamil corpus's per-utterance text files, inside archives that total about 14 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "domain": "Speech",
+  "expectedCounts": {},
+  "id": "openslr-slr127-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution 2.0 Generic (CC BY 2.0)",
+    "url": "https://www.openslr.org/127/"
+  },
+  "name": "IISc-MILE Tamil ASR Corpus transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "Its transcripts are the Tamil corpus's per-utterance text files, inside archives that total about 14 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4014,
+        "sha256": "8d7d7028b8f5bedb37927e6e83d98c2da837240c201dd92a463b6fc28031b1d3",
+        "timestamp": "20260516203726",
+        "url": "https://web.archive.org/web/20260516203726/https://www.openslr.org/127/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/127/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

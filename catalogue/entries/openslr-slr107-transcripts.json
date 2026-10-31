@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "slr107-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of Totonac Resources. No recipe reads them. Its transcripts are the Totonac ELAN annotation files, whose location in the archive is not settled, inside archives that total about 4 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "domain": "Speech",
+  "expectedCounts": {},
+  "id": "openslr-slr107-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-NonCommercial-ShareAlike 3.0 Unported (CC BY-NC-SA 3.0)",
+    "url": "https://www.openslr.org/107/"
+  },
+  "name": "Totonac Resources transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "Its transcripts are the Totonac ELAN annotation files, whose location in the archive is not settled, inside archives that total about 4 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 6517,
+        "sha256": "2150a4d96989e81fb0de9b8374a59212126e2d5a3893b219558e79ed053668fc",
+        "timestamp": "20251206042616",
+        "url": "https://web.archive.org/web/20251206042616/https://www.openslr.org/107/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/107/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

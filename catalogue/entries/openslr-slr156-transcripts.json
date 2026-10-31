@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "slr156-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of SMIIP-TV dataset. No recipe reads them. The corpus is for speaker verification and publishes no transcripts: its only data per utterance is the recording environment and the speaker's region and age.",
+  "domain": "Speech",
+  "expectedCounts": {},
+  "id": "openslr-slr156-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0 US)",
+    "url": "https://www.openslr.org/156/"
+  },
+  "name": "SMIIP-TV dataset transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "The corpus is for speaker verification and publishes no transcripts: its only data per utterance is the recording environment and the speaker's region and age.",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 5498,
+        "sha256": "c7c14b367a53a437f9a99321760bcbe5e06a7d8bba77a98bdc5dde0a6f9ac626",
+        "timestamp": "20260516200124",
+        "url": "https://web.archive.org/web/20260516200124/https://www.openslr.org/156/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/156/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

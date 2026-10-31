@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "slr13-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of RWCP Sound Scene Database. No recipe reads them. The corpus is sound scenes and impulse responses, not speech with transcripts: the archive holds recordings and documentation pages only.",
+  "domain": "Speech + Software",
+  "expectedCounts": {},
+  "id": "openslr-slr13-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Research and development use only",
+    "url": "https://www.openslr.org/13/"
+  },
+  "name": "RWCP Sound Scene Database transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "The corpus is sound scenes and impulse responses, not speech with transcripts: the archive holds recordings and documentation pages only.",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3457,
+        "sha256": "083e5ed242e121977f9946e622178c2b1901b88b7953f9f0db535a3f76c64752",
+        "timestamp": "20260516195552",
+        "url": "https://web.archive.org/web/20260516195552/https://www.openslr.org/13/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/13/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

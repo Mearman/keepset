@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "slr115-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of EmoV_DB. No recipe reads them. The archives hold recordings only: the sentences are the CMU Arctic prompts, and the page points to TextGrid annotations hosted elsewhere.",
+  "domain": "Speech",
+  "expectedCounts": {},
+  "id": "openslr-slr115-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Click here to view the license (https://github.com/numediart/EmoV-DB/blob/master/LICENSE.md)",
+    "url": "https://www.openslr.org/115/"
+  },
+  "name": "EmoV_DB transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "The archives hold recordings only: the sentences are the CMU Arctic prompts, and the page points to TextGrid annotations hosted elsewhere.",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 11684,
+        "sha256": "119473de96717b574993af04e720f5e90d41311033c2097c7288a77e8f5377a6",
+        "timestamp": "20260903063116",
+        "url": "https://web.archive.org/web/20260903063116/https://www.openslr.org/115/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/115/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

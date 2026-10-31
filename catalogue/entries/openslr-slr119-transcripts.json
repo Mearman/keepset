@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "slr119-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of AliMeeting. No recipe reads them. AliMeeting's TextGrid files are hosted outside OpenSLR (the download list of its page links to external storage), so no OpenSLR source holds the transcripts.",
+  "domain": "Speech",
+  "expectedCounts": {},
+  "id": "openslr-slr119-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "CC BY-SA 4.0",
+    "url": "https://www.openslr.org/119/"
+  },
+  "name": "AliMeeting transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "AliMeeting's TextGrid files are hosted outside OpenSLR (the download list of its page links to external storage), so no OpenSLR source holds the transcripts.",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 5922,
+        "sha256": "62bdcb06a0fc58b4e615d8f184df2a85cb4bbc8a98c54e2c7b258c46f0cf0da7",
+        "timestamp": "20261013110600",
+        "url": "https://web.archive.org/web/20261013110600/https://www.openslr.org/119/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/119/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "slr33-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of Aishell. No recipe reads them. Its transcripts are Aishell's transcript file, inside archives that total about 15 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "domain": "Speech",
+  "expectedCounts": {},
+  "id": "openslr-slr33-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Apache License v.2.0",
+    "url": "https://www.openslr.org/33/"
+  },
+  "name": "Aishell transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "Its transcripts are Aishell's transcript file, inside archives that total about 15 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4011,
+        "sha256": "072e77c5f5a401eca59f7ba0c6608a4c6720f6c67227ab53c37f5745d7b019d9",
+        "timestamp": "20260908011541",
+        "url": "https://web.archive.org/web/20260908011541/https://www.openslr.org/33/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/33/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

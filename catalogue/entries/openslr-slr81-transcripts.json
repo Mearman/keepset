@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "slr81-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of Small Audio Clips. No recipe reads them. The archive holds a few audio samples and no transcript or metadata file.",
+  "domain": "Speech",
+  "expectedCounts": {},
+  "id": "openslr-slr81-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "CC BY 4.0",
+    "url": "https://www.openslr.org/81/"
+  },
+  "name": "Small Audio Clips transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "The archive holds a few audio samples and no transcript or metadata file.",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3118,
+        "sha256": "796563d27c7654e04bc14546ff6fc2a949ff13d8add920dae49a530fd2c05df8",
+        "timestamp": "20260315175904",
+        "url": "https://web.archive.org/web/20260315175904/https://www.openslr.org/81/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/81/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

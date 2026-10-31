@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "slr139-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of Audiocite.net. No recipe reads them. The corpus gives no transcripts (the transcript field is empty in every record) and its per-recording metadata is one JSON object keyed by file name, which no parser reads.",
+  "domain": "Speech",
+  "expectedCounts": {},
+  "id": "openslr-slr139-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Depends on each audio file (CC BY (Public domain) or CC BY SA (Share alike) or CC BY ND (No modification) or CC BY NC (No commercial use) or combination of the above)",
+    "url": "https://www.openslr.org/139/"
+  },
+  "name": "Audiocite.net transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "The corpus gives no transcripts (the transcript field is empty in every record) and its per-recording metadata is one JSON object keyed by file name, which no parser reads.",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 19778,
+        "sha256": "1ce921063aeec3ed230dd01a66f37ea8c4f4d71026a12feaa649ed0d49298ffa",
+        "timestamp": "20260516204753",
+        "url": "https://web.archive.org/web/20260516204753/https://www.openslr.org/139/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/139/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

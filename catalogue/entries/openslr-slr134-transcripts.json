@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "slr134-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of SASPEECH. No recipe reads them. Its transcripts are SASPEECH's metadata tables, inside archives that total about 11 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "domain": "Speech",
+  "expectedCounts": {},
+  "id": "openslr-slr134-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Custom non-commercial (See README)",
+    "url": "https://www.openslr.org/134/"
+  },
+  "name": "SASPEECH transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "Its transcripts are SASPEECH's metadata tables, inside archives that total about 11 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 6034,
+        "sha256": "505953bd7866f451088b48e7cf92cb1097db92953ab32bccc8ab215704aea701",
+        "timestamp": "20260129025941",
+        "url": "https://web.archive.org/web/20260129025941/https://www.openslr.org/134/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/134/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

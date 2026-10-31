@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "slr129-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of BibleTTS. No recipe reads them. Its transcripts are BibleTTS's per-verse text files, inside archives that total about 90 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "domain": "Speech",
+  "expectedCounts": {},
+  "id": "openslr-slr129-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)",
+    "url": "https://www.openslr.org/129/"
+  },
+  "name": "BibleTTS transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "Its transcripts are BibleTTS's per-verse text files, inside archives that total about 90 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 7002,
+        "sha256": "5aa83fa974cc6414fdf47e4738b019539cc149bb4acdea998e2df9197090c687",
+        "timestamp": "20260315173456",
+        "url": "https://web.archive.org/web/20260315173456/https://www.openslr.org/129/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/129/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}
