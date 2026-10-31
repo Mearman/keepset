@@ -112,6 +112,19 @@ describe("scanTar", () => {
   });
 });
 
+/** Zero bytes after the gzip member, as the padding a tool leaves after the end of a tar archive. */
+const PADDING_BYTES = 37;
+
+describe("unpack of a tar.gz with bytes after its gzip member", () => {
+  it("reads the archive a gzip member holds when padding follows it, and still refuses a stream that is not gzip", () => {
+    const compressed = gzip(tar([{ path: "pad/a.txt", text: "wanted" }]));
+    const padded = Uint8Array.from([...compressed, ...new Uint8Array(PADDING_BYTES)]);
+    expect(text(unpack(padded, { kind: "tar.gz", member: { extensions: [".txt"] } }).bytes)).toBe("wanted");
+    expect(() => unpack(new TextEncoder().encode("not gzip data at all"), { kind: "tar.gz", member: { extensions: [".txt"] } })).toThrow(/not valid gzip data/);
+    expect(() => unpack(compressed.subarray(0, compressed.length >> 1), { kind: "tar.gz", member: { extensions: [".txt"] } })).toThrow(ArchiveError);
+  });
+});
+
 describe("unpack of a tar.gz larger than one gzip slice", () => {
   const KIBIBYTE = 1024;
   const MEBIBYTE = KIBIBYTE * KIBIBYTE;
