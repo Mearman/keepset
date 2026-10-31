@@ -10,7 +10,7 @@
   "description": "The transcripts of LibriSpeech ASR corpus: one instance for each subset archive, its chapters' transcript files read together, each record being an utterance with its identifier and text. It carries none of the audio, which the download list of openslr-slr12 gives.",
   "domain": "Speech",
   "expectedCounts": {
-    "instances": 0
+    "instances": 7
   },
   "id": "openslr-slr12-transcripts",
   "licence": {

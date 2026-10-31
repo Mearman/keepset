@@ -10,7 +10,7 @@
   "description": "The transcripts of IISc-MILE Kannada ASR Corpus: one instance for the training archive and one for the test archive, each record being an utterance named by its transcript file with that file's text. It carries none of the audio, which the download list of openslr-slr126 gives.",
   "domain": "Speech",
   "expectedCounts": {
-    "instances": 0
+    "instances": 2
   },
   "id": "openslr-slr126-transcripts",
   "licence": {

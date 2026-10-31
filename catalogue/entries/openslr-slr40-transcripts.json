@@ -10,7 +10,7 @@
   "description": "The transcripts of Zeroth-Korean: the transcript files of its training and test data read together, each record being an utterance with its identifier and text. It carries none of the audio, which the download list of openslr-slr40 gives.",
   "domain": "Speech Corpus for Automatic Speech Recognition",
   "expectedCounts": {
-    "nodes": 0
+    "nodes": 22720
   },
   "id": "openslr-slr40-transcripts",
   "licence": {

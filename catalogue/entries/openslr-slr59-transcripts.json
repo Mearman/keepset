@@ -10,7 +10,7 @@
   "description": "The transcripts of ParlamentParla: one instance for the clean archive and one for the other archive, each record being a segment with its identifier (the session, start and end that name its audio) and text. It carries none of the audio, which the download list of openslr-slr59 gives.",
   "domain": "Speech",
   "expectedCounts": {
-    "instances": 0
+    "instances": 2
   },
   "id": "openslr-slr59-transcripts",
   "licence": {
