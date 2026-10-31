@@ -18,7 +18,7 @@
     "source": "none",
     "target": "audio/v1"
   },
-  "description": "Room Impulse Response and Noise Database (annotations). No recipe reads it. The room and noise lists are plain lists beside 1.3 GB of audio in one archive, and the lists name files without further annotation.",
+  "description": "Room Impulse Response and Noise Database (annotations). No recipe reads it. The annotations are the room and noise lists inside a 1.3 GB archive of recordings, more than a fetch holds in memory (see https://github.com/Mearman/keepset/issues/212). The option-list parser reads the lists, so the size is all that remains.",
   "domain": "Audio",
   "expectedCounts": {},
   "id": "openslr-slr28-clips",
@@ -34,7 +34,7 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "The room and noise lists are plain lists beside 1.3 GB of audio in one archive, and the lists name files without further annotation.",
+    "reason": "The annotations are the room and noise lists inside a 1.3 GB archive of recordings, more than a fetch holds in memory (see https://github.com/Mearman/keepset/issues/212). The option-list parser reads the lists, so the size is all that remains.",
     "status": "not-fetchable"
   },
   "sources": [
