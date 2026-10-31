@@ -1,0 +1,55 @@
+{
+  "aliases": [
+    "slr153-corpus"
+  ],
+  "category": "corpus/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/corpus-v1/word-text.json"
+  },
+  "description": "The text of the Yerevan City Magazine corpus of Armenian articles: each document is one Word file of the archive, a .docx package or a legacy .doc file, read as the plain text of its main story with its paragraphs separated by line feeds and named by its path beneath the archive's top directory without the extension.",
+  "domain": "Text",
+  "expectedCounts": {
+    "nodes": 0
+  },
+  "id": "openslr-slr153-corpus",
+  "licence": {
+    "kind": "custom",
+    "name": "CC BY-SA 4.0",
+    "url": "https://www.openslr.org/153/"
+  },
+  "name": "Yerevan City Magazine texts",
+  "namespace": [
+    "openslr",
+    "text"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "files": {
+        "pattern": "data_evnmag/.+\\.docx?"
+      },
+      "kind": "tar.gz"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "word-text",
+      "idPattern": "data_evnmag/(.+)\\.docx?"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/153/data_evnmag.tgz"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "text"
+  ]
+}
