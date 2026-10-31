@@ -144,8 +144,14 @@ export type ArchiveMember = z.infer<typeof ArchiveMemberSchema>;
 /** The archive kinds that hold several files, from which a recipe selects one (`member`) or every one a selector matches (`members`). */
 const FileArchiveKindSchema = z.enum(["zip", "tar", "tar.gz", "tar.bz2", "7z"]);
 
-/** An archive a collection is read from: every file a selector matches, at least one. With `inner` of kind `xlsx`, every matched member is a workbook and each of its sheets, in the workbook's order, is one file of the collection: the sheet's CSV, at the path of the member and the sheet's name joined by `/`, for an instance format laid out on a sheet. `sheets` is a regular expression a sheet's whole name must match for the sheet to be read (every sheet when it is absent), and it must match at least one sheet of every workbook. */
-export const CollectionArchiveSchema = z.object({ kind: FileArchiveKindSchema, members: ArchiveMemberSchema, inner: z.object({ kind: z.literal("xlsx"), sheets: MemberPatternSchema.optional() }).strict().optional() }).strict();
+/** An archive a collection is read from: every file a selector matches, at least one. With `inner` of kind `xlsx`, every matched member is a workbook and each of its sheets, in the workbook's order, is one file of the collection: the sheet's CSV, at the path of the member and the sheet's name joined by `/`, for an instance format laid out on a sheet. `sheets` is a regular expression a sheet's whole name must match for the sheet to be read (every sheet when it is absent), and it must match at least one sheet of every workbook. With `inner` of a file archive kind and its own `members` selector, every matched member is an archive in its turn and each file that selector matches, at least one in each, is one file of the collection, at the member's path and the file's path joined by `/` (a download whose one wanted member is a tarball of the instance files). */
+export const CollectionArchiveSchema = z
+  .object({
+    kind: FileArchiveKindSchema,
+    members: ArchiveMemberSchema,
+    inner: z.union([z.object({ kind: z.literal("xlsx"), sheets: MemberPatternSchema.optional() }).strict(), z.object({ kind: FileArchiveKindSchema, members: ArchiveMemberSchema }).strict()]).optional(),
+  })
+  .strict();
 
 /** An archive whose dataset is spread over several of its files, which a parser of a multi-file format (`ogb`, `member-text`, `nxt-words`, `eaf`, `textgrid`, `option-list`, `chat`) reads together into one document: every file the `files` selector matches, at least one, in path order, each gunzipped first when `inner` is `gzip` (an OGB dataset zip holds its tables as `.csv.gz` files). When `inner` is a file archive kind with its own `files` selector, each matched member is an archive in its turn and the files are those its selector matches, at least one in each, filed under the member's path and the file's path joined by `/` (a tarball that holds its annotations as one zip). */
 export const FilesArchiveSchema = z

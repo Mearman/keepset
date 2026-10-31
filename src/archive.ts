@@ -212,31 +212,42 @@ export interface Member {
 }
 
 /**
- * Unpacks a source into every file a collection's selector matches, or, with an `xlsx` inner layout, into every sheet of every matched workbook that its `sheets` pattern matches as the sheet's CSV, at the member's path and the sheet's name joined by `/`, members in path order and sheets in the workbook's order. The files are given one at a time: a zip member is read and inflated only when it is reached, so a reader that lets each file go before taking the next holds one member's bytes, never every member at once; a tar archive is read once as it arrives, keeping the members the selector matches; a 7z archive is decoded once by the platform's 7z reader, which keeps the members the selector matches where it can give them one at a time.
+ * Unpacks a source into every file a collection's selector matches, or, with an `inner` layout, into the files inside each matched member. An `xlsx` layout gives every sheet of every matched workbook that its `sheets` pattern matches as the sheet's CSV, at the member's path and the sheet's name joined by `/`, sheets in the workbook's order. A file archive layout unpacks each matched member as an archive in its turn and gives every file its `members` selector matches, at the member's path and the file's path joined by `/`, in path order. Members are in path order. The files are given one at a time: a zip member is read and inflated only when it is reached, so a reader that lets each file go before taking the next holds one member's bytes, never every member at once; a tar archive is read once as it arrives, keeping only the members the selector matches (the outer archive's other members, however large, are never held), and a matched member that is itself an archive is held while its own files are given.
  * @param input - The downloaded bytes, held in memory or kept anywhere.
  * @param archive - The recipe's archive layout, which selects members with `members`.
  * @param options - The platform's 7z reader and the abort signal, which only a 7z archive needs.
  * @returns Each file.
- * @throws ArchiveError when the bytes are not a well-formed archive of the stated kind, the selector matches no member (at the first file taken), or a member an `xlsx` layout reads is not a workbook or has no sheet the pattern matches (at that member).
+ * @throws ArchiveError when the bytes are not a well-formed archive of the stated kind, the selector matches no member (at the first file taken), a member an `xlsx` layout reads is not a workbook or has no sheet the pattern matches, or a member an archive layout reads is not a well-formed archive of the stated kind or holds no file the inner selector matches (at that member).
  */
 export async function* unpackMembers(input: Uint8Array | Readonly<SourceBytes>, archive: CollectionArchive, options?: Readonly<UnpackOptions>): AsyncGenerator<Member, void, undefined> {
-  const { sheets } = archive.inner ?? {};
-  const wanted = sheets === undefined ? undefined : new RegExp(`^(?:${sheets})$`, "u");
+  const { inner } = archive;
   for await (const member of selectMembers(asSource(input), archive, options)) {
-    if (archive.inner === undefined) {
+    if (inner === undefined) {
       yield member;
       continue;
     }
-    let names: string[];
+    const inside = (error: unknown): ArchiveError => new ArchiveError(`member ${member.path}: ${error instanceof Error ? error.message : String(error)}`, { cause: error });
+    if (inner.kind === "xlsx") {
+      const wanted = inner.sheets === undefined ? undefined : new RegExp(`^(?:${inner.sheets})$`, "u");
+      let names: string[];
+      try {
+        names = sheetNames(member.bytes).filter((sheet) => wanted === undefined || wanted.test(sheet));
+      } catch (error) {
+        throw inside(error);
+      }
+      if (names.length === 0) {
+        throw new ArchiveError(`member ${member.path} has no sheet matching ${inner.sheets ?? ""}`);
+      }
+      yield* names.map((sheet) => ({ path: `${member.path}/${sheet}`, bytes: sheetToCsv(member.bytes, { kind: "xlsx", sheet }) }));
+      continue;
+    }
     try {
-      names = sheetNames(member.bytes).filter((sheet) => wanted === undefined || wanted.test(sheet));
+      for await (const file of unpackMembers(member.bytes, { kind: inner.kind, members: inner.members })) {
+        yield { path: `${member.path}/${file.path}`, bytes: file.bytes };
+      }
     } catch (error) {
-      throw new ArchiveError(`member ${member.path}: ${error instanceof Error ? error.message : String(error)}`, { cause: error });
+      throw inside(error);
     }
-    if (names.length === 0) {
-      throw new ArchiveError(`member ${member.path} has no sheet matching ${sheets ?? ""}`);
-    }
-    yield* names.map((sheet) => ({ path: `${member.path}/${sheet}`, bytes: sheetToCsv(member.bytes, { kind: "xlsx", sheet }) }));
   }
 }
 

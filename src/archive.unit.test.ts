@@ -400,3 +400,40 @@ describe("unpackFiles", () => {
   });
 });
 
+
+describe("unpackMembers when each selected member is an archive in its turn", () => {
+  /** A tarball of instance files, with a listing that is not an instance and a macOS resource fork beside one. */
+  const inner = gzip(
+    tar([
+      { path: "test/text", text: "t1 ONE\n" },
+      { path: "dev/text", text: "d1 TWO\n" },
+      { path: "dev/ocr_text", text: "not an instance" },
+      { path: "__MACOSX/dev/._text", text: "fork" },
+    ]),
+  );
+  /** The bundle: a member that is not an archive, which only a selector taking it opens, and the tarball. */
+  const bundle = gzip(
+    tar([
+      { path: "decoy.tar.gz", text: "not an archive" },
+      { path: "wanted.tar.gz", text: inner },
+    ]),
+  );
+  const select = { kind: "tar.gz", members: { path: "wanted.tar.gz" }, inner: { kind: "tar.gz", members: { pattern: "(?:dev|test)/text" } } } as const;
+
+  it("gives the files the inner selector matches, in path order, under the member's path and their own", async () => {
+    const members = await collect(unpackMembers(bundle, select));
+    expect(members.map((member) => [member.path, text(member.bytes)])).toEqual([
+      ["wanted.tar.gz/dev/text", "d1 TWO\n"],
+      ["wanted.tar.gz/test/text", "t1 ONE\n"],
+    ]);
+  });
+
+  it("opens only the member the outer selector takes", async () => {
+    await expect(collect(unpackMembers(bundle, { ...select, members: { path: "decoy.tar.gz" } }))).rejects.toThrow(/member decoy\.tar\.gz: /);
+    expect(await collect(unpackMembers(bundle, select))).toHaveLength(2);
+  });
+
+  it("rejects an inner selector that matches nothing, naming the member", async () => {
+    await expect(collect(unpackMembers(bundle, { ...select, inner: { kind: "tar.gz", members: { extensions: [".segments"] } } }))).rejects.toThrow(/member wanted\.tar\.gz: expected at least one member ending \.segments/);
+  });
+});
