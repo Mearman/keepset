@@ -1,3 +1,10 @@
+## [0.80.3](https://github.com/Mearman/keepset/compare/v0.80.2...v0.80.3) (2026-10-31)
+
+
+### Bug Fixes
+
+* **parsers:** read an empty string in a JSON table as a missing value ([077a447](https://github.com/Mearman/keepset/commit/077a4472b811a9559b5145d7b9299c9a2f6756bb))
+
 ## [0.80.2](https://github.com/Mearman/keepset/compare/v0.80.1...v0.80.2) (2026-10-31)
 
 
