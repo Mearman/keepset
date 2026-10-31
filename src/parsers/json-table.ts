@@ -17,7 +17,7 @@ const BYTE_ORDER_MARK = "\uFEFF";
  * @param record - The record.
  * @param field - The field's name.
  * @param line - The 1-based line of the record, or the record's 1-based position in an array, for the error.
- * @returns The field's string or number, or null when the record lacks the field or holds null there.
+ * @returns The field's string or number, or null when the record lacks the field or holds null or an empty string there.
  * @throws NativeParseError when the field holds anything but a string, a number or null.
  */
 function cell(record: Readonly<Record<string, unknown>>, field: string, line: number): string | number | null {
@@ -25,7 +25,11 @@ function cell(record: Readonly<Record<string, unknown>>, field: string, line: nu
   if (value === undefined || value === null) {
     return null;
   }
-  if (typeof value === "string" || typeof value === "number") {
+  if (typeof value === "string") {
+    // An empty string is a missing value, as an empty cell is in a delimited table.
+    return value.trim() === "" ? null : value;
+  }
+  if (typeof value === "number") {
     return value;
   }
 
