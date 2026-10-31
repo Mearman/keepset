@@ -1,0 +1,92 @@
+{
+  "aliases": [
+    "slr92-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].text",
+        "op": "move",
+        "to": "nodes[].text"
+      },
+      {
+        "from": "nodes[].tier",
+        "op": "move",
+        "to": "nodes[].tier"
+      },
+      {
+        "from": "nodes[].start",
+        "op": "move",
+        "to": "nodes[].start"
+      },
+      {
+        "from": "nodes[].end",
+        "op": "move",
+        "to": "nodes[].end"
+      }
+    ],
+    "source": "eaf",
+    "target": "speech/v1"
+  },
+  "description": "The transcripts of Puebla-Nahuatl: each record is an utterance with its file and annotation identifier, text, tier and times in milliseconds. It carries none of the audio, which the download list of openslr-slr92 gives.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 86236
+  },
+  "id": "openslr-slr92-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-NonCommercial-ShareAlike 3.0 Unported (CC BY-NC-SA 3.0)",
+    "url": "https://www.openslr.org/92/"
+  },
+  "name": "Puebla-Nahuatl transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "files": {
+        "pattern": "SpeechTranslation210217/Highland-Puebla-eaf/.*\\.eaf"
+      },
+      "kind": "tar.gz"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "eaf",
+      "idPattern": "SpeechTranslation210217/Highland-Puebla-eaf/(.+)\\.eaf"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/92/SpeechTranslation_Nahuatl_Manifest.tgz"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "text",
+    "tier",
+    "start",
+    "end"
+  ]
+}

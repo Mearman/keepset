@@ -1,0 +1,92 @@
+{
+  "aliases": [
+    "slr16-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].text",
+        "op": "move",
+        "to": "nodes[].text"
+      },
+      {
+        "from": "nodes[].words",
+        "op": "move",
+        "to": "nodes[].words"
+      },
+      {
+        "from": "nodes[].start",
+        "op": "move",
+        "to": "nodes[].start"
+      },
+      {
+        "from": "nodes[].end",
+        "op": "move",
+        "to": "nodes[].end"
+      }
+    ],
+    "source": "nxt-words",
+    "target": "speech/v1"
+  },
+  "description": "The transcripts of The AMI Corpus: each record is an utterance with its meeting-and-speaker identifier, text, word count and first and last times. It carries none of the audio, which the download list of openslr-slr16 gives.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 687
+  },
+  "id": "openslr-slr16-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "THE CREATIVE COMMONS ATTRIBUTION-NONCOMMERCIAL-SHAREALIKE v2.0 LICENCE (modified, look for more details in the licence file and/or the AMI webpage)",
+    "url": "https://www.openslr.org/16/"
+  },
+  "name": "The AMI Corpus transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "files": {
+        "pattern": "words/[^/]+\\.words\\.xml"
+      },
+      "kind": "tar.gz"
+    },
+    "parser": {
+      "encoding": "latin1",
+      "format": "nxt-words",
+      "idPattern": "words/([^/]+)\\.words\\.xml"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/16/ami_manual_1.6.1.tar.gz"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "text",
+    "words",
+    "start",
+    "end"
+  ]
+}

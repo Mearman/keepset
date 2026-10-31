@@ -1,0 +1,55 @@
+{
+  "aliases": [
+    "slr67-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/utterance-lines.json"
+  },
+  "description": "The transcripts of TEDx Spanish Corpus: each record is an utterance with its identifier and text. It carries none of the audio, which the download list of openslr-slr67 gives.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "instances": 1
+  },
+  "id": "openslr-slr67-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)",
+    "url": "https://www.openslr.org/67/"
+  },
+  "name": "TEDx Spanish Corpus transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "tar.gz",
+      "members": {
+        "pattern": "tedx_spanish_corpus/files/TEDx_Spanish\\.transcription"
+      }
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "utterance-lines",
+      "layout": "id-last"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/67/tedx_spanish_corpus.tgz"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "text"
+  ]
+}
