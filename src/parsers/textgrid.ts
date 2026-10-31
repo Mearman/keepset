@@ -234,13 +234,32 @@ function tiersOf(text: string, position: number): Tier[] {
 }
 
 /**
- * Reads a corpus whose transcripts are Praat TextGrid files, in the long or the short text form, in UTF-8, UTF-16 or (for a file with no byte order mark) the recipe's encoding: each non-empty interval of the recipe's tier (of every tier when the recipe names none) is a row, and so is each point of a point tier with a mark. A row's id is the file's id (the capture group of the recipe's `idPattern` on the file's path), a slash, the tier's 1-based position in the file, a full stop and the annotation's 1-based position in the tier, which names it even when several tiers share the tier's name. A row has the annotation's `text`, trimmed, and its `start` and `end` in seconds as the file states them (equal for a point). An empty interval is the grid's gap between annotations and is left out.
+ * Says which tiers of a file the recipe reads: the one named by `tier`, every tier whose whole name matches `tierPattern`, or every tier when the recipe gives neither.
+ * @param parser - The recipe's parser, which gives at most one of the two.
+ * @returns A predicate on a tier's name, and the words that say, in an error, which tier a file lacks.
+ */
+function tierSelection(parser: Readonly<TextGridParser>): { readonly selects: (name: string) => boolean; readonly description: string } {
+  if (parser.tier !== undefined) {
+    return { selects: (name) => name === parser.tier, description: `no tier named ${parser.tier}` };
+  }
+  if (parser.tierPattern !== undefined) {
+    const pattern = new RegExp(`^(?:${parser.tierPattern})$`, "u");
+
+    return { selects: (name) => pattern.test(name), description: `no tier matching ${parser.tierPattern}` };
+  }
+
+  return { selects: () => true, description: "no tier" };
+}
+
+/**
+ * Reads a corpus whose transcripts are Praat TextGrid files, in the long or short text form, in UTF-8, UTF-16 or (for a file with no byte order mark) the recipe's encoding: each non-empty interval of the tiers the recipe selects is a row, and so is each point of a selected point tier with a mark. The recipe selects the tier named by `tier`, every tier whose whole name matches `tierPattern` (for a corpus whose tiers are named for the speakers, who differ from file to file) or, when it gives neither, every tier. A row's id is the file's id (the capture group of the recipe's `idPattern` on the file's path), a slash, the tier's 1-based position in the file, a full stop and the annotation's 1-based position in the tier, which names it even when several tiers share a name. A row has the annotation's `text`, trimmed, the `tier` it is on and its `start` and `end` in seconds as the file states them (equal for a point). An empty interval is the grid's gap between annotations and is left out.
  * @param files - The files a `files` archive selects, each with its path in the archive, in path order.
- * @param parser - The recipe's parser, which names the tier, or none for every tier.
+ * @param parser - The recipe's parser, which selects the tiers.
  * @returns The rows, in file and tier order.
- * @throws NativeParseError when a file is not a well-formed TextGrid, holds no tier of the recipe's name (or no tier at all when the recipe names none), two files give the same id, or a path does not match the pattern.
+ * @throws NativeParseError when a file is not a well-formed TextGrid, holds no tier the recipe selects, two files give the same id, or a path does not match the pattern.
  */
 export function parseTextGrid(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Readonly<TextGridParser>): NativeTable {
+  const { selects, description } = tierSelection(parser);
   const seen = new Set<string>();
   const nodes: NativeRow[] = [];
   for (const [index, file] of files.entries()) {
@@ -250,18 +269,17 @@ export function parseTextGrid(files: readonly { readonly path: string; readonly 
     }
     seen.add(stem);
     const tiers = tiersOf(decodeFile(file.bytes, parser), index + 1);
-    const read = (tier: Tier): boolean => parser.tier === undefined || tier.name === parser.tier;
-    if (!tiers.some(read)) {
-      throw new NativeParseError(FORMAT, index + 1, parser.tier === undefined ? `the file ${file.path} has no tier` : `the file ${file.path} has no tier named ${parser.tier}`);
+    if (!tiers.some((tier) => selects(tier.name))) {
+      throw new NativeParseError(FORMAT, index + 1, `the file ${file.path} has ${description}`);
     }
     for (const [tierIndex, tier] of tiers.entries()) {
-      if (!read(tier)) {
+      if (!selects(tier.name)) {
         continue;
       }
       for (const [annotationIndex, annotation] of tier.annotations.entries()) {
         const text = annotation.text.trim();
         if (text !== "") {
-          nodes.push({ id: `${stem}/${String(tierIndex + 1)}.${String(annotationIndex + 1)}`, text, start: annotation.start, end: annotation.end });
+          nodes.push({ id: `${stem}/${String(tierIndex + 1)}.${String(annotationIndex + 1)}`, text, tier: tier.name, start: annotation.start, end: annotation.end });
         }
       }
     }

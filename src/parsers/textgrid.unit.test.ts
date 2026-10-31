@@ -109,9 +109,9 @@ describe("the textgrid parser", () => {
   it("reads the non-empty intervals and points of the named tier from a UTF-16 long form file, by tier and annotation position", () => {
     for (const littleEndian of [true, false]) {
       expect(parseTextGrid([file("label/s01.TextGrid", utf16(long, littleEndian))], parser()).nodes).toEqual([
-        { id: "s01/2.2", text: "안녕 하세요", start: 0.5, end: 1.25 },
-        { id: "s01/2.3", text: 'she said "hi" = = x\nand left', start: 1.25, end: 2 },
-        { id: "s01/3.1", text: "beep", start: 3, end: 3 },
+        { id: "s01/2.2", text: "안녕 하세요", tier: "words", start: 0.5, end: 1.25 },
+        { id: "s01/2.3", text: 'she said "hi" = = x\nand left', tier: "words", start: 1.25, end: 2 },
+        { id: "s01/3.1", text: "beep", tier: "words", start: 3, end: 3 },
       ]);
     }
   });
@@ -135,7 +135,7 @@ item []:
             xmax = 1
             text = "${text}"
 `;
-    const expected = (text: string): unknown[] => [{ id: "s01/1.1", text, start: 0, end: 1 }];
+    const expected = (text: string): unknown[] => [{ id: "s01/1.1", text, tier: "words", start: 0, end: 1 }];
     expect(parseTextGrid([file("s01.TextGrid", utf8(grid("안녕")))], parser()).nodes).toEqual(expected("안녕"));
     expect(parseTextGrid([file("s01.TextGrid", utf8(`${MARK}${grid("안녕")}`))], parser()).nodes).toEqual(expected("안녕"));
     const latin1 = Uint8Array.from(grid("caf\u00e9"), (character) => character.charCodeAt(0));
@@ -146,9 +146,9 @@ item []:
 
   it("reads the short form", () => {
     expect(parseTextGrid([file("a/b.TextGrid", utf8(short))], parser()).nodes).toEqual([
-      { id: "b/1.1", text: "one", start: 0, end: 1 },
-      { id: "b/1.2", text: "two", start: 1, end: 2 },
-      { id: "b/2.1", text: "mark", start: 1.5, end: 1.5 },
+      { id: "b/1.1", text: "one", tier: "words", start: 0, end: 1 },
+      { id: "b/1.2", text: "two", tier: "words", start: 1, end: 2 },
+      { id: "b/2.1", text: "mark", tier: "words", start: 1.5, end: 1.5 },
     ]);
   });
 
@@ -162,6 +162,18 @@ item []:
     expect(parseTextGrid([file("b.TextGrid", utf8(long))], every).nodes.map((row) => row.id)).toEqual(["b/1.1", "b/2.2", "b/2.3", "b/3.1"]);
     const noTiers = 'File type = "ooTextFile short"\n"TextGrid"\n\n0\n1\n<absent>\n';
     expect(() => parseTextGrid([file("b.TextGrid", utf8(noTiers))], every)).toThrow(/has no tier$/);
+  });
+
+  it("reads every tier whose whole name matches a pattern, as a corpus whose tiers are named for its speakers needs, and says which pattern a file misses", () => {
+    const patterned = (tierPattern: string): TextGridParser => ({ format: "textgrid", encoding: "utf-8", idPattern: "(?:.*/)?([^/]+)\\.TextGrid", tierPattern });
+    const speakers = ["File type = \"ooTextFile short\"", "\"TextGrid\"", "0", "9", "<exists>", "2", ...["P01", "P02"].flatMap((name, index) => ["\"IntervalTier\"", `"${name}"`, "0", "9", "1", String(index), String(index + 1), `"turn ${name}"`])].join("\n");
+    const rows = parseTextGrid([file("a/s1.TextGrid", utf8(speakers))], patterned("P\\d+")).nodes;
+    expect(rows).toEqual([
+      { id: "s1/1.1", text: "turn P01", tier: "P01", start: 0, end: 1 },
+      { id: "s1/2.1", text: "turn P02", tier: "P02", start: 1, end: 2 },
+    ]);
+    expect(parseTextGrid([file("a/s1.TextGrid", utf8(speakers))], patterned("P02")).nodes.map((row) => row["tier"])).toEqual(["P02"]);
+    expect(() => parseTextGrid([file("a/s1.TextGrid", utf8(speakers))], patterned("P"))).toThrow(/has no tier matching P$/);
   });
 
   it("refuses text that is not a TextGrid, a tier of another class, a file that ends early or runs on, a repeated id and a path the pattern misses", () => {
