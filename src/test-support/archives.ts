@@ -22,11 +22,16 @@ function octal(value: number, at: Field): string {
   return `${value.toString(OCTAL).padStart(at.length - 1, "0")}\0`;
 }
 
-/** One file to put in a test archive. Type `5` writes a directory, `L` a GNU long-name record. */
-export interface ArchiveFile {
-  readonly path: string;
-  readonly text: string;
-  readonly type?: string;
+/** One file to put in a test archive: its contents as text, written as UTF-8, or as bytes, for a file in another encoding. Type `5` writes a directory, `L` a GNU long-name record. */
+export type ArchiveFile = { readonly path: string; readonly type?: string } & ({ readonly text: string } | { readonly bytes: Uint8Array });
+
+/**
+ * A test file's contents as bytes.
+ * @param file - The file.
+ * @returns Its text as UTF-8, or its bytes.
+ */
+function dataOf(file: ArchiveFile): Uint8Array {
+  return "bytes" in file ? file.bytes : new TextEncoder().encode(file.text);
 }
 
 /**
@@ -66,7 +71,7 @@ export function tar(files: readonly ArchiveFile[]): Uint8Array {
     blocks.push(padded);
   };
   for (const file of files) {
-    const data = new TextEncoder().encode(file.text);
+    const data = dataOf(file);
     if (file.path.length > HEADER.name.length) {
       member("././@LongLink", new TextEncoder().encode(`${file.path}\0`), "L");
     }
@@ -103,7 +108,7 @@ export async function collect<Item>(items: Readonly<AsyncIterable<Item>>): Promi
  * @returns The archive bytes.
  */
 export function zip(files: readonly ArchiveFile[]): Uint8Array {
-  return zipSync(Object.fromEntries(files.map((file) => [file.path, new TextEncoder().encode(file.text)])));
+  return zipSync(Object.fromEntries(files.map((file) => [file.path, dataOf(file)])));
 }
 
 /**

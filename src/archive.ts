@@ -4,8 +4,8 @@ import { ArchiveError } from "./errors";
 import { getOwn } from "./own";
 import { bunzip2, Bunzip2Stream } from "./node/bzip2";
 import { pointShapefileToCsv } from "./node/shapefile";
-import { scanTar } from "./node/tar";
-import { listZip, readZipEntry, unzipEntries, type ZipEntry, type ZipEntryInfo } from "./node/zip";
+import { scanTar, TarScanner, type TarMember } from "./node/tar";
+import { listZip, readZipEntry, readZipEntryChunks, unzipEntries, type ZipEntry, type ZipEntryInfo } from "./node/zip";
 import { odsGrid } from "./node/ods";
 import { gridToCsv } from "./node/sheet";
 import { xlsGrid } from "./node/xls";
@@ -322,7 +322,7 @@ async function* readMembers<Choice extends { readonly path: string }>(
 
     return;
   }
-  const { paths, members } = await scanTar(tarChunks(source, kind), candidate);
+  const { paths, members } = await scanTar(tarChunks(source.chunks(), kind), candidate);
   for (const choice of choose(paths)) {
     const found = members.find((member) => member.path === choice.path);
     if (found === undefined) {
@@ -462,20 +462,139 @@ export async function unpackFiles(input: Uint8Array | Readonly<SourceBytes>, arc
   return unpacked.flat();
 }
 
+/** A member of a files archive that `streamFiles` has reached: its path, and its bytes either as they are read (a zip member inflated a feed at a time) or whole. */
+interface Reached {
+  readonly path: string;
+  readonly chunks: () => AsyncIterable<Uint8Array> | Iterable<Uint8Array>;
+  readonly bytes: () => Promise<Uint8Array>;
+}
+
+/**
+ * Hands on every file a tar archive holds that a selector matches, each as soon as its data is complete, and fails once the archive has been read when none matched.
+ * @param chunks - The tar's bytes, which may be compressed.
+ * @param kind - The tar kind.
+ * @param files - The selector.
+ * @returns Each matching file, in the order the archive holds them.
+ * @throws ArchiveError when the bytes are not a well-formed archive of the kind or the selector matches no member, listing the members.
+ */
+async function* streamTarFiles(chunks: Readonly<AsyncIterable<Uint8Array> | Iterable<Uint8Array>>, kind: "tar" | "tar.gz" | "tar.bz2", files: ArchiveMember): AsyncGenerator<Member, void, undefined> {
+  const scanner = new TarScanner((path) => selects(path, files));
+  const asMember = (member: Readonly<TarMember>): Member => ({ path: member.path, bytes: member.data });
+  let matched = 0;
+  for await (const chunk of tarChunks(chunks, kind)) {
+    scanner.push(chunk);
+    const completed = scanner.take();
+    matched += completed.length;
+    yield* completed.map(asMember);
+  }
+  scanner.end();
+  const last = scanner.take();
+  matched += last.length;
+  yield* last.map(asMember);
+  if (matched === 0) {
+    pickAll(scanner.paths, files);
+  }
+}
+
+/**
+ * A failure reading within a member, naming the member as `unpackFiles` names it.
+ * @param path - The member's path.
+ * @param error - The failure.
+ * @returns The archive error.
+ */
+function failedWithin(path: string, error: unknown): ArchiveError {
+  return new ArchiveError(`member ${path}: ${error instanceof Error ? error.message : String(error)}`, { cause: error });
+}
+
+/**
+ * Passes on the files read from within one member, naming the member in any failure, as `unpackFiles` names it.
+ * @param path - The member's path.
+ * @param files - The files read from it.
+ * @returns The same files.
+ */
+async function* within(path: string, files: Readonly<AsyncIterable<Member>>): AsyncGenerator<Member, void, undefined> {
+  try {
+    yield* files;
+  } catch (error) {
+    throw failedWithin(path, error);
+  }
+}
+
+/**
+ * The members of a files archive its outer selector matches, as `streamFiles` reaches them: a zip's in path order, each read only when it is reached, and a tar's in archive order as the scan completes each.
+ * @param source - The archive.
+ * @param archive - Its layout.
+ * @returns Each matching member.
+ * @throws ArchiveError when the bytes are not a well-formed archive of the stated kind or the selector matches no member.
+ */
+async function* reachMembers(source: Readonly<SourceBytes>, archive: FilesArchive): AsyncGenerator<Reached, void, undefined> {
+  if (archive.kind !== "zip") {
+    for await (const member of streamTarFiles(source.chunks(), archive.kind, archive.files)) {
+      yield { path: member.path, chunks: () => [member.bytes], bytes: async () => Promise.resolve(member.bytes) };
+    }
+
+    return;
+  }
+  const entries = await zipEntries(source);
+  for (const path of pickAll(
+    entries.map((entry) => entry.name),
+    archive.files,
+  )) {
+    // The last entry of a name, as an archive tool that extracts every entry in order leaves it.
+    const entry = entries.findLast((candidate) => candidate.name === path);
+    if (entry === undefined) {
+      throw new ArchiveError(`zip member ${path} could not be read`);
+    }
+    yield { path, chunks: () => readZipEntryChunks(source, entry), bytes: async () => readZip(source, entry) };
+  }
+}
+
+/**
+ * Unpacks a source into every file a multi-file format's selector matches, as `unpackFiles` does, but hands each file on as soon as it is read rather than collecting them, so a reader that lets each file go before taking the next reads an archive of any size in the memory of one file. A zip's members are taken in path order and read one at a time, and a member that is a tar archive in its turn (a tar zipped whole) is inflated and scanned as it is read, never held whole; a tar archive is scanned once as it arrives. The files of a tar are therefore handed on in the order the tar holds them, not in path order, since sorting them would mean holding them all. A member that is a gzip file or a zip in its turn is held whole, being one file, or an archive whose directory is at its end.
+ * @param input - The downloaded bytes, held in memory or kept anywhere.
+ * @param archive - The recipe's archive layout, which selects files with `files`.
+ * @returns Each matching file, filed as `unpackFiles` files it.
+ * @throws ArchiveError when the bytes, or a member `inner` reads, are not well-formed, or a selector matches no member (for a tar, once it has been read to its end), after the files before the fault.
+ */
+export async function* streamFiles(input: Uint8Array | Readonly<SourceBytes>, archive: FilesArchive): AsyncGenerator<Member, void, undefined> {
+  const { inner } = archive;
+  for await (const member of reachMembers(asSource(input), archive)) {
+    if (inner === undefined) {
+      yield { path: member.path, bytes: await member.bytes() };
+      continue;
+    }
+    if (inner.kind === "gzip") {
+      const compressed = await member.bytes();
+      let bytes: Uint8Array;
+      try {
+        bytes = gunzip(compressed);
+      } catch (error) {
+        throw failedWithin(member.path, error);
+      }
+      yield { path: member.path, bytes };
+      continue;
+    }
+    const files = inner.kind === "zip" ? unpackMembers(await member.bytes(), { kind: "zip", members: inner.files }) : streamTarFiles(member.chunks(), inner.kind, inner.files);
+    for await (const file of within(member.path, files)) {
+      yield { path: `${member.path}/${file.path}`, bytes: file.bytes };
+    }
+  }
+}
+
 /** How many compressed bytes are fed to the gzip stream at a time. The stream decompresses each feed into one array before it hands any of it on, so what a feed yields, which is what is held of the decompressed archive at once, is the feed times the data's compression ratio; a mebibyte keeps the stream's per-call cost small and that output a few mebibytes for the text and media archives recipes read. */
 const KIBIBYTE = 1024;
 const GZIP_FEED_BYTES = KIBIBYTE * KIBIBYTE;
 
 /**
- * The bytes of a tar archive, which may be compressed, as chunks, decompressed as the source's chunks arrive, so neither the compressed nor the decompressed archive is ever held whole: `tar.gz` is gunzipped a feed at a time and `tar.bz2` a bzip2 block at a time, and `tar` is yielded as it arrives.
- * @param source - The archive.
+ * The bytes of a tar archive, which may be compressed, as chunks, decompressed as the archive's chunks arrive, so neither the compressed nor the decompressed archive is ever held whole: `tar.gz` is gunzipped a feed at a time and `tar.bz2` a bzip2 block at a time, and `tar` is yielded as it arrives.
+ * @param chunks - The archive's bytes, in order: a source's chunks, or a member's as it is inflated.
  * @param kind - The archive kind.
  * @returns The tar's bytes, in order, cut anywhere.
  * @throws ArchiveError when the bytes are not valid gzip or bzip2 data, as `gunzip` and `bunzip2` report.
  */
-async function* tarChunks(source: Readonly<SourceBytes>, kind: "tar" | "tar.gz" | "tar.bz2"): AsyncGenerator<Uint8Array, void, undefined> {
+async function* tarChunks(chunks: Readonly<AsyncIterable<Uint8Array> | Iterable<Uint8Array>>, kind: "tar" | "tar.gz" | "tar.bz2"): AsyncGenerator<Uint8Array, void, undefined> {
   if (kind === "tar") {
-    yield* source.chunks();
+    yield* chunks;
 
     return;
   }
@@ -484,7 +603,7 @@ async function* tarChunks(source: Readonly<SourceBytes>, kind: "tar" | "tar.gz" 
     const stream = new Bunzip2Stream((chunk) => {
       produced.push(chunk);
     });
-    for await (const chunk of source.chunks()) {
+    for await (const chunk of chunks) {
       stream.push(chunk);
       yield* produced.splice(0);
     }
@@ -516,7 +635,7 @@ async function* tarChunks(source: Readonly<SourceBytes>, kind: "tar" | "tar.gz" 
       return false;
     }
   };
-  for await (const chunk of source.chunks()) {
+  for await (const chunk of chunks) {
     for (let start = 0; start < chunk.length; start += GZIP_FEED_BYTES) {
       const goesOn = feed(chunk.subarray(start, start + GZIP_FEED_BYTES), false);
       yield* produced.splice(0);

@@ -1,4 +1,4 @@
-/* The Node entry point (`keepset/node`): the platform-neutral fetch core with Node's own downloader and file store preset, and the streamed reading beside it, which holds a paged table a page at a time and so lives with the platform it streams on. */
+/* The Node entry point (`keepset/node`): the platform-neutral fetch core with Node's own downloader and file store preset, and the streamed reading beside it, which holds a paged table a page at a time and an archive of files a file at a time, and so lives with the platform it streams on. */
 
 
 import type { Dataset } from "../catalogue";
@@ -57,7 +57,7 @@ export async function fetchEntry(dataset: Dataset, options: NodeFetchOptions = {
 }
 
 /**
- * Checks a dataset's crosswalk on its real data, a streamed table a page at a time.
+ * Checks a dataset's crosswalk on its real data, a streamed recipe a page at a time.
  * @param dataset - A dataset from any catalogue.
  * @param options - The ports to override, an abort signal and the clock.
  * @returns Whether the round trip holds.
@@ -85,7 +85,7 @@ export async function streamDataset(id: string, sink: NodeSink, options: NodeFet
   return streamEntry(getDataset(id), sink, options);
 }
 
-/** Streams a dataset whose table is too large to hold as one document, a page at a time, as `streamTable` does. */
+/** Streams a dataset too large to hold as one document, a page at a time, as `streamTable` does. */
 export async function streamEntry(dataset: Dataset, sink: NodeSink, options: NodeFetchOptions = {}): Promise<StreamedDataset> {
   return streamTable(dataset, sink, defaults(options));
 }

@@ -3,7 +3,10 @@ import { gunzipSync } from "node:zlib";
 import { execFileSync } from "node:child_process";
 import { unzipSync, zipSync } from "fflate";
 import { describe, expect, it } from "vitest";
-import { unpack, unpackMembers, unpackParts } from "./archive";
+import { streamFiles, unpack, unpackFiles, unpackMembers, unpackParts } from "./archive";
+import type { FilesArchive } from "./entry";
+import { ArchiveError } from "./errors";
+import { INFLATE_FEED_BYTES } from "./node/zip";
 import { BLOCK, scanTar } from "./node/tar";
 import { allowance } from "./test-support/allowance";
 import { bzip2, collect, gzip, tar, zip64 } from "./test-support/archives";
@@ -127,5 +130,65 @@ describe("the zip reader by ranges", () => {
     const entries = Object.keys(unzipSync(bundle)).length;
     new DataView(counted.buffer).setUint16(counted.length - END_RECORD_LENGTH + COUNT_FIELD, entries + 1, true);
     await expect(unpack(chunkedSource(counted, BLOCK), { kind: "zip", member: { path: "net.txt" } })).rejects.toThrow(/central directory entry at byte \d+ is malformed/);
+  });
+});
+
+describe("the streamed files reader against unpackFiles", () => {
+  /** How many inflater feeds the zipped tar's large file spans, so the zip is read in several feeds and a whole feed is still unread when the first file is handed on. */
+  const FEEDS_SPANNED = 4;
+  /** The time the zipped tar test takes alone, rounded up from a run on a loaded host, which overstates the quiet one. */
+  const QUIET_ZIPPED_TAR_MILLISECONDS = 2000;
+  const books = tar([
+    { path: "books/2/pg2.txt", text: "second, first in the tar" },
+    { path: "books/1/pg1.txt", text: "first by path" },
+    { path: "books/readme.md", text: "not a book" },
+    { path: "books/3/pg3.txt", text: noise(INFLATE_FEED_BYTES * FEEDS_SPANNED) },
+    { path: "books/4/pg4.txt", text: "last" },
+  ]);
+  const zipped = zipSync({ "books.tar": books, "notes.txt": new TextEncoder().encode("beside the tar") });
+  const layout = { kind: "zip", files: { path: "books.tar" }, inner: { kind: "tar", files: { pattern: "books/[0-9]+/pg[0-9]+\\.txt" } } } as const;
+  const pairs = (members: readonly { readonly path: string; readonly bytes: Uint8Array }[]): [string, string][] => members.map((member) => [member.path, text(member.bytes)]);
+
+  it(
+    "gives the files unpackFiles gives from a tar zipped whole, in the tar's order, the first before the zip has been read",
+    async () => {
+      const source = chunkedSource(zipped, BLOCK);
+      const streamed = streamFiles(source, layout);
+      const first = await streamed.next();
+      expect(first.done === true ? undefined : first.value.path).toBe("books.tar/books/2/pg2.txt");
+      expect(source.rangeBytes()).toBeLessThan(zipped.length - INFLATE_FEED_BYTES);
+      const rest = await collect(streamed);
+      const all = first.done === true ? rest : [first.value, ...rest];
+      expect(all.map((member) => member.path)).toEqual(["books.tar/books/2/pg2.txt", "books.tar/books/1/pg1.txt", "books.tar/books/3/pg3.txt", "books.tar/books/4/pg4.txt"]);
+      expect(pairs(all).sort(byPath)).toEqual(pairs(await unpackFiles(zipped, layout)));
+    },
+    allowance(QUIET_ZIPPED_TAR_MILLISECONDS),
+  );
+
+  it.each(kinds)(
+    "gives $kind's selected files as unpackFiles does, in the archive's order, however it is chunked",
+    async ({ kind, bytes }) => {
+      const select: FilesArchive = { kind, files: { extensions: [".txt"] } };
+      const reference = pairs(await unpackFiles(bytes, select));
+      const streamed = await Promise.all(CHUNK_SIZES.map(async (size) => collect(streamFiles(chunkedSource(bytes, size), select))));
+      for (const members of streamed) {
+        expect(members.map((member) => member.path)).toEqual(files.filter((file) => file.path.endsWith(".txt")).map((file) => file.path));
+        expect(pairs(members).sort(byPath)).toEqual(reference);
+      }
+    },
+    FORM_TIMEOUT_MILLISECONDS,
+  );
+
+  it("names the member when its tar holds nothing the selector matches, once it has been read, and refuses an outer selector that matches nothing", async () => {
+    const empty = zipSync({ "books.tar": tar([{ path: "books/readme.md", text: "not a book" }]) });
+    await expect(collect(streamFiles(empty, layout))).rejects.toThrow(/member books\.tar: expected at least one member matching books\/\[0-9\]\+/);
+    await expect(collect(streamFiles(empty, { ...layout, files: { path: "other.tar" } }))).rejects.toThrow(ArchiveError);
+  });
+
+  it("gunzips each file when inner says so, naming a file that is not gzip data", async () => {
+    const gzipped = zipSync({ "a.txt.gz": gzip("alpha"), "b.txt.gz": new TextEncoder().encode("plain") });
+    const [only] = await collect(streamFiles(gzipped, { kind: "zip", files: { path: "a.txt.gz" }, inner: { kind: "gzip" } }));
+    expect(only === undefined ? undefined : [only.path, text(only.bytes)]).toEqual(["a.txt.gz", "alpha"]);
+    await expect(collect(streamFiles(gzipped, { kind: "zip", files: { path: "b.txt.gz" }, inner: { kind: "gzip" } }))).rejects.toThrow(/member b\.txt\.gz: not valid gzip data/);
   });
 });
