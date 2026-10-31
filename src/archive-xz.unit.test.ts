@@ -27,7 +27,7 @@ describe("a tar.xz archive", () => {
   it("gives the one file a document recipe selects, and the files of a files archive, as it does for the other compressions", async () => {
     const { bytes, member } = await unpack(quran(ODD), { kind: "tar.xz", member: { pattern: "(?:.*/)?transcripts\\.tsv" } }, { xz: unxz });
     expect(member).toBe("transcripts.tsv");
-    expect(text(bytes)).toMatch(/^audio_data\/reader_1\/001001\.mp3\t6\.552\tبِسْمِ/);
+    expect(text(bytes)).toMatch(/^PATH\tDURATION\tTRANSCRIPT\naudio_data\/reader_1\/001001\.mp3\t6\.552\n\tبِسْمِ/);
     const files = await unpackFiles(quran(ODD), { kind: "tar.xz", files: { extensions: [".txt", ".json"] } }, { xz: unxz });
     expect(files.map((file) => file.path)).toEqual(["all_ayat.json", "audo_list.txt"]);
   });

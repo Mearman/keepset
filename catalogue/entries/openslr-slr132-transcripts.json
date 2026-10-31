@@ -5,11 +5,37 @@
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "file": "crosswalks/speech-v1/id-text.json"
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].text",
+        "op": "move",
+        "to": "nodes[].text"
+      },
+      {
+        "from": "nodes[].duration",
+        "op": "move",
+        "to": "nodes[].duration"
+      }
+    ],
+    "source": "csv-table",
+    "target": "speech/v1"
   },
-  "description": "The transcripts of Mohammed. No recipe reads them. Its transcripts are the Quran dataset's transcript table, inside archives that total about 24 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "description": "The transcripts of Mohammed (the Quran speech to text data): each record is a recording, named by its path in the download's audio_data directory, with its duration in seconds and the Arabic text recited. The table's rows are read from transcripts.tsv, which has a header row and gives each recording's path, duration and text; all_ayat.json, whose text is of each verse and not of a recording, is not read. It carries none of the audio, which the download list of openslr-slr132 gives.",
   "domain": "Speech",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "nodes": 0
+  },
   "id": "openslr-slr132-transcripts",
   "licence": {
     "id": "MIT",
@@ -22,24 +48,51 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "Its transcripts are the Quran dataset's transcript table, inside archives that total about 24 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
-    "status": "not-fetchable"
+    "archive": {
+      "kind": "tar.xz",
+      "member": {
+        "pattern": "(?:.*/)?transcripts\\.tsv"
+      }
+    },
+    "parser": {
+      "columns": [
+        "duration",
+        "text"
+      ],
+      "delimiter": "tab",
+      "encoding": "utf-8",
+      "format": "csv-table",
+      "headerNames": [
+        "path",
+        "duration",
+        "text"
+      ],
+      "idColumn": "path",
+      "lineBreaksInCells": true,
+      "numericColumns": [
+        {
+          "column": "duration",
+          "factor": 1
+        }
+      ],
+      "skipLines": 1,
+      "unquoted": true
+    },
+    "source": 0,
+    "status": "fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 4789,
-        "sha256": "bf412e8e38d83af0ce7bffdb15005517faa3c23ec7174255db0b9b18cff07740",
-        "timestamp": "20260511054913",
-        "url": "https://web.archive.org/web/20260511054913/https://www.openslr.org/132/"
-      },
+      "retrieved": "2026-10-31",
       "status": "live",
-      "url": "https://www.openslr.org/132/"
+      "url": "https://www.openslr.org/resources/132/Quran_Speech_Dataset.tar.xz"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "text",
+    "duration"
+  ]
 }
