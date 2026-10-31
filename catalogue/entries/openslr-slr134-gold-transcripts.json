@@ -34,7 +34,7 @@
   "description": "The transcripts of SASPEECH's gold-standard subset: each record is an utterance with its identifier and its manually corrected text, which LJSpeech's metadata layout gives twice. It carries none of the audio, which the download list of openslr-slr134 gives.",
   "domain": "Speech",
   "expectedCounts": {
-    "nodes": 0
+    "nodes": 2986
   },
   "id": "openslr-slr134-gold-transcripts",
   "licence": {

@@ -10,7 +10,7 @@
   "description": "The transcripts of Aishell: each record is an utterance with its identifier and its text, word-segmented as the corpus's transcript file writes it. It carries none of the audio, which the download list of openslr-slr33 gives.",
   "domain": "Speech",
   "expectedCounts": {
-    "nodes": 0
+    "nodes": 141600
   },
   "id": "openslr-slr33-transcripts",
   "licence": {
