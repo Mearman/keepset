@@ -1,3 +1,16 @@
+# [0.85.0](https://github.com/Mearman/keepset/compare/v0.84.0...v0.85.0) (2026-10-31)
+
+
+### Bug Fixes
+
+* **fetch:** pass over a Wayback capture the Archive says it truncated ([8264c62](https://github.com/Mearman/keepset/commit/8264c62224cbd52bb629a52961e03585f676d864))
+
+
+### Features
+
+* **catalogue:** read the OpenSLR SRE 2004 key, LRE 2007 key and Spanish word list ([2217671](https://github.com/Mearman/keepset/commit/22176716b5943595ffc8257e1251ad28bac2dcfc))
+* **parsers:** read a word list written as one JSON object of counts ([612fd21](https://github.com/Mearman/keepset/commit/612fd211015e74cc2a8f05ccd7eec3b5982108a3))
+
 # [0.84.0](https://github.com/Mearman/keepset/compare/v0.83.0...v0.84.0) (2026-10-31)
 
 
