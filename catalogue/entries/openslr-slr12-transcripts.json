@@ -5,11 +5,13 @@
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "file": "crosswalks/speech-v1/id-text.json"
+    "file": "crosswalks/speech-v1/utterance-lines.json"
   },
-  "description": "The transcripts of LibriSpeech ASR corpus. No recipe reads them. Its transcripts are LibriSpeech's `.trans.txt` files, inside archives that total about 61 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "description": "The transcripts of LibriSpeech ASR corpus: one instance for each subset archive, its chapters' transcript files read together, each record being an utterance with its identifier and text. It carries none of the audio, which the download list of openslr-slr12 gives.",
   "domain": "Speech",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "instances": 0
+  },
   "id": "openslr-slr12-transcripts",
   "licence": {
     "kind": "custom",
@@ -23,24 +25,132 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "Its transcripts are LibriSpeech's `.trans.txt` files, inside archives that total about 61 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
-    "status": "not-fetchable"
+    "files": [
+      {
+        "archive": {
+          "concatenate": true,
+          "files": {
+            "pattern": "LibriSpeech/[^/]+/\\d+/\\d+/\\d+-\\d+\\.trans\\.txt"
+          },
+          "kind": "tar.gz"
+        },
+        "path": "dev-clean.tar.gz",
+        "source": 0
+      },
+      {
+        "archive": {
+          "concatenate": true,
+          "files": {
+            "pattern": "LibriSpeech/[^/]+/\\d+/\\d+/\\d+-\\d+\\.trans\\.txt"
+          },
+          "kind": "tar.gz"
+        },
+        "path": "dev-other.tar.gz",
+        "source": 1
+      },
+      {
+        "archive": {
+          "concatenate": true,
+          "files": {
+            "pattern": "LibriSpeech/[^/]+/\\d+/\\d+/\\d+-\\d+\\.trans\\.txt"
+          },
+          "kind": "tar.gz"
+        },
+        "path": "test-clean.tar.gz",
+        "source": 2
+      },
+      {
+        "archive": {
+          "concatenate": true,
+          "files": {
+            "pattern": "LibriSpeech/[^/]+/\\d+/\\d+/\\d+-\\d+\\.trans\\.txt"
+          },
+          "kind": "tar.gz"
+        },
+        "path": "test-other.tar.gz",
+        "source": 3
+      },
+      {
+        "archive": {
+          "concatenate": true,
+          "files": {
+            "pattern": "LibriSpeech/[^/]+/\\d+/\\d+/\\d+-\\d+\\.trans\\.txt"
+          },
+          "kind": "tar.gz"
+        },
+        "path": "train-clean-100.tar.gz",
+        "source": 4
+      },
+      {
+        "archive": {
+          "concatenate": true,
+          "files": {
+            "pattern": "LibriSpeech/[^/]+/\\d+/\\d+/\\d+-\\d+\\.trans\\.txt"
+          },
+          "kind": "tar.gz"
+        },
+        "path": "train-clean-360.tar.gz",
+        "source": 5
+      },
+      {
+        "archive": {
+          "concatenate": true,
+          "files": {
+            "pattern": "LibriSpeech/[^/]+/\\d+/\\d+/\\d+-\\d+\\.trans\\.txt"
+          },
+          "kind": "tar.gz"
+        },
+        "path": "train-other-500.tar.gz",
+        "source": 6
+      }
+    ],
+    "parser": {
+      "encoding": "utf-8",
+      "format": "utterance-lines"
+    },
+    "status": "fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 8245,
-        "sha256": "9b012c60f8fe6a5435f96cf034c042ffe4222e7936c88cb835671413e74a5301",
-        "timestamp": "20261012025658",
-        "url": "https://web.archive.org/web/20261012025658/https://www.openslr.org/12/"
-      },
+      "retrieved": "2026-10-31",
       "status": "live",
-      "url": "https://www.openslr.org/12/"
+      "url": "https://www.openslr.org/resources/12/dev-clean.tar.gz"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/12/dev-other.tar.gz"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/12/test-clean.tar.gz"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/12/test-other.tar.gz"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/12/train-clean-100.tar.gz"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/12/train-clean-360.tar.gz"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/12/train-other-500.tar.gz"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "text"
+  ]
 }
