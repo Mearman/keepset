@@ -5,11 +5,47 @@
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "file": "crosswalks/speech-v1/id-text.json"
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].text",
+        "op": "move",
+        "to": "nodes[].text"
+      },
+      {
+        "from": "nodes[].tier",
+        "op": "move",
+        "to": "nodes[].tier"
+      },
+      {
+        "from": "nodes[].start",
+        "op": "move",
+        "to": "nodes[].start"
+      },
+      {
+        "from": "nodes[].end",
+        "op": "move",
+        "to": "nodes[].end"
+      }
+    ],
+    "source": "textgrid",
+    "target": "speech/v1"
   },
-  "description": "The transcripts of Basic LAnguage Resource Kit 1.0 for Faroese. No recipe reads them. Its transcripts are BLARK's TextGrid files, inside archives that total about 28 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "description": "The orthographic transcripts of the Faroese BLARK recordings as the corpus's TextGrid files give them: each record is a stretch of speech, named by the recording and its position in the recording's TextGrid, with its text (word by word, with the corpus's markers for hesitations, pauses and the like), the speaker's orthography tier it is on and its start and end in seconds. The phonetic, comment and sound tiers are not read. Two of the corpus's files are damaged in the download (MUM04_040320_blogg20 ends part of the way through its last tier, and MEY01_040319_rok0 has an interval whose text lacks its opening quote), so the recipe's selector leaves them out. It carries none of the audio, which the download list of openslr-slr125 gives.",
   "domain": "Speech",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "nodes": 0
+  },
   "id": "openslr-slr125-transcripts",
   "licence": {
     "kind": "custom",
@@ -23,24 +59,35 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "Its transcripts are BLARK's TextGrid files, inside archives that total about 28 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
-    "status": "not-fetchable"
+    "archive": {
+      "files": {
+        "pattern": "BLARK_1\\.0/textgrids_1\\.0/ortho(?:_phone)?/(?!MUM04_040320_blogg20\\.|MEY01_040319_rok0\\.)[^/]+\\.textGrid"
+      },
+      "kind": "tar.gz"
+    },
+    "parser": {
+      "encoding": "latin1",
+      "format": "textgrid",
+      "idPattern": "BLARK_1\\.0/textgrids_1\\.0/ortho(?:_phone)?/([^/]+)\\.textGrid",
+      "tierPattern": "SPK\\d+\\|t\\|[Oo]rthography"
+    },
+    "source": 0,
+    "status": "fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 4332,
-        "sha256": "79ddba42cb951b5077e09cdbf10f31c9eae52dd65133e1c6899fefc91a9bbe65",
-        "timestamp": "20260516203250",
-        "url": "https://web.archive.org/web/20260516203250/https://www.openslr.org/125/"
-      },
+      "retrieved": "2026-10-31",
       "status": "live",
-      "url": "https://www.openslr.org/125/"
+      "url": "https://www.openslr.org/resources/125/BLARK_1.0_update.tar.gz"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "text",
+    "tier",
+    "start",
+    "end"
+  ]
 }
