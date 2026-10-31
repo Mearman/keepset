@@ -227,13 +227,25 @@ describe("an archive that selects one file or every file", () => {
 
   it("gives a files archive only to a multi-file parser, and a multi-file parser only a files archive", () => {
     expect(issues(ogbEntry)).toBe("");
-    expect(issues({ ...ogbEntry, recipe: { ...ogbEntry.recipe, parser: liveEntry.recipe.parser } })).toMatch(/a files archive is read by a multi-file parser \(ogb, member-text, nxt-words, eaf\)/);
+    expect(issues({ ...ogbEntry, recipe: { ...ogbEntry.recipe, parser: liveEntry.recipe.parser } })).toMatch(/a files archive is read by a multi-file parser \(ogb, member-text, nxt-words, eaf, textgrid\)/);
     expect(issues({ ...ogbEntry, recipe: { ...ogbEntry.recipe, archive: { kind: "zip", member: { path: "raw/edge.csv.gz" }, inner: { kind: "gzip" } } } })).toMatch(/a files archive is read by a multi-file parser/);
     expect(issues({ ...ogbEntry, recipe: { ...ogbEntry.recipe, archive: { kind: "zip", members: { extensions: [".gz"] } } } })).toMatch(/a files archive is read by a multi-file parser/);
     expect(issues({ ...ogbEntry, recipe: { ...ogbEntry.recipe, archive: { ...ogbEntry.recipe.archive, inner: { kind: "zip", member: { path: "x" } } } } })).not.toBe("");
     const memberText = { format: "member-text", encoding: "utf-8", idPattern: "(?:.*/)?([^/]+)\\.txt" };
     expect(issues({ ...ogbEntry, recipe: { ...ogbEntry.recipe, parser: memberText, archive: { kind: "tar.gz", files: { pattern: ".*\\.txt" } } } })).toBe("");
     expect(issues({ ...ogbEntry, recipe: { ...ogbEntry.recipe, parser: { ...memberText, idPattern: "(" }, archive: { kind: "tar.gz", files: { pattern: ".*\\.txt" } } } })).not.toBe("");
+  });
+
+  it("accepts a files archive whose members are archives in their turn, with a selector for the files inside", () => {
+    const textGrid = { format: "textgrid", encoding: "utf-8", idPattern: "(?:.*/)?([^/]+)\\.TextGrid", tier: "words" };
+    const nested = { kind: "tar.gz", files: { extensions: [".zip"] }, inner: { kind: "zip", files: { extensions: [".TextGrid"] } } };
+    const entry = (parser: unknown, archive: unknown): unknown => ({ ...ogbEntry, recipe: { ...ogbEntry.recipe, parser, archive } });
+    expect(issues(entry(textGrid, nested))).toBe("");
+    expect(issues(entry(textGrid, { ...nested, inner: { kind: "zip" } }))).not.toBe("");
+    expect(issues(entry(textGrid, { ...nested, inner: { kind: "gzip", files: { extensions: [".TextGrid"] } } }))).not.toBe("");
+    expect(issues(entry(textGrid, { ...nested, inner: { kind: "zip", files: { extensions: [".TextGrid"] }, inner: { kind: "gzip" } } }))).not.toBe("");
+    expect(issues(entry({ ...textGrid, tier: "" }, nested))).not.toBe("");
+    expect(issues(entry({ ...textGrid, encoding: "utf-16" }, nested))).not.toBe("");
   });
 
   it("gives a nested json-table layout levels and no id field, and any other layout an id field and no levels", () => {
