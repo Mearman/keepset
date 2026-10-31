@@ -46,7 +46,7 @@ describe("the json-table parser", () => {
     expect(run("[1]").message).toMatch(/not an object/);
     expect(run('{"text": "x"}').message).toMatch(/id field audio_filepath is missing/);
     expect(run('{"audio_filepath": "a", "text": ["x"]}').message).toMatch(/field text holds object/);
-    expect(run('{"audio_filepath": "a"}\n{"audio_filepath": "a"}').message).toMatch(/id a is used twice/);
+    expect(run('{"audio_filepath": "a", "text": "x"}\n{"audio_filepath": "a", "text": "y"}').message).toMatch(/id a is used twice with different content/);
     expect(run('{"id": "a"}', parser({ layout: "array" })).message).toMatch(/not an array/);
   });
 
@@ -70,6 +70,14 @@ describe("the json-table parser", () => {
     expect(parseJsonTable('{"audio_filepath": "a", "text": "", "duration": 2}\n{"audio_filepath": "b", "text": "  ", "duration": 3}', parser()).nodes).toEqual([
       { id: "a", text: null, duration: 2 },
       { id: "b", text: null, duration: 3 },
+    ]);
+  });
+
+  it("reads a record repeated exactly once, even when its keys come in another order", () => {
+    const text = '{"audio_filepath": "a", "text": "x", "duration": 1}\n{"duration": 1, "text": "x", "audio_filepath": "a"}\n{"audio_filepath": "b", "text": "y", "duration": 2}';
+    expect(parseJsonTable(text, parser()).nodes).toEqual([
+      { id: "a", text: "x", duration: 1 },
+      { id: "b", text: "y", duration: 2 },
     ]);
   });
 

@@ -94,21 +94,27 @@ function rowOf(value: unknown, options: JsonTableParser, position: number): Nati
 }
 
 /**
- * Parses a file of JSON records into table rows: either one record per line (JSON Lines, as speech manifests are written) or one array of records. Each row has the record's `idField` as its id, as text, and every field the recipe keeps, a string or number as the record holds it and null where the record lacks it. A field the recipe does not keep is left out, as the csv-table parser's `columns` do. Blank lines are skipped.
+ * Parses a file of JSON records into table rows: either one record per line (JSON Lines, as speech manifests are written) or one array of records. Each row has the record's `idField` as its id, as text, and every field the recipe keeps, a string or number as the record holds it and null where the record lacks it. A field the recipe does not keep is left out, as the csv-table parser's `columns` do. A record repeated exactly is read once. Blank lines are skipped.
  * @param text - The file text.
  * @param options - The recipe's parser.
  * @returns The rows, in file order.
- * @throws NativeParseError naming the line (or the array position) of the first problem: text that is not JSON, a record that is not an object, a missing or empty id, a kept field that is not a string, number or null, an id used twice, or for an array layout a document that is not an array.
+ * @throws NativeParseError naming the line (or the array position) of the first problem: text that is not JSON, a record that is not an object, a missing or empty id, a kept field that is not a string, number or null, an id used twice by records that differ, or for an array layout a document that is not an array.
  */
 export function parseJsonTable(text: string, options: JsonTableParser): NativeTable {
   const nodes: NativeRow[] = [];
-  const seen = new Set<string>();
+  const seen = new Map<string, string>();
   const add = (value: unknown, position: number): void => {
     const row = rowOf(value, options, position);
-    if (seen.has(row.id)) {
-      throw new NativeParseError(FORMAT, position, `the id ${row.id} is used twice`);
+    const content = JSON.stringify(row);
+    const earlier = seen.get(row.id);
+    if (earlier !== undefined) {
+      // A record repeated exactly is the same record listed again, so it is read once; the same id on different content is two records sharing an identity, which the target cannot hold.
+      if (earlier === content) {
+        return;
+      }
+      throw new NativeParseError(FORMAT, position, `the id ${row.id} is used twice with different content`);
     }
-    seen.add(row.id);
+    seen.set(row.id, content);
     nodes.push(row);
   };
   if (options.layout === "array") {
