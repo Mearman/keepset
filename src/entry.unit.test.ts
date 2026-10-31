@@ -215,6 +215,14 @@ describe("an archive that selects one file or every file", () => {
     expect(issues(withArchive(taskCollectionEntry, { kind: "zip", members: { pattern: "" } }))).not.toBe("");
   });
 
+  it("accepts a collection whose matched member is an archive in its turn, and refuses an inner layout without a selector or nested deeper", () => {
+    const nested = { kind: "tar.gz", members: { path: "all.tar.gz" }, inner: { kind: "tar.gz", members: { pattern: "(?:dev|test)/text" } } };
+    expect(issues(withArchive(taskCollectionEntry, nested))).toBe("");
+    expect(issues(withArchive(taskCollectionEntry, { ...nested, inner: { kind: "tar.gz" } }))).not.toBe("");
+    expect(issues(withArchive(taskCollectionEntry, { ...nested, inner: { kind: "tar.gz", members: { pattern: "(" } } }))).toMatch(/must be a valid regular expression/);
+    expect(issues(withArchive(taskCollectionEntry, { ...nested, inner: { ...nested.inner, inner: { kind: "xlsx" } } }))).not.toBe("");
+  });
+
   it("accepts one member unpacked by an inner archive, and refuses an inner archive anywhere else or nested deeper", () => {
     const inner = { kind: "zip", member: { path: "challenge/prob1.gd4" } };
     expect(issues(withArchive(taskEntry, { kind: "zip", member: { extensions: [".zip"] }, inner }))).toBe("");
