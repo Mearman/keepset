@@ -244,6 +244,17 @@ describe("an archive that selects one file or every file", () => {
     expect(issues({ ...ogbEntry, recipe: { ...ogbEntry.recipe, parser: { ...memberText, idPattern: "(" }, archive: { kind: "tar.gz", files: { pattern: ".*\\.txt" } } } })).not.toBe("");
   });
 
+  it("lets a files archive concatenate its files for a parser that reads one file, and refuses concatenating for a multi-file parser or an archive without files", () => {
+    const lines = { format: "utterance-lines", encoding: "utf-8" };
+    const concatenating = { kind: "tar.gz", files: { pattern: ".*\\.trans\\.txt" }, concatenate: true };
+    const entry = (parser: unknown, archive: unknown): unknown => ({ ...ogbEntry, recipe: { ...ogbEntry.recipe, parser, archive } });
+    expect(issues(entry(lines, concatenating))).toBe("");
+    expect(issues(entry(lines, { ...concatenating, concatenate: false }))).not.toBe("");
+    expect(issues(entry(lines, { kind: "tar.gz", files: { pattern: ".*\\.trans\\.txt" } }))).toMatch(/or concatenates its files for a parser that reads one file/);
+    expect(issues(entry({ format: "member-text", encoding: "utf-8", idPattern: "([^/]+)\\.txt" }, concatenating))).toMatch(/the member-text parser reads the files separately/);
+    expect(issues(entry(lines, { kind: "tar.gz", member: { path: "a.txt" }, concatenate: true }))).not.toBe("");
+  });
+
   it("accepts a files archive whose members are archives in their turn, with a selector for the files inside", () => {
     const textGrid = { format: "textgrid", encoding: "utf-8", idPattern: "(?:.*/)?([^/]+)\\.TextGrid", tier: "words" };
     const nested = { kind: "tar.gz", files: { extensions: [".zip"] }, inner: { kind: "zip", files: { extensions: [".TextGrid"] } } };

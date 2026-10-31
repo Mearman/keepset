@@ -6,12 +6,12 @@ import { ArchiveError, KeepsetError, RecipeError } from "./errors";
 import type { NativeDocument } from "./parsers/native";
 import { parseNative, parseNativeFiles, parseNativeParts } from "./parsers/parse-native";
 import type { JsonScalar } from "./targets/json-scalar";
-import { readsByRanges, type SevenZipPort, unpack, unpackFiles, unpackMembers, unpackParts, type Unpacked, type UnpackOptions } from "./archive";
+import { concatenateFiles, type Member, readsByRanges, type SevenZipPort, unpack, unpackFiles, unpackMembers, unpackParts, type Unpacked, type UnpackOptions } from "./archive";
 import { downloadPaged } from "./paged";
 import { countWarnings, downloadOf, metaOf, sourceUrl, step } from "./recipe-run";
 import { resolveSource } from "./resolve";
 import type { ByteRange, StoredSource, StorePort } from "./source-bytes";
-import type { Archive, Entry, FilesRecipe, Parser, Snapshot, Source } from "./entry";
+import type { Archive, Entry, FilesArchive, FilesRecipe, Parser, Snapshot, Source } from "./entry";
 
 /** The network port a recipe downloads through: `downloadRaw` by default, which returns the bytes exactly as served, or a stand-in under test. A `range` asks for those bytes of the file only; a port may answer 206 with them or 200 with the whole file, and the reader tells which from the status. */
 export type FetchPort = (url: string, init: { readonly signal?: AbortSignal; readonly range?: ByteRange }) => Promise<Response>;
@@ -135,9 +135,21 @@ async function reading<Result>(stored: StoredSource, read: () => Promise<Result>
 }
 
 /**
+ * Reads the files a files archive selected into one native document: together by a multi-file parser, or, when the archive concatenates them, as the one file a parser that reads one file takes.
+ * @param files - The files, in path order.
+ * @param archive - The files archive.
+ * @param parser - The recipe's parser.
+ * @returns The native document.
+ * @throws NativeParseError when the files are not in the parser's format.
+ */
+function parseFiles(files: readonly Member[], archive: FilesArchive, parser: Parser): NativeDocument {
+  return archive.concatenate === true ? parseNative(concatenateFiles(files), parser) : parseNativeFiles(files, parser);
+}
+
+/**
  * Parses one instance of a collection into its native document, naming the instance when it fails.
  * @param id - The instance's id.
- * @param parse - Reads the instance's native document from its file, or from the several files a multi-file format reads together.
+ * @param parse - Reads the instance: one file, or the several files of a files archive.
  * @returns The instance's native document, with only its own header values as `meta`.
  * @throws KeepsetError naming the instance when it does not parse.
  */
@@ -152,7 +164,7 @@ function parseInstance(id: string, parse: () => NativeDocument): { readonly id: 
 }
 
 /**
- * Unpacks and parses a source of one archive or file into instances, each member let go once it is parsed. A `files` archive gives one instance, which a multi-file format reads from every file the archive selects.
+ * Unpacks and parses a source of one archive or file into instances: one for each member a `members` selector matches, each let go once it is parsed, or one for the whole file or the whole of a files archive.
  * @param stored - The kept source.
  * @param archive - Its archive layout.
  * @param parser - The recipe's parser.
@@ -187,7 +199,7 @@ async function instancesOf(stored: StoredSource, archive: Archive, parser: Parse
   if ("files" in archive) {
     const files = await unpackFiles(stored, archive, unpacking);
 
-    return [parseInstance(named(undefined), () => parseNativeFiles(files, parser))];
+    return [parseInstance(named(undefined), () => parseFiles(files, archive, parser))];
   }
   const unpacked = await unpack(stored, archive, unpacking);
 
@@ -307,7 +319,7 @@ async function runToNative(dataset: Dataset, options: FetchOptions): Promise<Nat
     }
     if ("files" in archive) {
       const files = await step(entry.id, "extract", async () => unpackFiles(stored, archive, unpackOptionsOf(options)));
-      const parsed = await step(entry.id, "parse", () => parseNativeFiles(files, recipe.parser));
+      const parsed = await step(entry.id, "parse", () => parseFiles(files, archive, recipe.parser));
 
       return { collection: false, documents: [{ id: undefined, native: { ...parsed, meta: metaOf(entry) } }], provenance: await provenanceOf({ members: files.map((file) => file.path) }) };
     }

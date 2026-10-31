@@ -153,12 +153,13 @@ export const CollectionArchiveSchema = z
   })
   .strict();
 
-/** An archive whose dataset is spread over several of its files, which a parser of a multi-file format (`ogb`, `member-text`, `nxt-words`, `eaf`, `textgrid`, `option-list`, `chat`) reads together into one document: every file the `files` selector matches, at least one, in path order, each gunzipped first when `inner` is `gzip` (an OGB dataset zip holds its tables as `.csv.gz` files). When `inner` is a file archive kind with its own `files` selector, each matched member is an archive in its turn and the files are those its selector matches, at least one in each, filed under the member's path and the file's path joined by `/` (a tarball that holds its annotations as one zip). */
+/** An archive whose dataset is spread over several of its files, which a parser of a multi-file format (`ogb`, `member-text`, `nxt-words`, `eaf`, `textgrid`, `option-list`, `chat`, `mtedx`) reads together into one document: every file the `files` selector matches, at least one, in path order, each gunzipped first when `inner` is `gzip` (an OGB dataset zip holds its tables as `.csv.gz` files). When `inner` is a file archive kind with its own `files` selector, each matched member is an archive in its turn and the files are those its selector matches, at least one in each, filed under the member's path and the file's path joined by `/` (a tarball that holds its annotations as one zip). With `concatenate`, the files are instead one file for a parser that reads one: their texts one after another in path order, a line break added after a file that does not end with one, so a transcript table split over a file for each chapter is read as the one table it is. */
 export const FilesArchiveSchema = z
   .object({
     kind: FileArchiveKindSchema,
     files: ArchiveMemberSchema,
     inner: z.union([z.object({ kind: z.literal("gzip") }).strict(), z.object({ kind: FileArchiveKindSchema, files: ArchiveMemberSchema }).strict()]).optional(),
+    concatenate: z.literal(true).optional(),
   })
   .strict();
 
@@ -516,6 +517,22 @@ const PART_FORMATS: ReadonlyMap<Parser["format"], readonly string[] | undefined>
   ["hgb", ["nodes", "links"]],
 ]);
 
+/**
+ * Reports a files archive that does not suit the parser: a multi-file parser reads only a files archive, and a files archive is read by a multi-file parser or, when it concatenates its files, by a parser that reads one file.
+ * @param archive - The recipe's archive.
+ * @param parser - The recipe's parser.
+ * @param path - Where the archive sits in the entry, for the issue's path.
+ * @param ctx - The refinement context to report to.
+ */
+function addFilesArchiveIssues(archive: Archive, parser: Parser, path: readonly (string | number)[], ctx: z.core.$RefinementCtx): void {
+  const concatenated = "concatenate" in archive;
+  if (concatenated && MULTI_FILE_FORMATS.has(parser.format)) {
+    ctx.addIssue({ code: "custom", path: [...path, "concatenate"], message: `the ${parser.format} parser reads the files separately, so its archive does not concatenate them` });
+  } else if ("files" in archive !== (MULTI_FILE_FORMATS.has(parser.format) || concatenated)) {
+    ctx.addIssue({ code: "custom", path: [...path], message: `a files archive is read by a multi-file parser (${[...MULTI_FILE_FORMATS].join(", ")}) or concatenates its files for a parser that reads one file, and such a parser reads only a files archive` });
+  }
+}
+
 /** A recipe that downloads one source: the source (by index into `sources`), how it is paged when it is a paged query, the archive layout its bytes unpack by, and the parser. */
 export const SourceRecipeSchema = z
   .object({
@@ -539,9 +556,7 @@ export const SourceRecipeSchema = z
         ctx.addIssue({ code: "custom", path: ["archive"], message: `the ${recipe.parser.format} parser reads the parts ${required.join(" and ")} from a parts archive` });
       }
     }
-    if (("files" in recipe.archive) !== MULTI_FILE_FORMATS.has(recipe.parser.format)) {
-      ctx.addIssue({ code: "custom", path: ["archive"], message: `a files archive is read by a multi-file parser (${[...MULTI_FILE_FORMATS].join(", ")}), and such a parser reads only a files archive` });
-    }
+    addFilesArchiveIssues(recipe.archive, recipe.parser, ["archive"], ctx);
   });
 
 /** One file of a collection read file by file: the path it is filed under in the collection, the entry's source it is downloaded from (by index into `sources`, so a dead file is fetched from its own pinned snapshot), and the archive layout its bytes unpack by into the one file or, with `members`, the several files the parser reads. */
@@ -561,9 +576,7 @@ export const FilesRecipeSchema = z
   .strict()
   .superRefine((recipe, ctx) => {
     for (const [index, file] of recipe.files.entries()) {
-      if (("files" in file.archive) !== MULTI_FILE_FORMATS.has(recipe.parser.format)) {
-        ctx.addIssue({ code: "custom", path: ["files", index, "archive"], message: `a files archive is read by a multi-file parser (${[...MULTI_FILE_FORMATS].join(", ")}), and such a parser reads only a files archive` });
-      }
+      addFilesArchiveIssues(file.archive, recipe.parser, ["files", index, "archive"], ctx);
     }
   });
 

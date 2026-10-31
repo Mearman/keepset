@@ -7,7 +7,7 @@ import { zipSync } from "fflate";
 import { describe, expect, it } from "vitest";
 import { ArchiveError } from "./errors";
 import { bzip2, collect, gzip, tar, zip } from "./test-support/archives";
-import { unpack, unpackFiles, unpackMembers } from "./archive";
+import { concatenateFiles, unpack, unpackFiles, unpackMembers } from "./archive";
 import { BLOCK, scanTar } from "./node/tar";
 
 const text = (bytes: Uint8Array): string => new TextDecoder().decode(bytes);
@@ -464,5 +464,18 @@ describe("unpackMembers when each selected member is an archive in its turn", ()
 
   it("rejects an inner selector that matches nothing, naming the member", async () => {
     await expect(collect(unpackMembers(bundle, { ...select, inner: { kind: "tar.gz", members: { extensions: [".segments"] } } }))).rejects.toThrow(/member wanted\.tar\.gz: expected at least one member ending \.segments/);
+  });
+});
+
+describe("concatenateFiles", () => {
+  const member = (path: string, content: string): { readonly path: string; readonly bytes: Uint8Array } => ({ path, bytes: new TextEncoder().encode(content) });
+
+  it("joins the files in the order given, adding a line feed only after a file that does not end with one", () => {
+    const joined = concatenateFiles([member("a", "1\n2"), member("b", "3\n"), member("c", ""), member("d", "4")]);
+    expect(text(joined)).toBe("1\n2\n3\n4\n");
+  });
+
+  it("is empty for no files", () => {
+    expect(concatenateFiles([])).toEqual(new Uint8Array());
   });
 });
