@@ -49,19 +49,26 @@ function isTransportGzip(url: string, response: Response, bytes: Uint8Array): bo
   return response.headers.get("content-encoding")?.toLowerCase() === "gzip" && bytes[0] === GZIP_FIRST_BYTE && bytes[1] === GZIP_SECOND_BYTE && !COMPRESSED_FILE_EXTENSIONS.has(extension);
 }
 
+/** The warning the Wayback Machine replays with a capture that stopped at its size limit (`299 wayback content truncated by "length"`): such a capture holds a prefix of the file and not the file. */
+const TRUNCATED_CAPTURE_WARNING = /\btruncated\b/i;
+
 /**
  * Requests one URL's bytes through the port, with a gzip transport encoding undone.
  * @param port - The network port.
  * @param url - The URL.
  * @param signal - Aborts the request.
  * @returns The bytes.
- * @throws KeepsetError when the server does not answer successfully.
+ * @throws KeepsetError when the server does not answer successfully, or says the bytes are a truncated capture.
  * @throws TypeError when a gzip transport encoding is not valid gzip data.
  */
 async function bytesOf(port: FetchPort, url: string, signal: AbortSignal | undefined): Promise<Uint8Array> {
   const response = await port(url, signal === undefined ? {} : { signal });
   if (!response.ok) {
     throw new KeepsetError(`${url} answered ${String(response.status)} ${response.statusText}`);
+  }
+  // A truncated capture is a prefix of the file, so reading it would hand a recipe a file that ends partway through a record; the chain moves on to the next tier instead.
+  if (TRUNCATED_CAPTURE_WARNING.test(response.headers.get("warning") ?? "")) {
+    throw new KeepsetError(`${url} is a truncated capture`);
   }
   const bytes = new Uint8Array(await response.arrayBuffer());
 

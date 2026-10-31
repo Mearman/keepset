@@ -82,6 +82,16 @@ describe("resolveSource", () => {
     expect(requested).not.toContain(raw(CLOSEST));
   });
 
+  it("passes over a capture the Archive says it truncated, to the next tier, and names it when no tier remains", async () => {
+    const truncated = (): Response => new Response("prefix of the file", { status: OK, headers: { warning: '299 wayback content truncated by "length"' } });
+    const { port, requested } = served({ [availability()]: closestAnswer(CLOSEST), [raw(CLOSEST)]: truncated(), [URL_LIVE]: "whole file" });
+    const resolved = await resolveSource(live(), { port });
+    expect(new TextDecoder().decode(resolved.bytes)).toBe("whole file");
+    expect(resolved.tier).toBe("live source");
+    expect(requested).toEqual([availability(), raw(CLOSEST), URL_LIVE]);
+    await expect(resolveSource(dead(), { port: served({ [raw(PIN)]: truncated(), [availability()]: Response.json({ archived_snapshots: {} }) }).port })).rejects.toThrow(/truncated capture/);
+  });
+
   it("rethrows an abort instead of trying the next tier", async () => {
     const controller = new AbortController();
     const reason = new Error("stop");

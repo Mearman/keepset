@@ -108,10 +108,18 @@ async function follow(url: URL, init: DownloadInit, redirects: number): Promise<
     throw new KeepsetError(`${url.href} answered without a status line`);
   }
   if (!REDIRECTS.has(status)) {
-    // The one header the resolution chain reads: whether the bytes are a transport encoding of the page, which this downloader leaves as served.
-    const contentEncoding = response.headers["content-encoding"];
+    // The headers the resolution chain reads: whether the bytes are a transport encoding of the page, which this downloader leaves as served, and the warning the Wayback Machine gives a capture it truncated.
+    const headers = new Headers();
+    for (const name of ["content-encoding", "warning"]) {
+      const value = response.headers[name];
+      for (const part of Array.isArray(value) ? value : [value]) {
+        if (part !== undefined) {
+          headers.append(name, part);
+        }
+      }
+    }
 
-    return new Response(await readBody(response), { status, statusText: statusMessage, ...(contentEncoding === undefined ? {} : { headers: { "content-encoding": contentEncoding } }) });
+    return new Response(await readBody(response), { status, statusText: statusMessage, headers });
   }
   response.resume();
   const { location } = response.headers;
