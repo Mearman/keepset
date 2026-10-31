@@ -1,0 +1,55 @@
+{
+  "aliases": [
+    "slr88-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/member-text.json"
+  },
+  "description": "The transcripts of Att-HACK: each record is an utterance with its identifier and text. It carries none of the audio, which the download list of openslr-slr88 gives.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 36634
+  },
+  "id": "openslr-slr88-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Creative Commons (BY/NC/ND) Licence",
+    "url": "https://www.openslr.org/88/"
+  },
+  "name": "Att-HACK transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "files": {
+        "pattern": "/?Volumes/CLEM_HDD/IRCAM/Open_SLR/txt/[FM]\\d+_a\\d_s\\d+_v\\d+\\.txt"
+      },
+      "kind": "tar.gz"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "member-text",
+      "idPattern": "(?:.*/)?([^/]+)\\.txt"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/88/txt.tgz"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "text"
+  ]
+}

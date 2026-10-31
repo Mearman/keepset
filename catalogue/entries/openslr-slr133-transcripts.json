@@ -1,0 +1,54 @@
+{
+  "aliases": [
+    "slr133-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/utterance-lines.json"
+  },
+  "description": "The transcripts of XBMU-AMDO31: one instance per transcript table, each record being an utterance with its identifier and text. It carries none of the audio, which the download list of openslr-slr133 gives.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "instances": 1
+  },
+  "id": "openslr-slr133-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "CC BY-SA 4.0",
+    "url": "https://www.openslr.org/133/"
+  },
+  "name": "XBMU-AMDO31 transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "tar.gz",
+      "members": {
+        "pattern": ".*/transcript_clean\\.txt"
+      }
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "utterance-lines"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/133/xbmu_amdo31.tar.gz"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "text"
+  ]
+}

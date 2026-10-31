@@ -1,0 +1,52 @@
+{
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/member-text.json"
+  },
+  "description": "The transcripts of Vystadial (en): each record is an utterance with its identifier and text. It carries none of the audio, which the download list of openslr-slr6 gives.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 51462
+  },
+  "id": "openslr-slr6-en-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0 US)",
+    "url": "https://www.openslr.org/6/"
+  },
+  "name": "Vystadial (en) transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "files": {
+        "pattern": "data_voip_en/data/[^/]+\\.wav\\.trn"
+      },
+      "kind": "tar.gz"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "member-text",
+      "idPattern": "data_voip_en/data/([^/]+)\\.wav\\.trn"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/6/data_voip_en.tgz"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "text"
+  ]
+}

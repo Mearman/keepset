@@ -1,0 +1,93 @@
+{
+  "aliases": [
+    "slr161-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].sentence",
+        "op": "move",
+        "to": "nodes[].text"
+      },
+      {
+        "from": "nodes[].actor",
+        "op": "move",
+        "to": "nodes[].speaker"
+      },
+      {
+        "from": "nodes[].emotion_expressed",
+        "op": "move",
+        "to": "nodes[].emotion"
+      }
+    ],
+    "source": "csv-table",
+    "target": "speech/v1"
+  },
+  "description": "The transcripts of Emozionalmente: each record is an utterance with its text, actor and the emotion expressed. It carries none of the audio, which the download list of openslr-slr161 gives.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "instances": 1
+  },
+  "id": "openslr-slr161-transcripts",
+  "licence": {
+    "id": "CC-BY-4.0",
+    "kind": "spdx"
+  },
+  "name": "Emozionalmente transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "zip",
+      "members": {
+        "pattern": "emozionalmente/metadata/samples\\.csv"
+      }
+    },
+    "parser": {
+      "columns": [
+        "sentence",
+        "actor",
+        "emotion_expressed"
+      ],
+      "delimiter": "comma",
+      "encoding": "utf-8",
+      "format": "csv-table",
+      "idColumn": "file_name",
+      "numericColumns": [],
+      "skipLines": 0
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://zenodo.org/records/12616095/files/emozionalmente.zip"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "text",
+    "speaker",
+    "emotion"
+  ]
+}

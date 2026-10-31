@@ -1,0 +1,87 @@
+{
+  "aliases": [
+    "slr97-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].Script",
+        "op": "move",
+        "to": "nodes[].text"
+      },
+      {
+        "from": "nodes[].Speaker",
+        "op": "move",
+        "to": "nodes[].speaker"
+      }
+    ],
+    "source": "csv-table",
+    "target": "speech/v1"
+  },
+  "description": "The transcripts of Deeply Korean read speech corpus: each record is an utterance with its identifier, text and speaker. It carries none of the audio, which the download list of openslr-slr97 gives.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "instances": 1
+  },
+  "id": "openslr-slr97-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)",
+    "url": "https://www.openslr.org/97/"
+  },
+  "name": "Deeply Korean read speech corpus transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "tar.gz",
+      "members": {
+        "pattern": "(?:.*/)?script\\.csv"
+      }
+    },
+    "parser": {
+      "columns": [
+        "Script",
+        "Speaker"
+      ],
+      "delimiter": "comma",
+      "encoding": "utf-8",
+      "format": "csv-table",
+      "idColumn": "Text_code",
+      "numericColumns": [],
+      "skipLines": 0
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/97/KoreanReadSpeechCorpus.tar.gz"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "text",
+    "speaker"
+  ]
+}

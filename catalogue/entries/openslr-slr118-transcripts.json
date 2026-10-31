@@ -1,0 +1,89 @@
+{
+  "aliases": [
+    "slr118-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/utterance-lines.json"
+  },
+  "description": "The transcripts of 1111 Hours Hindi ASR Challenge: each record is an utterance with its identifier and text. It carries none of the audio, which the download list of openslr-slr118 gives.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "instances": 3
+  },
+  "id": "openslr-slr118-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "The data released as a part of this challenge can be used freely for academic purposes, but permission for any commercial use of the data should be sought by writing to contact@gramvaani.org.",
+    "url": "https://www.openslr.org/118/"
+  },
+  "name": "1111 Hours Hindi ASR Challenge transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "files": [
+      {
+        "archive": {
+          "kind": "tar.gz",
+          "members": {
+            "pattern": "(?:.*/)?text"
+          }
+        },
+        "path": "GV_Dev_5h.tar.gz",
+        "source": 0
+      },
+      {
+        "archive": {
+          "kind": "tar.gz",
+          "members": {
+            "pattern": "(?:.*/)?text"
+          }
+        },
+        "path": "GV_Eval_3h.tar.gz",
+        "source": 1
+      },
+      {
+        "archive": {
+          "kind": "tar.gz",
+          "members": {
+            "pattern": "(?:.*/)?text"
+          }
+        },
+        "path": "GV_Train_100h.tar.gz",
+        "source": 2
+      }
+    ],
+    "parser": {
+      "encoding": "utf-8",
+      "format": "utterance-lines"
+    },
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/118/GV_Dev_5h.tar.gz"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/118/GV_Eval_3h.tar.gz"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/118/GV_Train_100h.tar.gz"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "text"
+  ]
+}
