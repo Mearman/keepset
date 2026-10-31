@@ -5,11 +5,42 @@
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "file": "crosswalks/speech-v1/id-text.json"
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].text",
+        "op": "move",
+        "to": "nodes[].text"
+      },
+      {
+        "from": "nodes[].start",
+        "op": "move",
+        "to": "nodes[].start"
+      },
+      {
+        "from": "nodes[].end",
+        "op": "move",
+        "to": "nodes[].end"
+      }
+    ],
+    "source": "textgrid",
+    "target": "speech/v1"
   },
-  "description": "The transcripts of AliMeeting. No recipe reads them. AliMeeting's TextGrid files are hosted outside OpenSLR (the download list of its page links to external storage), so no OpenSLR source holds the transcripts.",
+  "description": "The transcripts of AliMeeting as the near-field (headset) Praat TextGrid files give them: one instance for each of the training, evaluation and test sets, whose records are the intervals of every participant's transcript tier, each with its identifier (the recording and participant, the tier's position in the file and the interval's position in the tier), its text, and its start and end in seconds. Intervals with no text are left out. The far-field TextGrid files and all of the audio are not read: the audio is in the distribution the download list of openslr-slr119 gives.",
   "domain": "Speech",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "instances": 3
+  },
   "id": "openslr-slr119-transcripts",
   "licence": {
     "kind": "custom",
@@ -23,24 +54,66 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "AliMeeting's TextGrid files are hosted outside OpenSLR (the download list of its page links to external storage), so no OpenSLR source holds the transcripts.",
-    "status": "not-fetchable"
+    "files": [
+      {
+        "archive": {
+          "files": {
+            "pattern": "Train_Ali_near/textgrid_dir/[^/]+\\.TextGrid"
+          },
+          "kind": "tar.gz"
+        },
+        "path": "Train_Ali_near",
+        "source": 0
+      },
+      {
+        "archive": {
+          "files": {
+            "pattern": "Eval_Ali/Eval_Ali_near/textgrid_dir/[^/]+\\.TextGrid"
+          },
+          "kind": "tar.gz"
+        },
+        "path": "Eval_Ali",
+        "source": 1
+      },
+      {
+        "archive": {
+          "files": {
+            "pattern": "Test_Ali/Test_Ali_near/textgrid_dir/[^/]+\\.TextGrid"
+          },
+          "kind": "tar.gz"
+        },
+        "path": "Test_Ali",
+        "source": 2
+      }
+    ],
+    "parser": {
+      "encoding": "utf-8",
+      "format": "textgrid",
+      "idPattern": "(?:.*/)?([^/]+)\\.TextGrid"
+    },
+    "status": "fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 5922,
-        "sha256": "62bdcb06a0fc58b4e615d8f184df2a85cb4bbc8a98c54e2c7b258c46f0cf0da7",
-        "timestamp": "20261013110600",
-        "url": "https://web.archive.org/web/20261013110600/https://www.openslr.org/119/"
-      },
+      "retrieved": "2026-10-31",
       "status": "live",
-      "url": "https://www.openslr.org/119/"
+      "url": "https://speech-lab-share-data.oss-cn-shanghai.aliyuncs.com/AliMeeting/openlr/Train_Ali_near.tar.gz"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://speech-lab-share-data.oss-cn-shanghai.aliyuncs.com/AliMeeting/openlr/Eval_Ali.tar.gz"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://speech-lab-share-data.oss-cn-shanghai.aliyuncs.com/AliMeeting/openlr/Test_Ali.tar.gz"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "text"
+  ]
 }

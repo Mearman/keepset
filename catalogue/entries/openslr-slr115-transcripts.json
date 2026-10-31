@@ -5,11 +5,13 @@
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "file": "crosswalks/speech-v1/id-text.json"
+    "file": "crosswalks/speech-v1/utterance-lines.json"
   },
-  "description": "The transcripts of EmoV_DB. No recipe reads them. The archives hold recordings only: the sentences are the CMU Arctic prompts, and the page points to TextGrid annotations hosted elsewhere.",
+  "description": "The transcripts of EmoV_DB as the sentences it is recorded from: each record is a CMU Arctic prompt with its identifier and text, the corpus's own README stating that its transcript is based on that database and that the last four numerals of a recording's file name are its sentence number. It is the prompt table and not a per-recording transcript, so a recording is linked to its prompt through the number in its file name, which the README does not state is the Arctic identifier. It carries none of the audio, which the download list of openslr-slr115 gives.",
   "domain": "Speech",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "nodes": 1132
+  },
   "id": "openslr-slr115-transcripts",
   "licence": {
     "kind": "custom",
@@ -23,24 +25,28 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "The archives hold recordings only: the sentences are the CMU Arctic prompts, and the page points to TextGrid annotations hosted elsewhere.",
-    "status": "not-fetchable"
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "utterance-lines",
+      "layout": "festival"
+    },
+    "source": 0,
+    "status": "fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 11684,
-        "sha256": "119473de96717b574993af04e720f5e90d41311033c2097c7288a77e8f5377a6",
-        "timestamp": "20260903063116",
-        "url": "https://web.archive.org/web/20260903063116/https://www.openslr.org/115/"
-      },
+      "retrieved": "2026-10-31",
       "status": "live",
-      "url": "https://www.openslr.org/115/"
+      "url": "http://www.festvox.org/cmu_arctic/cmuarctic.data"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "text"
+  ]
 }
