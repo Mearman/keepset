@@ -27,7 +27,7 @@ const relatedFiles = gzip(
     { path: "preprocessed_ocr.tar.gz", text: "not an archive" },
     {
       path: "all_information.tar.gz",
-      text: gzip(
+      bytes: gzip(
         tar([
           ...split("L95", "other_0000-00000 HELLO\nshared_0000-00001 GOOD\nother_0000-00004 WE ALL DO IS MAYBE THE FIRST THING WE LEARN IT'S\n", "other_0000-00000 other 0.00 0.50\n"),
           ...split("S95", "shared_0000-00001 AND THIS PAPER THAT WE'RE PRESENTING UH IS DRAWING ON SOME PERSPECTIVES\n", "shared_0000-00001 shared 1.00 3.50\n"),
