@@ -13,14 +13,26 @@
         "from": "nodes[].id",
         "op": "move",
         "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].word",
+        "op": "move",
+        "to": "nodes[].word"
+      },
+      {
+        "from": "nodes[].count",
+        "op": "move",
+        "to": "nodes[].count"
       }
     ],
-    "source": "none",
+    "source": "json-word-counts",
     "target": "lexicon/v1"
   },
-  "description": "Spanish Word list (lexicon). No recipe reads it. The word list is one JSON object keyed by word with the word's count as its value, which no parser reads.",
+  "description": "Spanish Word list (lexicon): the words of a large Spanish text collection with the number of times each occurs. It carries the entries and none of the data they describe.",
   "domain": "Text",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "nodes": 2976458
+  },
   "id": "openslr-slr21-lexicon",
   "licence": {
     "kind": "custom",
@@ -34,24 +46,31 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "The word list is one JSON object keyed by word with the word's count as its value, which no parser reads.",
-    "status": "not-fetchable"
+    "archive": {
+      "kind": "tar.gz",
+      "member": {
+        "path": "es_wordlist.json"
+      }
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "json-word-counts"
+    },
+    "source": 0,
+    "status": "fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 3155,
-        "sha256": "aeb1ac090b40b69c7c450dea16863240e54ccdb75365a0056a2c09c44f306ae9",
-        "timestamp": "20260418044648",
-        "url": "https://web.archive.org/web/20260418044648/https://www.openslr.org/21/"
-      },
+      "retrieved": "2026-10-31",
       "status": "live",
-      "url": "https://www.openslr.org/21/"
+      "url": "https://www.openslr.org/resources/21/es_wordlist.json.tgz"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "word",
+    "count"
+  ]
 }
