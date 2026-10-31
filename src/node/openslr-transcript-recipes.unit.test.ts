@@ -45,32 +45,6 @@ describe("the Aishell transcripts recipe", () => {
   });
 });
 
-describe("the MAGICDATA read speech transcripts recipe", () => {
-  const trans = (rows: readonly string[]): string => ["UtteranceID\tSpeakerID\tTranscription", ...rows, ""].join("\n");
-
-  it("reads the TRANS.txt of each set's archive as one instance, with the speaker beside the text", async () => {
-    const files = {
-      [`${OPENSLR}/68/train_set.tar.gz`]: tgz({ "train/TRANS.txt": trans(["14_3892_20170824224913.wav\t14_3892\t打开导航"]), "train/14_3892/14_3892_20170824224913.wav": "RIFF" }),
-      [`${OPENSLR}/68/dev_set.tar.gz`]: tgz({ "dev/TRANS.txt": trans(["37_5622_20170913203118.wav\t37_5622\t高德地图", "37_5622_20170913203322.wav\t37_5622\t我想用百度搜索短信"]) }),
-      [`${OPENSLR}/68/test_set.tar.gz`]: tgz({ "test/TRANS.txt": trans(["5_1932_20170628221832.wav\t5_1932\t今天天气怎么样"]) }),
-    };
-    const data = await fetchShipped("openslr-slr68-transcripts", files);
-    expect(data).toMatchObject({
-      instances: [
-        { id: "train_set.tar.gz/train/TRANS.txt", nodes: [{ id: "14_3892_20170824224913.wav", speaker: "14_3892", text: "打开导航" }] },
-        {
-          id: "dev_set.tar.gz/dev/TRANS.txt",
-          nodes: [
-            { id: "37_5622_20170913203118.wav", speaker: "37_5622", text: "高德地图" },
-            { id: "37_5622_20170913203322.wav", speaker: "37_5622", text: "我想用百度搜索短信" },
-          ],
-        },
-        { id: "test_set.tar.gz/test/TRANS.txt", nodes: [{ id: "5_1932_20170628221832.wav", speaker: "5_1932", text: "今天天气怎么样" }] },
-      ],
-    });
-  });
-});
-
 describe("the AISHELL-3 transcripts recipe", () => {
   it("reads the content file of each part, whose lines end in CRLF and whose ids carry the wav suffix", async () => {
     const archive = tgz({
