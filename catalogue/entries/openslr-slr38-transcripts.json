@@ -1,0 +1,55 @@
+{
+  "aliases": [
+    "slr38-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/member-text.json"
+  },
+  "description": "The transcripts of Free ST Chinese Mandarin Corpus: each record is an utterance with its identifier and text. It carries none of the audio, which the download list of openslr-slr38 gives.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 102600
+  },
+  "id": "openslr-slr38-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Creative Common BY-NC-ND 4.0 (Attribution-NonCommercial-NoDerivatives 4.0 International)",
+    "url": "https://www.openslr.org/38/"
+  },
+  "name": "Free ST Chinese Mandarin Corpus transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "files": {
+        "pattern": "ST-CMDS-20170001_1-OS/[^/]+\\.txt"
+      },
+      "kind": "tar.gz"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "member-text",
+      "idPattern": "ST-CMDS-20170001_1-OS/([^/]+)\\.txt"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/38/ST-CMDS-20170001_1-OS.tar.gz"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "text"
+  ]
+}
