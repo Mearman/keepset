@@ -4,7 +4,7 @@ import { NativeParseError } from "../errors";
 import { parseNative } from "./parse-native";
 import { parseUtteranceLines } from "./utterance-lines";
 
-const parser = (layout?: "id-first" | "id-last" | "festival"): Extract<Parser, { format: "utterance-lines" }> => ({ format: "utterance-lines", encoding: "utf-8", ...(layout === undefined ? {} : { layout }) });
+const parser = (layout?: "id-first" | "id-last" | "festival" | "sphinx"): Extract<Parser, { format: "utterance-lines" }> => ({ format: "utterance-lines", encoding: "utf-8", ...(layout === undefined ? {} : { layout }) });
 
 describe("the utterance-lines parser", () => {
   it("reads an id and then the transcript of each line, keeping the transcript's inner spacing", () => {
@@ -52,6 +52,15 @@ describe("the utterance-lines parser", () => {
       { id: "sin_2", text: 'she said "hi"' },
     ]);
     expect(() => parseUtteranceLines("sin_1 hello", parser("festival"))).toThrow(/not of the form/);
+  });
+
+  it("reads Sphinx lines, taking the id from the parentheses at the end and the transcript from between the sentence markers", () => {
+    expect(parseUtteranceLines("<s> gràcies presidenta </s> (86f47e90_20.51_23.6)\n<s>  </s> (86f47e90_30.0_31.5)\n<s> he said (so) </s> (a_1_2)\n", parser("sphinx")).nodes).toEqual([
+      { id: "86f47e90_20.51_23.6", text: "gràcies presidenta" },
+      { id: "86f47e90_30.0_31.5", text: null },
+      { id: "a_1_2", text: "he said (so)" },
+    ]);
+    expect(() => parseUtteranceLines("gràcies presidenta (a_1_2)", parser("sphinx"))).toThrow(/not of the form <s> text <\/s> \(id\)/);
   });
 
   it("is what parseNative runs for the format", () => {
