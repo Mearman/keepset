@@ -1,3 +1,11 @@
+# [0.78.0](https://github.com/Mearman/keepset/compare/v0.77.0...v0.78.0) (2026-10-31)
+
+
+### Features
+
+* **categories:** add lexicon, speakers, splits and audio ([b456c2c](https://github.com/Mearman/keepset/commit/b456c2c043b841949ae656c1151118931bca2e8b))
+* **parsers:** read lexicon lines and space delimited tables ([7256747](https://github.com/Mearman/keepset/commit/7256747e1e0a6adc781d1c63f9ff8063a9501b91))
+
 # [0.77.0](https://github.com/Mearman/keepset/compare/v0.76.2...v0.77.0) (2026-10-31)
 
 
