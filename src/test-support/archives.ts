@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { gzipSync } from "node:zlib";
+import { crc32, deflateRawSync, gunzipSync, gzipSync } from "node:zlib";
 import { zipSync } from "fflate";
 import { BLOCK, CHECKSUM_FILL, HEADER } from "../node/tar";
 import { SATURATED_16, SATURATED_32, U16, U32, U64, ZIP_SIGNATURES } from "../node/zip";
@@ -114,10 +114,10 @@ export function zip(files: readonly ArchiveFile[]): Uint8Array {
 /**
  * Gzips text or bytes.
  * @param data - The data.
- * @returns The gzip bytes.
+ * @returns The gzip bytes, as a plain Uint8Array: a Buffer's `slice` shares its memory, so a test that copies the data to corrupt it would corrupt the original too.
  */
 export function gzip(data: string | Uint8Array): Uint8Array {
-  return gzipSync(typeof data === "string" ? new TextEncoder().encode(data) : data);
+  return new Uint8Array(gzipSync(typeof data === "string" ? new TextEncoder().encode(data) : data));
 }
 
 /** The parts of a minimal workbook, as the files a spreadsheet application writes them. */
@@ -231,4 +231,55 @@ export function zip64(name: string, data: Uint8Array, options: Readonly<Zip64Opt
   const end = [...u32(ZIP_SIGNATURES.endOfCentralDirectory), ...u16(0), ...u16(0), ...u16(SATURATED_16), ...u16(SATURATED_16), ...u32(SATURATED_32), ...u32(SATURATED_32), ...u16(0)];
 
   return Uint8Array.from([...local, ...central, ...zip64End, ...locator, ...end]);
+}
+
+/**
+ * Gunzips with Node's zlib, the reference a streamed gzip reader is checked against: it reads concatenated members, checks every member's CRC-32 and length modulo 2^32, and fails on data cut short or followed by bytes that do not start with a zero or another member.
+ * @param bytes - The gzip data.
+ * @returns The decompressed bytes.
+ */
+export function referenceGunzip(bytes: Uint8Array): Uint8Array {
+  return new Uint8Array(gunzipSync(bytes));
+}
+
+/** The optional fields a hand-built gzip member header carries (RFC 1952 section 2.3.1). */
+export interface GzipHeaderFields {
+  readonly extra?: Uint8Array;
+  readonly name?: string;
+  readonly comment?: string;
+  /** Whether the header ends with the low 16 bits of its own CRC-32. */
+  readonly headerCrc?: boolean;
+}
+
+/** The header flags of the optional fields, the deflate method byte and the operating system byte for an unknown system. */
+const GZIP_FLAGS = { headerCrc: 0x02, extra: 0x04, name: 0x08, comment: 0x10 } as const;
+const GZIP_MAGIC_FIRST = 0x1f;
+const GZIP_MAGIC_SECOND = 0x8b;
+const GZIP_DEFLATE = 8;
+const GZIP_UNKNOWN_OS = 255;
+const LOW_16_BITS = 0xffff;
+
+/**
+ * Writes one gzip member by hand, with whichever optional header fields are asked for, which Node's own gzip never writes: the header, the raw deflate data and a trailer of the data's CRC-32 and length.
+ * @param data - The text or bytes to compress.
+ * @param fields - The optional header fields.
+ * @returns The member.
+ */
+export function gzipMember(data: string | Uint8Array, fields: Readonly<GzipHeaderFields> = {}): Uint8Array {
+  const bytes = typeof data === "string" ? new TextEncoder().encode(data) : data;
+  const flags = (fields.extra === undefined ? 0 : GZIP_FLAGS.extra) | (fields.name === undefined ? 0 : GZIP_FLAGS.name) | (fields.comment === undefined ? 0 : GZIP_FLAGS.comment) | (fields.headerCrc === true ? GZIP_FLAGS.headerCrc : 0);
+  const header = [GZIP_MAGIC_FIRST, GZIP_MAGIC_SECOND, GZIP_DEFLATE, flags, ...u32(0), 0, GZIP_UNKNOWN_OS];
+  if (fields.extra !== undefined) {
+    header.push(...u16(fields.extra.length), ...fields.extra);
+  }
+  for (const text of [fields.name, fields.comment]) {
+    if (text !== undefined) {
+      header.push(...new TextEncoder().encode(text), 0);
+    }
+  }
+  if (fields.headerCrc === true) {
+    header.push(...u16(crc32(Uint8Array.from(header)) & LOW_16_BITS));
+  }
+
+  return Uint8Array.from([...header, ...deflateRawSync(bytes), ...u32(crc32(bytes)), ...u32(bytes.length % WORD)]);
 }

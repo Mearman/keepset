@@ -4,6 +4,7 @@ import { KeepsetError, UnreachableSourceError } from "./errors";
 import { rawSnapshotUrl, type Source } from "./entry";
 import type { Download, FetchPort, Provenance } from "./fetch";
 import { emptyBody, type StoredSource, type StorePort } from "./source-bytes";
+import { gunzipTransform } from "./gzip";
 
 /** The availability API, which answers with the closest capture of a URL as JSON and, unlike the replay endpoints, sends CORS headers, so a browser can ask it. */
 const AVAILABILITY_URL = "https://archive.org/wayback/available";
@@ -119,7 +120,7 @@ const TRUNCATED_CAPTURE_WARNING = /\btruncated\b/i;
  * @param options - The network port, the store, whether the reader reads by ranges, and the abort signal.
  * @returns The kept source.
  * @throws KeepsetError when the server does not answer successfully, or says the bytes are a truncated capture.
- * @throws TypeError when a gzip transport encoding is not valid gzip data.
+ * @throws ArchiveError when a gzip transport encoding is not valid gzip data, fails its checksum or its recorded length, or ends inside a member, as `GunzipStream` reports.
  */
 async function keep(url: string, options: Readonly<ResolveOptions>): Promise<StoredSource> {
   const { port, store, randomAccess, signal } = options;
@@ -143,7 +144,7 @@ async function keep(url: string, options: Readonly<ResolveOptions>): Promise<Sto
     headers.delete("content-encoding");
     headers.delete("content-length");
   }
-  const kept = new Response(transportGzip ? body.pipeThrough(new DecompressionStream("gzip")) : body, { status: response.status, statusText: response.statusText, headers });
+  const kept = new Response(transportGzip ? body.pipeThrough(gunzipTransform()) : body, { status: response.status, statusText: response.statusText, headers });
 
   return store.keep(kept, { url, port, randomAccess, ...(signal === undefined ? {} : { signal }) });
 }

@@ -126,6 +126,35 @@ describe("unpack of a tar.gz with bytes after its gzip member", () => {
   });
 });
 
+describe("every gzip path checks each member's trailer", () => {
+  /** The trailer's CRC-32 is its first four of eight bytes, so the byte this far from the end is the CRC's first. */
+  const CRC_FROM_END = 8;
+  const corruptCrc = (bytes: Uint8Array): Uint8Array => {
+    const copy = bytes.slice();
+    copy[copy.length - CRC_FROM_END] = (copy[copy.length - CRC_FROM_END] ?? expect.unreachable("the gzip data has a trailer")) ^ 1;
+
+    return copy;
+  };
+  const archive = tar([{ path: "pad/a.txt", text: "wanted" }]);
+
+  it("refuses a tar.gz, a gzip file and a gzipped member whose recorded CRC-32 differs from the data's", async () => {
+    await expect(unpack(corruptCrc(gzip(archive)), { kind: "tar.gz", member: { extensions: [".txt"] } })).rejects.toThrow(/the gzip stream fails its checksum/);
+    await expect(collect(unpackMembers(corruptCrc(gzip(archive)), { kind: "tar.gz", members: { extensions: [".txt"] } }))).rejects.toThrow(/the gzip stream fails its checksum/);
+    await expect(unpack(corruptCrc(gzip("zipped")), { kind: "gzip" })).rejects.toThrow(/the gzip stream fails its checksum/);
+    const bundle = zipSync({ "net.txt.gz": corruptCrc(gzip("gunzipped")) });
+    await expect(unpack(bundle, { kind: "zip", member: { extensions: [".gz"] }, inner: { kind: "gzip" } })).rejects.toThrow(/the gzip stream fails its checksum/);
+    await expect(unpackFiles(bundle, { kind: "zip", files: { extensions: [".gz"] }, inner: { kind: "gzip" } })).rejects.toThrow(/member net\.txt\.gz: .*the gzip stream fails its checksum/);
+  });
+
+  it("reads a tar.gz written as several concatenated gzip members, and refuses one with bytes after its padding", async () => {
+    const half = archive.length >> 1;
+    const members = Uint8Array.from([...gzip(archive.subarray(0, half)), ...gzip(archive.subarray(half))]);
+    expect(text((await unpack(members, { kind: "tar.gz", member: { extensions: [".txt"] } })).bytes)).toBe("wanted");
+    const junk = Uint8Array.from([...gzip(archive), ...new Uint8Array(PADDING_BYTES), ...new TextEncoder().encode("junk")]);
+    await expect(unpack(junk, { kind: "tar.gz", member: { extensions: [".txt"] } })).rejects.toThrow(/neither zero padding nor another gzip member/);
+  });
+});
+
 describe("unpack of a tar.gz larger than one gzip slice", () => {
   const KIBIBYTE = 1024;
   const MEBIBYTE = KIBIBYTE * KIBIBYTE;

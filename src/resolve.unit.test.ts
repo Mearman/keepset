@@ -118,6 +118,16 @@ describe("resolveSource's transport encodings", () => {
     expect(new TextDecoder().decode(await (await resolveSource(live({ snapshot: snapshotOf(PIN, URL_LIVE) }), { port: plain.port, ...keeping })).source.bytes())).toBe(page);
   });
 
+  it("refuses a gzip transport encoding whose recorded CRC-32 differs from the page's, rather than keeping a corrupted page", async () => {
+    const corrupt = await gzipped(page);
+    // The trailer's CRC-32 is its first four of eight bytes.
+    const TRAILER_BYTES = 8;
+    const crcAt = corrupt.length - TRAILER_BYTES;
+    corrupt[crcAt] = (corrupt[crcAt] ?? expect.unreachable("the gzip data has a trailer")) ^ 1;
+    const port: FetchPort = async () => Promise.resolve(new Response(corrupt, { status: OK, headers: { "content-encoding": "gzip" } }));
+    await expect(resolveSource(live({ snapshot: snapshotOf(PIN, URL_LIVE) }), { port, ...keeping })).rejects.toThrow(/the gzip stream fails its checksum/);
+  });
+
   it("leaves a compressed file as published, even when the server labels it gzip-encoded", async () => {
     const file = "https://x.example/data.csv.gz";
     const bytes = await gzipped(page);

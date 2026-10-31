@@ -193,6 +193,9 @@ importers:
       leaflet:
         specifier: 1.9.4
         version: 1.9.4
+      pako:
+        specifier: 3.0.2
+        version: 3.0.2
       react:
         specifier: 19.3.0
         version: 19.3.0
@@ -2697,6 +2700,9 @@ packages:
 
   package-manager-detector@1.9.0:
     resolution: {integrity: sha512-zAMfbta9nPA8AKkA4WdmNAT8R8s6Dk0/xwPsqNnRidMFcLo1YkLuPDTgs2f64XdzS8vbLNnoJ+uUIkgbz7oRHA==}
+
+  pako@3.0.2:
+    resolution: {integrity: sha512-uBv6IT2aT1A78iU6dpNEbf6+CyhlV/6g9JlJs9kpgjFGFhruIICVRysF/W0SLzXg5+hCl+KroH7e4YUyfEmgLg==}
 
   parent-module@1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}
@@ -5868,6 +5874,8 @@ snapshots:
   p-try@1.0.0: {}
 
   package-manager-detector@1.9.0: {}
+
+  pako@3.0.2: {}
 
   parent-module@1.0.1:
     dependencies:
