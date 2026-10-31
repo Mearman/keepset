@@ -1,3 +1,10 @@
+# [0.82.0](https://github.com/Mearman/keepset/compare/v0.81.0...v0.82.0) (2026-10-31)
+
+
+### Features
+
+* **catalogue:** add the transcripts of eleven more OpenSLR corpora ([ff66cc3](https://github.com/Mearman/keepset/commit/ff66cc35ad731def4a95dbad2e67db75226fe594))
+
 # [0.81.0](https://github.com/Mearman/keepset/compare/v0.80.3...v0.81.0) (2026-10-31)
 
 
