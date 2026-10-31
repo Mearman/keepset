@@ -1,3 +1,10 @@
+## [0.76.1](https://github.com/Mearman/keepset/compare/v0.76.0...v0.76.1) (2026-10-31)
+
+
+### Bug Fixes
+
+* **node:** hash a download of 2 GiB or more in slices ([7538fd8](https://github.com/Mearman/keepset/commit/7538fd85321d1dc600a4968b8a725fdb0f830d4c))
+
 # [0.76.0](https://github.com/Mearman/keepset/compare/v0.75.0...v0.76.0) (2026-10-31)
 
 
