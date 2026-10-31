@@ -437,6 +437,8 @@ export const ParserSchema = z.discriminatedUnion("format", [
       headerNames: z.array(ColumnNameSchema).min(1).optional(),
       /** Set on a file that never quotes a field, as a tab-separated list of sentences that holds double quotes in its text: a double quote is then an ordinary character and no field is read as quoted. */
       unquoted: z.literal(true).optional(),
+      /** Set on a file whose cells hold line breaks without quoting them (a duration column whose cells end in one, so the next cell starts on the next line): a line break ends a record only once the record holds as many cells as `headerNames` names, and before that it is part of the cell it falls in. Needs `headerNames`, the record's width being known before the file is read. */
+      lineBreaksInCells: z.literal(true).optional(),
       /** Cell texts, besides the empty cell, that stand for a missing value (`NA`): such a cell is null in every column, numeric or not. */
       nullValues: z.array(z.string().min(1)).optional(),
       /** Columns each row gains, built from other columns of the same row: a name, and a template of text with `{column}` placeholders, each replaced by that header column's cell as the file writes it, trimmed and not scaled (the id column included). A derived column is null in a row where a column its template names is empty or its `when` condition fails, is kept whatever `columns` lists, and is an ordinary column to the crosswalk. */
@@ -446,6 +448,7 @@ export const ParserSchema = z.discriminatedUnion("format", [
     .refine((parser) => new Set(parser.numericColumns.map((numeric) => numeric.column)).size === parser.numericColumns.length, { message: "a column may be declared numeric once", path: ["numericColumns"] })
     .refine((parser) => parser.columns === undefined || new Set(parser.columns).size === parser.columns.length, { message: "a column may be listed once", path: ["columns"] })
     .refine((parser) => parser.headerNames === undefined || new Set(parser.headerNames).size === parser.headerNames.length, { message: "a header name may be given once", path: ["headerNames"] })
+    .refine((parser) => parser.lineBreaksInCells === undefined || parser.headerNames !== undefined, { message: "line breaks in cells need the column names, which give the width of a record", path: ["lineBreaksInCells"] })
     .superRefine((parser, ctx) => {
       addDerivedColumnIssues(parser.derivedColumns ?? [], parser.headerNames, ctx);
     }),
