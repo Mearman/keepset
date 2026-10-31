@@ -1,3 +1,18 @@
+# [0.101.0](https://github.com/Mearman/keepset/compare/v0.100.0...v0.101.0) (2026-10-31)
+
+
+### Bug Fixes
+
+* **catalogue:** keep the extension in the Yerevan City Magazine document ids ([63781b3](https://github.com/Mearman/keepset/commit/63781b3bafa617b31802992ac6bd22b328bfd05f))
+
+
+### Features
+
+* **catalogue:** read the AISHELL-5 transcripts from its archives ([93ad786](https://github.com/Mearman/keepset/commit/93ad7865bc84db8b0d793004405870cbae99e7a2))
+* **catalogue:** read the CLMAD and Yerevan City Magazine texts as corpus/v1 documents ([446778d](https://github.com/Mearman/keepset/commit/446778d4487c1604e4996777498ea73b394c0318))
+* **catalogue:** record the fetched counts of the CLMAD and Yerevan City Magazine texts ([49842f5](https://github.com/Mearman/keepset/commit/49842f5c34d3c86b190acbdd6fbbd44c8411881b))
+* **parsers:** read Word documents one document per file ([47b2070](https://github.com/Mearman/keepset/commit/47b20705ccab0e3e8d21a9d83177d028206170a1))
+
 # [0.100.0](https://github.com/Mearman/keepset/compare/v0.99.0...v0.100.0) (2026-10-31)
 
 
