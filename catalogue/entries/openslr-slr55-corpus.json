@@ -1,0 +1,84 @@
+{
+  "aliases": [
+    "slr55-corpus"
+  ],
+  "category": "corpus/v1",
+  "citations": [
+    {
+      "text": "Bai, Y., Tao, J., Yi, J., Wen, Z., & Fan, C. CLMAD: A Chinese Language Model Adaptation Dataset. ISCSLP 2018.",
+      "url": "https://www.openslr.org/55/"
+    }
+  ],
+  "crosswalk": {
+    "file": "crosswalks/corpus-v1/member-text.json"
+  },
+  "description": "The text of CLMAD, a Chinese language model adaptation dataset of news in 14 classes: one instance for the training archive and one for the test archive, each document being a class's file, its sentences one to a line with the words separated by spaces, exactly as the file is distributed. It carries the corpus's text and none of its original news items, which the source splits into sentences and removes the punctuation from.",
+  "domain": "Text",
+  "expectedCounts": {
+    "instances": 0
+  },
+  "id": "openslr-slr55-corpus",
+  "licence": {
+    "kind": "custom",
+    "name": "Creative Commons BY-NC-ND 3.0 (attribution/non-commercial/no-derivatives).",
+    "url": "https://www.openslr.org/55/"
+  },
+  "name": "CLMAD texts",
+  "namespace": [
+    "openslr",
+    "text"
+  ],
+  "properties": {
+    "encoding": "utf-8",
+    "format": "text/plain"
+  },
+  "recipe": {
+    "files": [
+      {
+        "archive": {
+          "files": {
+            "pattern": "[^/]+\\.train"
+          },
+          "kind": "tar"
+        },
+        "path": "train.tgz",
+        "source": 0
+      },
+      {
+        "archive": {
+          "files": {
+            "pattern": "[^/]+\\.test"
+          },
+          "kind": "tar"
+        },
+        "path": "test.tgz",
+        "source": 1
+      }
+    ],
+    "parser": {
+      "encoding": "utf-8",
+      "format": "member-text",
+      "idPattern": "([^/]+)\\.(?:train|test)",
+      "verbatim": true
+    },
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/55/train.tgz"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/55/test.tgz"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "text"
+  ]
+}
