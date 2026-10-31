@@ -338,7 +338,7 @@ export const ParserSchema = z.discriminatedUnion("format", [
     .object({
       format: z.literal("csv-table"),
       encoding: EncodingSchema,
-      delimiter: z.enum(["comma", "tab", "semicolon", "pipe"]),
+      delimiter: z.enum(["comma", "tab", "semicolon", "pipe", "space"]),
       skipLines: z.int().min(0),
       idColumn: ColumnNameSchema.nullable(),
       numericColumns: z.array(z.object({ column: ColumnNameSchema, factor: z.number().positive() }).strict()),
@@ -354,6 +354,14 @@ export const ParserSchema = z.discriminatedUnion("format", [
     .refine((parser) => new Set(parser.numericColumns.map((numeric) => numeric.column)).size === parser.numericColumns.length, { message: "a column may be declared numeric once", path: ["numericColumns"] })
     .refine((parser) => parser.columns === undefined || new Set(parser.columns).size === parser.columns.length, { message: "a column may be listed once", path: ["columns"] })
     .refine((parser) => parser.headerNames === undefined || new Set(parser.headerNames).size === parser.headerNames.length, { message: "a header name may be given once", path: ["headerNames"] }),
+  z
+    .object({
+      format: z.literal("lexicon-lines"),
+      encoding: EncodingSchema,
+      /** Lines that start with one of these are comments and are skipped, with blank lines. */
+      commentPrefixes: z.array(z.string().min(1)),
+    })
+    .strict(),
   z
     .object({
       format: z.literal("json-table"),

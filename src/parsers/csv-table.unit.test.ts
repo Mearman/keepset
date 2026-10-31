@@ -113,6 +113,13 @@ describe("the csv-table parser", () => {
     expect(parseNative(utf8('id|text\n7|"two\nlines"\n'), table({ delimiter: "pipe", idColumn: "id" })).nodes).toEqual([{ id: "7", text: "two\nlines" }]);
   });
 
+  it("reads a space delimited file, each single space separating two cells", () => {
+    expect(parseNative(utf8("arb-1.xml s1\narb-1.xml s2\n"), table({ delimiter: "space", headerNames: ["document", "line"] })).nodes).toEqual([
+      { id: "1", document: "arb-1.xml", line: "s1" },
+      { id: "2", document: "arb-1.xml", line: "s2" },
+    ]);
+  });
+
   it("skips blank lines and trims cells", () => {
     expect(parseNative(utf8("a,b\n\n  x , y \n\n"), table()).nodes).toEqual([{ id: "1", a: "x", b: "y" }]);
   });
