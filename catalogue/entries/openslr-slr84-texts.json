@@ -13,14 +13,61 @@
         "from": "nodes[].id",
         "op": "move",
         "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].scribe",
+        "op": "move",
+        "to": "nodes[].authors"
+      },
+      {
+        "from": "nodes[].split",
+        "op": "move",
+        "to": "nodes[].collections"
+      },
+      {
+        "from": "nodes[].transcription",
+        "op": "move",
+        "to": "nodes[].transcription"
+      },
+      {
+        "from": "nodes[].transcribed",
+        "op": "move",
+        "to": "nodes[].transcribed"
+      },
+      {
+        "from": "nodes[].page_id",
+        "op": "move",
+        "to": "nodes[].page_id"
+      },
+      {
+        "from": "nodes[].page",
+        "op": "move",
+        "to": "nodes[].page"
+      },
+      {
+        "from": "nodes[].line_index",
+        "op": "move",
+        "to": "nodes[].line_index"
+      },
+      {
+        "from": "nodes[].scribe_id",
+        "op": "move",
+        "to": "nodes[].scribe_id"
+      },
+      {
+        "from": "nodes[].colormode",
+        "op": "move",
+        "to": "nodes[].colormode"
       }
     ],
-    "source": "none",
+    "source": "csv-table",
     "target": "texts/v1"
   },
-  "description": "ScribbleLens (text). No recipe reads it. The corpus is scans of handwritten pages with transcriptions in a 12 GB archive, more than a fetch holds in memory (see https://github.com/Mearman/keepset/issues/212).",
+  "description": "ScribbleLens as the corpus table in its download lists it: each record is a line of handwriting, named by the path of its image in the download, with the scribe as its author, the split it belongs to as its collection, the transcription of the line (null where it has none), whether it is transcribed, the page it is on and its position on the page, the scribe's number and the colour mode of the image. It carries none of the images, which the download of openslr-slr84 gives.",
   "domain": "Handwriting",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "nodes": 84765
+  },
   "id": "openslr-slr84-texts",
   "licence": {
     "kind": "custom",
@@ -34,24 +81,53 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "The corpus is scans of handwritten pages with transcriptions in a 12 GB archive, more than a fetch holds in memory (see https://github.com/Mearman/keepset/issues/212).",
-    "status": "not-fetchable"
+    "archive": {
+      "kind": "zip",
+      "member": {
+        "path": "scribblelens.corpus.v1/corpora/scribblelens.corpus.v1.2.csv"
+      }
+    },
+    "parser": {
+      "columns": [
+        "colormode",
+        "line_index",
+        "page",
+        "scribe",
+        "scribe_id",
+        "split",
+        "transcribed",
+        "page_id",
+        "transcription"
+      ],
+      "delimiter": "comma",
+      "encoding": "utf-8",
+      "format": "csv-table",
+      "idColumn": "img_filename",
+      "numericColumns": [],
+      "skipLines": 0
+    },
+    "source": 0,
+    "status": "fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 5624,
-        "sha256": "a5d85b9c6cf8add0816f161bf83f9ff6aa04d11b490d5e8ac42245d26e90817e",
-        "timestamp": "20251225091725",
-        "url": "https://web.archive.org/web/20251225091725/https://www.openslr.org/84/"
-      },
+      "retrieved": "2026-10-31",
       "status": "live",
-      "url": "https://www.openslr.org/84/"
+      "url": "https://www.openslr.org/resources/84/scribblelens.corpus.v1.2.zip"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "authors",
+    "collections",
+    "transcription",
+    "transcribed",
+    "page_id",
+    "page",
+    "line_index",
+    "scribe_id",
+    "colormode"
+  ]
 }
