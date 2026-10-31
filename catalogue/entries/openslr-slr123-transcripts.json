@@ -44,7 +44,7 @@
   "description": "The transcripts of MAGICDATA Mandarin Chinese Conversational Speech Corpus: one instance per conversation, each record being an utterance with its line number in the conversation as identifier, the span of the conversation it covers (start and end in seconds, as the source writes them), its speaker, the speaker's gender and dialect as one field, and its text. It carries none of the audio, which the download list of openslr-slr123 gives.",
   "domain": "Speech",
   "expectedCounts": {
-    "instances": 0
+    "instances": 351
   },
   "id": "openslr-slr123-transcripts",
   "licence": {

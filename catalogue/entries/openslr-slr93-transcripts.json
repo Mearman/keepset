@@ -10,7 +10,7 @@
   "description": "The transcripts of AISHELL-3: one instance per part (training or test), each record being an utterance with its audio file name as identifier and its text, as alternating characters and pinyin with tones. It carries none of the audio, which the download list of openslr-slr93 gives.",
   "domain": "Speech",
   "expectedCounts": {
-    "instances": 0
+    "instances": 2
   },
   "id": "openslr-slr93-transcripts",
   "licence": {

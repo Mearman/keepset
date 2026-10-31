@@ -10,7 +10,7 @@
   "description": "The transcripts of Kazakh Speech Corpus (KSC): each record is an utterance with its audio identifier, taken from the name of the one-line file that holds the text, and its text. It carries none of the audio, which the download list of openslr-slr102 gives.",
   "domain": "Speech",
   "expectedCounts": {
-    "nodes": 0
+    "nodes": 153853
   },
   "id": "openslr-slr102-transcripts",
   "licence": {

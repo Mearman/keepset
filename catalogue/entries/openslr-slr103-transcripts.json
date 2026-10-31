@@ -10,7 +10,7 @@
   "description": "The transcripts of Multilingual and code-switching ASR Challenge Dataset - sub-task1: one instance per language and part (training or test), each record being an utterance with its audio file name as identifier and its text. It carries none of the audio, which the download list of openslr-slr103 gives.",
   "domain": "Speech",
   "expectedCounts": {
-    "instances": 0
+    "instances": 6
   },
   "id": "openslr-slr103-transcripts",
   "licence": {

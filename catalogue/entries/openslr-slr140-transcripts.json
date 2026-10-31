@@ -29,7 +29,7 @@
   "description": "The transcripts of Kazakh Speech Dataset (KSD): one instance per zip of the distribution, each record being an utterance with its audio path as identifier and its text. It carries none of the audio, which the download list of openslr-slr140 gives.",
   "domain": "Speech",
   "expectedCounts": {
-    "instances": 0
+    "instances": 4
   },
   "id": "openslr-slr140-transcripts",
   "licence": {
