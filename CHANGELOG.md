@@ -1,3 +1,10 @@
+# [0.88.0](https://github.com/Mearman/keepset/compare/v0.87.0...v0.88.0) (2026-10-31)
+
+
+### Features
+
+* **fetch:** read a source larger than memory by streaming it ([6df669d](https://github.com/Mearman/keepset/commit/6df669d21d7bb80aff180dee1d41bdcef02999ec)), closes [#212](https://github.com/Mearman/keepset/issues/212)
+
 # [0.87.0](https://github.com/Mearman/keepset/compare/v0.86.0...v0.87.0) (2026-10-31)
 
 
