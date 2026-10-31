@@ -1,3 +1,10 @@
+# [0.98.0](https://github.com/Mearman/keepset/compare/v0.97.0...v0.98.0) (2026-10-31)
+
+
+### Features
+
+* **catalogue:** read the MAGICDATA read speech transcripts from its archives ([3092eeb](https://github.com/Mearman/keepset/commit/3092eeb1cc60954c3ba0e26a3ad1adae379afe4c))
+
 # [0.97.0](https://github.com/Mearman/keepset/compare/v0.96.1...v0.97.0) (2026-10-31)
 
 
