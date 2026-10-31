@@ -5,13 +5,11 @@
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "file": "crosswalks/speech-v1/member-text.json"
+    "file": "crosswalks/speech-v1/id-text.json"
   },
-  "description": "The transcripts of BibleTTS: one instance for each language's archive, each record being a verse named by its transcript file with that file's text. It carries none of the audio, which the download list of openslr-slr129 gives.",
+  "description": "The transcripts of BibleTTS. No recipe reads them. Its transcripts are BibleTTS's per-verse text files, inside archives that total about 90 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
   "domain": "Speech",
-  "expectedCounts": {
-    "instances": 0
-  },
+  "expectedCounts": {},
   "id": "openslr-slr129-transcripts",
   "licence": {
     "kind": "custom",
@@ -25,111 +23,24 @@
   ],
   "properties": {},
   "recipe": {
-    "files": [
-      {
-        "archive": {
-          "files": {
-            "pattern": "[^/]+/(?:train|dev|test)/[^/]+/[^/]+\\.txt"
-          },
-          "kind": "tar.gz"
-        },
-        "path": "akuapem-twi.tgz",
-        "source": 0
-      },
-      {
-        "archive": {
-          "files": {
-            "pattern": "[^/]+/(?:train|dev|test)/[^/]+/[^/]+\\.txt"
-          },
-          "kind": "tar.gz"
-        },
-        "path": "asante-twi.tgz",
-        "source": 1
-      },
-      {
-        "archive": {
-          "files": {
-            "pattern": "[^/]+/(?:train|dev|test)/[^/]+/[^/]+\\.txt"
-          },
-          "kind": "tar.gz"
-        },
-        "path": "ewe.tgz",
-        "source": 2
-      },
-      {
-        "archive": {
-          "files": {
-            "pattern": "[^/]+/(?:train|dev|test)/[^/]+/[^/]+\\.txt"
-          },
-          "kind": "tar.gz"
-        },
-        "path": "hausa.tgz",
-        "source": 3
-      },
-      {
-        "archive": {
-          "files": {
-            "pattern": "[^/]+/(?:train|dev|test)/[^/]+/[^/]+\\.txt"
-          },
-          "kind": "tar.gz"
-        },
-        "path": "lingala.tgz",
-        "source": 4
-      },
-      {
-        "archive": {
-          "files": {
-            "pattern": "[^/]+/(?:train|dev|test)/[^/]+/[^/]+\\.txt"
-          },
-          "kind": "tar.gz"
-        },
-        "path": "yoruba.tgz",
-        "source": 5
-      }
-    ],
-    "parser": {
-      "encoding": "utf-8",
-      "format": "member-text",
-      "idPattern": "[^/]+/(?:train|dev|test)/[^/]+/([^/]+)\\.txt"
-    },
-    "status": "fetchable"
+    "reason": "Its transcripts are BibleTTS's per-verse text files, inside archives that total about 90 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+    "status": "not-fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-31",
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 7002,
+        "sha256": "5aa83fa974cc6414fdf47e4738b019539cc149bb4acdea998e2df9197090c687",
+        "timestamp": "20260315173456",
+        "url": "https://web.archive.org/web/20260315173456/https://www.openslr.org/129/"
+      },
       "status": "live",
-      "url": "https://www.openslr.org/resources/129/akuapem-twi.tgz"
-    },
-    {
-      "retrieved": "2026-10-31",
-      "status": "live",
-      "url": "https://www.openslr.org/resources/129/asante-twi.tgz"
-    },
-    {
-      "retrieved": "2026-10-31",
-      "status": "live",
-      "url": "https://www.openslr.org/resources/129/ewe.tgz"
-    },
-    {
-      "retrieved": "2026-10-31",
-      "status": "live",
-      "url": "https://www.openslr.org/resources/129/hausa.tgz"
-    },
-    {
-      "retrieved": "2026-10-31",
-      "status": "live",
-      "url": "https://www.openslr.org/resources/129/lingala.tgz"
-    },
-    {
-      "retrieved": "2026-10-31",
-      "status": "live",
-      "url": "https://www.openslr.org/resources/129/yoruba.tgz"
+      "url": "https://www.openslr.org/129/"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": [
-    "text"
-  ]
+  "tags": []
 }

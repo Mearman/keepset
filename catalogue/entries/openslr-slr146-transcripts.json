@@ -5,37 +5,11 @@
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "oneWay": [],
-    "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
-      {
-        "from": "nodes[].transcript",
-        "op": "move",
-        "to": "nodes[].text"
-      },
-      {
-        "from": "nodes[].client_id",
-        "op": "move",
-        "to": "nodes[].speaker"
-      }
-    ],
-    "source": "csv-table",
-    "target": "speech/v1"
+    "file": "crosswalks/speech-v1/id-text.json"
   },
-  "description": "The transcripts of CML-TTS Dataset: one instance for each split of each language's archive (named by the archive and the split's table), each record being an utterance with its audio file as its identifier, its text and its speaker. It carries none of the audio, which the download list of openslr-slr146 gives.",
+  "description": "The transcripts of CML-TTS Dataset. No recipe reads them. Its transcripts are CML-TTS's transcript files, inside archives that total about 384 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
   "domain": "Speech",
-  "expectedCounts": {
-    "instances": 0
-  },
+  "expectedCounts": {},
   "id": "openslr-slr146-transcripts",
   "licence": {
     "kind": "custom",
@@ -49,134 +23,24 @@
   ],
   "properties": {},
   "recipe": {
-    "files": [
-      {
-        "archive": {
-          "kind": "tar.bz2",
-          "members": {
-            "pattern": "[^/]+/(?:train|dev|test)\\.csv"
-          }
-        },
-        "path": "cml_tts_dataset_dutch_v0.1.tar.bz",
-        "source": 0
-      },
-      {
-        "archive": {
-          "kind": "tar.bz2",
-          "members": {
-            "pattern": "[^/]+/(?:train|dev|test)\\.csv"
-          }
-        },
-        "path": "cml_tts_dataset_french_v0.1.tar.bz",
-        "source": 1
-      },
-      {
-        "archive": {
-          "kind": "tar.bz2",
-          "members": {
-            "pattern": "[^/]+/(?:train|dev|test)\\.csv"
-          }
-        },
-        "path": "cml_tts_dataset_german_v0.1.tar.bz",
-        "source": 2
-      },
-      {
-        "archive": {
-          "kind": "tar.bz2",
-          "members": {
-            "pattern": "[^/]+/(?:train|dev|test)\\.csv"
-          }
-        },
-        "path": "cml_tts_dataset_italian_v0.1.tar.bz",
-        "source": 3
-      },
-      {
-        "archive": {
-          "kind": "tar.bz2",
-          "members": {
-            "pattern": "[^/]+/(?:train|dev|test)\\.csv"
-          }
-        },
-        "path": "cml_tts_dataset_polish_v0.1.tar.bz",
-        "source": 4
-      },
-      {
-        "archive": {
-          "kind": "tar.bz2",
-          "members": {
-            "pattern": "[^/]+/(?:train|dev|test)\\.csv"
-          }
-        },
-        "path": "cml_tts_dataset_portuguese_v0.1.tar.bz",
-        "source": 5
-      },
-      {
-        "archive": {
-          "kind": "tar.bz2",
-          "members": {
-            "pattern": "[^/]+/(?:train|dev|test)\\.csv"
-          }
-        },
-        "path": "cml_tts_dataset_spanish_v0.1.tar.bz",
-        "source": 6
-      }
-    ],
-    "parser": {
-      "columns": [
-        "transcript",
-        "client_id"
-      ],
-      "delimiter": "pipe",
-      "encoding": "utf-8",
-      "format": "csv-table",
-      "idColumn": "wav_filename",
-      "numericColumns": [],
-      "skipLines": 0
-    },
-    "status": "fetchable"
+    "reason": "Its transcripts are CML-TTS's transcript files, inside archives that total about 384 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+    "status": "not-fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-31",
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 8362,
+        "sha256": "6cf30f567b74cc2c55d380809f55a2edef1216d088bc27d25672191baec9a0d1",
+        "timestamp": "20260516195759",
+        "url": "https://web.archive.org/web/20260516195759/https://www.openslr.org/146/"
+      },
       "status": "live",
-      "url": "https://www.openslr.org/resources/146/cml_tts_dataset_dutch_v0.1.tar.bz"
-    },
-    {
-      "retrieved": "2026-10-31",
-      "status": "live",
-      "url": "https://www.openslr.org/resources/146/cml_tts_dataset_french_v0.1.tar.bz"
-    },
-    {
-      "retrieved": "2026-10-31",
-      "status": "live",
-      "url": "https://www.openslr.org/resources/146/cml_tts_dataset_german_v0.1.tar.bz"
-    },
-    {
-      "retrieved": "2026-10-31",
-      "status": "live",
-      "url": "https://www.openslr.org/resources/146/cml_tts_dataset_italian_v0.1.tar.bz"
-    },
-    {
-      "retrieved": "2026-10-31",
-      "status": "live",
-      "url": "https://www.openslr.org/resources/146/cml_tts_dataset_polish_v0.1.tar.bz"
-    },
-    {
-      "retrieved": "2026-10-31",
-      "status": "live",
-      "url": "https://www.openslr.org/resources/146/cml_tts_dataset_portuguese_v0.1.tar.bz"
-    },
-    {
-      "retrieved": "2026-10-31",
-      "status": "live",
-      "url": "https://www.openslr.org/resources/146/cml_tts_dataset_spanish_v0.1.tar.bz"
+      "url": "https://www.openslr.org/146/"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": [
-    "text",
-    "speaker"
-  ]
+  "tags": []
 }
