@@ -1,0 +1,66 @@
+{
+  "aliases": [
+    "slr95-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of Thorsten Müller (German Neutral-TTS dataset): one instance per transcript table, each record being an utterance with its identifier and text. It carries none of the audio, which the download list of openslr-slr95 gives.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "instances": 3
+  },
+  "id": "openslr-slr95-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Creative Commons (CC0) Licence",
+    "url": "https://www.openslr.org/95/"
+  },
+  "name": "Thorsten Müller (German Neutral-TTS dataset) transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "tar.gz",
+      "members": {
+        "pattern": "thorsten-de/metadata_[a-z]+\\.csv"
+      }
+    },
+    "parser": {
+      "columns": [
+        "text"
+      ],
+      "delimiter": "pipe",
+      "encoding": "utf-8",
+      "format": "csv-table",
+      "headerNames": [
+        "file_id",
+        "text"
+      ],
+      "idColumn": "file_id",
+      "numericColumns": [],
+      "skipLines": 0,
+      "unquoted": true
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/95/thorsten-de_v02.tgz"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "text"
+  ]
+}

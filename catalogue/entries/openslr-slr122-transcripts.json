@@ -1,0 +1,55 @@
+{
+  "aliases": [
+    "slr122-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/member-text.json"
+  },
+  "description": "The transcripts of Kashmiri Data Corpus: each record is an utterance with its identifier and text. It carries none of the audio, which the download list of openslr-slr122 gives.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 46
+  },
+  "id": "openslr-slr122-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "GPL-3.0-or-later",
+    "url": "https://www.openslr.org/122/"
+  },
+  "name": "Kashmiri Data Corpus transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "files": {
+        "pattern": "[^/]+\\.txt"
+      },
+      "kind": "tar.gz"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "member-text",
+      "idPattern": "([^/]+)\\.txt"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/122/kashmiri.tar.gz"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "text"
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/member-text.json"
+  },
+  "description": "The transcripts of MediaSpeech (fr): each record is an utterance with its identifier and text. It carries none of the audio, which the download list of openslr-slr108 gives.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 2498
+  },
+  "id": "openslr-slr108-fr-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "dataset is distributed under the Creative Commons Attribution 4.0 International License.",
+    "url": "https://www.openslr.org/108/"
+  },
+  "name": "MediaSpeech (fr) transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "files": {
+        "pattern": "FR/[^/]+\\.txt"
+      },
+      "kind": "tar.gz"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "member-text",
+      "idPattern": "FR/([^/]+)\\.txt"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/108/FR.tgz"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "text"
+  ]
+}
