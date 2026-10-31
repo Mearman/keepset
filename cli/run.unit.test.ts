@@ -1,7 +1,7 @@
 import { createCatalogue, DatasetNotFoundError, RecipeError, type Dataset, type DatasetQuery } from "keepset";
 import { captureRequestsFor, type DownloadProvenance, type FetchedDataset, type RoundTripReport } from "keepset/node";
 import { describe, expect, it } from "vitest";
-import { deadEntry, fixtureIndex, liveEntry, streamedEntry } from "../src/test-support/entries";
+import { deadEntry, fixtureIndex, liveEntry, streamedCorpusEntry, streamedEntry } from "../src/test-support/entries";
 import { EXIT_FAILED, EXIT_NO, EXIT_OK, formatNamespaces, formatSearch, formatShow, provenancePath, run, type CliIo, type CliLibrary } from "./run";
 
 const catalogue = createCatalogue(fixtureIndex);
@@ -189,6 +189,11 @@ describe("show", () => {
     ]) {
       expect(text).toContain(line);
     }
+  });
+
+  it("names the selector of an inner archive, the files of a files archive's inner one among them", () => {
+    const corpus = createCatalogue({ ...fixtureIndex, entries: [streamedCorpusEntry] }).getDataset("library-texts");
+    expect(formatShow(corpus)).toContain("  archive: zip, files texts.tar, inner tar, files matching texts/[0-9]+\\.txt\n");
   });
 
   it("names the entries that hold the same data", () => {

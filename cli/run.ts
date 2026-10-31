@@ -22,7 +22,9 @@ function selectorText(selector: ArchiveMember): string {
  * @returns Its kind, the member or members it selects and any inner archive.
  */
 function archiveText(archive: Archive): string {
-  const innerText = "inner" in archive && archive.inner !== undefined ? `, inner ${archive.inner.kind}${"member" in archive.inner ? `, member ${selectorText(archive.inner.member)}` : ""}` : "";
+  const inner = "inner" in archive ? archive.inner : undefined;
+  const innerSelector = inner === undefined ? "" : "member" in inner ? `, member ${selectorText(inner.member)}` : "files" in inner ? `, files ${selectorText(inner.files)}` : "";
+  const innerText = inner === undefined ? "" : `, inner ${inner.kind}${innerSelector}`;
   const memberText = "member" in archive ? `, member ${selectorText(archive.member)}${innerText}` : "members" in archive ? `, members ${selectorText(archive.members)}` : "parts" in archive ? `, parts ${archive.parts.map((part) => `${part.name} from ${selectorText(part.member)}`).join(", ")}` : "files" in archive ? `, files ${selectorText(archive.files)}${innerText}` : "";
 
   return `${archive.kind}${memberText}`;
