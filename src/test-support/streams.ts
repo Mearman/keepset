@@ -151,3 +151,137 @@ export function chunkedSource(bytes: Uint8Array, chunkBytes: number): CountingSo
     rangeBytes: () => given,
   };
 }
+
+/** The most data one LZMA2 uncompressed chunk holds, which its two-byte size field limits. */
+const LZMA2_CHUNK_BYTES = 0x10000;
+
+/** The control bytes of an LZMA2 uncompressed chunk (the first resets the dictionary) and of the end of the data. */
+const LZMA2_STORED_RESET = 0x01;
+const LZMA2_STORED = 0x02;
+const LZMA2_END = 0x00;
+
+/** The reflected polynomial of the CRC-32 the xz format uses for its headers, index and footer, the one gzip uses. */
+const CRC32_POLYNOMIAL = 0xedb88320;
+const CRC32_START = 0xffffffff;
+const BITS_PER_BYTE = 8;
+const BYTE_MASK = 0xff;
+
+/** The length of a checksum and the unit the format pads every part to. */
+const WORD_BYTES = 4;
+
+/** What a variable-length integer carries in each byte: seven bits, with the eighth set on every byte but the last. */
+const VLI_RADIX = 0x80;
+
+/** The magic bytes opening a stream (`\xFD7zXZ\0`) and closing its footer (`YZ`). */
+const HEADER_MAGIC = Uint8Array.from("\xFD7zXZ\0", (character) => character.charCodeAt(0));
+const FOOTER_MAGIC = Uint8Array.from("YZ", (character) => character.charCodeAt(0));
+
+/** The stream flags: no integrity check on the data, so the data's own checksum is never computed. */
+const STREAM_FLAGS = [0x00, 0x00];
+
+/** The id of the LZMA2 filter, and its property byte for a 1 MiB dictionary (the size is `(2 | (property & 1)) << (property / 2 + 11)`). */
+const LZMA2_FILTER_ID = 0x21;
+const LZMA2_DICTIONARY_PROPERTY = 0x10;
+
+/** The block header: its size in words less one, no optional sizes and one filter, LZMA2 (id 0x21) with its one property byte naming a 1 MiB dictionary, then padding to the word before the checksum. */
+const BLOCK_HEADER_BODY = [0x02, 0x00, LZMA2_FILTER_ID, 0x01, LZMA2_DICTIONARY_PROPERTY, 0x00, 0x00, 0x00];
+
+/** The index's indicator byte; its one record then follows. */
+const INDEX_INDICATOR = 0x00;
+
+/**
+ * The CRC-32 of some bytes, as four little-endian bytes. It is computed bitwise, as only headers, an index and a footer are ever summed.
+ * @param bytes - The bytes.
+ * @returns Their checksum.
+ */
+function crc32(bytes: Uint8Array): Uint8Array {
+  let crc = CRC32_START;
+  for (const byte of bytes) {
+    crc ^= byte;
+    for (let bit = 0; bit < BITS_PER_BYTE; bit += 1) {
+      crc = crc & 1 ? (crc >>> 1) ^ CRC32_POLYNOMIAL : crc >>> 1;
+    }
+  }
+  const out = new Uint8Array(WORD_BYTES);
+  new DataView(out.buffer).setUint32(0, ~crc >>> 0, true);
+
+  return out;
+}
+
+/**
+ * A number as an xz variable-length integer: seven bits a byte, least significant first, the high bit set on every byte but the last.
+ * @param value - A non-negative integer.
+ * @returns The bytes.
+ */
+function vli(value: number): number[] {
+  const bytes: number[] = [];
+  let rest = value;
+  while (rest >= VLI_RADIX) {
+    bytes.push((rest % VLI_RADIX) | VLI_RADIX);
+    rest = Math.floor(rest / VLI_RADIX);
+  }
+  bytes.push(rest);
+
+  return bytes;
+}
+
+/**
+ * Joins byte arrays.
+ * @param parts - The arrays.
+ * @returns One array of them all.
+ */
+function joined(...parts: readonly (Uint8Array | readonly number[])[]): Uint8Array {
+  const out = new Uint8Array(parts.reduce((total, part) => total + part.length, 0));
+  let offset = 0;
+  for (const part of parts) {
+    out.set(part, offset);
+    offset += part.length;
+  }
+
+  return out;
+}
+
+/**
+ * The zero bytes that round a length up to a whole number of words, as the format pads each part.
+ * @param length - The length so far.
+ * @returns The padding.
+ */
+function padding(length: number): Uint8Array {
+  return new Uint8Array((WORD_BYTES - (length % WORD_BYTES)) % WORD_BYTES);
+}
+
+/**
+ * Writes pieces of data as one xz stream of one block whose LZMA2 chunks are stored uncompressed, with no integrity check on the data (the stream's headers, index and footer are checksummed as the format requires). The result is a valid `.xz` file that a decoder reads as it would any other, without the cost of compressing the random filler a memory test pushes through it.
+ * @param pieces - The data, in pieces.
+ * @returns The stream's bytes, in pieces.
+ */
+export function* lazyXz(pieces: Readonly<Iterable<Uint8Array>>): Generator<Uint8Array, void, undefined> {
+  yield joined(HEADER_MAGIC, STREAM_FLAGS, crc32(Uint8Array.from(STREAM_FLAGS)));
+  const blockHeader = joined(BLOCK_HEADER_BODY, crc32(Uint8Array.from(BLOCK_HEADER_BODY)));
+  yield blockHeader;
+  let compressed = 0;
+  let uncompressed = 0;
+  let first = true;
+  for (const piece of pieces) {
+    for (let start = 0; start < piece.length; start += LZMA2_CHUNK_BYTES) {
+      const chunk = piece.subarray(start, start + LZMA2_CHUNK_BYTES);
+      const size = chunk.length - 1;
+      const framed = joined([first ? LZMA2_STORED_RESET : LZMA2_STORED, size >> BITS_PER_BYTE, size & BYTE_MASK], chunk);
+      first = false;
+      compressed += framed.length;
+      uncompressed += chunk.length;
+      yield framed;
+    }
+  }
+  yield Uint8Array.from([LZMA2_END]);
+  compressed += 1;
+  yield padding(compressed);
+  const indexBody = joined([INDEX_INDICATOR], vli(1), vli(blockHeader.length + compressed), vli(uncompressed));
+  const indexUnchecked = joined(indexBody, padding(indexBody.length));
+  const index = joined(indexUnchecked, crc32(indexUnchecked));
+  yield index;
+  const footerBody = new Uint8Array(WORD_BYTES + STREAM_FLAGS.length);
+  new DataView(footerBody.buffer).setUint32(0, index.length / WORD_BYTES - 1, true);
+  footerBody.set(STREAM_FLAGS, WORD_BYTES);
+  yield joined(crc32(footerBody), footerBody, FOOTER_MAGIC);
+}

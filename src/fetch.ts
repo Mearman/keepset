@@ -6,9 +6,9 @@ import { ArchiveError, KeepsetError, RecipeError } from "./errors";
 import type { NativeDocument } from "./parsers/native";
 import { parseNative, parseNativeFiles, parseNativeParts } from "./parsers/parse-native";
 import type { JsonScalar } from "./targets/json-scalar";
-import { concatenateFiles, type Member, readsByRanges, type SevenZipPort, unpack, unpackFiles, unpackMembers, unpackParts, type Unpacked, type UnpackOptions } from "./archive";
+import { concatenateFiles, type Member, readsByRanges, type SevenZipPort, unpack, unpackFiles, unpackMembers, unpackParts, type Unpacked, type UnpackOptions, type XzPort } from "./archive";
 import { downloadPaged } from "./paged";
-import { countWarnings, downloadOf, metaOf, sourceUrl, step } from "./recipe-run";
+import { countWarnings, downloadOf, metaOf, sourceUrl, step, unpackOptionsOf } from "./recipe-run";
 import { resolveSource } from "./resolve";
 import type { ByteRange, StoredSource, StorePort } from "./source-bytes";
 import type { Archive, Entry, FilesArchive, FilesRecipe, Parser, Snapshot, Source } from "./entry";
@@ -16,22 +16,14 @@ import type { Archive, Entry, FilesArchive, FilesRecipe, Parser, Snapshot, Sourc
 /** The network port a recipe downloads through: `downloadRaw` by default, which returns the bytes exactly as served, or a stand-in under test. A `range` asks for those bytes of the file only; a port may answer 206 with them or 200 with the whole file, and the reader tells which from the status. */
 export type FetchPort = (url: string, init: { readonly signal?: AbortSignal; readonly range?: ByteRange }) => Promise<Response>;
 
-/** What a fetch takes beyond the dataset: the network port and the store every entry point supplies its own of (the store keeps what arrives and hashes it as it arrives), the 7z reader of a platform that gives one (without it a 7z archive is refused), an abort signal and the clock that dates the provenance record. */
+/** What a fetch takes beyond the dataset: the network port and the store every entry point supplies its own of (the store keeps what arrives and hashes it as it arrives), the 7z reader and the xz decoder of a platform that gives them (without one an archive of that kind is refused), an abort signal and the clock that dates the provenance record. */
 export interface FetchOptions {
   readonly fetch: FetchPort;
   readonly store: StorePort;
   readonly sevenZip?: SevenZipPort;
+  readonly xz?: XzPort;
   readonly signal?: AbortSignal;
   readonly now?: () => Date;
-}
-
-/**
- * What the archive readers are given of a fetch's options: its 7z reader and abort signal.
- * @param options - The fetch's options.
- * @returns The options unpacking takes.
- */
-function unpackOptionsOf(options: Readonly<FetchOptions>): UnpackOptions {
-  return { ...(options.sevenZip === undefined ? {} : { sevenZip: options.sevenZip }), ...(options.signal === undefined ? {} : { signal: options.signal }) };
 }
 
 /** One download a result's bytes came from: the entry's source, the URL actually requested (the snapshot's for a dead source) and exactly which bytes arrived, hashed in the order they arrived. A source read by ranged requests rather than downloaded whole (a zip too large to download, whose directory and selected members are all a recipe reads) also records the ranges and the whole file's size, so its hash is told apart from a whole file's. */
@@ -168,7 +160,7 @@ function parseInstance(id: string, parse: () => NativeDocument): { readonly id: 
  * @param stored - The kept source.
  * @param archive - Its archive layout.
  * @param parser - The recipe's parser.
- * @param filing - Where the instance ids are filed (`prefix`: the path joined to each member's path, or undefined to use the member's path alone) and what unpacking is given (`unpacking`: the platform's 7z reader and the abort signal).
+ * @param filing - Where the instance ids are filed (`prefix`: the path joined to each member's path, or undefined to use the member's path alone) and what unpacking is given (`unpacking`: the platform's 7z reader and xz decoder and the abort signal).
  * @returns The instances, in member order.
  */
 async function instancesOf(stored: StoredSource, archive: Archive, parser: Parser, filing: Readonly<{ readonly prefix: string | undefined; readonly unpacking: UnpackOptions }>): Promise<{ readonly id: string; readonly native: NativeWithMeta }[]> {

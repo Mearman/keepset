@@ -268,9 +268,9 @@ function pathOf(url: string): string {
 /**
  * The archive layout a URL's extension names, before any member is chosen.
  * @param url - The download URL (the original URL for a snapshot).
- * @returns The archive kind, or the reason no keepset unpacker reads it.
+ * @returns The archive kind, or the reason no keepset unpacker reads it. The import maps no xz URL: the source catalogues it reads publish none.
  */
-function archiveKindOf(url: string): Exclude<Archive["kind"], SheetArchive["kind"] | "shapefile"> | { readonly unsupported: string } {
+function archiveKindOf(url: string): Exclude<Archive["kind"], SheetArchive["kind"] | "shapefile" | "xz" | "tar.xz"> | { readonly unsupported: string } {
   const path = pathOf(url);
   for (const [extension, name] of [
     [".zst", "zstd"],
