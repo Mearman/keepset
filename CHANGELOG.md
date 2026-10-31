@@ -1,3 +1,14 @@
+# [0.93.0](https://github.com/Mearman/keepset/compare/v0.92.0...v0.93.0) (2026-10-31)
+
+
+### Features
+
+* **archive:** add the 7z archive kind and a 7z reader port ([b699b2c](https://github.com/Mearman/keepset/commit/b699b2c1732154b83ef5f858bfc36e3bc299da3a))
+* **catalogue:** read Sagalee's transcripts from its solid 7z archive ([8cef0d7](https://github.com/Mearman/keepset/commit/8cef0d7455c290f39afe9862f47cf591c52bc94f))
+* **catalogue:** record the fetched count of the Sagalee transcripts ([287b5c3](https://github.com/Mearman/keepset/commit/287b5c31ca8c03bd33ec92a45ceebb186969d406))
+* **node:** read 7z archives with 7-Zip in a worker thread ([0f314bf](https://github.com/Mearman/keepset/commit/0f314bf9a611ad780cb75652ab53146c34d5e523))
+* **seed:** map 7z downloads to the 7z archive kind ([1546dd1](https://github.com/Mearman/keepset/commit/1546dd11b814d670763a8075c7c41ab3ec67989c))
+
 # [0.92.0](https://github.com/Mearman/keepset/compare/v0.91.0...v0.92.0) (2026-10-31)
 
 
