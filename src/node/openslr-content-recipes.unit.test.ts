@@ -238,6 +238,29 @@ describe("the TextGrid recipes", () => {
       ],
     });
   });
+
+  it("reads one instance for each AISHELL-5 archive, from each speaker's near-field TextGrid and not the far-field ones that repeat them", async () => {
+    const archive = (set: string, session: string, speaker: string): Uint8Array =>
+      gzip(
+        tar([
+          { path: `${set}/${session}/`, text: "", type: "5" },
+          { path: `${set}/${session}/DA01.TextGrid`, text: textGrid([{ name: speaker, intervals: [{ start: 0, end: 4, text: "" }, { start: 4, end: 5, text: "换我不换。" }] }]) },
+          { path: `${set}/${session}/DX01C01.TextGrid`, text: textGrid([{ name: speaker, intervals: [{ start: 4, end: 5, text: "换我不换。" }] }, { name: "P9999", intervals: [{ start: 5, end: 6, text: "好" }] }]) },
+          { path: `${set}/${session}/DA01.wav`, text: "RIFF" },
+        ]),
+      );
+    const { data } = await fetchEntry(getDataset("openslr-slr159-transcripts"), {
+      fetch: serving({
+        [download("159", "train.tar.gz")]: archive("train", "568", "P0001"),
+        [download("159", "Dev.tar.gz")]: archive("Dev", "018", "P0247"),
+        [download("159", "Eval1.tar.gz")]: archive("Eval1", "001", "P0301"),
+        [download("159", "Eval2.tar.gz")]: archive("Eval2", "002", "P0401"),
+      }),
+    });
+    const instances = instancesOf(data);
+    expect(instances.map((instance) => instance.id)).toEqual(["train.tar.gz", "Dev.tar.gz", "Eval1.tar.gz", "Eval2.tar.gz"]);
+    expect(instances[1]?.nodes).toMatchObject([{ id: "018/DA01/1.2", text: "换我不换。", speaker: "P0247", start: 4, end: 5 }]);
+  });
 });
 
 describe("the openslr-slr151-transcripts recipe", () => {
