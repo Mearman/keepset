@@ -1,12 +1,12 @@
 /* The Node entry point (`keepset/node`): the platform-neutral fetch core with Node's own downloader and digest preset, and the streamed reading beside it, which holds a paged table a page at a time and so lives with the platform it streams on. */
 
 
-import { createHash } from "node:crypto";
 import type { Dataset } from "../catalogue";
 import { getDataset } from "../bundled";
 import { fetchDataset as fetchCore, fetchEntry as fetchEntryCore, type FetchOptions, type FetchPort, roundTripEntry as roundTripEntryCore } from "../fetch";
 import type { NodeSink, StreamedDataset } from "./stream-dataset";
 import { downloadRaw } from "./download";
+import { sha256Hex } from "./sha256";
 import { requestCapture as requestCaptureCore } from "../resolve";
 import { isStreamed, roundTripTable, streamTable } from "./stream-dataset";
 
@@ -17,8 +17,8 @@ export { captureRequestsFor } from "../resolve";
 export type { NodeSink, StreamedDataset, StreamedNode } from "./stream-dataset";
 export { downloadRaw, type DownloadInit, STALL_MILLISECONDS, DOWNLOAD_ATTEMPTS, RETRY_DELAY_MILLISECONDS } from "./download";
 
-/** Node's own SHA-256, which needs no promise to answer. */
-const nodeDigest: FetchOptions["digest"] = async (bytes) => await Promise.resolve(createHash("sha256").update(bytes).digest("hex"));
+/** Node's own SHA-256, which needs no promise to answer and reads a download of any size. */
+const nodeDigest: FetchOptions["digest"] = async (bytes) => await Promise.resolve(sha256Hex(bytes));
 
 /** What a fetch may be given beyond the dataset in Node: every port is optional, with Node's own as the default. */
 export type NodeFetchOptions = Omit<FetchOptions, "fetch" | "digest"> & { readonly fetch?: FetchPort; readonly digest?: FetchOptions["digest"]; readonly signal?: AbortSignal; readonly now?: () => Date };
