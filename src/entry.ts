@@ -146,7 +146,7 @@ const FileArchiveKindSchema = z.enum(["zip", "tar", "tar.gz", "tar.bz2"]);
 /** An archive a collection is read from: every file a selector matches, at least one. With `inner` of kind `xlsx`, every matched member is a workbook and each of its sheets, in the workbook's order, is one file of the collection: the sheet's CSV, at the path of the member and the sheet's name joined by `/`, for an instance format laid out on a sheet. `sheets` is a regular expression a sheet's whole name must match for the sheet to be read (every sheet when it is absent), and it must match at least one sheet of every workbook. */
 export const CollectionArchiveSchema = z.object({ kind: FileArchiveKindSchema, members: ArchiveMemberSchema, inner: z.object({ kind: z.literal("xlsx"), sheets: MemberPatternSchema.optional() }).strict().optional() }).strict();
 
-/** An archive whose dataset is spread over several of its files, which a parser of a multi-file format (`ogb`, `member-text`, `nxt-words`, `eaf`, `textgrid`, `option-list`) reads together into one document: every file the `files` selector matches, at least one, in path order, each gunzipped first when `inner` is `gzip` (an OGB dataset zip holds its tables as `.csv.gz` files). When `inner` is a file archive kind with its own `files` selector, each matched member is an archive in its turn and the files are those its selector matches, at least one in each, filed under the member's path and the file's path joined by `/` (a tarball that holds its annotations as one zip). */
+/** An archive whose dataset is spread over several of its files, which a parser of a multi-file format (`ogb`, `member-text`, `nxt-words`, `eaf`, `textgrid`, `option-list`, `chat`) reads together into one document: every file the `files` selector matches, at least one, in path order, each gunzipped first when `inner` is `gzip` (an OGB dataset zip holds its tables as `.csv.gz` files). When `inner` is a file archive kind with its own `files` selector, each matched member is an archive in its turn and the files are those its selector matches, at least one in each, filed under the member's path and the file's path joined by `/` (a tarball that holds its annotations as one zip). */
 export const FilesArchiveSchema = z
   .object({
     kind: FileArchiveKindSchema,
@@ -315,6 +315,8 @@ export const ParserSchema = z.discriminatedUnion("format", [
   z.object({ format: z.literal("ogb"), encoding: z.literal("utf-8") }).strict(),
   z.object({ format: z.literal("nxt-words"), encoding: EncodingSchema, idPattern: MemberPatternSchema }).strict(),
   z.object({ format: z.literal("eaf"), encoding: z.literal("utf-8"), idPattern: MemberPatternSchema }).strict(),
+  /** CHAT files (the TalkBank transcript format), which are always UTF-8: each main line is a turn, read from the several files a `files` archive selects. */
+  z.object({ format: z.literal("chat"), encoding: z.literal("utf-8"), idPattern: MemberPatternSchema }).strict(),
   z
     .object({
       format: z.literal("option-list"),
@@ -446,7 +448,7 @@ export const PagingSchema = z.discriminatedUnion("kind", [
 export type Paging = z.infer<typeof PagingSchema>;
 
 /** The parser formats that read a dataset spread over several files of one archive, and so the only ones a `files` archive is given to. */
-export const MULTI_FILE_FORMATS: ReadonlySet<Parser["format"]> = new Set(["ogb", "member-text", "nxt-words", "eaf", "textgrid", "option-list"]);
+export const MULTI_FILE_FORMATS: ReadonlySet<Parser["format"]> = new Set(["ogb", "member-text", "nxt-words", "eaf", "textgrid", "option-list", "chat"]);
 /** The parser formats that read a document from named parts, and the part names each requires (none for a format whose part names are its own, such as the splits of a triples download). */
 const PART_FORMATS: ReadonlyMap<Parser["format"], readonly string[] | undefined> = new Map([
   ["kg-triples", undefined],
