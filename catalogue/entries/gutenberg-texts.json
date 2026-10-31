@@ -35,7 +35,7 @@
   "description": "The plain text of Project Gutenberg's free ebooks, from the zipped tar of every .txt file that Project Gutenberg rebuilds weekly for bulk use: one document per ebook, its id the ebook number and its text the UTF-8 file exactly as Project Gutenberg distributes it, its licence header and footer included and nothing trimmed. Titles, authors and languages are in the Project Gutenberg catalogue entry under the same ids. The archive is far larger than one document can hold, so it is streamed a book at a time.",
   "domain": "Text",
   "expectedCounts": {
-    "nodes": 0
+    "nodes": 78145
   },
   "id": "gutenberg-texts",
   "licence": {
