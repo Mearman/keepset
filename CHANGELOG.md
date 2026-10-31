@@ -1,3 +1,12 @@
+# [0.92.0](https://github.com/Mearman/keepset/compare/v0.91.0...v0.92.0) (2026-10-31)
+
+
+### Features
+
+* **catalogue:** give each Project Gutenberg record the URLs of its files ([6c48268](https://github.com/Mearman/keepset/commit/6c482688908f2a9cb7593d8ca6b1ca4a4d166b43))
+* **csv-table:** derive columns from a template over a row's other columns ([2fa6248](https://github.com/Mearman/keepset/commit/2fa6248954114b2e6b142315ec50676f123e5ca5))
+* **texts:** carry the addresses of a text's plain text, web page and EPUB files ([d0d124d](https://github.com/Mearman/keepset/commit/d0d124d81a91582f0a31ed0012e627ad7544fa58))
+
 # [0.91.0](https://github.com/Mearman/keepset/compare/v0.90.1...v0.91.0) (2026-10-31)
 
 
