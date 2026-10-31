@@ -2,6 +2,7 @@ import { execFileSync } from "node:child_process";
 import { gzipSync } from "node:zlib";
 import { zipSync } from "fflate";
 import { BLOCK, CHECKSUM_FILL, HEADER } from "../node/tar";
+import { SATURATED_16, SATURATED_32, U16, U32, U64, ZIP_SIGNATURES } from "../node/zip";
 
 const OCTAL = 8;
 const FILE_MODE = 0o644;
@@ -145,4 +146,58 @@ export function odsSpreadsheet(tables: Readonly<Record<string, string>>): Uint8A
     { path: "mimetype", text: "application/vnd.oasis.opendocument.spreadsheet" },
     { path: "content.xml", text: `<?xml version="1.0" encoding="UTF-8"?><office:document-content xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" office:version="1.3"><office:body><office:spreadsheet>${body}</office:spreadsheet></office:body></office:document-content>` },
   ]);
+}
+
+/** The zip64 extended information extra field's id, the version that needs it, and the length of its three 64-bit values. */
+const ZIP64_EXTRA_ID = 1;
+const ZIP64_VERSION = 45;
+const ZIP64_EXTRA_VALUES = 3;
+const ZIP64_END_RECORD_LENGTH = 44;
+const ZIP64_DISKS = 1;
+const BYTE_BITS = 8;
+const WORD = 2 ** (BYTE_BITS * U32);
+
+/**
+ * A little-endian unsigned integer of a given width, as bytes.
+ * @param width - How many bytes.
+ * @param value - The number, below 2^53.
+ * @returns The bytes, least significant first.
+ */
+function littleEndian(width: number, value: number): number[] {
+  return Array.from({ length: width }, (_, index) => Math.floor(value / 2 ** (BYTE_BITS * index)) % 2 ** BYTE_BITS);
+}
+const u16 = (value: number): number[] => littleEndian(U16, value);
+const u32 = (value: number): number[] => littleEndian(U32, value);
+const u64 = (value: number): number[] => [...u32(value % WORD), ...u32(Math.floor(value / WORD))];
+
+/** How a hand-built zip64 member states itself: its compression method and general purpose flags, which a test sets to provoke a refusal. */
+export interface Zip64Options {
+  readonly method: number;
+  readonly flags: number;
+}
+
+/**
+ * Writes a one-member zip whose central directory entry and end records carry their sizes and offsets in zip64 form (saturated 32-bit fields with zip64 extra fields), the form an archive over 4 GiB takes; the values are small, so the archive can be built in memory.
+ * @param name - The member's name.
+ * @param data - Its bytes, stored as they are.
+ * @param options - The method and flags the central directory states.
+ * @returns The archive.
+ */
+export function zip64(name: string, data: Uint8Array, options: Readonly<Zip64Options> = { method: 0, flags: 0 }): Uint8Array {
+  const nameBytes = new TextEncoder().encode(name);
+  const { method, flags } = options;
+  const local = [...u32(ZIP_SIGNATURES.localHeader), ...u16(ZIP64_VERSION), ...u16(flags), ...u16(method), ...u16(0), ...u16(0), ...u32(0), ...u32(data.length), ...u32(data.length), ...u16(nameBytes.length), ...u16(0), ...nameBytes, ...data];
+  const values = [...u64(data.length), ...u64(data.length), ...u64(0)];
+  const extra = [...u16(ZIP64_EXTRA_ID), ...u16(U64 * ZIP64_EXTRA_VALUES), ...values];
+  const central = [
+    ...u32(ZIP_SIGNATURES.centralEntry), ...u16(ZIP64_VERSION), ...u16(ZIP64_VERSION), ...u16(flags), ...u16(method), ...u16(0), ...u16(0), ...u32(0),
+    ...u32(SATURATED_32), ...u32(SATURATED_32), ...u16(nameBytes.length), ...u16(extra.length), ...u16(0), ...u16(0), ...u16(0), ...u32(0), ...u32(SATURATED_32),
+    ...nameBytes, ...extra,
+  ];
+  const directoryAt = local.length;
+  const zip64End = [...u32(ZIP_SIGNATURES.zip64EndOfCentralDirectory), ...u64(ZIP64_END_RECORD_LENGTH), ...u16(ZIP64_VERSION), ...u16(ZIP64_VERSION), ...u32(0), ...u32(0), ...u64(1), ...u64(1), ...u64(central.length), ...u64(directoryAt)];
+  const locator = [...u32(ZIP_SIGNATURES.zip64Locator), ...u32(0), ...u64(directoryAt + central.length), ...u32(ZIP64_DISKS)];
+  const end = [...u32(ZIP_SIGNATURES.endOfCentralDirectory), ...u16(0), ...u16(0), ...u16(SATURATED_16), ...u16(SATURATED_16), ...u32(SATURATED_32), ...u32(SATURATED_32), ...u16(0)];
+
+  return Uint8Array.from([...local, ...central, ...zip64End, ...locator, ...end]);
 }
