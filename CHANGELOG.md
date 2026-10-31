@@ -1,3 +1,10 @@
+# [0.80.0](https://github.com/Mearman/keepset/compare/v0.79.0...v0.80.0) (2026-10-31)
+
+
+### Features
+
+* **parsers:** let a JSON table name a record by several fields ([2f9a8a5](https://github.com/Mearman/keepset/commit/2f9a8a5b688f445a49a6b4e554ccad3374faa4ba))
+
 # [0.79.0](https://github.com/Mearman/keepset/compare/v0.78.0...v0.79.0) (2026-10-31)
 
 
