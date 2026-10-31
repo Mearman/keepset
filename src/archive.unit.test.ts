@@ -253,9 +253,16 @@ describe("bzip2 archives", () => {
     ["bytes after the last stream that are not another stream", concat(whole, new TextEncoder().encode("JUNKJUNKJUNK")), /./],
   ] as const)("rejects %s", (_name, bytes, message) => {
     for (const archive of [{ kind: "bzip2" }, { kind: "tar.bz2", member: { path: "a" } }] as const) {
-      expect(() => unpack(bytes, archive)).toThrow(ArchiveError);
-      expect(() => unpack(bytes, archive)).toThrow(/not valid bzip2 data/);
-      expect(() => unpack(bytes, archive)).toThrow(message);
+      // One decode per archive kind: each decode allocates the decoder's block tables, so asserting on three separate calls tripled the work for no extra coverage.
+      let failure: unknown;
+      try {
+        unpack(bytes, archive);
+      } catch (error) {
+        failure = error;
+      }
+      expect(failure).toBeInstanceOf(ArchiveError);
+      expect(failure).toHaveProperty("message", expect.stringMatching(/not valid bzip2 data/));
+      expect(failure).toHaveProperty("message", expect.stringMatching(message));
     }
   });
 });
