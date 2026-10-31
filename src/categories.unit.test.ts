@@ -1,9 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { CategoryIdSchema, countTarget, getCategory, getCollectionTarget, getTarget, kindOf, listCategories } from "./categories";
 import { KeepsetError, UnknownCategoryError } from "./errors";
+import { AudioV1Schema } from "./targets/audio-v1";
 import { GraphV1Schema } from "./targets/graph-v1";
+import { LexiconV1Schema } from "./targets/lexicon-v1";
 import { ResourcesV1Schema } from "./targets/resources-v1";
+import { SpeakersV1Schema } from "./targets/speakers-v1";
 import { SpeechV1Schema } from "./targets/speech-v1";
+import { SplitsV1Schema } from "./targets/splits-v1";
 import { TasksV1Schema } from "./targets/tasks-v1";
 import { TextsV1Schema } from "./targets/texts-v1";
 
@@ -45,14 +49,14 @@ describe("the category registry", () => {
   it("rejects an unknown category id with an error naming the known ones", () => {
     expect(() => getTarget("graph/v2")).toThrow(UnknownCategoryError);
     expect(() => getTarget("graph/v2")).toThrow(KeepsetError);
-    expect(() => getTarget("graph/v2")).toThrow(/known categories are graph\/v1, resources\/v1, speech\/v1, tasks\/v1, texts\/v1/);
+    expect(() => getTarget("graph/v2")).toThrow(/known categories are audio\/v1, graph\/v1, lexicon\/v1, resources\/v1, speakers\/v1, speech\/v1, splits\/v1, tasks\/v1, texts\/v1/);
   });
 
   it("holds the removed ids out of the registry: the registry is graph/v1, resources/v1, speech/v1, tasks/v1 and texts/v1, and or/v1 and or-set/v1 are unknown", () => {
-    expect(listCategories().map((category) => category.id)).toEqual(["graph/v1", "resources/v1", "speech/v1", "tasks/v1", "texts/v1"]);
+    expect(listCategories().map((category) => category.id)).toEqual(["audio/v1", "graph/v1", "lexicon/v1", "resources/v1", "speakers/v1", "speech/v1", "splits/v1", "tasks/v1", "texts/v1"]);
     for (const removed of ["or/v1", "or-set/v1"]) {
       expect(() => getTarget(removed)).toThrow(UnknownCategoryError);
-      expect(() => getCategory(removed)).toThrow(/known categories are graph\/v1, resources\/v1, speech\/v1, tasks\/v1, texts\/v1$/);
+      expect(() => getCategory(removed)).toThrow(/known categories are audio\/v1, graph\/v1, lexicon\/v1, resources\/v1, speakers\/v1, speech\/v1, splits\/v1, tasks\/v1, texts\/v1$/);
     }
   });
 
@@ -75,6 +79,10 @@ describe("the category registry", () => {
     expect(kindOf("texts/v1")).toBe("texts");
     expect(kindOf("resources/v1")).toBe("resources");
     expect(kindOf("speech/v1")).toBe("speech");
+    expect(kindOf("audio/v1")).toBe("audio");
+    expect(kindOf("lexicon/v1")).toBe("lexicon");
+    expect(kindOf("speakers/v1")).toBe("speakers");
+    expect(kindOf("splits/v1")).toBe("splits");
   });
 });
 
@@ -306,5 +314,37 @@ describe("a collection of any category", () => {
     }
     expect(getCollectionTarget("tasks/v1").safeParse({ ...orSet, nodes: [] }).success).toBe(false);
     expect(getCollectionTarget("tasks/v1").safeParse({ instances: [] }).success).toBe(false);
+  });
+});
+
+const NEW_TARGETS = [
+  { id: "audio/v1", schema: AudioV1Schema, node: { id: "music-fma-0001.wav", label: "music", speaker: null, duration: 31.5, split: "train", extraColumn: "kept as given" }, bad: [{ duration: -1 }, { label: "" }, { duration: "3" }] },
+  { id: "lexicon/v1", schema: LexiconV1Schema, node: { id: "1", word: "abajo", pronunciation: "a b a x o", count: 12, extraColumn: "kept as given" }, bad: [{ count: -1 }, { word: "" }, { pronunciation: 5 }] },
+  { id: "speakers/v1", schema: SpeakersV1Schema, node: { id: "id10001", gender: "m", nationality: "Ireland", language: null, set: "dev", name: "A.J._Buckley" }, bad: [{ gender: "" }, { set: 1 }, { name: [] }] },
+  { id: "splits/v1", schema: SplitsV1Schema, node: { id: "1", split: "dev", document: "a.madcat.xml", line: "s1" }, bad: [{ split: "" }, { line: 1 }, { document: {} }] },
+] as const;
+
+describe.each(NEW_TARGETS)("the $id target", ({ id, schema, node, bad }) => {
+  const document = { meta: { name: "Example", note: null }, nodes: [node, { id: "second" }] };
+
+  it("accepts a representative document, with every field optional or null and others kept, and an empty one", () => {
+    expect(schema.parse(document)).toEqual(document);
+    expect(schema.is({ meta: {}, nodes: [] })).toBe(true);
+  });
+
+  it("rejects a node without an id, a duplicate id, a badly typed field, a non-scalar meta value and any key beyond meta and nodes", () => {
+    expect(schema.is({ ...document, nodes: [{ word: "x" }] })).toBe(false);
+    const duplicate = schema.safeParse({ ...document, nodes: [{ id: "a" }, { id: "a" }] });
+    expect(duplicate.success).toBe(false);
+    expect(JSON.stringify(duplicate.error?.issues)).toMatch(/duplicate node id/);
+    for (const field of bad) {
+      expect(schema.is({ ...document, nodes: [{ id: "a", ...field }] })).toBe(false);
+    }
+    expect(schema.is({ ...document, meta: { nested: { a: 1 } } })).toBe(false);
+    expect(schema.is({ ...document, edges: [] })).toBe(false);
+  });
+
+  it("counts its nodes", () => {
+    expect(countTarget(id, schema.parse(document))).toEqual(new Map([["nodes", document.nodes.length]]));
   });
 });
