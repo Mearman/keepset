@@ -1,3 +1,10 @@
+## [0.82.1](https://github.com/Mearman/keepset/compare/v0.82.0...v0.82.1) (2026-10-31)
+
+
+### Bug Fixes
+
+* **parsers:** read a JSON record listed twice exactly once ([4459209](https://github.com/Mearman/keepset/commit/4459209fc6869cbf46adaf2fe38d4780ad2ab341))
+
 # [0.82.0](https://github.com/Mearman/keepset/compare/v0.81.0...v0.82.0) (2026-10-31)
 
 
