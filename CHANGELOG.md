@@ -1,3 +1,10 @@
+# [0.79.0](https://github.com/Mearman/keepset/compare/v0.78.0...v0.79.0) (2026-10-31)
+
+
+### Features
+
+* **catalogue:** add the OpenSLR lexicons, speaker lists, split lists and annotation records ([e1d9630](https://github.com/Mearman/keepset/commit/e1d9630fcd78366e5b68f676273b750f494f9bd6))
+
 # [0.78.0](https://github.com/Mearman/keepset/compare/v0.77.0...v0.78.0) (2026-10-31)
 
 
