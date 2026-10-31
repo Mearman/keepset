@@ -35,7 +35,7 @@
     "weighted": false
   },
   "recipe": {
-    "reason": "no download is in a form keepset reads yet (aminer-7z: the archive is a 7z (LZMA2) file holding one JSON array of paper records (dblp.v12.json) that unpacks to over twelve gigabytes, more than a fetch can hold in memory, so no 7z reader is added for it)",
+    "reason": "no download is in a form keepset reads yet (aminer-7z: the archive is a 7z (LZMA2) file holding one JSON array of paper records (dblp.v12.json) that unpacks to over twelve gigabytes, one member larger than a fetch can hold in memory)",
     "status": "not-fetchable"
   },
   "sources": [

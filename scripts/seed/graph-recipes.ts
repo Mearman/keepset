@@ -80,7 +80,7 @@ export const UNREADABLE_FORMATS: ReadonlyMap<string, string> = new Map([
   ["pytorch-hetero", "the file is a PyTorch torch.save archive whose graph is a pickled Python dictionary (pyHGT's OAG layout of node_forward, node_feature and edge_list by target type, source type and relation), which only a Python runtime with PyTorch can unpickle, and it is several gigabytes"],
   ["pytorch-hetero-zip", "the archive holds a PyTorch torch.save file whose graph is a pickled Python dictionary, which only a Python runtime with PyTorch can unpickle"],
   ["ieee-cis-zip", "the archive holds the IEEE-CIS fraud detection competition's raw transaction and identity tables, not a graph: H2GB builds its graph from shared card, address, email and device fields with its own construction code"],
-  ["aminer-7z", "the archive is a 7z (LZMA2) file holding one JSON array of paper records (dblp.v12.json) that unpacks to over twelve gigabytes, more than a fetch can hold in memory, so no 7z reader is added for it"],
+  ["aminer-7z", "the archive is a 7z (LZMA2) file holding one JSON array of paper records (dblp.v12.json) that unpacks to over twelve gigabytes, one member larger than a fetch can hold in memory"],
   ["parquet", "the download is a Hugging Face dataset repository whose citation table is thousands of Parquet files holding billions of rows, tens of gigabytes in all, more than a fetch can hold in memory, so no Parquet reader is added for it"],
 ]);
 

@@ -274,7 +274,6 @@ function archiveKindOf(url: string): Exclude<Archive["kind"], SheetArchive["kind
   const path = pathOf(url);
   for (const [extension, name] of [
     [".zst", "zstd"],
-    [".7z", "7z"],
     [".xz", "xz"],
   ] as const) {
     if (path.endsWith(extension)) {
@@ -295,6 +294,9 @@ function archiveKindOf(url: string): Exclude<Archive["kind"], SheetArchive["kind
   }
   if (path.endsWith(".zip")) {
     return "zip";
+  }
+  if (path.endsWith(".7z")) {
+    return "7z";
   }
   if (path.endsWith(".gz")) {
     return "gzip";
