@@ -7,7 +7,7 @@
   "crosswalk": {
     "file": "crosswalks/speech-v1/id-text.json"
   },
-  "description": "The transcripts of SBCSAE. No recipe reads them. The transcripts are CHAT files (conversation turns with speaker labels and time marks) inside a 6.1 GB archive, a format no parser here reads, and the archive is more than a fetch is verified to hold in memory.",
+  "description": "The transcripts of SBCSAE. No recipe reads them. The transcripts are CHAT files (conversation turns with speaker labels and time marks) inside a 6.1 GB archive of recordings, more than a fetch holds in memory (see https://github.com/Mearman/keepset/issues/212). The chat parser reads the files, so the size is all that remains.",
   "domain": "Speech",
   "expectedCounts": {},
   "id": "openslr-slr155-transcripts",
@@ -23,7 +23,7 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "The transcripts are CHAT files (conversation turns with speaker labels and time marks) inside a 6.1 GB archive, a format no parser here reads, and the archive is more than a fetch is verified to hold in memory.",
+    "reason": "The transcripts are CHAT files (conversation turns with speaker labels and time marks) inside a 6.1 GB archive of recordings, more than a fetch holds in memory (see https://github.com/Mearman/keepset/issues/212). The chat parser reads the files, so the size is all that remains.",
     "status": "not-fetchable"
   },
   "sources": [
