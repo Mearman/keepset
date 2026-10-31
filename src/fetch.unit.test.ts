@@ -5,6 +5,7 @@ import { createCatalogue, type Dataset } from "./catalogue";
 import { DatasetNotFoundError, KeepsetError, RecipeError, type RecipeStep } from "./errors";
 import { gzip, tar, zip } from "./test-support/archives";
 import { arcgisEntry, ckanEntry, deadEntry, filesCollectionEntry, fixtureIndex, liveEntry, notFetchableEntry, ogbEntry, openFemaEntry, taskCollectionEntry, taskEntry, graphCollectionEntry, socrataEntry } from "./test-support/entries";
+import { fileStore } from "./node/file-store";
 import { downloadUrl, fetchDataset, fetchEntry, roundTripDataset, roundTripEntry, type DownloadProvenance, type FetchPort, type Provenance } from "./fetch";
 
 /**
@@ -44,10 +45,9 @@ const PAGE_ATTEMPTS = 3;
 
 const now = (): Date => new Date("2026-10-18T12:00:00.000Z");
 
-/** The digest every options literal in these tests shares, so each reads as the ports it injects and nothing else. */
-/** A SHA-256 as sixty-four hex characters, spelled out for the fixture. */
+/** The store every options literal in these tests shares, so each reads as the ports it injects and nothing else: Node's own, which keeps each download in a temporary file and hashes it as it arrives, so every recipe here runs through the path a real fetch takes. */
 const neverFetch = async (): Promise<Response> => await Promise.reject(new Error("nothing should be downloaded"));
-const digestPort = { digest: async (bytes: Uint8Array): Promise<string> => await Promise.resolve(createHash("sha256").update(bytes).digest("hex")), fetch: neverFetch } as const;
+const storePort = { store: fileStore(), fetch: neverFetch } as const;
 
 const datasetWith = (entry: unknown): Dataset => createCatalogue({ ...fixtureIndex, entries: [entry] }).listDatasets()[0] ?? expect.unreachable("the fixture catalogue lists its one entry");
 
@@ -66,7 +66,7 @@ async function failure(run: Readonly<Promise<unknown>>): Promise<RecipeError> {
 describe("fetchEntry", () => {
   it("downloads a live source, parses it, applies the crosswalk and resolves graph/v1", async () => {
     const { fetch, requested } = servedBy({ "https://example.org/data/karate.txt": karateText });
-    const result = await fetchEntry(datasetWith(liveEntry), { ...digestPort, fetch, now });
+    const result = await fetchEntry(datasetWith(liveEntry), { ...storePort, fetch, now });
     expect(requested).toEqual([availabilityOf("https://example.org/data/karate.txt"), "https://example.org/data/karate.txt"]);
     expect(result.data).toEqual({
       meta: { id: "karate", name: "Zachary Karate Club", directed: false, weighted: false, density: 0.139 },
@@ -91,9 +91,9 @@ describe("fetchEntry", () => {
 
   it("warns, without failing, when a fetched count differs from the one the entry records", async () => {
     const { fetch } = servedBy({ "https://example.org/data/karate.txt": karateText });
-    const result = await fetchEntry(datasetWith(liveEntry), { ...digestPort, fetch, now });
+    const result = await fetchEntry(datasetWith(liveEntry), { ...storePort, fetch, now });
     expect(result.warnings).toEqual(["nodes: the entry records 34, the fetched result has 3", "edges: the entry records 78, the fetched result has 3"]);
-    const exact = await fetchEntry(datasetWith({ ...liveEntry, expectedCounts: { nodes: 3, edges: 3 } }), { ...digestPort, fetch, now });
+    const exact = await fetchEntry(datasetWith({ ...liveEntry, expectedCounts: { nodes: 3, edges: 3 } }), { ...storePort, fetch, now });
     expect(exact.warnings).toEqual([]);
   });
 
@@ -102,7 +102,7 @@ describe("fetchEntry", () => {
     const archived = "https://web.archive.org/web/20230601id_/http://example.edu/~lab/data/celegans_metabolic.zip";
     const zipped = zip([{ path: "data/celegans_metabolic.net", text: pajek }]);
     const { fetch, requested } = servedBy({ [archived]: zipped });
-    const result = await fetchEntry(datasetWith(deadEntry), { ...digestPort, fetch, now });
+    const result = await fetchEntry(datasetWith(deadEntry), { ...storePort, fetch, now });
     expect(requested).toEqual([archived]);
     expect("edges" in result.data && result.data.edges).toEqual([{ source: "1", target: "2" }]);
     expect(result.provenance).toMatchObject({ fetchedUrl: archived, member: "data/celegans_metabolic.net", source: { status: "dead", snapshot: { timestamp: "20230601" } } });
@@ -115,7 +115,7 @@ describe("fetchEntry", () => {
     };
     const mtx = "%%MatrixMarket matrix coordinate pattern symmetric\n3 3 2\n2 1\n3 1\n";
     const { fetch } = servedBy({ "https://example.org/data/karate.txt": gzip(tar([{ path: "karate/karate.mtx", text: mtx }])) });
-    expect((await fetchEntry(datasetWith(entry), { ...digestPort, fetch, now })).data).toMatchObject({ nodes: [{ id: "1" }, { id: "2" }, { id: "3" }] });
+    expect((await fetchEntry(datasetWith(entry), { ...storePort, fetch, now })).data).toMatchObject({ nodes: [{ id: "1" }, { id: "2" }, { id: "3" }] });
   });
 
   it("passes the abort signal to the network port", async () => {
@@ -126,7 +126,7 @@ describe("fetchEntry", () => {
 
       return Promise.resolve(new Response(karateText));
     };
-    await fetchEntry(datasetWith(liveEntry), { ...digestPort, fetch, now, signal: controller.signal });
+    await fetchEntry(datasetWith(liveEntry), { ...storePort, fetch, now, signal: controller.signal });
     expect(seen).toBe(controller.signal);
   });
 
@@ -157,7 +157,7 @@ describe("fetchEntry", () => {
 
   it.each(failures)("fails loudly at the $step step, naming the entry", async ({ step, entry, body, fetch, message }) => {
     const port = fetch ?? servedBy(body === undefined ? {} : { "https://example.org/data/karate.txt": body, "https://example.com/datasets/walled": body }).fetch;
-    const error = await failure(fetchEntry(datasetWith(entry), { ...digestPort, fetch: port, now }));
+    const error = await failure(fetchEntry(datasetWith(entry), { ...storePort, fetch: port, now }));
     expect(error.step).toBe(step);
     expect(error.entryId).toMatch(/^(karate|auth-walled)$/);
     expect(error.message).toMatch(message);
@@ -174,34 +174,34 @@ describe("downloadUrl", () => {
 describe("fetchDataset", () => {
   it("resolves ids against the bundled catalogue, failing before anything is downloaded", async () => {
     const never = async (): Promise<Response> => await Promise.reject(new Error("nothing should be downloaded"));
-    await expect(fetchDataset("no-such-entry", { ...digestPort, fetch: never })).rejects.toThrow(DatasetNotFoundError);
+    await expect(fetchDataset("no-such-entry", { ...storePort, fetch: never })).rejects.toThrow(DatasetNotFoundError);
   });
 });
 
 describe("roundTripEntry", () => {
   it("holds when the crosswalk preserves every path of the native document", async () => {
     const { fetch } = servedBy({ "https://example.org/data/karate.txt": karateText });
-    const report = await roundTripEntry(datasetWith(liveEntry), { ...digestPort, fetch, now });
+    const report = await roundTripEntry(datasetWith(liveEntry), { ...storePort, fetch, now });
     expect(report).toMatchObject({ holds: true, provenance: { entryId: "karate" } });
   });
 
   it("reports the first path a lossy crosswalk loses", async () => {
     const { fetch } = servedBy({ "https://example.org/data/karate.txt": karateText });
     const withoutMeta = { ...liveEntry, crosswalk: { ...liveEntry.crosswalk, rules: liveEntry.crosswalk.rules.filter((rule) => rule.from !== "meta") } };
-    const report = await roundTripEntry(datasetWith(withoutMeta), { ...digestPort, fetch, now });
+    const report = await roundTripEntry(datasetWith(withoutMeta), { ...storePort, fetch, now });
     // crossmap names the record whose keys differ, here the document root.
     expect(report).toMatchObject({ holds: false, path: "" });
     expect(report.holds ? "" : report.message).toMatch(/records differ in keys: edges,meta,nodes against edges,nodes/);
   });
 
   it("fails loudly when the recipe fails before the comparison", async () => {
-    const error = await failure(roundTripEntry(datasetWith(notFetchableEntry), { ...digestPort, now }));
+    const error = await failure(roundTripEntry(datasetWith(notFetchableEntry), { ...storePort, now }));
     expect(error.step).toBe("recipe");
   });
 
   it("resolves ids against the bundled catalogue, failing before anything is downloaded", async () => {
     const never = async (): Promise<Response> => await Promise.reject(new Error("nothing should be downloaded"));
-    await expect(roundTripDataset("no-such-entry", { ...digestPort, fetch: never })).rejects.toThrow(DatasetNotFoundError);
+    await expect(roundTripDataset("no-such-entry", { ...storePort, fetch: never })).rejects.toThrow(DatasetNotFoundError);
   });
 });
 
@@ -211,7 +211,7 @@ describe("a tasks/v1 entry", () => {
   const dataset = datasetWith(taskEntry);
 
   it("downloads a table, parses it, applies the crosswalk and resolves tasks/v1 with only the mapped fields", async () => {
-    const fetched = await fetchEntry(dataset, { ...digestPort, fetch: port, now });
+    const fetched = await fetchEntry(dataset, { ...storePort, fetch: port, now });
     expect(fetched.warnings).toEqual([]);
     expect(fetched.data).toEqual({
       meta: { id: "service-requests", name: "Service requests", durationUnit: "seconds" },
@@ -225,19 +225,19 @@ describe("a tasks/v1 entry", () => {
   });
 
   it("holds the round trip over the paths the crosswalk maps", async () => {
-    expect(await roundTripEntry(dataset, { ...digestPort, fetch: port, now })).toMatchObject({ holds: true });
+    expect(await roundTripEntry(dataset, { ...storePort, fetch: port, now })).toMatchObject({ holds: true });
   });
 
   it("fails at the validate step when a value is outside the target's range", async () => {
     const bad = servedBy({ "https://example.org/data/requests.csv": "request_id,latitude,longitude,minutes,status,borough\nx,95,0,1,Open,A\n" });
-    const error = await failure(fetchEntry(dataset, { ...digestPort, fetch: bad.fetch, now }));
+    const error = await failure(fetchEntry(dataset, { ...storePort, fetch: bad.fetch, now }));
     expect(error.step).toBe("validate");
     expect(error.message).toMatch(/lat/);
   });
 
   it("fails at the parse step, naming the line, when the table is malformed", async () => {
     const bad = servedBy({ "https://example.org/data/requests.csv": "request_id,latitude,longitude,minutes,status,borough\nx,1,0,notanumber,Open,A\n" });
-    const error = await failure(fetchEntry(dataset, { ...digestPort, fetch: bad.fetch, now }));
+    const error = await failure(fetchEntry(dataset, { ...storePort, fetch: bad.fetch, now }));
     expect(error.step).toBe("parse");
     expect(error.message).toMatch(/line 2/);
   });
@@ -262,7 +262,7 @@ describe("a tasks/v1 entry whose collection is files downloaded one by one", () 
 
   it("downloads each file in turn, a dead one from its snapshot, and files every instance under its path", async () => {
     const { fetch, requested } = served();
-    const fetched = await fetchEntry(dataset, { ...digestPort, fetch, now });
+    const fetched = await fetchEntry(dataset, { ...storePort, fetch, now });
     expect(requested).toEqual([
       availabilityOf("https://example.org/data/routes/north.csv"),
       "https://example.org/data/routes/north.csv",
@@ -290,7 +290,7 @@ describe("a tasks/v1 entry whose collection is files downloaded one by one", () 
   });
 
   it("records each file's download, hash and the instances it gave", async () => {
-    const { provenance } = await fetchEntry(dataset, { ...digestPort, fetch: served().fetch, now });
+    const { provenance } = await fetchEntry(dataset, { ...storePort, fetch: served().fetch, now });
     expect(provenance).toEqual({
       entryId: "route-files",
       catalogue: { id: "fixture", version: "1.2.3" },
@@ -312,13 +312,13 @@ describe("a tasks/v1 entry whose collection is files downloaded one by one", () 
   });
 
   it("holds the round trip over every instance", async () => {
-    expect(await roundTripEntry(dataset, { ...digestPort, fetch: served().fetch, now })).toMatchObject({ holds: true });
+    expect(await roundTripEntry(dataset, { ...storePort, fetch: served().fetch, now })).toMatchObject({ holds: true });
   });
 
   it("fails at the download step on a file that does not answer, after the files before it and before those after it", async () => {
     const { fetch, requested } = served({ "https://web.archive.org/web/20240101000000id_/https://example.org/data/routes/south.csv": new Uint8Array() });
     const missing = servedBy({ "https://example.org/data/routes/north.csv": north });
-    const error = await failure(fetchEntry(dataset, { ...digestPort, fetch: missing.fetch, now }));
+    const error = await failure(fetchEntry(dataset, { ...storePort, fetch: missing.fetch, now }));
     expect(error.step).toBe("download");
     expect(error.message).toMatch(/south\.csv answered 404/);
     expect(missing.requested).toEqual([
@@ -327,7 +327,7 @@ describe("a tasks/v1 entry whose collection is files downloaded one by one", () 
       "https://web.archive.org/web/20240101000000id_/https://example.org/data/routes/south.csv",
       availabilityOf("https://example.org/data/routes/south.csv"),
     ]);
-    const broken = await failure(fetchEntry(dataset, { ...digestPort, fetch, now }));
+    const broken = await failure(fetchEntry(dataset, { ...storePort, fetch, now }));
     expect(broken.step).toBe("parse");
     expect(broken.message).toMatch(/member south\.csv: /);
     expect(requested).toEqual([availabilityOf("https://example.org/data/routes/north.csv"), "https://example.org/data/routes/north.csv", "https://web.archive.org/web/20240101000000id_/https://example.org/data/routes/south.csv"]);
@@ -352,7 +352,7 @@ describe("a tasks/v1 entry that is a collection", () => {
   const dataset = datasetWith(taskCollectionEntry);
 
   it("reads every matching member as an instance, in path order, each numbering its own nodes", async () => {
-    const fetched = await fetchEntry(dataset, { ...digestPort, fetch: suite(members).fetch, now });
+    const fetched = await fetchEntry(dataset, { ...storePort, fetch: suite(members).fetch, now });
     expect(fetched.warnings).toEqual([]);
     expect(fetched.data).toEqual({
       meta: { id: "route-suite", name: "Route suite" },
@@ -371,41 +371,41 @@ describe("a tasks/v1 entry that is a collection", () => {
   });
 
   it("records the members it read in the provenance", async () => {
-    const { provenance } = await fetchEntry(dataset, { ...digestPort, fetch: suite(members).fetch, now });
+    const { provenance } = await fetchEntry(dataset, { ...storePort, fetch: suite(members).fetch, now });
     expect(single(provenance).members).toEqual(["suite/a.csv", "suite/b.csv"]);
     expect(single(provenance).member).toBeUndefined();
   });
 
   it("warns when the instance count differs from the recorded one", async () => {
-    const fetched = await fetchEntry(dataset, { ...digestPort, fetch: suite(members.slice(0, 2).slice(0, 1)).fetch, now });
+    const fetched = await fetchEntry(dataset, { ...storePort, fetch: suite(members.slice(0, 2).slice(0, 1)).fetch, now });
     expect(fetched.warnings).toEqual(["instances: the entry records 2, the fetched result has 1"]);
   });
 
   it("holds the round trip over every member", async () => {
-    expect(await roundTripEntry(dataset, { ...digestPort, fetch: suite(members).fetch, now })).toMatchObject({ holds: true });
+    expect(await roundTripEntry(dataset, { ...storePort, fetch: suite(members).fetch, now })).toMatchObject({ holds: true });
   });
 
   it("fails at the extract step when no member matches", async () => {
-    const error = await failure(fetchEntry(dataset, { ...digestPort, fetch: suite([{ path: "readme.txt", text: "none" }]).fetch, now }));
+    const error = await failure(fetchEntry(dataset, { ...storePort, fetch: suite([{ path: "readme.txt", text: "none" }]).fetch, now }));
     expect(error.step).toBe("extract");
     expect(error.message).toMatch(/at least one member ending \.csv/);
   });
 
   it("fails at the parse step naming the member that does not parse, and returns nothing partial", async () => {
-    const error = await failure(fetchEntry(dataset, { ...digestPort, fetch: suite([members[1] ?? expect.unreachable("fixture"), { path: "suite/z.csv", text: "customer,x,y,prize\n1,a,5,0\n" }]).fetch, now }));
+    const error = await failure(fetchEntry(dataset, { ...storePort, fetch: suite([members[1] ?? expect.unreachable("fixture"), { path: "suite/z.csv", text: "customer,x,y,prize\n1,a,5,0\n" }]).fetch, now }));
     expect(error.step).toBe("parse");
     expect(error.message).toMatch(/member suite\/z\.csv: .*line 2/);
   });
 
   it("fails at the crosswalk step naming the member the crosswalk cannot be applied to", async () => {
     const dropped = { ...taskCollectionEntry, crosswalk: { ...taskCollectionEntry.crosswalk, rules: [...taskCollectionEntry.crosswalk.rules, { op: "move", from: "nodes[].absent", to: "nodes[].prize" }] } };
-    const error = await failure(fetchEntry(datasetWith({ ...dropped, crosswalk: { ...dropped.crosswalk, rules: dropped.crosswalk.rules.filter((rule) => rule.to !== "nodes[].prize" || rule.from === "nodes[].absent") } }), { ...digestPort, fetch: suite(members).fetch, now }));
+    const error = await failure(fetchEntry(datasetWith({ ...dropped, crosswalk: { ...dropped.crosswalk, rules: dropped.crosswalk.rules.filter((rule) => rule.to !== "nodes[].prize" || rule.from === "nodes[].absent") } }), { ...storePort, fetch: suite(members).fetch, now }));
     expect(error.step).toBe("crosswalk");
     expect(error.message).toMatch(/member suite\/a\.csv/);
   });
 
   it("fails at the validate step naming the instance whose node ids repeat", async () => {
-    const error = await failure(fetchEntry(dataset, { ...digestPort, fetch: suite([{ path: "suite/a.csv", text: "customer,x,y,prize\n1,4,5,0\n1,6,7,3\n" }]).fetch, now }));
+    const error = await failure(fetchEntry(dataset, { ...storePort, fetch: suite([{ path: "suite/a.csv", text: "customer,x,y,prize\n1,4,5,0\n1,6,7,3\n" }]).fetch, now }));
     expect(error.step).toBe("validate");
     expect(error.message).toMatch(/instances\.0\.nodes\.1\.id/);
   });
@@ -421,7 +421,7 @@ describe("a graph/v1 entry that is a collection", () => {
   const dataset = datasetWith(graphCollectionEntry);
 
   it("resolves a collection of graphs through the same path as a collection of tasks, with no category of its own", async () => {
-    const fetched = await fetchEntry(dataset, { ...digestPort, fetch: served.fetch, now });
+    const fetched = await fetchEntry(dataset, { ...storePort, fetch: served.fetch, now });
     expect(fetched.warnings).toEqual([]);
     expect(fetched.data).toMatchObject({
       meta: { id: "graph-suite", name: "Graph suite" },
@@ -433,7 +433,7 @@ describe("a graph/v1 entry that is a collection", () => {
   });
 
   it("holds the round trip for every member", async () => {
-    expect(await roundTripEntry(dataset, { ...digestPort, fetch: served.fetch, now })).toMatchObject({ holds: true });
+    expect(await roundTripEntry(dataset, { ...storePort, fetch: served.fetch, now })).toMatchObject({ holds: true });
   });
 });
 
@@ -452,7 +452,7 @@ describe("a graph/v1 entry of a multi-file format", () => {
   const dataset = datasetWith(ogbEntry);
 
   it("reads every selected file of the archive into one graph, recording them in the provenance", async () => {
-    const fetched = await fetchEntry(dataset, { ...digestPort, fetch: served.fetch, now });
+    const fetched = await fetchEntry(dataset, { ...storePort, fetch: served.fetch, now });
     expect(fetched.warnings).toEqual([]);
     expect(fetched.data).toEqual({
       meta: { id: "ogb-suite", name: "OGB dataset" },
@@ -473,12 +473,12 @@ describe("a graph/v1 entry of a multi-file format", () => {
   });
 
   it("holds the round trip", async () => {
-    expect(await roundTripEntry(dataset, { ...digestPort, fetch: served.fetch, now })).toMatchObject({ holds: true });
+    expect(await roundTripEntry(dataset, { ...storePort, fetch: served.fetch, now })).toMatchObject({ holds: true });
   });
 
   it("fails at the parse step when the files do not make one dataset", async () => {
     const broken = servedBy({ "https://example.org/data/dataset.zip": zipSync({ "dataset/raw/num-node-dict.csv.gz": gzip("paper\n1\n") }) });
-    const error = await failure(fetchEntry(dataset, { ...digestPort, fetch: broken.fetch, now }));
+    const error = await failure(fetchEntry(dataset, { ...storePort, fetch: broken.fetch, now }));
     expect(error.step).toBe("parse");
     expect(error.message).toMatch(/has no raw\/triplet-type-list\.csv\.gz/);
   });
@@ -517,7 +517,7 @@ describe("a tasks/v1 entry whose source is a paged ArcGIS layer", () => {
 
   it("reads every page in order of the order-by field and resolves tasks/v1 from the one collection", async () => {
     const served = layerServing(features, 2);
-    const fetched = await fetchEntry(dataset, { ...digestPort, fetch: served.fetch, now });
+    const fetched = await fetchEntry(dataset, { ...storePort, fetch: served.fetch, now });
     expect(fetched.warnings).toEqual([]);
     expect(fetched.data).toEqual({
       meta: { id: "layer-violations", name: "Layer violations" },
@@ -536,21 +536,21 @@ describe("a tasks/v1 entry whose source is a paged ArcGIS layer", () => {
   });
 
   it("holds the round trip over the paths the crosswalk maps", async () => {
-    expect(await roundTripEntry(dataset, { ...digestPort, fetch: layerServing(features, 2).fetch, now })).toMatchObject({ holds: true });
+    expect(await roundTripEntry(dataset, { ...storePort, fetch: layerServing(features, 2).fetch, now })).toMatchObject({ holds: true });
   });
 
   it("fails at the download step, and does not loop, when the layer ignores the offset", async () => {
     const stuck = layerServing(features, 2, { "resultOffset=2": Response.json({ type: "FeatureCollection", features: [] }) });
-    const error = await failure(fetchEntry(dataset, { ...digestPort, fetch: stuck.fetch, now }));
+    const error = await failure(fetchEntry(dataset, { ...storePort, fetch: stuck.fetch, now }));
     expect(error.step).toBe("download");
     expect(error.message).toMatch(/gave no features at offset 2, before the 3 it reports/);
   });
 
   it("fails at the download step when the server answers an error in a 200 response, or reports no count", async () => {
     const refused = layerServing(features, 2, { returnCountOnly: Response.json({ error: { code: 499, message: "Token Required" } }) });
-    expect((await failure(fetchEntry(dataset, { ...digestPort, fetch: refused.fetch, now }))).message).toMatch(/Token Required/);
+    expect((await failure(fetchEntry(dataset, { ...storePort, fetch: refused.fetch, now }))).message).toMatch(/Token Required/);
     const noCount = layerServing(features, 2, { returnCountOnly: Response.json({ unrelated: true }) });
-    expect((await failure(fetchEntry(dataset, { ...digestPort, fetch: noCount.fetch, now }))).message).toMatch(/did not report a feature count/);
+    expect((await failure(fetchEntry(dataset, { ...storePort, fetch: noCount.fetch, now }))).message).toMatch(/did not report a feature count/);
   });
 });
 
@@ -580,7 +580,7 @@ describe("a tasks/v1 entry whose source is a Socrata resource read in pages", ()
 
   it("reads each page in order of the row ids and joins them under one header", async () => {
     const served = resourceServing(rows);
-    const fetched = await fetchEntry(dataset, { ...digestPort, fetch: served.fetch, now });
+    const fetched = await fetchEntry(dataset, { ...storePort, fetch: served.fetch, now });
     expect(fetched.data).toEqual({
       meta: { id: "resource-cases", name: "Resource cases" },
       nodes: [
@@ -595,12 +595,12 @@ describe("a tasks/v1 entry whose source is a Socrata resource read in pages", ()
   });
 
   it("holds the round trip over the paths the crosswalk maps", async () => {
-    expect(await roundTripEntry(dataset, { ...digestPort, fetch: resourceServing(rows).fetch, now })).toMatchObject({ holds: true });
+    expect(await roundTripEntry(dataset, { ...storePort, fetch: resourceServing(rows).fetch, now })).toMatchObject({ holds: true });
   });
 
   it("fails at the download step when a page holds fewer rows than it should, as a response cut short does", async () => {
     const cut = resourceServing(rows, { page: (offset, honest) => (offset === 2 ? header : honest) });
-    const error = await failure(fetchEntry(dataset, { ...digestPort, fetch: cut.fetch, now }));
+    const error = await failure(fetchEntry(dataset, { ...storePort, fetch: cut.fetch, now }));
     expect(error.step).toBe("download");
     expect(error.message).toMatch(/gave 0 rows at offset 2 where 1 of its 3 were due/);
   });
@@ -615,19 +615,19 @@ describe("a tasks/v1 entry whose source is a Socrata resource read in pages", ()
         return offset === 2 && seen < PAGE_ATTEMPTS ? header : honest;
       },
     });
-    const fetched = await fetchEntry(dataset, { ...digestPort, fetch: flaky.fetch, now });
+    const fetched = await fetchEntry(dataset, { ...storePort, fetch: flaky.fetch, now });
     expect(fetched.data).toMatchObject({ nodes: [{ id: "a1" }, { id: "a2" }, { id: "a3" }] });
     expect(attempts.get(2)).toBe(PAGE_ATTEMPTS);
     const hopeless = resourceServing(rows, { page: (offset, honest) => (offset === 2 ? header : honest) });
-    expect((await failure(fetchEntry(dataset, { ...digestPort, fetch: hopeless.fetch, now }))).message).toMatch(/gave 0 rows at offset 2/);
+    expect((await failure(fetchEntry(dataset, { ...storePort, fetch: hopeless.fetch, now }))).message).toMatch(/gave 0 rows at offset 2/);
     expect(hopeless.requested.filter((url) => url.includes("offset=2"))).toHaveLength(PAGE_ATTEMPTS);
   });
 
   it("fails at the download step when a later page has a different header, or the resource reports no rows or no count", async () => {
     const changed = resourceServing(rows, { page: (offset, honest) => (offset === 2 ? honest.replace("status", "state") : honest) });
-    expect((await failure(fetchEntry(dataset, { ...digestPort, fetch: changed.fetch, now }))).message).toMatch(/different header at offset 2/);
-    expect((await failure(fetchEntry(dataset, { ...digestPort, fetch: resourceServing([]).fetch, now }))).message).toMatch(/has no rows/);
-    expect((await failure(fetchEntry(dataset, { ...digestPort, fetch: resourceServing(rows, { count: "unrelated" }).fetch, now }))).message).toMatch(/did not report a row count/);
+    expect((await failure(fetchEntry(dataset, { ...storePort, fetch: changed.fetch, now }))).message).toMatch(/different header at offset 2/);
+    expect((await failure(fetchEntry(dataset, { ...storePort, fetch: resourceServing([]).fetch, now }))).message).toMatch(/has no rows/);
+    expect((await failure(fetchEntry(dataset, { ...storePort, fetch: resourceServing(rows, { count: "unrelated" }).fetch, now }))).message).toMatch(/did not report a row count/);
   });
 });
 
@@ -656,7 +656,7 @@ describe("a tasks/v1 entry whose source is a CKAN datastore dump read in pages",
 
   it("reads the count from the portal's own datastore API, then the dump's pages, and joins them", async () => {
     const served = portalServing(rows);
-    const fetched = await fetchEntry(dataset, { ...digestPort, fetch: served.fetch, now });
+    const fetched = await fetchEntry(dataset, { ...storePort, fetch: served.fetch, now });
     expect(fetched.data).toEqual({
       meta: { id: "datastore-cases", name: "Datastore cases" },
       nodes: [
@@ -669,10 +669,10 @@ describe("a tasks/v1 entry whose source is a CKAN datastore dump read in pages",
   });
 
   it("fails at the download step when the count is missing or a page is short", async () => {
-    expect((await failure(fetchEntry(dataset, { ...digestPort, fetch: portalServing(rows, '{"success":false}').fetch, now }))).message).toMatch(/did not report a row count/);
+    expect((await failure(fetchEntry(dataset, { ...storePort, fetch: portalServing(rows, '{"success":false}').fetch, now }))).message).toMatch(/did not report a row count/);
     const wrongTotal = portalServing(rows, JSON.stringify({ success: true, result: { total: 5 } }));
-    expect((await failure(fetchEntry(dataset, { ...digestPort, fetch: wrongTotal.fetch, now }))).message).toMatch(/gave 1 rows at offset 2 where 2 of its 5 were due/);
-    expect((await failure(fetchEntry(dataset, { ...digestPort, fetch: portalServing(rows, "not json").fetch, now }))).message).toMatch(/did not answer JSON/);
+    expect((await failure(fetchEntry(dataset, { ...storePort, fetch: wrongTotal.fetch, now }))).message).toMatch(/gave 1 rows at offset 2 where 2 of its 5 were due/);
+    expect((await failure(fetchEntry(dataset, { ...storePort, fetch: portalServing(rows, "not json").fetch, now }))).message).toMatch(/did not answer JSON/);
   });
 });
 
@@ -700,7 +700,7 @@ describe("a tasks/v1 entry whose source is an OpenFEMA entity read in pages", ()
 
   it("reads the count from the API's metadata, then pages in order of the id with the source's own select kept, and joins them", async () => {
     const served = apiServing(rows);
-    const fetched = await fetchEntry(dataset, { ...digestPort, fetch: served.fetch, now });
+    const fetched = await fetchEntry(dataset, { ...storePort, fetch: served.fetch, now });
     expect(fetched.data).toEqual({
       meta: { id: "entity-claims", name: "Entity claims" },
       nodes: [
@@ -718,10 +718,10 @@ describe("a tasks/v1 entry whose source is an OpenFEMA entity read in pages", ()
   });
 
   it("fails at the download step when the count is missing, a page is short, or the source URL sets a paging parameter", async () => {
-    expect((await failure(fetchEntry(dataset, { ...digestPort, fetch: apiServing(rows, "{}").fetch, now }))).message).toMatch(/did not report a row count/);
+    expect((await failure(fetchEntry(dataset, { ...storePort, fetch: apiServing(rows, "{}").fetch, now }))).message).toMatch(/did not report a row count/);
     const wrongTotal = apiServing(rows, JSON.stringify({ metadata: { count: 5 } }));
-    expect((await failure(fetchEntry(dataset, { ...digestPort, fetch: wrongTotal.fetch, now }))).message).toMatch(/gave 1 rows at offset 2 where 2 of its 5 were due/);
+    expect((await failure(fetchEntry(dataset, { ...storePort, fetch: wrongTotal.fetch, now }))).message).toMatch(/gave 1 rows at offset 2 where 2 of its 5 were due/);
     const setsTop = datasetWith({ ...openFemaEntry, sources: [{ url: "https://www.fema.gov/api/open/v3/Claims?$top=5", retrieved: "2026-10-19", status: "live" }] });
-    expect((await failure(fetchEntry(setsTop, { ...digestPort, fetch: apiServing(rows).fetch, now }))).message).toMatch(/sets \$top, which the download sets itself/);
+    expect((await failure(fetchEntry(setsTop, { ...storePort, fetch: apiServing(rows).fetch, now }))).message).toMatch(/sets \$top, which the download sets itself/);
   });
 });

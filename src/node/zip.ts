@@ -1,5 +1,7 @@
 import { inflateSync } from "fflate";
 import { ArchiveError } from "../errors";
+import { inTurn } from "../in-turn";
+import { asSource, type SourceBytes } from "../source-bytes";
 
 /** The signatures of the zip structures this reader finds, as the little-endian 32-bit values they are stored as. */
 export const ZIP_SIGNATURES = { endOfCentralDirectory: 0x06054b50, zip64Locator: 0x07064b50, zip64EndOfCentralDirectory: 0x06064b50, centralEntry: 0x02014b50, localHeader: 0x04034b50 } as const;
@@ -37,6 +39,12 @@ const CENTRAL = { flags: 8, compression: 10, size: 20, originalSize: 24, nameLen
 const LOCAL = { nameLength: 26, extraLength: 28 } as const;
 const EXTRA = { id: 0, size: 2, data: 4 } as const;
 
+/** How many bytes of the end of an archive can hold its end of central directory record: the record and the longest comment that may follow it. */
+const TAIL_LENGTH = EOCD_LENGTH + MAX_COMMENT;
+
+/** How much of the zip64 end of central directory record this reader reads: up to and including the directory's offset. */
+const ZIP64_RECORD_READ = ZIP64_RECORD.directoryOffset + U64;
+
 /** What a filter is told of an entry before any of it is inflated, as fflate's own zip reader tells it. */
 export interface ZipEntryInfo {
   readonly name: string;
@@ -46,7 +54,7 @@ export interface ZipEntryInfo {
 }
 
 /** One entry of the central directory, with its sizes and the offset of its local header as full numbers. */
-interface CentralEntry extends ZipEntryInfo {
+export interface ZipEntry extends ZipEntryInfo {
   readonly flags: number;
   readonly offset: number;
 }
@@ -56,7 +64,7 @@ interface CentralEntry extends ZipEntryInfo {
  * @param view - The bytes.
  * @param at - The field's position.
  * @returns The value.
- * @throws ArchiveError when it is beyond what a number holds exactly, which no archive in memory can be.
+ * @throws ArchiveError when it is beyond what a number holds exactly, which no file a filesystem or a server holds can be.
  */
 export function readU64(view: DataView, at: number): number {
   const value = view.getBigUint64(at, true);
@@ -68,15 +76,40 @@ export function readU64(view: DataView, at: number): number {
 }
 
 /**
+ * A DataView over bytes.
+ * @param bytes - The bytes.
+ * @returns The view.
+ */
+function viewOf(bytes: Uint8Array): DataView {
+  return new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+}
+
+/**
+ * Reads a range of an archive, refusing one the archive does not hold.
+ * @param source - The archive.
+ * @param offset - Where the range starts.
+ * @param length - How many bytes.
+ * @param what - What the range is, for the error.
+ * @returns The bytes.
+ * @throws ArchiveError when the range runs past the end of the archive.
+ */
+async function readRange(source: SourceBytes, offset: number, length: number, what: string): Promise<Uint8Array> {
+  if (offset < 0 || offset + length > source.size) {
+    throw new ArchiveError(`not a valid zip archive: ${what} at byte ${String(offset)} runs past the end of the archive`);
+  }
+
+  return source.read({ offset, length });
+}
+
+/**
  * Finds the end of the central directory record by scanning back from the end of the archive, past any comment.
- * @param view - The archive.
- * @returns The record's position.
+ * @param tail - The archive's last bytes, as many as can hold the record and a comment.
+ * @returns The record's position in the tail.
  * @throws ArchiveError when there is none.
  */
-function findEnd(view: DataView): number {
-  const lowest = Math.max(0, view.byteLength - EOCD_LENGTH - MAX_COMMENT);
-  for (let at = view.byteLength - EOCD_LENGTH; at >= lowest; at -= 1) {
-    if (view.getUint32(at, true) === ZIP_SIGNATURES.endOfCentralDirectory) {
+function findEnd(tail: DataView): number {
+  for (let at = tail.byteLength - EOCD_LENGTH; at >= 0; at -= 1) {
+    if (tail.getUint32(at, true) === ZIP_SIGNATURES.endOfCentralDirectory) {
       return at;
     }
   }
@@ -85,33 +118,41 @@ function findEnd(view: DataView): number {
 }
 
 /**
- * Reads where the central directory is and how many entries it holds, from the zip64 record where the ordinary one says its fields are saturated.
- * @param view - The archive.
- * @param end - The position of the end of central directory record.
- * @returns The directory's offset and its entry count.
- * @throws ArchiveError when a saturated field has no zip64 record to say what it is.
+ * Reads where the central directory is, how many entries it holds and where it ends, from the zip64 record where the ordinary one says its fields are saturated. The directory ends where the record after it starts: the zip64 record, or the end of central directory record.
+ * @param source - The archive.
+ * @returns The directory's offset, its entry count and the offset it ends before.
+ * @throws ArchiveError when the archive has no end of central directory record, or its zip64 locator points at no zip64 record.
  */
-function locateDirectory(view: DataView, end: number): { readonly offset: number; readonly count: number } {
-  const count = view.getUint16(end + EOCD.count, true);
-  const offset = view.getUint32(end + EOCD.directoryOffset, true);
+async function locateDirectory(source: SourceBytes): Promise<{ readonly offset: number; readonly count: number; readonly end: number }> {
+  const tailStart = Math.max(0, source.size - TAIL_LENGTH);
+  const tail = viewOf(await source.read({ offset: tailStart, length: source.size - tailStart }));
+  const endInTail = findEnd(tail);
+  const end = tailStart + endInTail;
+  const count = tail.getUint16(endInTail + EOCD.count, true);
+  const offset = tail.getUint32(endInTail + EOCD.directoryOffset, true);
   if (count !== SATURATED_16 && offset !== SATURATED_32) {
-    return { offset, count };
+    return { offset, count, end };
   }
   const locator = end - LOCATOR_LENGTH;
-  if (locator < 0 || view.getUint32(locator, true) !== ZIP_SIGNATURES.zip64Locator) {
-    return { offset, count };
+  if (locator < 0) {
+    return { offset, count, end };
   }
-  const record = readU64(view, locator + LOCATOR.recordOffset);
-  if (view.getUint32(record, true) !== ZIP_SIGNATURES.zip64EndOfCentralDirectory) {
+  const locatorView = viewOf(await source.read({ offset: locator, length: LOCATOR_LENGTH }));
+  if (locatorView.getUint32(0, true) !== ZIP_SIGNATURES.zip64Locator) {
+    return { offset, count, end };
+  }
+  const record = readU64(locatorView, LOCATOR.recordOffset);
+  const recordView = record + ZIP64_RECORD_READ > source.size ? undefined : viewOf(await source.read({ offset: record, length: ZIP64_RECORD_READ }));
+  if (recordView?.getUint32(0, true) !== ZIP_SIGNATURES.zip64EndOfCentralDirectory) {
     throw new ArchiveError("not a valid zip64 archive: the end of central directory locator points at no zip64 record");
   }
 
-  return { offset: readU64(view, record + ZIP64_RECORD.directoryOffset), count: readU64(view, record + ZIP64_RECORD.count) };
+  return { offset: readU64(recordView, ZIP64_RECORD.directoryOffset), count: readU64(recordView, ZIP64_RECORD.count), end: record };
 }
 
 /**
  * Reads the zip64 values of an entry, which its extra field gives in the order uncompressed size, compressed size, local header offset, for only those fields the entry's own record saturates.
- * @param view - The archive.
+ * @param view - The central directory.
  * @param extra - The extra field's position.
  * @param length - The extra field's length.
  * @param saturated - Which of the three the entry's record saturates.
@@ -148,19 +189,28 @@ function nameOf(bytes: Uint8Array, flags: number): string {
 }
 
 /**
- * Lists the central directory of a zip archive, with every size and offset as a full number, so an archive larger than 4 GiB is read as well as a small one.
- * @param bytes - The archive.
+ * Lists the central directory of a zip archive, with every size and offset as a full number, so an archive larger than 4 GiB is read as well as a small one. Only the end of the archive and the directory are read, so a source kept on the server is listed by a few ranged requests.
+ * @param input - The archive, held in memory or kept anywhere.
  * @returns Each entry, in directory order.
  * @throws ArchiveError when the archive has no readable central directory.
  */
-function readDirectory(bytes: Uint8Array): CentralEntry[] {
-  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
-  const { offset, count } = locateDirectory(view, findEnd(view));
-  const entries: CentralEntry[] = [];
-  let at = offset;
+export async function listZip(input: Uint8Array | SourceBytes): Promise<ZipEntry[]> {
+  const source = asSource(input);
+  const { offset, count, end } = await locateDirectory(source);
+  const malformed = (at: number): ArchiveError => new ArchiveError(`not a valid zip archive: the central directory entry at byte ${String(at)} is malformed`);
+  if (count === 0) {
+    return [];
+  }
+  if (offset > end) {
+    throw malformed(offset);
+  }
+  const directory = await source.read({ offset, length: end - offset });
+  const view = viewOf(directory);
+  const entries: ZipEntry[] = [];
+  let at = 0;
   for (let index = 0; index < count; index += 1) {
     if (at + CENTRAL_ENTRY_LENGTH > view.byteLength || view.getUint32(at, true) !== ZIP_SIGNATURES.centralEntry) {
-      throw new ArchiveError(`not a valid zip archive: the central directory entry at byte ${String(at)} is malformed`);
+      throw malformed(offset + at);
     }
     const flags = view.getUint16(at + CENTRAL.flags, true);
     const compression = view.getUint16(at + CENTRAL.compression, true);
@@ -170,7 +220,10 @@ function readDirectory(bytes: Uint8Array): CentralEntry[] {
     const extraLength = view.getUint16(at + CENTRAL.extraLength, true);
     const commentLength = view.getUint16(at + CENTRAL.commentLength, true);
     const offset32 = view.getUint32(at + CENTRAL.offset, true);
-    const name = nameOf(bytes.subarray(at + CENTRAL_ENTRY_LENGTH, at + CENTRAL_ENTRY_LENGTH + nameLength), flags);
+    if (at + CENTRAL_ENTRY_LENGTH + nameLength + extraLength > view.byteLength) {
+      throw malformed(offset + at);
+    }
+    const name = nameOf(directory.subarray(at + CENTRAL_ENTRY_LENGTH, at + CENTRAL_ENTRY_LENGTH + nameLength), flags);
     const [original64, size64, offset64] = zip64Values(view, at + CENTRAL_ENTRY_LENGTH + nameLength, extraLength, [original32 === SATURATED_32, size32 === SATURATED_32, offset32 === SATURATED_32]);
     entries.push({ name, flags, compression, size: size64 ?? size32, originalSize: original64 ?? original32, offset: offset64 ?? offset32 });
     at += CENTRAL_ENTRY_LENGTH + nameLength + extraLength + commentLength;
@@ -180,45 +233,48 @@ function readDirectory(bytes: Uint8Array): CentralEntry[] {
 }
 
 /**
- * Reads one entry's bytes: stored as they are, deflated inflated.
- * @param bytes - The archive.
- * @param entry - The entry.
+ * Reads one entry's bytes: stored as they are, deflated inflated. Only the entry's local header and its data are read.
+ * @param input - The archive, held in memory or kept anywhere.
+ * @param entry - The entry, as `listZip` gives it.
  * @returns The entry's uncompressed bytes.
- * @throws ArchiveError for an encrypted entry, a compression method other than stored and deflate, or a local header that is not there.
+ * @throws ArchiveError for an encrypted entry, a compression method other than stored and deflate, a local header that is not there, or data that runs past the end of the archive.
  */
-function extract(bytes: Uint8Array, entry: CentralEntry): Uint8Array {
+export async function readZipEntry(input: Uint8Array | SourceBytes, entry: ZipEntry): Promise<Uint8Array> {
+  const source = asSource(input);
   if ((entry.flags & FLAG_ENCRYPTED) !== 0) {
     throw new ArchiveError(`zip member ${entry.name} is encrypted`);
   }
-  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
-  if (entry.offset + LOCAL_HEADER_LENGTH > view.byteLength || view.getUint32(entry.offset, true) !== ZIP_SIGNATURES.localHeader) {
+  if (entry.compression !== STORED && entry.compression !== DEFLATE) {
+    throw new ArchiveError(`zip member ${entry.name} uses compression method ${String(entry.compression)}, which is neither stored nor deflate`);
+  }
+  const local = entry.offset + LOCAL_HEADER_LENGTH > source.size ? undefined : viewOf(await source.read({ offset: entry.offset, length: LOCAL_HEADER_LENGTH }));
+  if (local?.getUint32(0, true) !== ZIP_SIGNATURES.localHeader) {
     throw new ArchiveError(`not a valid zip archive: the local header of ${entry.name} is not at byte ${String(entry.offset)}`);
   }
-  const start = entry.offset + LOCAL_HEADER_LENGTH + view.getUint16(entry.offset + LOCAL.nameLength, true) + view.getUint16(entry.offset + LOCAL.extraLength, true);
-  const data = bytes.subarray(start, start + entry.size);
+  const start = entry.offset + LOCAL_HEADER_LENGTH + local.getUint16(LOCAL.nameLength, true) + local.getUint16(LOCAL.extraLength, true);
+  const data = await readRange(source, start, entry.size, `the data of ${entry.name}`);
   if (entry.compression === STORED) {
+    // A copy, so a member its reader keeps does not hold the larger range or file it was read from.
     return data.slice();
   }
-  if (entry.compression === DEFLATE) {
-    return inflateSync(data, { out: new Uint8Array(entry.originalSize) });
-  }
 
-  throw new ArchiveError(`zip member ${entry.name} uses compression method ${String(entry.compression)}, which is neither stored nor deflate`);
+  return inflateSync(data, { out: new Uint8Array(entry.originalSize) });
 }
 
 /**
  * Reads the entries of a zip archive that a filter accepts, as fflate's `unzipSync` does but with the 64-bit offsets and sizes of zip64, which fflate truncates to 32 bits and so reads a central directory in the wrong place in an archive larger than 4 GiB.
- * @param bytes - The archive.
+ * @param input - The archive, held in memory or kept anywhere.
  * @param filter - Given an entry's name and sizes before anything is inflated, whether to read it.
  * @returns The accepted entries' bytes, by name.
  * @throws ArchiveError when the archive is malformed, or an accepted entry is encrypted or compressed by a method other than stored or deflate.
  */
-export function unzipEntries(bytes: Uint8Array, filter: (entry: ZipEntryInfo) => boolean): Record<string, Uint8Array> {
+export async function unzipEntries(input: Uint8Array | SourceBytes, filter: (entry: ZipEntryInfo) => boolean): Promise<Record<string, Uint8Array>> {
+  const source = asSource(input);
   const files: Record<string, Uint8Array> = {};
-  for (const entry of readDirectory(bytes)) {
-    if (filter({ name: entry.name, size: entry.size, originalSize: entry.originalSize, compression: entry.compression })) {
-      files[entry.name] = extract(bytes, entry);
-    }
+  const accepted = (await listZip(source)).filter((entry) => filter({ name: entry.name, size: entry.size, originalSize: entry.originalSize, compression: entry.compression }));
+  for await (const [name, bytes] of inTurn(accepted, async (entry) => [entry.name, await readZipEntry(source, entry)] as const)) {
+    // Defined rather than assigned, as a member's name is the archive's to choose and `__proto__` must land as an own property, not reach the prototype.
+    Object.defineProperty(files, name, { value: bytes, enumerable: true, writable: true, configurable: true });
   }
 
   return files;
