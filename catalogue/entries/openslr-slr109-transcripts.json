@@ -5,11 +5,47 @@
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "file": "crosswalks/speech-v1/id-text.json"
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].text",
+        "op": "move",
+        "to": "nodes[].text"
+      },
+      {
+        "from": "nodes[].duration",
+        "op": "move",
+        "to": "nodes[].duration"
+      },
+      {
+        "from": "nodes[].text_normalized",
+        "op": "move",
+        "to": "nodes[].text_normalized"
+      },
+      {
+        "from": "nodes[].text_no_preprocessing",
+        "op": "move",
+        "to": "nodes[].text_no_preprocessing"
+      }
+    ],
+    "source": "json-table",
+    "target": "speech/v1"
   },
-  "description": "The transcripts of Hi-Fi Multi-Speaker English TTS Dataset (Hi-Fi TTS). No recipe reads them. Its transcripts are Hi-Fi TTS's JSON manifests, inside archives that total about 41 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "description": "The transcripts of Hi-Fi Multi-Speaker English TTS Dataset (Hi-Fi TTS): one instance per manifest (one reader, one of clean and other, and one of training, development and test), each record being an utterance with its audio file as identifier, its normalised text, its duration and the text before and after normalisation. It carries none of the audio, which the download list of openslr-slr109 gives.",
   "domain": "Speech",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "instances": 0
+  },
   "id": "openslr-slr109-transcripts",
   "licence": {
     "kind": "custom",
@@ -23,24 +59,41 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "Its transcripts are Hi-Fi TTS's JSON manifests, inside archives that total about 41 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
-    "status": "not-fetchable"
+    "archive": {
+      "kind": "tar.gz",
+      "members": {
+        "pattern": "hi_fi_tts_v0/[0-9]+_manifest_(?:clean|other)_(?:train|dev|test)\\.json"
+      }
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "fields": [
+        "text",
+        "duration",
+        "text_normalized",
+        "text_no_preprocessing"
+      ],
+      "format": "json-table",
+      "idField": "audio_filepath",
+      "layout": "lines"
+    },
+    "source": 0,
+    "status": "fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 3409,
-        "sha256": "827f1dd8cbbaf4cc56b41408d1d28fafe151e463b09e2296160df6bbf1b76d95",
-        "timestamp": "20260925222622",
-        "url": "https://web.archive.org/web/20260925222622/https://www.openslr.org/109/"
-      },
+      "retrieved": "2026-10-31",
       "status": "live",
-      "url": "https://www.openslr.org/109/"
+      "url": "https://www.openslr.org/resources/109/hi_fi_tts_v0.tar.gz"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "text",
+    "duration",
+    "text_normalized",
+    "text_no_preprocessing"
+  ]
 }
