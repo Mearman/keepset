@@ -44,7 +44,7 @@
   "description": "The orthographic transcripts of the Faroese BLARK recordings as the corpus's TextGrid files give them: each record is a stretch of speech, named by the recording and its position in the recording's TextGrid, with its text (word by word, with the corpus's markers for hesitations, pauses and the like), the speaker's orthography tier it is on and its start and end in seconds. The phonetic, comment and sound tiers are not read. Two of the corpus's files are damaged in the download (MUM04_040320_blogg20 ends part of the way through its last tier, and MEY01_040319_rok0 has an interval whose text lacks its opening quote), so the recipe's selector leaves them out. It carries none of the audio, which the download list of openslr-slr125 gives.",
   "domain": "Speech",
   "expectedCounts": {
-    "nodes": 0
+    "nodes": 77697
   },
   "id": "openslr-slr125-transcripts",
   "licence": {
