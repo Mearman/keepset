@@ -528,6 +528,9 @@ async function* within(path: string, files: Readonly<AsyncIterable<Member>>): As
  * @throws ArchiveError when the bytes are not a well-formed archive of the stated kind or the selector matches no member.
  */
 async function* reachMembers(source: Readonly<SourceBytes>, archive: FilesArchive): AsyncGenerator<Reached, void, undefined> {
+  if (archive.kind === "7z") {
+    throw new ArchiveError("a 7z archive is read from the file the store kept and cannot be streamed a file at a time");
+  }
   if (archive.kind !== "zip") {
     for await (const member of streamTarFiles(source.chunks(), archive.kind, archive.files)) {
       yield { path: member.path, chunks: () => [member.bytes], bytes: async () => Promise.resolve(member.bytes) };
@@ -573,6 +576,9 @@ export async function* streamFiles(input: Uint8Array | Readonly<SourceBytes>, ar
       }
       yield { path: member.path, bytes };
       continue;
+    }
+    if (inner.kind === "7z") {
+      throw new ArchiveError(`member ${member.path}: a 7z archive inside an archive cannot be streamed a file at a time`);
     }
     const files = inner.kind === "zip" ? unpackMembers(await member.bytes(), { kind: "zip", members: inner.files }) : streamTarFiles(member.chunks(), inner.kind, inner.files);
     for await (const file of within(member.path, files)) {
