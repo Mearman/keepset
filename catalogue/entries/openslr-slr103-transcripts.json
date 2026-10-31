@@ -5,11 +5,13 @@
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "file": "crosswalks/speech-v1/id-text.json"
+    "file": "crosswalks/speech-v1/utterance-lines.json"
   },
-  "description": "The transcripts of Multilingual and code-switching ASR Challenge Dataset - sub-task1. No recipe reads them. Its transcripts are the challenge's `transcription.txt` files, inside archives that total about 14 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "description": "The transcripts of Multilingual and code-switching ASR Challenge Dataset - sub-task1: one instance per language and part (training or test), each record being an utterance with its audio file name as identifier and its text. It carries none of the audio, which the download list of openslr-slr103 gives.",
   "domain": "Speech",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "instances": 0
+  },
   "id": "openslr-slr103-transcripts",
   "licence": {
     "kind": "custom",
@@ -23,24 +25,110 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "Its transcripts are the challenge's `transcription.txt` files, inside archives that total about 14 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
-    "status": "not-fetchable"
+    "files": [
+      {
+        "archive": {
+          "kind": "tar.gz",
+          "members": {
+            "pattern": "(?:train|test)/transcription\\.txt"
+          }
+        },
+        "path": "Hindi_train.tar.gz",
+        "source": 0
+      },
+      {
+        "archive": {
+          "kind": "tar.gz",
+          "members": {
+            "pattern": "(?:train|test)/transcription\\.txt"
+          }
+        },
+        "path": "Hindi_test.tar.gz",
+        "source": 1
+      },
+      {
+        "archive": {
+          "kind": "tar.gz",
+          "members": {
+            "pattern": "(?:train|test)/transcription\\.txt"
+          }
+        },
+        "path": "Marathi_train.tar.gz",
+        "source": 2
+      },
+      {
+        "archive": {
+          "kind": "tar.gz",
+          "members": {
+            "pattern": "(?:train|test)/transcription\\.txt"
+          }
+        },
+        "path": "Marathi_test.tar.gz",
+        "source": 3
+      },
+      {
+        "archive": {
+          "kind": "tar.gz",
+          "members": {
+            "pattern": "(?:train|test)/transcription\\.txt"
+          }
+        },
+        "path": "Odia_train.tar.gz",
+        "source": 4
+      },
+      {
+        "archive": {
+          "kind": "tar.gz",
+          "members": {
+            "pattern": "(?:train|test)/transcription\\.txt"
+          }
+        },
+        "path": "Odia_test.tar.gz",
+        "source": 5
+      }
+    ],
+    "parser": {
+      "encoding": "utf-8",
+      "format": "utterance-lines"
+    },
+    "status": "fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 7767,
-        "sha256": "c25ed41d9965ec3b46af822aed10363821c46c0b3a5d5b2d0b37b7e9783fb20c",
-        "timestamp": "20260725003524",
-        "url": "https://web.archive.org/web/20260725003524/https://www.openslr.org/103/"
-      },
+      "retrieved": "2026-10-31",
       "status": "live",
-      "url": "https://www.openslr.org/103/"
+      "url": "https://www.openslr.org/resources/103/Hindi_train.tar.gz"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/103/Hindi_test.tar.gz"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/103/Marathi_train.tar.gz"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/103/Marathi_test.tar.gz"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/103/Odia_train.tar.gz"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/103/Odia_test.tar.gz"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "text"
+  ]
 }

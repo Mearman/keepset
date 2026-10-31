@@ -5,11 +5,13 @@
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "file": "crosswalks/speech-v1/id-text.json"
+    "file": "crosswalks/speech-v1/utterance-lines.json"
   },
-  "description": "The transcripts of Multilingual and code-switching ASR Challenge Dataset - sub-task2. No recipe reads them. Its transcripts are the challenge's transcript files, inside archives that total about 13 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "description": "The transcripts of Multilingual and code-switching ASR Challenge Dataset - sub-task2: one instance per language pair and part (training or test), each record being an utterance with its identifier and its code-switched text, as the Kaldi text file of the part writes it. It carries none of the audio, which the download list of openslr-slr104 gives.",
   "domain": "Speech",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "instances": 0
+  },
   "id": "openslr-slr104-transcripts",
   "licence": {
     "kind": "custom",
@@ -23,24 +25,80 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "Its transcripts are the challenge's transcript files, inside archives that total about 13 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
-    "status": "not-fetchable"
+    "files": [
+      {
+        "archive": {
+          "kind": "tar.gz",
+          "members": {
+            "pattern": "(?:train|test)/transcripts/text"
+          }
+        },
+        "path": "Hindi-English_train.tar.gz",
+        "source": 0
+      },
+      {
+        "archive": {
+          "kind": "tar.gz",
+          "members": {
+            "pattern": "(?:train|test)/transcripts/text"
+          }
+        },
+        "path": "Hindi-English_test.tar.gz",
+        "source": 1
+      },
+      {
+        "archive": {
+          "kind": "tar.gz",
+          "members": {
+            "pattern": "(?:train|test)/transcripts/text"
+          }
+        },
+        "path": "Bengali-English_train.tar.gz",
+        "source": 2
+      },
+      {
+        "archive": {
+          "kind": "tar.gz",
+          "members": {
+            "pattern": "(?:train|test)/transcripts/text"
+          }
+        },
+        "path": "Bengali-English_test.tar.gz",
+        "source": 3
+      }
+    ],
+    "parser": {
+      "encoding": "utf-8",
+      "format": "utterance-lines"
+    },
+    "status": "fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 5762,
-        "sha256": "cfc02250283c366f74f545e34e498b80c3397ed38738c8f7f2d55e0e2967e54f",
-        "timestamp": "20250720084726",
-        "url": "https://web.archive.org/web/20250720084726/https://www.openslr.org/104/"
-      },
+      "retrieved": "2026-10-31",
       "status": "live",
-      "url": "https://www.openslr.org/104/"
+      "url": "https://www.openslr.org/resources/104/Hindi-English_train.tar.gz"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/104/Hindi-English_test.tar.gz"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/104/Bengali-English_train.tar.gz"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/104/Bengali-English_test.tar.gz"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "text"
+  ]
 }
