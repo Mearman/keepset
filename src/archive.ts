@@ -1,7 +1,7 @@
-import { Gunzip, gunzipSync } from "fflate";
 import type { Archive, CollectionArchive, DocumentArchive, ArchiveMember, FilesArchive, InnerArchive, PartsArchive, SheetArchive } from "./entry";
 import { ArchiveError } from "./errors";
 import { getOwn } from "./own";
+import { gunzip, GunzipStream } from "./gzip";
 import { bunzip2, Bunzip2Stream } from "./node/bzip2";
 import { pointShapefileToCsv } from "./node/shapefile";
 import { scanTar, TarScanner, type TarMember } from "./node/tar";
@@ -598,7 +598,7 @@ export async function* streamFiles(input: Uint8Array | Readonly<SourceBytes>, ar
   }
 }
 
-/** How many compressed bytes are fed to the gzip stream at a time. The stream decompresses each feed into one array before it hands any of it on, so what a feed yields, which is what is held of the decompressed archive at once, is the feed times the data's compression ratio; a mebibyte keeps the stream's per-call cost small and that output a few mebibytes for the text and media archives recipes read. */
+/** How many compressed bytes are fed to the gzip stream at a time. Everything a feed decompresses to is collected before any of it is yielded, so what is held of the decompressed archive at once is the feed times the data's compression ratio; a mebibyte keeps the stream's per-call cost small and that output a few mebibytes for the text and media archives recipes read. */
 const KIBIBYTE = 1024;
 const GZIP_FEED_BYTES = KIBIBYTE * KIBIBYTE;
 
@@ -607,7 +607,7 @@ const GZIP_FEED_BYTES = KIBIBYTE * KIBIBYTE;
  * @param chunks - The archive's bytes, in order: a source's chunks, or a member's as it is inflated.
  * @param kind - The archive kind.
  * @returns The tar's bytes, in order, cut anywhere.
- * @throws ArchiveError when the bytes are not valid gzip or bzip2 data, as `gunzip` and `bunzip2` report.
+ * @throws ArchiveError when the bytes are not valid gzip or bzip2 data, as `GunzipStream` and `Bunzip2Stream` report: a corrupted or truncated compressed archive fails once its fault is reached, after the bytes before it.
  */
 async function* tarChunks(chunks: Readonly<AsyncIterable<Uint8Array> | Iterable<Uint8Array>>, kind: "tar" | "tar.gz" | "tar.bz2"): AsyncGenerator<Uint8Array, void, undefined> {
   if (kind === "tar") {
@@ -629,54 +629,16 @@ async function* tarChunks(chunks: Readonly<AsyncIterable<Uint8Array> | Iterable<
 
     return;
   }
-  let emitted = 0;
-  const stream = new Gunzip((chunk) => {
+  const stream = new GunzipStream((chunk) => {
     produced.push(chunk);
-    emitted += chunk.length;
   });
-  /**
-   * Feeds the stream one piece.
-   * @returns Whether the stream goes on: false once it has rejected what follows the archive.
-   */
-  const feed = (piece: Uint8Array, final: boolean): boolean => {
-    try {
-      stream.push(piece, final);
-
-      return true;
-    } catch (error) {
-      // A tar.gz written by tar ends its first gzip member and may then carry padding that is not another member; the stream rejects it only after the whole member is out. What it emitted is all the archive holds, and the tar reader checks that it is a whole archive, so a stream that failed before emitting anything is the only one that is not gzip data.
-      if (emitted === 0) {
-        throw new ArchiveError(`not valid gzip data: ${error instanceof Error ? error.message : String(error)}`, { cause: error });
-      }
-
-      return false;
-    }
-  };
   for await (const chunk of chunks) {
     for (let start = 0; start < chunk.length; start += GZIP_FEED_BYTES) {
-      const goesOn = feed(chunk.subarray(start, start + GZIP_FEED_BYTES), false);
+      stream.push(chunk.subarray(start, start + GZIP_FEED_BYTES));
       yield* produced.splice(0);
-      if (!goesOn) {
-        return;
-      }
     }
   }
-  // The source's end is known only once its chunks are done, so the stream is told with an empty last piece.
-  feed(new Uint8Array(0), true);
-  yield* produced.splice(0);
-}
-
-/**
- * Gunzips bytes, rethrowing zlib's failure in the package's taxonomy.
- * @param bytes - Gzip data.
- * @returns The decompressed bytes.
- */
-function gunzip(bytes: Uint8Array): Uint8Array {
-  try {
-    return gunzipSync(bytes);
-  } catch (error) {
-    throw new ArchiveError(`not valid gzip data: ${error instanceof Error ? error.message : String(error)}`, { cause: error });
-  }
+  stream.end();
 }
 
 /**

@@ -92,7 +92,8 @@ describe("the streamed tar reader against the whole-archive reference", () => {
     const cut = compressed.subarray(0, compressed.length >> 1);
     await Promise.all(
       CHUNK_SIZES.map(async (size) => {
-        await expect(unpack(chunkedSource(cut, size), { kind: "tar.gz", member: { path: "b.txt" } })).rejects.toThrow(/runs past the end/);
+        // The gzip reader finds the cut before the tar reader would: the data ends inside its member, short of the trailer.
+        await expect(unpack(chunkedSource(cut, size), { kind: "tar.gz", member: { path: "b.txt" } })).rejects.toThrow(/it ends inside a gzip member/);
       }),
     );
   });
