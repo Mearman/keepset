@@ -1,3 +1,25 @@
+# [0.99.0](https://github.com/Mearman/keepset/compare/v0.98.0...v0.99.0) (2026-10-31)
+
+
+### Bug Fixes
+
+* **archive:** read a tar.xz member's chunks held in memory through the xz port ([b445968](https://github.com/Mearman/keepset/commit/b445968dee5d53d96798163267be44c4055bdf4b))
+* **catalogue:** read each Kallaama recording once, from the full transcription set ([26cee50](https://github.com/Mearman/keepset/commit/26cee503f622b2f769cfbbddab5a50890b2daae8))
+
+
+### Features
+
+* **archive:** read xz and tar.xz archives through an injected decoder ([09d4985](https://github.com/Mearman/keepset/commit/09d49853575e17c0a3c75c569bdc4e01a579e6b5))
+* **catalogue:** leave three unfetched transcript sets records until their fetches pass ([e898b3f](https://github.com/Mearman/keepset/commit/e898b3f7b6687249010fbd59a0072f1d83a852e2))
+* **catalogue:** read the ELAN transcripts of Mixtec and Totonac and the STM ones of Kallaama ([6d25c7a](https://github.com/Mearman/keepset/commit/6d25c7a36b18fbf8b1c0efcefbc21f9d065f1874))
+* **catalogue:** read the Quran speech transcripts from their tar.xz archive ([d2a5c20](https://github.com/Mearman/keepset/commit/d2a5c20120e5e2a951c6cfbefdd514f3a897f738))
+* **catalogue:** read the SBCSAE, RIR, MUSAN and ScribbleLens transcripts and annotations ([391e34a](https://github.com/Mearman/keepset/commit/391e34ace16e7774f8b127236331884ff4f87716))
+* **catalogue:** read the TextGrid transcripts of AISHELL-4, AISHELL-5 and BLARK ([5f7ff43](https://github.com/Mearman/keepset/commit/5f7ff43edc6faf6f1fbc1ce3ffdaba80ff2cc0f5))
+* **catalogue:** record the fetched counts of six more OpenSLR sets ([e68eca5](https://github.com/Mearman/keepset/commit/e68eca5b4821e07527987868b4b6ae10bdec7e20))
+* **parsers:** read NIST STM transcript files ([589e01d](https://github.com/Mearman/keepset/commit/589e01d640875f73815196d4b44fb544454a1b78))
+* **parsers:** read the MUSAN annotation lists ([ee2f0a4](https://github.com/Mearman/keepset/commit/ee2f0a4768be1b28bdd28eb50708d277ed62fa21))
+* **parsers:** select TextGrid tiers by a name pattern and carry each row's tier ([631d014](https://github.com/Mearman/keepset/commit/631d01405c4c7fc4c6dd4483769f94e0193290cf))
+
 # [0.98.0](https://github.com/Mearman/keepset/compare/v0.97.0...v0.98.0) (2026-10-31)
 
 
