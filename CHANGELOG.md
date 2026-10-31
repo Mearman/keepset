@@ -1,3 +1,15 @@
+# [0.97.0](https://github.com/Mearman/keepset/compare/v0.96.1...v0.97.0) (2026-10-31)
+
+
+### Features
+
+* **catalogue:** leave five large transcript sets records until their fetches have passed ([dc9ee48](https://github.com/Mearman/keepset/commit/dc9ee486603fe44877ec60e9b6ec7f1e1e9b335c))
+* **catalogue:** read the large OpenSLR transcripts from their archives ([2ba8298](https://github.com/Mearman/keepset/commit/2ba8298879ae30bbd7f3f4550c1ab71ddab833d9))
+* **catalogue:** record the fetched counts of six large OpenSLR transcript sets ([c8cfe5c](https://github.com/Mearman/keepset/commit/c8cfe5c31679b1121f741366004a784513a5fbf5))
+* **fetch:** concatenate the files of a files archive for a one-file parser ([879a5ae](https://github.com/Mearman/keepset/commit/879a5aeeab1aee3eb2a714b456384fd50c5b0a44))
+* **parsers:** read Multilingual TEDx split files together ([9d7d9a9](https://github.com/Mearman/keepset/commit/9d7d9a91ede366b65eef6c8f4a8352c086ba5f26))
+* **parsers:** read Sphinx transcription lines with utterance-lines ([4cc82ad](https://github.com/Mearman/keepset/commit/4cc82ada0a71e74bdbd4aba43fa2c914a589fe55))
+
 ## [0.96.1](https://github.com/Mearman/keepset/compare/v0.96.0...v0.96.1) (2026-10-31)
 
 
