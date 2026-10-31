@@ -1,0 +1,102 @@
+{
+  "aliases": [
+    "slr47-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].file",
+        "op": "move",
+        "to": "nodes[].audio"
+      },
+      {
+        "from": "nodes[].text",
+        "op": "move",
+        "to": "nodes[].text"
+      },
+      {
+        "from": "nodes[].user_id",
+        "op": "move",
+        "to": "nodes[].speaker"
+      },
+      {
+        "from": "nodes[].length",
+        "op": "move",
+        "to": "nodes[].duration"
+      }
+    ],
+    "source": "json-table",
+    "target": "speech/v1"
+  },
+  "description": "The utterances of Primewords Chinese Corpus Set 1 as its manifests list them: one instance per manifest, each record being an utterance with its identifier, audio file, text, speaker and duration. It carries none of the audio, which the download list of openslr-slr47 gives.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "instances": 1
+  },
+  "id": "openslr-slr47-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)",
+    "url": "https://www.openslr.org/47/"
+  },
+  "name": "Primewords Chinese Corpus Set 1 transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "tar.gz",
+      "members": {
+        "pattern": "primewords_md_2018_set1/set1_transcript\\.json"
+      }
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "fields": [
+        "file",
+        "text",
+        "user_id",
+        "length"
+      ],
+      "format": "json-table",
+      "idField": "id",
+      "layout": "array",
+      "numericFields": [
+        "length"
+      ]
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/47/primewords_md_2018_set1.tar.gz"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "audio",
+    "text",
+    "speaker",
+    "duration"
+  ]
+}
