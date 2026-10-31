@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { getDataset } from "../bundled";
-import { gzip, tar, type ArchiveFile } from "../test-support/archives";
+import { bzip2, gzip, tar, type ArchiveFile } from "../test-support/archives";
 import { validateDataset } from "../validate";
 import { fetchEntry, type FetchPort } from "./fetch-dataset";
 
@@ -121,6 +121,14 @@ describe("the LibriTTS recipes", () => {
     expect(nodesOf(data, 0)).toMatchObject([{ text: 'How quickly he disappeared!"', normalized_text: 'How quickly he disappeared!"' }, { text: '"So they tell me."' }, { text: "All that night we slept." }]);
     validates("openslr-slr60-transcripts");
   });
+
+  it("reads LibriTTS-R from its archives, whose members carry no leading ./", async () => {
+    const fetch = serveEntry("openslr-slr141-transcripts", (url) => gzip(tar(chapter("LibriTTS_R", stem(url).replaceAll("_", "-")))));
+    const { data } = await fetchEntry(getDataset("openslr-slr141-transcripts"), { fetch });
+    expect(Object.keys(shape(data))).toEqual(["dev_clean.tar.gz", "dev_other.tar.gz", "test_clean.tar.gz", "test_other.tar.gz", "train_clean_100.tar.gz", "train_clean_360.tar.gz", "train_other_500.tar.gz"]);
+    expect(Object.values(shape(data))[0]).toEqual(["3081_166546_000028_000002", "3081_166546_000070_000000", "7561_258992_000014_000005"]);
+    validates("openslr-slr141-transcripts");
+  });
 });
 
 describe("the IISc-MILE recipes", () => {
@@ -184,5 +192,111 @@ describe("the openslr-slr59-transcripts recipe", () => {
     });
     expect(nodesOf(data, 0)).toMatchObject([{ text: "perquè que el president de catalunya" }, { text: "gràcies presidenta" }]);
     validates("openslr-slr59-transcripts");
+  });
+});
+
+describe("the openslr-slr94-transcripts recipe", () => {
+  it("joins each language's training, development and test transcripts into one instance, leaving out the audio and the metainfo", async () => {
+    const fetch = serveEntry("openslr-slr94-transcripts", (url) => {
+      const root = stem(url);
+
+      return gzip(
+        tar([
+          { path: `${root}/metainfo.txt`, text: "speaker|gender" },
+          { path: `${root}/train/audio/10900/6473/10900_6473_000094.opus`, text: "audio" },
+          { path: `${root}/train/transcripts.txt`, text: "10900_6473_000094\tznowu się duch z ciałem\n" },
+          { path: `${root}/dev/transcripts.txt`, text: "11295_11059_000000\tjuż u źwierzyńca\n11295_11059_000001\tdalej tam były przestrogi" },
+          { path: `${root}/test/transcripts.txt`, text: "2_3_000000\tto jest test\n" },
+        ]),
+      );
+    });
+    const { data } = await fetchEntry(getDataset("openslr-slr94-transcripts"), { fetch });
+    expect(Object.keys(shape(data))).toEqual(["mls_dutch_opus.tar.gz", "mls_french_opus.tar.gz", "mls_german_opus.tar.gz", "mls_italian_opus.tar.gz", "mls_polish_opus.tar.gz", "mls_portuguese_opus.tar.gz", "mls_spanish_opus.tar.gz"]);
+    expect(Object.values(shape(data))[0]).toEqual(["11295_11059_000000", "11295_11059_000001", "2_3_000000", "10900_6473_000094"]);
+    expect(nodesOf(data, 0)).toMatchObject([{ id: "11295_11059_000000", text: "już u źwierzyńca" }, {}, {}, {}]);
+    validates("openslr-slr94-transcripts");
+  });
+});
+
+describe("the openslr-slr129-transcripts recipe", () => {
+  it("reads each language's archive as one instance, each verse named by its transcript file, leaving out the audio", async () => {
+    const fetch = serveEntry("openslr-slr129-transcripts", (url) => {
+      const language = stem(url);
+
+      return gzip(
+        tar([
+          { path: language, text: "", type: "5" },
+          { path: `${language}/dev/EZR/EZR_002_Verse_000.flac`, text: "audio" },
+          { path: `${language}/dev/EZR/EZR_002_Verse_000.txt`, text: "Anatoti jẹ́ méjìdínlááàdóje (128)\n" },
+          { path: `${language}/train/GEN/GEN_001_Verse_001.txt`, text: "Ní àtètèkọ́ṣe" },
+          { path: `${language}/README.txt`, text: "readme" },
+        ]),
+      );
+    });
+    const { data } = await fetchEntry(getDataset("openslr-slr129-transcripts"), { fetch });
+    expect(Object.keys(shape(data))).toEqual(["akuapem-twi.tgz", "asante-twi.tgz", "ewe.tgz", "hausa.tgz", "lingala.tgz", "yoruba.tgz"]);
+    expect(Object.values(shape(data))[0]).toEqual(["EZR_002_Verse_000", "GEN_001_Verse_001"]);
+    expect(nodesOf(data, 0)).toMatchObject([{ text: "Anatoti jẹ́ méjìdínlááàdóje (128)" }, { text: "Ní àtètèkọ́ṣe" }]);
+    validates("openslr-slr129-transcripts");
+  });
+});
+
+/** The split tables (`dev.csv` and `train.csv`) each CML-TTS language archive holds in the fixture. */
+const SPLITS_IN_FIXTURE = 2;
+
+describe("the openslr-slr146-transcripts recipe", () => {
+  it("reads each split's pipe-separated table of each language archive as an instance, its text and speaker on the audio file's name", async () => {
+    const fetch = serveEntry("openslr-slr146-transcripts", (url) => {
+      const root = stem(url);
+
+      return bzip2(
+        tar([
+          { path: `${root}/dev/audio/11295/11059/11295_11059_000051.wav`, text: "audio" },
+          { path: `${root}/dev.csv`, text: "wav_filename|wav_filesize|transcript|transcript_wav2vec|levenshtein|duration|num_words|client_id\ndev/audio/11295/11059/11295_11059_000051.wav|601964|Proszę pana, tu pano|prosze pana tu pano|0.96|13.6|4|11295\n" },
+          { path: `${root}/train.csv`, text: "wav_filename|wav_filesize|transcript|transcript_wav2vec|levenshtein|duration|num_words|client_id\ntrain/audio/6892/8912/6892_8912_000729.wav|601964|Dzień dobry|dzien dobry|0.99|2.1|2|6892\n" },
+        ]),
+      );
+    });
+    const { data } = await fetchEntry(getDataset("openslr-slr146-transcripts"), { fetch });
+    expect(Object.keys(shape(data)).slice(0, 2)).toEqual(["cml_tts_dataset_dutch_v0.1.tar.bz/cml_tts_dataset_dutch_v0.1/dev.csv", "cml_tts_dataset_dutch_v0.1.tar.bz/cml_tts_dataset_dutch_v0.1/train.csv"]);
+    expect(Object.keys(shape(data))).toHaveLength(getDataset("openslr-slr146-transcripts").entry.sources.length * SPLITS_IN_FIXTURE);
+    expect(nodesOf(data, 0)).toMatchObject([{ id: "dev/audio/11295/11059/11295_11059_000051.wav", text: "Proszę pana, tu pano", speaker: "11295" }]);
+    expect(nodesOf(data, 1)).toMatchObject([{ id: "train/audio/6892/8912/6892_8912_000729.wav", text: "Dzień dobry", speaker: "6892" }]);
+    validates("openslr-slr146-transcripts");
+  });
+});
+
+describe("the openslr-slr100-transcripts recipe", () => {
+  it("reads each monolingual archive's splits as one instance of segments, leaving out the audio and the subtitles", async () => {
+    const fetch = serveEntry("openslr-slr100-transcripts", (url) => {
+      const language = stem(url).replace("mtedx_", "");
+      const root = `${language}-${language}/data`;
+      const segments = (talk: string): string => `${talk}_0000 ${talk} 10.94 19.67\n${talk}_0001 ${talk} 21.41 24.31\n`;
+      const yaml = (talk: string): string => `- {duration: 8.730000000000002, offset: 10.94, speaker_id: ${talk}, wav: ${talk}.wav}\n- {duration: 2.8999999999999986, offset: 21.41, speaker_id: ${talk}, wav: ${talk}.wav}\n`;
+
+      return gzip(
+        tar([
+          { path: `${language}-${language}/docs/README`, text: "readme" },
+          { path: `${root}/train/txt/segments`, text: segments("009AJ_5hPZ4") },
+          { path: `${root}/train/txt/train.yaml`, text: yaml("009AJ_5hPZ4") },
+          { path: `${root}/train/txt/train.${language}`, text: "(Applaus) Ich spreche heute hier &amp; dort.\nWir genießen es jeden Tag.\n" },
+          { path: `${root}/train/vtt/009AJ_5hPZ4.${language}.vtt`, text: "WEBVTT" },
+          { path: `${root}/train/wav/009AJ_5hPZ4.flac`, text: "audio" },
+          { path: `${root}/valid/txt/valid.${language}`, text: "Ja.\n\n" },
+          { path: `${root}/valid/txt/valid.yaml`, text: yaml("O7KrwO3pVZ8") },
+          { path: `${root}/valid/txt/segments`, text: segments("O7KrwO3pVZ8") },
+        ]),
+      );
+    });
+    const { data } = await fetchEntry(getDataset("openslr-slr100-transcripts"), { fetch });
+    expect(Object.keys(shape(data))).toEqual(["mtedx_es.tgz", "mtedx_fr.tgz", "mtedx_pt.tgz", "mtedx_it.tgz", "mtedx_ru.tgz", "mtedx_el.tgz", "mtedx_ar.tgz", "mtedx_de.tgz"]);
+    expect(Object.values(shape(data))[0]).toEqual(["009AJ_5hPZ4_0000", "009AJ_5hPZ4_0001", "O7KrwO3pVZ8_0000", "O7KrwO3pVZ8_0001"]);
+    expect(nodesOf(data, 0)).toMatchObject([
+      { id: "009AJ_5hPZ4_0000", text: "(Applaus) Ich spreche heute hier &amp; dort.", speaker: "009AJ_5hPZ4", audio: "009AJ_5hPZ4.wav", start: 10.94, end: 19.67, duration: 8.730000000000002, split: "train", language: "es" },
+      {},
+      { text: "Ja.", split: "valid" },
+      { text: null },
+    ]);
+    validates("openslr-slr100-transcripts");
   });
 });
