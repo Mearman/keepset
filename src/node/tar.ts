@@ -86,20 +86,182 @@ function paxPath(data: Uint8Array): string | undefined {
   return path;
 }
 
+/** The bytes that have arrived and are not yet read, as the chunks they came in, so a stream of any length is read without joining it. */
+class ChunkQueue {
+  private readonly chunks: Uint8Array[] = [];
+
+  /** How far into the first chunk the read has got. */
+  private offset = 0;
+
+  /** The number of unread bytes. */
+  public size = 0;
+
+  public push(chunk: Uint8Array): void {
+    if (chunk.length > 0) {
+      this.chunks.push(chunk);
+      this.size += chunk.length;
+    }
+  }
+
+  /**
+   * Reads exactly `count` bytes, which must have arrived.
+   * @param count - How many bytes.
+   * @returns The bytes: a view of one chunk where they lie within it, otherwise a copy.
+   */
+  public take(count: number): Uint8Array {
+    const first = this.chunks[0];
+    if (first !== undefined && first.length - this.offset >= count) {
+      const view = first.subarray(this.offset, this.offset + count);
+      this.advance(count);
+
+      return view;
+    }
+    const joined = new Uint8Array(count);
+    let filled = 0;
+    while (filled < count) {
+      const chunk = this.chunks[0];
+      if (chunk === undefined) {
+        throw new ArchiveError("tar reader asked for more bytes than have arrived");
+      }
+      const piece = chunk.subarray(this.offset, this.offset + Math.min(count - filled, chunk.length - this.offset));
+      joined.set(piece, filled);
+      filled += piece.length;
+      this.advance(piece.length);
+    }
+
+    return joined;
+  }
+
+  /** Drops everything unread. */
+  public clear(): void {
+    this.chunks.length = 0;
+    this.offset = 0;
+    this.size = 0;
+  }
+
+  private advance(count: number): void {
+    this.offset += count;
+    this.size -= count;
+    const first = this.chunks[0];
+    if (first !== undefined && this.offset >= first.length) {
+      this.chunks.shift();
+      this.offset = 0;
+    }
+  }
+}
+
+/** The entry being read: its header's position, its data's size and how much is still to come, and what to do with the data. */
+interface Entry {
+  readonly start: number;
+  readonly size: number;
+  remaining: number;
+  /** A GNU long name (`L`) or pax extended header (`x`) record, whose data names the entry after it, or undefined for any other entry. */
+  readonly special: "L" | "x" | undefined;
+  /** The path of a regular file, or undefined for anything else. */
+  readonly path: string | undefined;
+  /** Whether the data is kept: a record's always, a regular file's when the caller keeps it. */
+  readonly collect: boolean;
+  readonly parts: Uint8Array[];
+}
+
 /**
- * Lists the regular files of a tar archive (ustar, with GNU long names and pax path records), verifying each header's checksum.
- * @param bytes - The archive.
- * @returns Every regular file, with its full path.
- * @throws ArchiveError when a header checksum fails or a member runs past the end of the archive.
+ * Reads a tar archive as it arrives in chunks of any size, keeping only the data of the regular files a caller selects, so an archive far larger than a process can hold is read in the memory of its largest selected file. It reads ustar with GNU long names and pax path records, verifying each header's checksum.
  */
-export function readTar(bytes: Uint8Array): TarMember[] {
-  const members: TarMember[] = [];
-  let longName: string | undefined;
-  let offset = 0;
-  while (offset + BLOCK <= bytes.length) {
-    const header = bytes.subarray(offset, offset + BLOCK);
+export class TarScanner {
+  /** The path of every regular file seen, in archive order. */
+  public readonly paths: string[] = [];
+
+  /** The regular files `keep` accepted, with their data, in archive order. */
+  public readonly members: TarMember[] = [];
+
+  private readonly queue = new ChunkQueue();
+
+  private entry: Entry | undefined;
+
+  private padding = 0;
+
+  private finished = false;
+
+  private position = 0;
+
+  private longName: string | undefined;
+
+  /**
+   * @param keep - Given a regular file's path, whether to keep its data.
+   */
+  public constructor(private readonly keep: (path: string) => boolean) {}
+
+  /**
+   * Reads the next chunk of the archive.
+   * @param chunk - The bytes that follow those already pushed.
+   * @throws ArchiveError when a header checksum fails.
+   */
+  public push(chunk: Uint8Array): void {
+    this.queue.push(chunk);
+    this.drain();
+  }
+
+  /**
+   * Ends the archive.
+   * @throws ArchiveError when the archive ends inside a member.
+   */
+  public end(): void {
+    if (this.entry !== undefined) {
+      throw new ArchiveError(`tar member at byte ${String(this.entry.start)} runs past the end of the archive`);
+    }
+  }
+
+  private drain(): void {
+    for (;;) {
+      if (this.finished) {
+        this.queue.clear();
+
+        return;
+      }
+      if (this.padding > 0) {
+        const skip = Math.min(this.padding, this.queue.size);
+        if (skip === 0) {
+          return;
+        }
+        this.queue.take(skip);
+        this.padding -= skip;
+        this.position += skip;
+        continue;
+      }
+      const { entry } = this;
+      if (entry === undefined) {
+        if (this.queue.size < BLOCK) {
+          return;
+        }
+        this.start(this.queue.take(BLOCK));
+        continue;
+      }
+      if (entry.remaining > 0) {
+        const count = Math.min(entry.remaining, this.queue.size);
+        if (count === 0) {
+          return;
+        }
+        const piece = this.queue.take(count);
+        if (entry.collect) {
+          // A copy, so a kept file does not hold the whole chunk it arrived in.
+          entry.parts.push(piece.slice());
+        }
+        entry.remaining -= count;
+        this.position += count;
+      }
+      if (entry.remaining === 0) {
+        this.complete(entry);
+      }
+    }
+  }
+
+  private start(header: Uint8Array): void {
+    const start = this.position;
+    this.position += BLOCK;
     if (header.every((byte) => byte === 0)) {
-      break;
+      this.finished = true;
+
+      return;
     }
     // The checksum is the sum of the header's bytes with its own field counted as spaces.
     const { checksum } = HEADER;
@@ -108,33 +270,86 @@ export function readTar(bytes: Uint8Array): TarMember[] {
       sum += index >= checksum.offset && index < checksum.offset + checksum.length ? CHECKSUM_FILL : byte;
     }
     if (sum !== numeric(header, checksum.offset, checksum.length)) {
-      throw new ArchiveError(`tar header at byte ${String(offset)} fails its checksum`);
+      throw new ArchiveError(`tar header at byte ${String(start)} fails its checksum`);
     }
     const size = numeric(header, HEADER.size.offset, HEADER.size.length);
     const type = field(header, HEADER.type.offset, HEADER.type.length);
-    const dataStart = offset + BLOCK;
-    if (dataStart + size > bytes.length) {
-      throw new ArchiveError(`tar member at byte ${String(offset)} runs past the end of the archive`);
-    }
-    const data = bytes.subarray(dataStart, dataStart + size);
-    offset = dataStart + Math.ceil(size / BLOCK) * BLOCK;
-    if (type === "L") {
-      longName = field(data, 0, data.length);
-      continue;
-    }
-    if (type === "x") {
-      longName = paxPath(data);
-      continue;
+    if (type === "L" || type === "x") {
+      this.entry = { start, size, remaining: size, special: type, path: undefined, collect: true, parts: [] };
+
+      return;
     }
     const name = field(header, HEADER.name.offset, HEADER.name.length);
     const prefix = field(header, HEADER.magic.offset, HEADER.magic.length).startsWith("ustar") ? field(header, HEADER.prefix.offset, HEADER.prefix.length) : "";
-    const path = longName ?? (prefix === "" ? name : `${prefix}/${name}`);
-    longName = undefined;
+    const path = this.longName ?? (prefix === "" ? name : `${prefix}/${name}`);
+    this.longName = undefined;
     // "0" and an empty (NUL) type mark a regular file, "7" a contiguous one; directories, links and devices carry no data to read.
-    if (type === "0" || type === "" || type === "7") {
-      members.push({ path, data });
-    }
+    const regular = type === "0" || type === "" || type === "7";
+    this.entry = { start, size, remaining: size, special: undefined, path: regular ? path : undefined, collect: regular && this.keep(path), parts: [] };
   }
 
-  return members;
+  private complete(entry: Readonly<Entry>): void {
+    this.entry = undefined;
+    this.padding = (BLOCK - (entry.size % BLOCK)) % BLOCK;
+    if (entry.special !== undefined) {
+      const data = join(entry.parts, entry.size);
+      this.longName = entry.special === "L" ? field(data, 0, data.length) : paxPath(data);
+
+      return;
+    }
+    if (entry.path === undefined) {
+      return;
+    }
+    this.paths.push(entry.path);
+    if (entry.collect) {
+      this.members.push({ path: entry.path, data: join(entry.parts, entry.size) });
+    }
+  }
+}
+
+/**
+ * Joins the parts of a member's data.
+ * @param parts - The parts, in order.
+ * @param size - Their total length.
+ * @returns The data.
+ */
+function join(parts: readonly Uint8Array[], size: number): Uint8Array {
+  if (parts.length === 1 && parts[0] !== undefined) {
+    return parts[0];
+  }
+  const data = new Uint8Array(size);
+  let at = 0;
+  for (const part of parts) {
+    data.set(part, at);
+    at += part.length;
+  }
+
+  return data;
+}
+
+/**
+ * Reads a tar archive that arrives in chunks, keeping the data of the regular files `keep` accepts.
+ * @param chunks - The archive's bytes, in order, cut anywhere.
+ * @param keep - Given a regular file's path, whether to keep its data.
+ * @returns The path of every regular file and the kept files with their data.
+ * @throws ArchiveError when a header checksum fails or a member runs past the end of the archive.
+ */
+export function scanTar(chunks: Readonly<Iterable<Uint8Array>>, keep: (path: string) => boolean): { readonly paths: readonly string[]; readonly members: readonly TarMember[] } {
+  const scanner = new TarScanner(keep);
+  for (const chunk of chunks) {
+    scanner.push(chunk);
+  }
+  scanner.end();
+
+  return { paths: scanner.paths, members: scanner.members };
+}
+
+/**
+ * Lists the regular files of a tar archive (ustar, with GNU long names and pax path records), verifying each header's checksum.
+ * @param bytes - The archive.
+ * @returns Every regular file, with its full path.
+ * @throws ArchiveError when a header checksum fails or a member runs past the end of the archive.
+ */
+export function readTar(bytes: Uint8Array): TarMember[] {
+  return [...scanTar([bytes], () => true).members];
 }

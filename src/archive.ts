@@ -1,10 +1,10 @@
-import { gunzipSync, unzipSync, type UnzipFileFilter } from "fflate";
+import { Gunzip, gunzipSync, unzipSync, type UnzipFileFilter } from "fflate";
 import type { CollectionArchive, DocumentArchive, ArchiveMember, FilesArchive, InnerArchive, PartsArchive, SheetArchive } from "./entry";
 import { ArchiveError } from "./errors";
 import { getOwn } from "./own";
 import { bunzip2 } from "./node/bzip2";
 import { pointShapefileToCsv } from "./node/shapefile";
-import { readTar } from "./node/tar";
+import { scanTar } from "./node/tar";
 import { odsGrid } from "./node/ods";
 import { gridToCsv } from "./node/sheet";
 import { xlsGrid } from "./node/xls";
@@ -157,12 +157,8 @@ function selectMember(bytes: Uint8Array, archive: Extract<InnerArchive, { readon
 
     return { bytes: file, member: path };
   }
-  const members = readTar(untarred(bytes, archive.kind));
-  const path = pick(
-    members.map((member) => member.path),
-    archive.member,
-  );
-  const found = members.find((member) => member.path === path);
+  const path = pick(scanTar(tarChunks(bytes, archive.kind), () => false).paths, archive.member);
+  const found = scanTar(tarChunks(bytes, archive.kind), (candidate) => candidate === path).members.find((member) => member.path === path);
   if (found === undefined) {
     throw new ArchiveError(`tar member ${path} could not be read`);
   }
@@ -304,8 +300,10 @@ function* readMembers<Choice extends { readonly path: string }>(bytes: Uint8Arra
 
     return;
   }
-  const members = readTar(untarred(bytes, kind));
-  for (const choice of choose(members.map((member) => member.path))) {
+  const choices = choose(scanTar(tarChunks(bytes, kind), () => false).paths);
+  const wanted = new Set(choices.map((choice) => choice.path));
+  const { members } = scanTar(tarChunks(bytes, kind), (path) => wanted.has(path));
+  for (const choice of choices) {
     const found = members.find((member) => member.path === choice.path);
     if (found === undefined) {
       throw new ArchiveError(`tar member ${choice.path} could not be read`);
@@ -349,19 +347,46 @@ export function unpackFiles(bytes: Uint8Array, archive: FilesArchive): Member[] 
   });
 }
 
+/** How many compressed bytes are fed to the gzip stream at a time: enough to keep the stream's per-call cost small, few enough that the decompressed bytes it yields stay a bounded multiple of it. */
+const KIBIBYTE = 1024;
+const GZIP_FEED_BYTES = KIBIBYTE * KIBIBYTE;
+
 /**
- * Unpacks a tar archive's bytes, which may be compressed: `tar.gz` is gunzipped and `tar.bz2` bunzipped first, `tar` read as it is.
+ * The bytes of a tar archive, which may be compressed, as chunks: `tar.gz` is gunzipped a slice at a time and `tar.bz2` bunzipped whole, so a `tar.gz` is never held decompressed in full, and `tar` is yielded as it is.
  * @param bytes - The archive's bytes.
  * @param kind - The archive kind.
- * @returns The tar's bytes.
+ * @returns The tar's bytes, in order, cut anywhere.
  * @throws ArchiveError when the bytes are not valid gzip or bzip2 data, as `gunzip` and `bunzip2` report.
  */
-function untarred(bytes: Uint8Array, kind: "tar" | "tar.gz" | "tar.bz2"): Uint8Array {
+function* tarChunks(bytes: Uint8Array, kind: "tar" | "tar.gz" | "tar.bz2"): Generator<Uint8Array, void, undefined> {
   if (kind === "tar") {
-    return bytes;
-  }
+    yield bytes;
 
-  return kind === "tar.gz" ? gunzip(bytes) : bunzip2(bytes);
+    return;
+  }
+  if (kind === "tar.bz2") {
+    yield bunzip2(bytes);
+
+    return;
+  }
+  const produced: Uint8Array[] = [];
+  const stream = new Gunzip((chunk) => {
+    produced.push(chunk);
+  });
+  try {
+    for (let start = 0; start < bytes.length; start += GZIP_FEED_BYTES) {
+      stream.push(bytes.subarray(start, start + GZIP_FEED_BYTES), start + GZIP_FEED_BYTES >= bytes.length);
+      yield* produced.splice(0);
+    }
+    if (bytes.length === 0) {
+      stream.push(bytes, true);
+    }
+  } catch (error) {
+    if (error instanceof ArchiveError) {
+      throw error;
+    }
+    throw new ArchiveError(`not valid gzip data: ${error instanceof Error ? error.message : String(error)}`, { cause: error });
+  }
 }
 
 /**
