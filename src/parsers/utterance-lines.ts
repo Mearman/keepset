@@ -27,18 +27,29 @@ const TEXT_THEN_ID = /^(?:([\s\S]*?)\s+)?(\S+)$/;
 /** A Festival utterance line, `( id " transcript " )`: the id, then the transcript inside the quotes. */
 const FESTIVAL = /^\(\s*(\S+)\s+"([\s\S]*)"\s*\)$/;
 
+/** A Sphinx transcription line, `<s> transcript </s> (id)`: the transcript between the sentence markers, then the id in parentheses. */
+const SPHINX = /^<s>\s*([\s\S]*?)\s*<\/s>\s*\(([^()\s]+)\)$/;
+
 /** A backslash and the character it escapes inside a Festival transcript. */
 const FESTIVAL_ESCAPE = /\\(.)/g;
 
 /**
  * Splits one trimmed, non-empty line into its id and transcript by the recipe's layout.
  * @param line - The line.
- * @param layout - `id-first` (the default): the id is the first whitespace-separated token and the transcript the rest. `id-last`: the id is the last token and the transcript what comes before it. `festival`: the line is `( id " transcript " )`, a backslash in the transcript escaping the next character.
+ * @param layout - `id-first` (the default): the id is the first whitespace-separated token and the transcript the rest. `id-last`: the id is the last token and the transcript what comes before it. `festival`: the line is `( id " transcript " )`, a backslash in the transcript escaping the next character. `sphinx`: the line is `<s> transcript </s> (id)`, as Sphinx and PocketSphinx transcription files write it.
  * @param position - The line's 1-based position, for the error.
  * @returns The id and the untrimmed transcript, which is empty where the line gives none.
- * @throws NativeParseError for a `festival` line that is not of that form.
+ * @throws NativeParseError for a `festival` or `sphinx` line that is not of that form.
  */
 function split(line: string, layout: UtteranceLinesParser["layout"], position: number): { readonly id: string; readonly transcript: string } {
+  if (layout === "sphinx") {
+    const match = SPHINX.exec(line);
+    if (match?.[2] === undefined) {
+      throw new NativeParseError(FORMAT, position, "the line is not of the form <s> text </s> (id)");
+    }
+
+    return { id: match[2], transcript: match[1] ?? "" };
+  }
   if (layout === "festival") {
     const match = FESTIVAL.exec(line);
     if (match?.[1] === undefined) {
