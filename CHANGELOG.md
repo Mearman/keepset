@@ -1,3 +1,10 @@
+# [0.77.0](https://github.com/Mearman/keepset/compare/v0.76.2...v0.77.0) (2026-10-31)
+
+
+### Features
+
+* **catalogue:** record the OpenSLR transcripts no recipe can read, with why ([2741cfd](https://github.com/Mearman/keepset/commit/2741cfd888985214f7da1943b24d873ab519b048))
+
 ## [0.76.2](https://github.com/Mearman/keepset/compare/v0.76.1...v0.76.2) (2026-10-31)
 
 
