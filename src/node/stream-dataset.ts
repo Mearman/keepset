@@ -14,7 +14,7 @@ import type { Download, DownloadProvenance, FetchOptions, RoundTripReport } from
 import { streamFiles, type Member } from "../archive";
 import { resolveSource } from "../resolve";
 import type { StreamedNodes, StreamableId } from "../categories";
-import { countWarnings, downloadOf, metaOf, sourceRecord, sourceUrl, step } from "../recipe-run";
+import { countWarnings, downloadOf, metaOf, sourceRecord, sourceUrl, step, unpackOptionsOf } from "../recipe-run";
 
 /** Where a streamed result goes: the meta once, before any node, then the nodes a page at a time, each already checked against the category's node shape and for an id no earlier node had. A sink that returns a promise is awaited before the next page is read, so a slow sink holds the stream back rather than letting pages pile up. */
 export interface NodeSink {
@@ -182,7 +182,7 @@ function openFiles(dataset: Dataset, source: Source, recipe: Extract<StreamedRec
     const resolved = await step(entry.id, "download", async () => resolveSource(source, { port, store, randomAccess: false, ...(signal === undefined ? {} : { signal }) }));
     const { source: stored, url: fetchedUrl } = resolved;
     try {
-      for await (const file of inStep(entry.id, "extract", streamFiles(stored, recipe.archive))) {
+      for await (const file of inStep(entry.id, "extract", streamFiles(stored, recipe.archive, unpackOptionsOf(options)))) {
         members.push(file.path);
         const parsed = await step(entry.id, "parse", () => parseInstanceFile(file, recipe.parser, members.length));
         yield parsed.nodes;

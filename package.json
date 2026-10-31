@@ -20,6 +20,7 @@
     "react-dom": "19.3.0",
     "react-leaflet": "5.0.0",
     "unbzip2-stream": "1.4.3",
+    "xz-decompress": "0.2.3",
     "zod": "4.6.6"
   },
   "devDependencies": {
