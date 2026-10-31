@@ -5,11 +5,47 @@
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "file": "crosswalks/speech-v1/id-text.json"
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].text",
+        "op": "move",
+        "to": "nodes[].text"
+      },
+      {
+        "from": "nodes[].speaker",
+        "op": "move",
+        "to": "nodes[].speaker"
+      },
+      {
+        "from": "nodes[].start",
+        "op": "move",
+        "to": "nodes[].start"
+      },
+      {
+        "from": "nodes[].end",
+        "op": "move",
+        "to": "nodes[].end"
+      }
+    ],
+    "source": "chat",
+    "target": "speech/v1"
   },
-  "description": "The transcripts of SBCSAE. No recipe reads them. The transcripts are CHAT files (conversation turns with speaker labels and time marks) inside a 6.1 GB archive of recordings, more than a fetch holds in memory (see https://github.com/Mearman/keepset/issues/212). The chat parser reads the files, so the size is all that remains.",
+  "description": "The transcripts of SBCSAE: each record is a turn of a conversation, named by the conversation and the turn's position in it, with its speaker, its text as the corpus transcribes it (its conversation analysis marks kept) and the times of its first and last time marks in milliseconds, null for a turn with none. It carries none of the audio, which the download list of openslr-slr155 gives.",
   "domain": "Speech",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "nodes": 0
+  },
   "id": "openslr-slr155-transcripts",
   "licence": {
     "kind": "custom",
@@ -23,24 +59,34 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "The transcripts are CHAT files (conversation turns with speaker labels and time marks) inside a 6.1 GB archive of recordings, more than a fetch holds in memory (see https://github.com/Mearman/keepset/issues/212). The chat parser reads the files, so the size is all that remains.",
-    "status": "not-fetchable"
+    "archive": {
+      "files": {
+        "pattern": "CHAT/[^/]+\\.cha"
+      },
+      "kind": "tar.gz"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "chat",
+      "idPattern": "CHAT/([^/]+)\\.cha"
+    },
+    "source": 0,
+    "status": "fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 3601,
-        "sha256": "bdcc47028014f3234bebf43df3127ef7f66a4deebee421d85b0c08c201c063f0",
-        "timestamp": "20260516204604",
-        "url": "https://web.archive.org/web/20260516204604/https://www.openslr.org/155/"
-      },
+      "retrieved": "2026-10-31",
       "status": "live",
-      "url": "https://www.openslr.org/155/"
+      "url": "https://www.openslr.org/resources/155/SBCSAE.tar.gz"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "text",
+    "speaker",
+    "start",
+    "end"
+  ]
 }
