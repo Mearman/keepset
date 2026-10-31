@@ -5,47 +5,11 @@
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "oneWay": [],
-    "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
-      {
-        "from": "nodes[].text",
-        "op": "move",
-        "to": "nodes[].text"
-      },
-      {
-        "from": "nodes[].tier",
-        "op": "move",
-        "to": "nodes[].speaker"
-      },
-      {
-        "from": "nodes[].start",
-        "op": "move",
-        "to": "nodes[].start"
-      },
-      {
-        "from": "nodes[].end",
-        "op": "move",
-        "to": "nodes[].end"
-      }
-    ],
-    "source": "textgrid",
-    "target": "speech/v1"
+    "file": "crosswalks/speech-v1/id-text.json"
   },
-  "description": "The transcripts of AISHELL-5: one instance for each of the four archives of the download that hold recordings (the training set, the development set and the two evaluation sets), and in it each record is a stretch of speech, named by the session and the speaker's near-field recording and its position in that recording's TextGrid, with its text, its speaker (the tier it is on) and its start and end in seconds. The far-field TextGrid files repeat these speakers' transcripts for every channel and are not read. It carries none of the audio, which the download list of openslr-slr159 gives.",
+  "description": "The transcripts of AISHELL-5. No recipe reads them. Its transcripts are AISHELL-5's TextGrid files, inside archives that total about 59 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
   "domain": "Speech",
-  "expectedCounts": {
-    "instances": 0
-  },
+  "expectedCounts": {},
   "id": "openslr-slr159-transcripts",
   "licence": {
     "kind": "custom",
@@ -59,85 +23,24 @@
   ],
   "properties": {},
   "recipe": {
-    "files": [
-      {
-        "archive": {
-          "files": {
-            "pattern": "[^/]+/\\d+/DA\\d+\\.TextGrid"
-          },
-          "kind": "tar.gz"
-        },
-        "path": "train.tar.gz",
-        "source": 0
-      },
-      {
-        "archive": {
-          "files": {
-            "pattern": "[^/]+/\\d+/DA\\d+\\.TextGrid"
-          },
-          "kind": "tar.gz"
-        },
-        "path": "Dev.tar.gz",
-        "source": 1
-      },
-      {
-        "archive": {
-          "files": {
-            "pattern": "[^/]+/\\d+/DA\\d+\\.TextGrid"
-          },
-          "kind": "tar.gz"
-        },
-        "path": "Eval1.tar.gz",
-        "source": 2
-      },
-      {
-        "archive": {
-          "files": {
-            "pattern": "[^/]+/\\d+/DA\\d+\\.TextGrid"
-          },
-          "kind": "tar.gz"
-        },
-        "path": "Eval2.tar.gz",
-        "source": 3
-      }
-    ],
-    "parser": {
-      "encoding": "utf-8",
-      "format": "textgrid",
-      "idPattern": "[^/]+/(\\d+/DA\\d+)\\.TextGrid",
-      "tierPattern": "P\\d+"
-    },
-    "status": "fetchable"
+    "reason": "Its transcripts are AISHELL-5's TextGrid files, inside archives that total about 59 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+    "status": "not-fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-31",
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 6373,
+        "sha256": "422b6c918a87354a753385b6c1ff7379e0ed682b3f61a5156bca0b62bd82d1f8",
+        "timestamp": "20260521090148",
+        "url": "https://web.archive.org/web/20260521090148/https://www.openslr.org/159/"
+      },
       "status": "live",
-      "url": "https://www.openslr.org/resources/159/train.tar.gz"
-    },
-    {
-      "retrieved": "2026-10-31",
-      "status": "live",
-      "url": "https://www.openslr.org/resources/159/Dev.tar.gz"
-    },
-    {
-      "retrieved": "2026-10-31",
-      "status": "live",
-      "url": "https://www.openslr.org/resources/159/Eval1.tar.gz"
-    },
-    {
-      "retrieved": "2026-10-31",
-      "status": "live",
-      "url": "https://www.openslr.org/resources/159/Eval2.tar.gz"
+      "url": "https://www.openslr.org/159/"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": [
-    "text",
-    "speaker",
-    "start",
-    "end"
-  ]
+  "tags": []
 }

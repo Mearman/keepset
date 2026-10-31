@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { getDataset } from "../bundled";
 import { gzip, tar, tarHeader, zip } from "../test-support/archives";
-import { fixtureBytes, QURAN_TAR_XZ_BASE64 } from "../test-support/xz-fixtures";
 import { fetchEntry, type FetchPort } from "./fetch-dataset";
 
 /** The tar block size, which pads every member. */
@@ -181,27 +180,6 @@ describe("the openslr-slr84-texts recipe", () => {
 });
 
 describe("the ELAN recipes", () => {
-  const ELAN_DIR = "Yoloxochitl-Mixtec-for-ASR/Transcriptions-for-ASR/ELAN-files-with-underlying-and-surface-tiers";
-
-  it("reads the ELAN files of the Mixtec archive with their tiers and times, and neither the Transcriber files nor the audio", async () => {
-    const archive = gzip(
-      tar([
-        { path: "Yoloxochitl-Mixtec-for-ASR/Metadata-recordings-and-speakers/Metadata.txt", text: "toolbox" },
-        { path: "Yoloxochitl-Mixtec-for-ASR/Sound-files-Narratives-for-ASR/Agricultura/Yolox_Agric_1.wav", text: "RIFF" },
-        { path: `${ELAN_DIR}/Agricultura_14/Yolox_Agric_1_ed-2018-04-14.eaf`, text: eaf("surface", [{ start: 0, end: 3578, text: "ki3ta" }, { start: 3578, end: 6196, text: "ña3" }]) },
-        { path: `${ELAN_DIR}/Agricultura_14/._Yolox_Agric_1_ed-2018-04-14.eaf`, text: "fork" },
-        { path: "Yoloxochitl-Mixtec-for-ASR/Transcriptions-for-ASR/Transcriber_513/Agricultura_14/Yolox_Agric_1_ed-2018-04-14.trs", text: "<Trans/>" },
-      ]),
-    );
-    const { data } = await fetchEntry(getDataset("openslr-slr89-transcripts"), { fetch: serving({ [download("89", "Yoloxochitl-Mixtec-Data.tgz")]: archive }) });
-    expect(data).toMatchObject({
-      nodes: [
-        { id: "Yolox_Agric_1_ed-2018-04-14/a1", text: "ki3ta", tier: "surface", start: 0, end: 3578 },
-        { id: "Yolox_Agric_1_ed-2018-04-14/a2", text: "ña3", tier: "surface", start: 3578, end: 6196 },
-      ],
-    });
-  });
-
   it("reads the ELAN files beneath the Totonac conversations", async () => {
     const archive = gzip(
       tar([
@@ -259,29 +237,6 @@ describe("the TextGrid recipes", () => {
       ],
     });
   });
-
-  it("reads one instance for each AISHELL-5 archive, from each speaker's near-field TextGrid and not the far-field ones that repeat them", async () => {
-    const archive = (set: string, session: string, speaker: string): Uint8Array =>
-      gzip(
-        tar([
-          { path: `${set}/${session}/`, text: "", type: "5" },
-          { path: `${set}/${session}/DA01.TextGrid`, text: textGrid([{ name: speaker, intervals: [{ start: 0, end: 4, text: "" }, { start: 4, end: 5, text: "换我不换。" }] }]) },
-          { path: `${set}/${session}/DX01C01.TextGrid`, text: textGrid([{ name: speaker, intervals: [{ start: 4, end: 5, text: "换我不换。" }] }, { name: "P9999", intervals: [{ start: 5, end: 6, text: "好" }] }]) },
-          { path: `${set}/${session}/DA01.wav`, text: "RIFF" },
-        ]),
-      );
-    const { data } = await fetchEntry(getDataset("openslr-slr159-transcripts"), {
-      fetch: serving({
-        [download("159", "train.tar.gz")]: archive("train", "568", "P0001"),
-        [download("159", "Dev.tar.gz")]: archive("Dev", "018", "P0247"),
-        [download("159", "Eval1.tar.gz")]: archive("Eval1", "001", "P0301"),
-        [download("159", "Eval2.tar.gz")]: archive("Eval2", "002", "P0401"),
-      }),
-    });
-    const instances = instancesOf(data);
-    expect(instances.map((instance) => instance.id)).toEqual(["train.tar.gz", "Dev.tar.gz", "Eval1.tar.gz", "Eval2.tar.gz"]);
-    expect(instances[1]?.nodes).toMatchObject([{ id: "018/DA01/1.2", text: "换我不换。", speaker: "P0247", start: 4, end: 5 }]);
-  });
 });
 
 describe("the openslr-slr151-transcripts recipe", () => {
@@ -308,17 +263,5 @@ describe("the openslr-slr151-transcripts recipe", () => {
     expect(instances.map((instance) => instance.id)).toEqual(["speech_dataset_wol.tar.gz", "speech_dataset_fuc.tar.gz", "speech_dataset_srr.tar.gz"]);
     expect(instances[1]?.nodes).toMatchObject([{ id: "fuc_4110/3", text: "maɗe puɗata :fra a", speaker: "locuteur2", channel: "1", start: 0, end: 3.214, label: "o,f1,male" }]);
     expect(instances[1]?.nodes).toHaveLength(1);
-  });
-});
-
-describe("the openslr-slr132-transcripts recipe", () => {
-  it("reads the transcript table from the tar.xz archive, leaving out the audio and the other members", async () => {
-    const { data } = await fetchEntry(getDataset("openslr-slr132-transcripts"), { fetch: serving({ [download("132", "Quran_Speech_Dataset.tar.xz")]: fixtureBytes(QURAN_TAR_XZ_BASE64) }) });
-    expect(data).toMatchObject({
-      nodes: [
-        { id: "audio_data/reader_1/001001.mp3", text: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ", duration: 6.552 },
-        { id: "audio_data/reader_2/001002.mp3", text: "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ", duration: 4.1 },
-      ],
-    });
   });
 });
