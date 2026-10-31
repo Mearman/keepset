@@ -1,0 +1,46 @@
+{
+  "aliases": [
+    "slr113-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of SEOUL CORPUS. No recipe reads them. The transcripts are Praat TextGrid files, encoded as UTF-16, in a zip archive nested inside the label tarball, and a recipe's inner archive layout selects one member, not a collection of nested ones.",
+  "domain": "Speech",
+  "expectedCounts": {},
+  "id": "openslr-slr113-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-NonCommercial 2.0 Generic (CC BY-NC 2.0)",
+    "url": "https://www.openslr.org/113/"
+  },
+  "name": "SEOUL CORPUS transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "The transcripts are Praat TextGrid files, encoded as UTF-16, in a zip archive nested inside the label tarball, and a recipe's inner archive layout selects one member, not a collection of nested ones.",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3904,
+        "sha256": "feef5be1d6afe3ce33e45ed1e4f103bb4fc17d6bafc738190ff9bb95f97d61f9",
+        "timestamp": "20260516202144",
+        "url": "https://web.archive.org/web/20260516202144/https://www.openslr.org/113/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/113/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}
