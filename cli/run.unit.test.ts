@@ -58,7 +58,7 @@ function harness(overrides: Partial<CliLibrary> = {}) {
     roundTripDataset: async (id): Promise<RoundTripReport> => {
       calls.push(["roundTripDataset", id]);
 
-      return Promise.resolve({ holds: true, provenance: fetched.provenance });
+      return Promise.resolve({ holds: true, provenance: fetched.provenance, counts: new Map([["nodes", 2], ["edges", 1]]), warnings: [] });
     },
     streamDataset: async (id) => {
       calls.push(["streamDataset", id]);
@@ -335,13 +335,21 @@ describe("roundtrip", () => {
     const { library, io, out, calls } = harness();
     expect(await run(["roundtrip", "karate"], library, io)).toBe(EXIT_OK);
     expect(calls).toEqual([["getDataset", "karate"], ["roundTripDataset", "karate"]]);
-    expect(out.stdout).toBe("karate: the round trip holds\n");
+    expect(out.stdout).toBe("karate: the round trip holds (nodes 2, edges 1)\n");
+    expect(out.stderr).toBe("");
+  });
+
+  it("prints the warnings of a count the entry records differently to stderr, as fetch does", async () => {
+    const { library, io, out } = harness({ roundTripDataset: async () => Promise.resolve({ holds: true, provenance: fetched.provenance, counts: new Map([["nodes", 2]]), warnings: ["nodes: the entry records 34, the fetched result has 2"] }) });
+    expect(await run(["roundtrip", "karate"], library, io)).toBe(EXIT_OK);
+    expect(out.stdout).toBe("karate: the round trip holds (nodes 2)\n");
+    expect(out.stderr).toBe("warning: nodes: the entry records 34, the fetched result has 2\n");
   });
 
   it("reports where a round trip fails and exits 1", async () => {
-    const { library, io, out } = harness({ roundTripDataset: async () => Promise.resolve({ holds: false, path: "", message: "records differ in keys", provenance: fetched.provenance }) });
+    const { library, io, out } = harness({ roundTripDataset: async () => Promise.resolve({ holds: false, path: "", message: "records differ in keys", provenance: fetched.provenance, counts: new Map([["nodes", 2]]), warnings: [] }) });
     expect(await run(["roundtrip", "karate"], library, io)).toBe(EXIT_NO);
-    expect(out.stdout).toBe("karate: the round trip does not hold at (root): records differ in keys\n");
+    expect(out.stdout).toBe("karate: the round trip does not hold at (root): records differ in keys (nodes 2)\n");
   });
 });
 
@@ -368,7 +376,7 @@ describe("namespaces and aliases", () => {
     expect(out.stdout).toBe("one-shared is valid\n");
     const second = nestedLibrary();
     expect(await run(["roundtrip", "two/shared"], second.library, second.io)).toBe(EXIT_OK);
-    expect(second.out.stdout).toBe("two-shared: the round trip holds\n");
+    expect(second.out.stdout).toBe("two-shared: the round trip holds (nodes 2, edges 1)\n");
   });
 
   it("turns an ambiguous name into exit status 2 naming the entries it could mean", async () => {

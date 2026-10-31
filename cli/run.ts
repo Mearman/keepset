@@ -94,8 +94,9 @@ Commands:
                       --no-archive is given
   validate <dataset>  check the entry against the entry schema and its
                       crosswalk against crossmap's validation
-  roundtrip <dataset> fetch the dataset and check that decoding the encoded
-                      native document gives it back
+  roundtrip <dataset> fetch the dataset once, check that decoding the encoded
+                      native document gives it back, and print the counts and
+                      warnings of the resolved result as fetch does
 
 A <dataset> is an entry id, an alias, or a qualified name such as
 suitesparse/gset/g53, written with / between the namespace and the name. Any
@@ -287,6 +288,15 @@ export function provenancePath(out: string): string {
 }
 
 /**
+ * Formats the counts of a resolved result as `fetch` and `roundtrip` print them.
+ * @param counts - The length of each counted array, by key.
+ * @returns The counts as `key N` pairs joined by a comma and a space.
+ */
+function formatCounts(counts: ReadonlyMap<string, number>): string {
+  return [...counts].map(([key, count]) => `${key} ${String(count)}`).join(", ");
+}
+
+/**
  * Formats a list of validation issues, one per line.
  * @param issues - The issues.
  * @returns The text.
@@ -421,7 +431,7 @@ export async function run(args: readonly string[], library: CliLibrary, io: CliI
       for (const warning of streamed.warnings) {
         io.writeStderr(`warning: ${warning}\n`);
       }
-      const counts = [...streamed.counts].map(([key, count]) => `${key} ${String(count)}`).join(", ");
+      const counts = formatCounts(streamed.counts);
       io.writeStdout(`wrote ${out} (${counts}, streamed) and ${provenancePath(out)}\n`);
       if (values["no-archive"] !== true) {
         await requestCaptures(streamed.provenance, library, io);
@@ -437,7 +447,7 @@ export async function run(args: readonly string[], library: CliLibrary, io: CliI
       for (const warning of fetched.warnings) {
         io.writeStderr(`warning: ${warning}\n`);
       }
-      const counts = [...library.countTarget(fetched)].map(([key, count]) => `${key} ${String(count)}`).join(", ");
+      const counts = formatCounts(library.countTarget(fetched));
       io.writeStdout(`wrote ${out} (${counts}) and ${provenancePath(out)}\n`);
       if (values["no-archive"] !== true) {
         await requestCaptures(fetched.provenance, library, io);
@@ -446,12 +456,16 @@ export async function run(args: readonly string[], library: CliLibrary, io: CliI
       return EXIT_OK;
     }
     const report = await library.roundTripDataset(id);
+    for (const warning of report.warnings) {
+      io.writeStderr(`warning: ${warning}\n`);
+    }
+    const counts = formatCounts(report.counts);
     if (report.holds) {
-      io.writeStdout(`${id}: the round trip holds\n`);
+      io.writeStdout(`${id}: the round trip holds (${counts})\n`);
 
       return EXIT_OK;
     }
-    io.writeStdout(`${id}: the round trip does not hold at ${report.path === "" ? "(root)" : report.path}: ${report.message}\n`);
+    io.writeStdout(`${id}: the round trip does not hold at ${report.path === "" ? "(root)" : report.path}: ${report.message} (${counts})\n`);
 
     return EXIT_NO;
   } catch (error) {
