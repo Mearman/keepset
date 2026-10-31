@@ -10,7 +10,7 @@
   "description": "The transcripts of Multilingual and code-switching ASR Challenge Dataset - sub-task2: one instance per language pair and part (training or test), each record being an utterance with its identifier and its code-switched text, as the Kaldi text file of the part writes it. It carries none of the audio, which the download list of openslr-slr104 gives.",
   "domain": "Speech",
   "expectedCounts": {
-    "instances": 0
+    "instances": 4
   },
   "id": "openslr-slr104-transcripts",
   "licence": {

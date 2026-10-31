@@ -44,7 +44,7 @@
   "description": "The transcripts of Hi-Fi Multi-Speaker English TTS Dataset (Hi-Fi TTS): one instance per manifest (one reader, one of clean and other, and one of training, development and test), each record being an utterance with its audio file as identifier, its normalised text, its duration and the text before and after normalisation. It carries none of the audio, which the download list of openslr-slr109 gives.",
   "domain": "Speech",
   "expectedCounts": {
-    "instances": 0
+    "instances": 31
   },
   "id": "openslr-slr109-transcripts",
   "licence": {

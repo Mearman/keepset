@@ -39,7 +39,7 @@
   "description": "The transcripts of Golos: one instance per JSON Lines manifest the archive holds, each record being an utterance with its identifier, text, duration and audio file. It carries none of the audio, which the download list of openslr-slr114 gives.",
   "domain": "Speech",
   "expectedCounts": {
-    "instances": 0
+    "instances": 7
   },
   "id": "openslr-slr114-transcripts",
   "licence": {
