@@ -30,6 +30,8 @@ export interface SourceBytes {
    * @returns The bytes.
    */
   readonly bytes: () => Promise<Uint8Array>;
+  /** The path of the file the bytes are kept in, when a store keeps them in one, for a reader that opens the file itself rather than reading it through this port (a 7z reader that runs outside JavaScript). The file is the store's: a reader never writes to it, and it is deleted when the source is closed. */
+  readonly file?: string;
 }
 
 /** What arrived of a source: the SHA-256 of exactly the bytes that arrived, in the order they arrived, and how many there were; for a source read by ranged requests, which ranges of how large a file those bytes are. */
