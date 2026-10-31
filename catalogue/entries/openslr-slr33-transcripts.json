@@ -5,11 +5,13 @@
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "file": "crosswalks/speech-v1/id-text.json"
+    "file": "crosswalks/speech-v1/utterance-lines.json"
   },
-  "description": "The transcripts of Aishell. No recipe reads them. Its transcripts are Aishell's transcript file, inside archives that total about 15 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "description": "The transcripts of Aishell: each record is an utterance with its identifier and its text, word-segmented as the corpus's transcript file writes it. It carries none of the audio, which the download list of openslr-slr33 gives.",
   "domain": "Speech",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "nodes": 0
+  },
   "id": "openslr-slr33-transcripts",
   "licence": {
     "kind": "custom",
@@ -23,24 +25,30 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "Its transcripts are Aishell's transcript file, inside archives that total about 15 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
-    "status": "not-fetchable"
+    "archive": {
+      "kind": "tar.gz",
+      "member": {
+        "path": "data_aishell/transcript/aishell_transcript_v0.8.txt"
+      }
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "utterance-lines"
+    },
+    "source": 0,
+    "status": "fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 4011,
-        "sha256": "072e77c5f5a401eca59f7ba0c6608a4c6720f6c67227ab53c37f5745d7b019d9",
-        "timestamp": "20260908011541",
-        "url": "https://web.archive.org/web/20260908011541/https://www.openslr.org/33/"
-      },
+      "retrieved": "2026-10-31",
       "status": "live",
-      "url": "https://www.openslr.org/33/"
+      "url": "https://www.openslr.org/resources/33/data_aishell.tgz"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "text"
+  ]
 }

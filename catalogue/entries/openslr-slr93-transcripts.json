@@ -5,11 +5,13 @@
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "file": "crosswalks/speech-v1/id-text.json"
+    "file": "crosswalks/speech-v1/utterance-lines.json"
   },
-  "description": "The transcripts of AISHELL-3. No recipe reads them. Its transcripts are AISHELL-3's `content.txt` files, inside archives that total about 19 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "description": "The transcripts of AISHELL-3: one instance per part (training or test), each record being an utterance with its audio file name as identifier and its text, as alternating characters and pinyin with tones. It carries none of the audio, which the download list of openslr-slr93 gives.",
   "domain": "Speech",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "instances": 0
+  },
   "id": "openslr-slr93-transcripts",
   "licence": {
     "kind": "custom",
@@ -23,24 +25,30 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "Its transcripts are AISHELL-3's `content.txt` files, inside archives that total about 19 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
-    "status": "not-fetchable"
+    "archive": {
+      "kind": "tar.gz",
+      "members": {
+        "pattern": "(?:train|test)/content\\.txt"
+      }
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "utterance-lines"
+    },
+    "source": 0,
+    "status": "fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 3858,
-        "sha256": "e6266a2e0b7784efedf4ce45756553640e75c5edeca0cc6f6ae2d1e3158afd26",
-        "timestamp": "20260521090148",
-        "url": "https://web.archive.org/web/20260521090148/https://www.openslr.org/93/"
-      },
+      "retrieved": "2026-10-31",
       "status": "live",
-      "url": "https://www.openslr.org/93/"
+      "url": "https://www.openslr.org/resources/93/data_aishell3.tgz"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "text"
+  ]
 }
