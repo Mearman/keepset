@@ -1,0 +1,116 @@
+{
+  "aliases": [
+    "slr15-speakers"
+  ],
+  "category": "speakers/v1",
+  "citations": [],
+  "crosswalk": {
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].speaker",
+        "op": "move",
+        "to": "nodes[].name"
+      },
+      {
+        "from": "nodes[].gender",
+        "op": "move",
+        "to": "nodes[].gender"
+      },
+      {
+        "from": "nodes[].corpus",
+        "op": "move",
+        "to": "nodes[].corpus"
+      },
+      {
+        "from": "nodes[].code",
+        "op": "move",
+        "to": "nodes[].code"
+      },
+      {
+        "from": "nodes[].side",
+        "op": "move",
+        "to": "nodes[].side"
+      }
+    ],
+    "source": "csv-table",
+    "target": "speakers/v1"
+  },
+  "description": "SRE speaker list (speaker list): the speaker list of the NIST SRE corpora: a line per speaker and side, with gender. It carries the entries and none of the data they describe.",
+  "domain": "Misc",
+  "expectedCounts": {
+    "instances": 1
+  },
+  "id": "openslr-slr15-speakers",
+  "licence": {
+    "kind": "custom",
+    "name": "Not copyrighted (derived from a work prepared by a US government employee in the course of their official duties)",
+    "url": "https://www.openslr.org/15/"
+  },
+  "name": "SRE speaker list (speaker list)",
+  "namespace": [
+    "openslr",
+    "other"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "tar.gz",
+      "members": {
+        "pattern": "speaker_list"
+      }
+    },
+    "parser": {
+      "columns": [
+        "speaker",
+        "gender",
+        "corpus",
+        "code",
+        "side"
+      ],
+      "delimiter": "space",
+      "encoding": "utf-8",
+      "format": "csv-table",
+      "headerNames": [
+        "speaker",
+        "gender",
+        "corpus",
+        "code",
+        "side"
+      ],
+      "idColumn": null,
+      "numericColumns": [],
+      "skipLines": 0,
+      "unquoted": true
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/15/speaker_list.tgz"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "name",
+    "gender",
+    "corpus",
+    "code",
+    "side"
+  ]
+}

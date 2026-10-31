@@ -1,0 +1,78 @@
+{
+  "aliases": [
+    "slr27-lexicon"
+  ],
+  "category": "lexicon/v1",
+  "citations": [],
+  "crosswalk": {
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].word",
+        "op": "move",
+        "to": "nodes[].word"
+      },
+      {
+        "from": "nodes[].pronunciation",
+        "op": "move",
+        "to": "nodes[].pronunciation"
+      }
+    ],
+    "source": "lexicon-lines",
+    "target": "lexicon/v1"
+  },
+  "description": "Cantab-TEDLIUM dictionary (lexicon): the pronunciation dictionary of the Cantab-TEDLIUM language model, not the model. It carries the entries and none of the data they describe.",
+  "domain": "Text",
+  "expectedCounts": {
+    "instances": 1
+  },
+  "id": "openslr-slr27-lexicon",
+  "licence": {
+    "kind": "unrecorded"
+  },
+  "name": "Cantab-TEDLIUM dictionary (lexicon)",
+  "namespace": [
+    "openslr",
+    "text"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "tar.bz2",
+      "members": {
+        "pattern": "cantab-TEDLIUM/cantab-TEDLIUM\\.dct"
+      }
+    },
+    "parser": {
+      "commentPrefixes": [],
+      "encoding": "utf-8",
+      "format": "lexicon-lines"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/27/cantab-TEDLIUM-partial.tar.bz2"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "word",
+    "pronunciation"
+  ]
+}

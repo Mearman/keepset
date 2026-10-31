@@ -1,0 +1,57 @@
+{
+  "category": "audio/v1",
+  "citations": [],
+  "crosswalk": {
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      }
+    ],
+    "source": "none",
+    "target": "audio/v1"
+  },
+  "description": "Simulated Room Impulse Response Database (annotations). No recipe reads it. The archives hold simulated impulse responses as audio files and no annotation table; each is identified by its file name only.",
+  "domain": "Audio",
+  "expectedCounts": {},
+  "id": "openslr-slr26-clips",
+  "licence": {
+    "kind": "custom",
+    "name": "Apache 2.0",
+    "url": "https://www.openslr.org/26/"
+  },
+  "name": "Simulated Room Impulse Response Database (annotations)",
+  "namespace": [
+    "openslr",
+    "audio"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "The archives hold simulated impulse responses as audio files and no annotation table; each is identified by its file name only.",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3252,
+        "sha256": "c99ba35a429fd614c16fe82f1cc609538c00d9dcc8075dd26b1a04a73a678877",
+        "timestamp": "20260914194542",
+        "url": "https://web.archive.org/web/20260914194542/https://www.openslr.org/26/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/26/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

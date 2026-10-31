@@ -1,0 +1,57 @@
+{
+  "category": "audio/v1",
+  "citations": [],
+  "crosswalk": {
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      }
+    ],
+    "source": "none",
+    "target": "audio/v1"
+  },
+  "description": "Deeply Nonverbal Vocalization Dataset (annotations). No recipe reads it. The annotations are one JSON object nested by sound class and then by file name, which no parser reads.",
+  "domain": "Audio",
+  "expectedCounts": {},
+  "id": "openslr-slr99-clips",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)",
+    "url": "https://www.openslr.org/99/"
+  },
+  "name": "Deeply Nonverbal Vocalization Dataset (annotations)",
+  "namespace": [
+    "openslr",
+    "audio"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "The annotations are one JSON object nested by sound class and then by file name, which no parser reads.",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 5260,
+        "sha256": "8981a98556c7753677e08e5875bc2a39e4f800300d172a67ae12d0513280ca42",
+        "timestamp": "20260516204226",
+        "url": "https://web.archive.org/web/20260516204226/https://www.openslr.org/99/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/99/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

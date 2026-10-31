@@ -1,0 +1,89 @@
+{
+  "category": "speakers/v1",
+  "citations": [],
+  "crosswalk": {
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].Name",
+        "op": "move",
+        "to": "nodes[].name"
+      },
+      {
+        "from": "nodes[].Gender",
+        "op": "move",
+        "to": "nodes[].gender"
+      },
+      {
+        "from": "nodes[].Set",
+        "op": "move",
+        "to": "nodes[].set"
+      }
+    ],
+    "source": "csv-table",
+    "target": "speakers/v1"
+  },
+  "description": "VoxCeleb2 speakers: the VoxCeleb2 speakers with gender and development or test set. It carries the entries and none of the data they describe.",
+  "domain": "Misc",
+  "expectedCounts": {
+    "nodes": 6114
+  },
+  "id": "openslr-slr49-vox2-speakers",
+  "licence": {
+    "kind": "custom",
+    "name": "Not copyrighted",
+    "url": "https://www.openslr.org/49/"
+  },
+  "name": "VoxCeleb2 speakers",
+  "namespace": [
+    "openslr",
+    "other"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "columns": [
+        "Name",
+        "Gender",
+        "Set"
+      ],
+      "delimiter": "tab",
+      "encoding": "utf-8",
+      "format": "csv-table",
+      "idColumn": "VoxCeleb2_ID",
+      "numericColumns": [],
+      "skipLines": 0,
+      "unquoted": true
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/49/vox2_meta.csv"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "name",
+    "gender",
+    "set"
+  ]
+}

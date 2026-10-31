@@ -1,0 +1,57 @@
+{
+  "category": "lexicon/v1",
+  "citations": [],
+  "crosswalk": {
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      }
+    ],
+    "source": "none",
+    "target": "lexicon/v1"
+  },
+  "description": "Spanish Word list (lexicon). No recipe reads it. The word list is one JSON object keyed by word with the word's count as its value, which no parser reads.",
+  "domain": "Text",
+  "expectedCounts": {},
+  "id": "openslr-slr21-lexicon",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0 US)",
+    "url": "https://www.openslr.org/21/"
+  },
+  "name": "Spanish Word list (lexicon)",
+  "namespace": [
+    "openslr",
+    "text"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "The word list is one JSON object keyed by word with the word's count as its value, which no parser reads.",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 3155,
+        "sha256": "aeb1ac090b40b69c7c450dea16863240e54ccdb75365a0056a2c09c44f306ae9",
+        "timestamp": "20260418044648",
+        "url": "https://web.archive.org/web/20260418044648/https://www.openslr.org/21/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/21/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

@@ -1,0 +1,57 @@
+{
+  "category": "audio/v1",
+  "citations": [],
+  "crosswalk": {
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      }
+    ],
+    "source": "none",
+    "target": "audio/v1"
+  },
+  "description": "MUSAN (annotations). No recipe reads it. The annotations are inside an 11 GB archive of recordings, more than a fetch holds in memory (see https://github.com/Mearman/keepset/issues/212).",
+  "domain": "Audio",
+  "expectedCounts": {},
+  "id": "openslr-slr17-clips",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution 4.0 International (CC BY 4.0)",
+    "url": "https://www.openslr.org/17/"
+  },
+  "name": "MUSAN (annotations)",
+  "namespace": [
+    "openslr",
+    "audio"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "The annotations are inside an 11 GB archive of recordings, more than a fetch holds in memory (see https://github.com/Mearman/keepset/issues/212).",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 2909,
+        "sha256": "4cf0be3b3ffd0ac78499998adaec48909d16431a0717575beee80cf175520fbc",
+        "timestamp": "20260418033341",
+        "url": "https://web.archive.org/web/20260418033341/https://www.openslr.org/17/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/17/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

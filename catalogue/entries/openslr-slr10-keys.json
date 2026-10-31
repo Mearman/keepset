@@ -1,0 +1,57 @@
+{
+  "category": "speakers/v1",
+  "citations": [],
+  "crosswalk": {
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      }
+    ],
+    "source": "none",
+    "target": "speakers/v1"
+  },
+  "description": "SRE Data keys (speaker list). No recipe reads it. The key files differ in layout from one year to the next (four archives of tables with different columns, some compressed singly), so no single recipe reads them.",
+  "domain": "Misc",
+  "expectedCounts": {},
+  "id": "openslr-slr10-keys",
+  "licence": {
+    "kind": "custom",
+    "name": "Public domain, I believe",
+    "url": "https://www.openslr.org/10/"
+  },
+  "name": "SRE Data keys (speaker list)",
+  "namespace": [
+    "openslr",
+    "other"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "The key files differ in layout from one year to the next (four archives of tables with different columns, some compressed singly), so no single recipe reads them.",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4340,
+        "sha256": "6f63a80308e7f9be9794667d06e177d467e16c867a1ee9d113cf37642365df89",
+        "timestamp": "20260131180849",
+        "url": "https://web.archive.org/web/20260131180849/https://www.openslr.org/10/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/10/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

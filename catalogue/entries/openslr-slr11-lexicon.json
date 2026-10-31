@@ -1,0 +1,94 @@
+{
+  "aliases": [
+    "slr11-lexicon"
+  ],
+  "category": "lexicon/v1",
+  "citations": [],
+  "crosswalk": {
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].word",
+        "op": "move",
+        "to": "nodes[].word"
+      },
+      {
+        "from": "nodes[].pronunciation",
+        "op": "move",
+        "to": "nodes[].pronunciation"
+      }
+    ],
+    "source": "lexicon-lines",
+    "target": "lexicon/v1"
+  },
+  "description": "LibriSpeech vocabulary and lexicon (lexicon): LibriSpeech's vocabulary and its pronunciation lexicon, not its language models. It carries the entries and none of the data they describe.",
+  "domain": "Text",
+  "expectedCounts": {
+    "instances": 2
+  },
+  "id": "openslr-slr11-lexicon",
+  "licence": {
+    "kind": "custom",
+    "name": "Public domain",
+    "url": "https://www.openslr.org/11/"
+  },
+  "name": "LibriSpeech vocabulary and lexicon (lexicon)",
+  "namespace": [
+    "openslr",
+    "text"
+  ],
+  "properties": {},
+  "recipe": {
+    "files": [
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "librispeech-vocab.txt",
+        "source": 0
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "librispeech-lexicon.txt",
+        "source": 1
+      }
+    ],
+    "parser": {
+      "commentPrefixes": [],
+      "encoding": "utf-8",
+      "format": "lexicon-lines"
+    },
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/11/librispeech-vocab.txt"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/11/librispeech-lexicon.txt"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "word",
+    "pronunciation"
+  ]
+}

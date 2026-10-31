@@ -1,0 +1,57 @@
+{
+  "category": "texts/v1",
+  "citations": [],
+  "crosswalk": {
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      }
+    ],
+    "source": "none",
+    "target": "texts/v1"
+  },
+  "description": "ScribbleLens (text). No recipe reads it. The corpus is scans of handwritten pages with transcriptions in a 12 GB archive, more than a fetch holds in memory (see https://github.com/Mearman/keepset/issues/212).",
+  "domain": "Handwriting",
+  "expectedCounts": {},
+  "id": "openslr-slr84-texts",
+  "licence": {
+    "kind": "custom",
+    "name": "CC-BY-NC-ND (details in LICENSE.txt)",
+    "url": "https://www.openslr.org/84/"
+  },
+  "name": "ScribbleLens (text)",
+  "namespace": [
+    "openslr",
+    "other"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "The corpus is scans of handwritten pages with transcriptions in a 12 GB archive, more than a fetch holds in memory (see https://github.com/Mearman/keepset/issues/212).",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 5624,
+        "sha256": "a5d85b9c6cf8add0816f161bf83f9ff6aa04d11b490d5e8ac42245d26e90817e",
+        "timestamp": "20251225091725",
+        "url": "https://web.archive.org/web/20251225091725/https://www.openslr.org/84/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/84/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}

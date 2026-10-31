@@ -1,0 +1,54 @@
+{
+  "aliases": [
+    "slr5-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/utterance-lines.json"
+  },
+  "description": "The transcripts of MSU Switchboard transcipts: each record is an utterance with its segment identifier and its start time, end time and words. It carries none of the audio, which the download list of openslr-slr5 gives.",
+  "domain": "Text",
+  "expectedCounts": {
+    "instances": 4876
+  },
+  "id": "openslr-slr5-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Unrestricted",
+    "url": "https://www.openslr.org/5/"
+  },
+  "name": "MSU Switchboard transcipts transcripts",
+  "namespace": [
+    "openslr",
+    "text"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "tar.gz",
+      "members": {
+        "pattern": "swb_ms98_transcriptions/\\d+/\\d+/sw\\d+[AB]-ms98-a-trans\\.text"
+      }
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "utterance-lines"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/5/switchboard_word_alignments.tar.gz"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "text"
+  ]
+}

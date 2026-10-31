@@ -1,0 +1,57 @@
+{
+  "category": "texts/v1",
+  "citations": [],
+  "crosswalk": {
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      }
+    ],
+    "source": "none",
+    "target": "texts/v1"
+  },
+  "description": "CLMAD (text). No recipe reads it. The corpus is the text itself, in a 1.9 GB archive of Arabic news text, and no normalisation target here carries a text corpus's contents.",
+  "domain": "Text",
+  "expectedCounts": {},
+  "id": "openslr-slr55-texts",
+  "licence": {
+    "kind": "custom",
+    "name": "Creative Commons BY-NC-ND 3.0 (attribution/non-commercial/no-derivatives).",
+    "url": "https://www.openslr.org/55/"
+  },
+  "name": "CLMAD (text)",
+  "namespace": [
+    "openslr",
+    "text"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "The corpus is the text itself, in a 1.9 GB archive of Arabic news text, and no normalisation target here carries a text corpus's contents.",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "snapshot": {
+        "byteLength": 4235,
+        "sha256": "db0ff6d48284f9f693ce88eedcf3a64ff2ca603a21fe053beeec3843fae84678",
+        "timestamp": "20260315175451",
+        "url": "https://web.archive.org/web/20260315175451/https://www.openslr.org/55/"
+      },
+      "status": "live",
+      "url": "https://www.openslr.org/55/"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}
