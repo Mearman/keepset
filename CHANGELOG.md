@@ -1,3 +1,10 @@
+## [0.80.1](https://github.com/Mearman/keepset/compare/v0.80.0...v0.80.1) (2026-10-31)
+
+
+### Bug Fixes
+
+* **parsers:** let a JSON table keep a field that is part of a several-field id ([be08d58](https://github.com/Mearman/keepset/commit/be08d583caab4717f8648661d0b8794f42990260))
+
 # [0.80.0](https://github.com/Mearman/keepset/compare/v0.79.0...v0.80.0) (2026-10-31)
 
 
