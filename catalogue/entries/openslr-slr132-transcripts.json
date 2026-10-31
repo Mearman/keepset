@@ -34,7 +34,7 @@
   "description": "The transcripts of Mohammed (the Quran speech to text data): each record is a recording, named by its path in the download's audio_data directory, with its duration in seconds and the Arabic text recited. The table's rows are read from transcripts.tsv, which has a header row and gives each recording's path, duration and text; all_ayat.json, whose text is of each verse and not of a recording, is not read. It carries none of the audio, which the download list of openslr-slr132 gives.",
   "domain": "Speech",
   "expectedCounts": {
-    "nodes": 0
+    "nodes": 226129
   },
   "id": "openslr-slr132-transcripts",
   "licence": {
