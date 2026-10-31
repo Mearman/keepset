@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { getDataset } from "../bundled";
 import { gzip, tar, tarHeader, zip } from "../test-support/archives";
+import { fixtureBytes, QURAN_TAR_XZ_BASE64 } from "../test-support/xz-fixtures";
 import { fetchEntry, type FetchPort } from "./fetch-dataset";
 
 /** The tar block size, which pads every member. */
@@ -310,11 +311,14 @@ describe("the openslr-slr151-transcripts recipe", () => {
   });
 });
 
-describe("the openslr-slr132-transcripts record", () => {
-  it("names the compression keepset does not read as the obstacle, and not a fetch's memory", () => {
-    const { recipe } = getDataset("openslr-slr132-transcripts").entry;
-    expect(recipe.status).toBe("not-fetchable");
-    expect("reason" in recipe ? recipe.reason : "").toMatch(/xz/);
-    expect("reason" in recipe ? recipe.reason : "").not.toMatch(/memory|in size|too large|bytes/i);
+describe("the openslr-slr132-transcripts recipe", () => {
+  it("reads the transcript table from the tar.xz archive, leaving out the audio and the other members", async () => {
+    const { data } = await fetchEntry(getDataset("openslr-slr132-transcripts"), { fetch: serving({ [download("132", "Quran_Speech_Dataset.tar.xz")]: fixtureBytes(QURAN_TAR_XZ_BASE64) }) });
+    expect(data).toMatchObject({
+      nodes: [
+        { id: "audio_data/reader_1/001001.mp3", text: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ", duration: 6.552 },
+        { id: "audio_data/reader_2/001002.mp3", text: "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ", duration: 4.1 },
+      ],
+    });
   });
 });
