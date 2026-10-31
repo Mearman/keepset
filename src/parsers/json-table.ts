@@ -77,14 +77,16 @@ function rowOf(value: unknown, options: JsonTableParser, position: number): Nati
   if (!isRecord(value)) {
     throw new NativeParseError(FORMAT, position, "the record is not an object");
   }
-  const id = cell(value, options.idField, position);
-  if (id === null || String(id) === "") {
-    throw new NativeParseError(FORMAT, position, `the id field ${options.idField} is missing or empty`);
+  const idFields = typeof options.idField === "string" ? [options.idField] : options.idField;
+  const parts = idFields.map((field) => cell(value, field, position));
+  if (parts.some((part) => part === null || String(part) === "")) {
+    throw new NativeParseError(FORMAT, position, `the id field ${idFields.join(", ")} is missing or empty`);
   }
+  const id = parts.map(String).join("/");
   const numeric = new Set(options.numericFields ?? []);
   const cells = options.fields.map((field): [string, string | number | null] => [field, numeric.has(field) ? numberCell(value, field, position) : cell(value, field, position)]);
 
-  return { ...Object.fromEntries(cells), id: String(id) };
+  return { ...Object.fromEntries(cells), id };
 }
 
 /**

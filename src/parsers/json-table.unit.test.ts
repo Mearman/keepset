@@ -50,6 +50,12 @@ describe("the json-table parser", () => {
     expect(run('{"id": "a"}', parser({ layout: "array" })).message).toMatch(/not an array/);
   });
 
+  it("joins several id fields with a slash into the row's id, and refuses a record missing one of them", () => {
+    const options = parser({ layout: "array", idField: ["session_id", "speaker", "start_time"], fields: ["words"] });
+    expect(parseJsonTable('[{"session_id": "S01", "speaker": "P05", "start_time": "00:00:01.2", "words": "hello"}]', options).nodes).toEqual([{ id: "S01/P05/00:00:01.2", words: "hello" }]);
+    expect(() => parseJsonTable('[{"session_id": "S01", "speaker": "P05", "words": "hello"}]', options)).toThrow(/id field session_id, speaker, start_time is missing/);
+  });
+
   it("reads the fields declared numeric as numbers, from decimal text or a number, and refuses other text", () => {
     const options = parser({ layout: "array", idField: "id", fields: ["length", "text"], numericFields: ["length"] });
     expect(parseJsonTable('[{"id": "a", "length": "8.64", "text": "1"}, {"id": "b", "length": 3, "text": "2"}, {"id": "c", "length": ""}]', options).nodes).toEqual([
