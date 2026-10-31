@@ -1,3 +1,10 @@
+# [0.76.0](https://github.com/Mearman/keepset/compare/v0.75.0...v0.76.0) (2026-10-31)
+
+
+### Features
+
+* **parsers:** read NXT word files, ELAN annotations and Festival or trailing-id utterance lines ([dc71ca4](https://github.com/Mearman/keepset/commit/dc71ca4f368c20e52efadde347d17faaeb202215))
+
 # [0.75.0](https://github.com/Mearman/keepset/compare/v0.74.0...v0.75.0) (2026-10-31)
 
 
