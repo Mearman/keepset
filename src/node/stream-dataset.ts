@@ -12,7 +12,7 @@ import { IdSet } from "./id-set";
 import { csvPages, type CsvPaging } from "../paged";
 import type { DownloadProvenance, FetchOptions, RoundTripReport } from "../fetch";
 import type { StreamedNodes, StreamableId } from "../categories";
-import { metaOf, sourceRecord, sourceUrl, step } from "../recipe-run";
+import { countWarnings, metaOf, sourceRecord, sourceUrl, step } from "../recipe-run";
 
 /** Where a streamed result goes: the meta once, before any node, then the nodes a page at a time, each already checked against the category's node shape and for an id no earlier node had. A sink that returns a promise is awaited before the next page is read, so a slow sink holds the stream back rather than letting pages pile up. */
 export interface NodeSink {
@@ -204,6 +204,62 @@ function assertSeparable(entry: Entry, crosswalk: Crosswalk): void {
   }
 }
 
+/** What resolving a streamed table needs besides its pages: the entry, its crosswalk, the category's node and meta shapes, and the meta the crosswalk receives with every page. */
+interface StreamedTable {
+  readonly entry: Entry;
+  readonly crosswalk: Crosswalk;
+  readonly shape: ReturnType<typeof getStreamedShape>;
+  readonly meta: Readonly<Record<string, JsonScalar>>;
+}
+
+/**
+ * Resolves a streamed table's meta: the crosswalk applied to the meta alone, checked against the category's meta shape.
+ * @param table - The table's entry, crosswalk, shape and meta.
+ * @returns The resolved meta.
+ * @throws RecipeError at the crosswalk step when the crosswalk fails, and at the validate step when the result is not the category's meta.
+ */
+async function resolveMeta(table: StreamedTable): Promise<Readonly<Record<string, JsonScalar>>> {
+  const { entry, crosswalk, shape, meta } = table;
+
+  return step(entry.id, "validate", async () => {
+    const encoded: unknown = await step(entry.id, "crosswalk", () => encode(crosswalk, { meta, nodes: [] }));
+    const parsed = shape.meta.safeParse(typeof encoded === "object" && encoded !== null && !Array.isArray(encoded) && "meta" in encoded ? encoded.meta : undefined);
+    if (!parsed.success) {
+      throw new KeepsetError(`the result's meta is not ${entry.category} meta: ${parsed.error.issues.map((issue) => `${["meta", ...issue.path.map(String)].join(".")}: ${issue.message}`).join("; ")}`);
+    }
+
+    return parsed.data;
+  });
+}
+
+/**
+ * Resolves one page of a streamed table's rows to nodes: the crosswalk applied to the page under the meta, each node checked against the category's node shape and for an id no earlier node had.
+ * @param table - The table's entry, crosswalk, shape and meta.
+ * @param rows - The page's rows.
+ * @param ids - The ids of the nodes before this page, which this page's nodes are added to.
+ * @returns The page's nodes.
+ * @throws RecipeError at the crosswalk step when the crosswalk fails, and at the validate step when a node is not the category's or repeats an id.
+ */
+async function resolvePage(table: StreamedTable, rows: readonly NativeRow[], ids: IdSet): Promise<readonly StreamedNode[]> {
+  const { entry, crosswalk, shape, meta } = table;
+  const offset = ids.size;
+  const encoded = await step(entry.id, "crosswalk", () => nodesOf(encode(crosswalk, { meta, nodes: rows })));
+
+  return step(entry.id, "validate", () =>
+    encoded.map((candidate, index) => {
+      const parsed = shape.node.safeParse(candidate);
+      if (!parsed.success) {
+        throw new KeepsetError(`the result is not ${entry.category}: ${parsed.error.issues.map((issue) => `${["nodes", String(offset + index), ...issue.path.map(String)].join(".")}: ${issue.message}`).join("; ")}`);
+      }
+      if (!ids.add(parsed.data.id)) {
+        throw new KeepsetError(`the result is not ${entry.category}: nodes.${String(offset + index)}.id: duplicate node id ${JSON.stringify(parsed.data.id)}`);
+      }
+
+      return parsed.data;
+    }),
+  );
+}
+
 /**
  * Streams a table, as `streamEntry` describes.
  * @param dataset - A dataset whose recipe streams.
@@ -218,83 +274,57 @@ export async function streamTable(dataset: Dataset, sink: NodeSink, options: Fet
   assertSeparable(entry, crosswalk);
   const shape = getStreamedShape(recipe.category);
   const native = openNative(dataset, recipe, options);
-  const meta = await step(entry.id, "validate", async () => {
-    const encoded: unknown = await step(entry.id, "crosswalk", () => encode(crosswalk, { meta: native.meta, nodes: [] }));
-    const parsed = shape.meta.safeParse(typeof encoded === "object" && encoded !== null && !Array.isArray(encoded) && "meta" in encoded ? encoded.meta : undefined);
-    if (!parsed.success) {
-      throw new KeepsetError(`the result's meta is not ${entry.category} meta: ${parsed.error.issues.map((issue) => `${["meta", ...issue.path.map(String)].join(".")}: ${issue.message}`).join("; ")}`);
-    }
-
-    return parsed.data;
-  });
+  const table: StreamedTable = { entry, crosswalk, shape, meta: native.meta };
+  const meta = await resolveMeta(table);
   await sink.meta(meta);
   const ids = new IdSet();
   for await (const rows of native.pages) {
-    const offset = ids.size;
-    const encoded = await step(entry.id, "crosswalk", () => nodesOf(encode(crosswalk, { meta: native.meta, nodes: rows })));
-    const nodes = await step(entry.id, "validate", () =>
-      encoded.map((candidate, index) => {
-        const parsed = shape.node.safeParse(candidate);
-        if (!parsed.success) {
-          throw new KeepsetError(`the result is not ${entry.category}: ${parsed.error.issues.map((issue) => `${["nodes", String(offset + index), ...issue.path.map(String)].join(".")}: ${issue.message}`).join("; ")}`);
-        }
-        if (!ids.add(parsed.data.id)) {
-          throw new KeepsetError(`the result is not ${entry.category}: nodes.${String(offset + index)}.id: duplicate node id ${JSON.stringify(parsed.data.id)}`);
-        }
-
-        return parsed.data;
-      }),
-    );
-    await sink.nodes(nodes);
+    await sink.nodes(await resolvePage(table, rows, ids));
   }
   const counts = new Map([["nodes", ids.size]]);
-  const warnings = Object.entries(entry.expectedCounts)
-    .filter(([key, expected]) => counts.get(key) !== expected)
-    .map(([key, expected]) => `${key}: the entry records ${String(expected)}, the fetched result has ${String(counts.get(key))}`);
 
-  return { dataset, meta, provenance: native.provenance(), counts, warnings };
+  return { dataset, meta, provenance: native.provenance(), counts, warnings: countWarnings(entry, counts) };
 }
 
 /**
- * Checks a streamed dataset's crosswalk on its real data a page at a time: crossmap's `assertRoundTrip` on the meta alone and then on each page's rows under the meta. The crosswalk applies to a page on its own, so the round trip holds on the whole table exactly when it holds on every page. It stops at the first page that differs and reports the path in the whole document.
+ * Checks a streamed dataset's crosswalk on its real data a page at a time, from one download: crossmap's `assertRoundTrip` on the meta alone and then on each page's rows under the meta. The crosswalk applies to a page on its own, so the round trip holds on the whole table exactly when it holds on every page. Each page is also resolved to nodes exactly as `streamTable` does, so the report carries the counts and warnings of the target the table resolves to; the first page that differs is recorded and the table is still read to its end, since the counts are those of the whole table.
  * @param dataset - A dataset whose recipe streams.
  * @param options - The network port, abort signal and clock.
- * @returns Whether the round trip holds, and where it first differs when it does not, with the provenance of the bytes it was checked on: every byte when it holds, those read up to the page that differs when it does not.
- * @throws RecipeError naming the entry and the failing step when the recipe fails before the comparison or the crosswalk cannot run.
+ * @returns Whether the round trip holds, and where it first differs in the whole document when it does not, with the provenance of every byte read and the counts and warnings of the resolved table.
+ * @throws RecipeError naming the entry and the failing step when the recipe fails, the table does not resolve to the target or the crosswalk cannot run.
  */
 export async function roundTripTable(dataset: Dataset, options: FetchOptions): Promise<RoundTripReport> {
   const { entry, crosswalk } = dataset;
   const recipe = streamedRecipe(entry);
   assertSeparable(entry, crosswalk);
+  const shape = getStreamedShape(recipe.category);
   const native = openNative(dataset, recipe, options);
-  const check = (nodes: readonly NativeRow[], offset: number): RoundTripReport | undefined => {
+  const check = (nodes: readonly NativeRow[], offset: number): { readonly path: string; readonly message: string } | undefined => {
     try {
       assertRoundTrip(crosswalk, [{ meta: native.meta, nodes }]);
     } catch (error) {
       if (error instanceof RoundTripMismatchError) {
         const path = error.path.replace(/^nodes\[(\d+)\]/, (_, index: string) => `nodes[${String(offset + Number(index))}]`);
 
-        return { holds: false, path, message: error.message.replaceAll(error.path, path), provenance: native.provenance() };
+        return { path, message: error.message.replaceAll(error.path, path) };
       }
       throw new RecipeError(entry.id, "crosswalk", error instanceof Error ? error.message : String(error), { cause: error });
     }
 
     return undefined;
   };
-  const metaMismatch = check([], 0);
-  if (metaMismatch !== undefined) {
-    return metaMismatch;
-  }
+  const table: StreamedTable = { entry, crosswalk, shape, meta: native.meta };
+  await resolveMeta(table);
+  let mismatch = check([], 0);
+  const ids = new IdSet();
   let offset = 0;
   for await (const rows of native.pages) {
-    const mismatch = check(rows, offset);
-    if (mismatch !== undefined) {
-      await native.pages.return();
-
-      return mismatch;
-    }
+    await resolvePage(table, rows, ids);
+    mismatch ??= check(rows, offset);
     offset += rows.length;
   }
+  const counts = new Map([["nodes", ids.size]]);
+  const resolved = { provenance: native.provenance(), counts, warnings: countWarnings(entry, counts) };
 
-  return { holds: true, provenance: native.provenance() };
+  return mismatch === undefined ? { holds: true, ...resolved } : { holds: false, ...mismatch, ...resolved };
 }

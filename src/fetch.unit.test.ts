@@ -43,6 +43,15 @@ const FEATURES = 3;
 /** How many times the downloader requests a page before it gives up. */
 const PAGE_ATTEMPTS = 3;
 
+/** What the karate fixture, the requests fixture and the file collection resolve to: the nodes and edges of the first, the tasks of the second, and the instances of the third. */
+const KARATE_NODES = 3;
+const KARATE_EDGES = 3;
+const REQUEST_TASKS = 3;
+const FILES_COLLECTION_INSTANCES = 4;
+const KARATE_COUNTS = new Map([["nodes", KARATE_NODES], ["edges", KARATE_EDGES]]);
+const REQUEST_COUNTS = new Map([["nodes", REQUEST_TASKS]]);
+const FILES_COLLECTION_COUNTS = new Map([["instances", FILES_COLLECTION_INSTANCES]]);
+
 const now = (): Date => new Date("2026-10-18T12:00:00.000Z");
 
 /** The store every options literal in these tests shares, so each reads as the ports it injects and nothing else: Node's own, which keeps each download in a temporary file and hashes it as it arrives, so every recipe here runs through the path a real fetch takes. */
@@ -179,6 +188,15 @@ describe("fetchDataset", () => {
 });
 
 describe("roundTripEntry", () => {
+  /** The karate entry with a crosswalk that resolves to graph/v1 but keeps only the id and name of the meta, so the round trip loses the entry's recorded properties. */
+  const losingProperties = {
+    ...liveEntry,
+    crosswalk: {
+      ...liveEntry.crosswalk,
+      rules: [{ op: "move", from: "meta.id", to: "meta.id" }, { op: "move", from: "meta.name", to: "meta.name" }, ...liveEntry.crosswalk.rules.filter((rule) => rule.from !== "meta")],
+    },
+  };
+
   it("holds when the crosswalk preserves every path of the native document", async () => {
     const { fetch } = servedBy({ "https://example.org/data/karate.txt": karateText });
     const report = await roundTripEntry(datasetWith(liveEntry), { ...storePort, fetch, now });
@@ -187,16 +205,54 @@ describe("roundTripEntry", () => {
 
   it("reports the first path a lossy crosswalk loses", async () => {
     const { fetch } = servedBy({ "https://example.org/data/karate.txt": karateText });
-    const withoutMeta = { ...liveEntry, crosswalk: { ...liveEntry.crosswalk, rules: liveEntry.crosswalk.rules.filter((rule) => rule.from !== "meta") } };
-    const report = await roundTripEntry(datasetWith(withoutMeta), { ...storePort, fetch, now });
-    // crossmap names the record whose keys differ, here the document root.
-    expect(report).toMatchObject({ holds: false, path: "" });
-    expect(report.holds ? "" : report.message).toMatch(/records differ in keys: edges,meta,nodes against edges,nodes/);
+    const report = await roundTripEntry(datasetWith(losingProperties), { ...storePort, fetch, now });
+    // crossmap names the record whose keys differ, here the meta, which keeps only the id and name.
+    expect(report).toMatchObject({ holds: false, path: "meta" });
+    expect(report.holds ? "" : report.message).toMatch(/records differ in keys/);
   });
 
   it("fails loudly when the recipe fails before the comparison", async () => {
     const error = await failure(roundTripEntry(datasetWith(notFetchableEntry), { ...storePort, now }));
     expect(error.step).toBe("recipe");
+  });
+
+  describe("from one download", () => {
+    const karate = "https://example.org/data/karate.txt";
+
+    it("reports the counts and the warnings a fetch of the same document gives, asking the network for the source once", async () => {
+      const roundTrip = servedBy({ [karate]: karateText });
+      const report = await roundTripEntry(datasetWith(liveEntry), { ...storePort, fetch: roundTrip.fetch, now });
+      const fetch = servedBy({ [karate]: karateText });
+      const fetched = await fetchEntry(datasetWith(liveEntry), { ...storePort, fetch: fetch.fetch, now });
+      expect(report.counts).toEqual(KARATE_COUNTS);
+      expect(report.warnings).toEqual(["nodes: the entry records 34, the fetched result has 3", "edges: the entry records 78, the fetched result has 3"]);
+      expect(report.warnings).toEqual(fetched.warnings);
+      expect(roundTrip.requested.filter((url) => url === karate)).toHaveLength(1);
+      expect(roundTrip.requested).toEqual(fetch.requested);
+    });
+
+    it("reports no warning when the recorded counts are the resolved ones", async () => {
+      const { fetch } = servedBy({ [karate]: karateText });
+      const report = await roundTripEntry(datasetWith({ ...liveEntry, expectedCounts: { nodes: 3, edges: 3 } }), { ...storePort, fetch, now });
+      expect(report.warnings).toEqual([]);
+    });
+
+    it("reports the counts of a crosswalk whose round trip does not hold", async () => {
+      const { fetch, requested } = servedBy({ [karate]: karateText });
+      const report = await roundTripEntry(datasetWith(losingProperties), { ...storePort, fetch, now });
+      expect(report.holds).toBe(false);
+      expect(report.counts).toEqual(KARATE_COUNTS);
+      expect(requested.filter((url) => url === karate)).toHaveLength(1);
+    });
+
+    it("fails at the step that fails a fetch, naming the entry, when the document does not resolve to the target", async () => {
+      const { fetch } = servedBy({ [karate]: "graph [ node [ id 1 ] edge [ source 1 target 2 ] ]" });
+      const gml = { ...liveEntry, recipe: { ...liveEntry.recipe, parser: { format: "gml", encoding: "utf-8" } } };
+      const error = await failure(roundTripEntry(datasetWith(gml), { ...storePort, fetch, now }));
+      expect(error.step).toBe("validate");
+      expect(error.entryId).toBe("karate");
+      expect(error.message).toMatch(/names no node/);
+    });
   });
 
   it("resolves ids against the bundled catalogue, failing before anything is downloaded", async () => {
@@ -224,8 +280,10 @@ describe("a tasks/v1 entry", () => {
     expect(JSON.stringify(fetched.data)).not.toContain("not shared");
   });
 
-  it("holds the round trip over the paths the crosswalk maps", async () => {
-    expect(await roundTripEntry(dataset, { ...storePort, fetch: port, now })).toMatchObject({ holds: true });
+  it("holds the round trip over the paths the crosswalk maps, with the counts of the resolved tasks", async () => {
+    const report = await roundTripEntry(dataset, { ...storePort, fetch: port, now });
+    expect(report).toMatchObject({ holds: true, warnings: [] });
+    expect(report.counts).toEqual(REQUEST_COUNTS);
   });
 
   it("fails at the validate step when a value is outside the target's range", async () => {
@@ -311,8 +369,15 @@ describe("a tasks/v1 entry whose collection is files downloaded one by one", () 
     });
   });
 
-  it("holds the round trip over every instance", async () => {
-    expect(await roundTripEntry(dataset, { ...storePort, fetch: served().fetch, now })).toMatchObject({ holds: true });
+  it("holds the round trip over every instance, with the instance count and one request for each file", async () => {
+    const { fetch, requested } = served();
+    const reference = served();
+    await fetchEntry(dataset, { ...storePort, fetch: reference.fetch, now });
+    const report = await roundTripEntry(dataset, { ...storePort, fetch, now });
+    expect(report).toMatchObject({ holds: true, warnings: [] });
+    expect(report.counts).toEqual(FILES_COLLECTION_COUNTS);
+    expect(requested).toEqual(reference.requested);
+    expect(new Set(requested).size).toBe(requested.length);
   });
 
   it("fails at the download step on a file that does not answer, after the files before it and before those after it", async () => {
@@ -381,8 +446,17 @@ describe("a tasks/v1 entry that is a collection", () => {
     expect(fetched.warnings).toEqual(["instances: the entry records 2, the fetched result has 1"]);
   });
 
-  it("holds the round trip over every member", async () => {
-    expect(await roundTripEntry(dataset, { ...storePort, fetch: suite(members).fetch, now })).toMatchObject({ holds: true });
+  it("holds the round trip over every member, with the instance count, downloading the archive once", async () => {
+    const { fetch, requested } = suite(members);
+    const report = await roundTripEntry(dataset, { ...storePort, fetch, now });
+    expect(report).toMatchObject({ holds: true, warnings: [] });
+    expect(report.counts).toEqual(new Map([["instances", 2]]));
+    expect(requested.filter((url) => url === "https://example.org/data/suite.zip")).toHaveLength(1);
+  });
+
+  it("warns, on a round trip that holds, when the instance count differs from the recorded one", async () => {
+    const report = await roundTripEntry(dataset, { ...storePort, fetch: suite(members.slice(0, 1)).fetch, now });
+    expect(report).toMatchObject({ holds: true, warnings: ["instances: the entry records 2, the fetched result has 1"] });
   });
 
   it("fails at the extract step when no member matches", async () => {

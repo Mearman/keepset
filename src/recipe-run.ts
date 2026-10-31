@@ -56,3 +56,15 @@ export async function step<Result>(entryId: string, name: RecipeStep, run: () =>
 export function metaOf(entry: Entry): Record<string, JsonScalar> {
   return { id: entry.id, name: entry.name, ...entry.properties };
 }
+
+/**
+ * The warnings for counts that differ from the ones an entry records: one for each recorded count the resolved result does not have, whether it has another value or none.
+ * @param entry - The entry.
+ * @param counts - The resolved result's counts by key.
+ * @returns One warning for each recorded count that differs, in the order the entry records them.
+ */
+export function countWarnings(entry: Entry, counts: ReadonlyMap<string, number>): readonly string[] {
+  return Object.entries(entry.expectedCounts)
+    .filter(([key, expected]) => counts.get(key) !== expected)
+    .map(([key, expected]) => `${key}: the entry records ${String(expected)}, the fetched result has ${String(counts.get(key))}`);
+}

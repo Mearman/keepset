@@ -8,7 +8,7 @@ import { parseNative, parseNativeFiles, parseNativeParts } from "./parsers/parse
 import type { JsonScalar } from "./targets/json-scalar";
 import { readsByRanges, unpack, unpackFiles, unpackMembers, unpackParts, type Unpacked } from "./archive";
 import { downloadPaged } from "./paged";
-import { metaOf, sourceRecord, sourceUrl, step } from "./recipe-run";
+import { countWarnings, metaOf, sourceRecord, sourceUrl, step } from "./recipe-run";
 import { resolveSource } from "./resolve";
 import type { ByteRange, StoredSource, StorePort } from "./source-bytes";
 import type { Archive, Entry, FilesRecipe, Parser, Snapshot, Source } from "./entry";
@@ -64,10 +64,14 @@ export interface FilesProvenance extends ProvenanceOf {
 /** Where a fetched result's bytes came from: enough to say which entry, catalogue and source produced it, which URL was actually requested, when, and exactly which bytes arrived, for the one download a recipe reads or for each file of a collection read file by file (told apart by `files`). */
 export type Provenance = DownloadProvenance | FilesProvenance;
 
-/** Whether decoding a dataset's encoded native document gives the native document back, with the provenance of the bytes it was checked on. */
-export type RoundTripReport = { readonly holds: true; readonly provenance: Provenance } | { readonly holds: false; readonly path: string; readonly message: string; readonly provenance: Provenance };
+/** What resolving a dataset's native documents to its category target gives besides the target: the length of each counted array, and a warning for each recorded count that the result does not have. */
+export interface ResolvedCounts {
+  readonly counts: ReadonlyMap<string, number>;
+  readonly warnings: readonly string[];
+}
 
-
+/** Whether decoding a dataset's encoded native document gives the native document back, with the provenance of the bytes it was checked on, and the counts and warnings of the target the same documents resolve to, so one download both verifies the crosswalk and measures its result. */
+export type RoundTripReport = ResolvedCounts & ({ readonly holds: true; readonly provenance: Provenance } | { readonly holds: false; readonly path: string; readonly message: string; readonly provenance: Provenance });
 
 /**
  * The URL a recipe downloads a source from. A dead source is fetched from its pinned snapshot in the Wayback Machine's `id_` form, which serves the archived bytes as they were captured rather than wrapped in the archive's page chrome.
@@ -318,15 +322,15 @@ async function runToNative(dataset: Dataset, options: FetchOptions): Promise<Nat
 }
 
 /**
- * Runs a dataset's recipe: downloads the source (from its pinned snapshot when the source is dead), unpacks the archive, parses the native shape, applies the crossmap crosswalk and validates the result against the category target. The native document the crosswalk receives is the parser's output with `meta` built from the entry.
- * @param dataset - A dataset from any catalogue.
- * @param options - The network port, store, abort signal and clock.
- * @returns The resolved target with its provenance and any count warnings.
- * @throws RecipeError naming the entry and the failing step, including for a recipe that streams, which `streamEntry` reads; nothing partial or default-shaped is ever returned.
+ * Resolves a recipe's native documents to the category target: applies the crosswalk to each, validates the result against the category's target (or, for a collection, its collection target), counts it and compares the counts with the ones the entry records.
+ * @param dataset - The dataset.
+ * @param run - The native documents `runToNative` read.
+ * @returns The resolved target with its counts and warnings.
+ * @throws RecipeError naming the entry and the crosswalk or validate step that failed.
  */
-export async function fetchEntry(dataset: Dataset, options: FetchOptions): Promise<FetchedDataset> {
+async function resolveTarget(dataset: Dataset, run: NativeRun): Promise<ResolvedCounts & { readonly data: CategoryTarget | CollectionTarget }> {
   const { entry, crosswalk } = dataset;
-  const { collection, documents, provenance } = await runToNative(dataset, options);
+  const { collection, documents } = run;
   const encoded = await step(entry.id, "crosswalk", () =>
     documents.map(({ id, native }) => {
       try {
@@ -346,13 +350,23 @@ export async function fetchEntry(dataset: Dataset, options: FetchOptions): Promi
 
     return result.data;
   });
-
   const counts = countTarget(entry.category, data);
-  const warnings = Object.entries(entry.expectedCounts)
-    .filter(([key, expected]) => counts.get(key) !== expected)
-    .map(([key, expected]) => `${key}: the entry records ${String(expected)}, the fetched result has ${String(counts.get(key))}`);
 
-  return { dataset, data, provenance, warnings };
+  return { data, counts, warnings: countWarnings(entry, counts) };
+}
+
+/**
+ * Runs a dataset's recipe: downloads the source (from its pinned snapshot when the source is dead), unpacks the archive, parses the native shape, applies the crossmap crosswalk and validates the result against the category target. The native document the crosswalk receives is the parser's output with `meta` built from the entry.
+ * @param dataset - A dataset from any catalogue.
+ * @param options - The network port, store, abort signal and clock.
+ * @returns The resolved target with its provenance and any count warnings.
+ * @throws RecipeError naming the entry and the failing step, including for a recipe that streams, which `streamEntry` reads; nothing partial or default-shaped is ever returned.
+ */
+export async function fetchEntry(dataset: Dataset, options: FetchOptions): Promise<FetchedDataset> {
+  const run = await runToNative(dataset, options);
+  const { data, warnings } = await resolveTarget(dataset, run);
+
+  return { dataset, data, provenance: run.provenance, warnings };
 }
 
 /**
@@ -367,14 +381,16 @@ export async function fetchDataset(id: string, options: FetchOptions): Promise<F
 }
 
 /**
- * Checks a dataset's crosswalk on its real data: runs the recipe to the native document, then crossmap's `assertRoundTrip`, which encodes it, decodes the result and compares the two over every path the crosswalk promises to preserve. A streamed recipe is checked a page at a time, with the round trip holding on the whole table exactly when it holds on every page, so the table is never held.
+ * Checks a dataset's crosswalk on its real data from one download: runs the recipe to the native documents, resolves them to the category target exactly as `fetchEntry` does (so a failure there is the same RecipeError), then crossmap's `assertRoundTrip`, which encodes them, decodes the result and compares the two over every path the crosswalk promises to preserve. A streamed recipe is checked a page at a time by `roundTripTable`.
  * @param dataset - A dataset from any catalogue.
  * @param options - The network port, store, abort signal and clock.
- * @returns Whether the round trip holds, and where it first differs when it does not.
- * @throws RecipeError naming the entry and the failing step when the recipe fails before the comparison, or when the crosswalk cannot run.
+ * @returns Whether the round trip holds, and where it first differs when it does not, with the counts and warnings of the resolved target.
+ * @throws RecipeError naming the entry and the failing step when the recipe fails before the comparison, when the documents do not resolve to the target, or when the crosswalk cannot run.
  */
 export async function roundTripEntry(dataset: Dataset, options: FetchOptions): Promise<RoundTripReport> {
-  const { documents, provenance } = await runToNative(dataset, options);
+  const run = await runToNative(dataset, options);
+  const { counts, warnings } = await resolveTarget(dataset, run);
+  const { documents, provenance } = run;
   try {
     assertRoundTrip(
       dataset.crosswalk,
@@ -383,12 +399,12 @@ export async function roundTripEntry(dataset: Dataset, options: FetchOptions): P
   } catch (error) {
     // A mismatch is the answer this check exists to give, so it becomes the report; any other failure is the crosswalk failing to run.
     if (error instanceof RoundTripMismatchError) {
-      return { holds: false, path: error.path, message: error.message, provenance };
+      return { holds: false, path: error.path, message: error.message, provenance, counts, warnings };
     }
     throw new RecipeError(dataset.entry.id, "crosswalk", error instanceof Error ? error.message : String(error), { cause: error });
   }
 
-  return { holds: true, provenance };
+  return { holds: true, provenance, counts, warnings };
 }
 
 /**

@@ -222,20 +222,50 @@ describe("a streamed recipe in the entry schema", () => {
 });
 
 describe("roundTripEntry on a streamed recipe", () => {
+  const lossy = {
+    ...streamedEntry,
+    recipe: { ...streamedEntry.recipe, parser: { ...streamedEntry.recipe.parser, numericColumns: [{ column: "borough", factor: 1 }] } },
+    crosswalk: { ...socrataEntry.crosswalk, rules: [...rulesBesideBorough, { op: "scale", from: "nodes[].borough", to: "nodes[].prize", factor: 0.1 }] },
+  };
+  const lossyRows = ["a1,Open,1\n", "a2,Open,2\n", "a3,Open,4\n", "a4,Open,3\n", "a5,Open,8\n"];
+  const requests = (events: readonly Event[]): readonly string[] => events.flatMap((event) => ("request" in event ? [event.request] : []));
+
   it("holds page by page over the whole table", async () => {
     expect(await roundTripEntry(datasetWith(streamedEntry), { fetch: resourceServing(rows, ignore), now })).toMatchObject({ holds: true, provenance: { byteLength: new TextEncoder().encode(header + rows.join("")).length } });
   });
 
-  it("stops at the first page that differs and names the path in the whole table", async () => {
-    const lossy = {
-      ...streamedEntry,
-      recipe: { ...streamedEntry.recipe, parser: { ...streamedEntry.recipe.parser, numericColumns: [{ column: "borough", factor: 1 }] } },
-      crosswalk: { ...socrataEntry.crosswalk, rules: [...rulesBesideBorough, { op: "scale", from: "nodes[].borough", to: "nodes[].prize", factor: 0.1 }] },
-    };
+  it("reports the node count and a warning for a recorded count that differs, as streamEntry does", async () => {
+    const entry = datasetWith({ ...streamedEntry, expectedCounts: { nodes: RECORDED_COUNT } });
+    const report = await roundTripEntry(entry, { fetch: resourceServing(rows, ignore), now });
+    const streamed = await streamEntry(entry, ignoring, { fetch: resourceServing(rows, ignore), now });
+    expect(report.counts).toEqual(new Map([["nodes", rows.length]]));
+    expect(report.warnings).toEqual([`nodes: the entry records ${String(RECORDED_COUNT)}, the fetched result has ${String(rows.length)}`]);
+    expect(report.warnings).toEqual(streamed.warnings);
+    expect(report.counts).toEqual(streamed.counts);
+  });
+
+  it("asks the network for each request of the table once, the same requests a stream makes", async () => {
+    const roundTrip = eventLog();
+    await roundTripEntry(datasetWith(streamedEntry), { fetch: resourceServing(rows, roundTrip.record), now });
+    const stream = eventLog();
+    await streamEntry(datasetWith(streamedEntry), ignoring, { fetch: resourceServing(rows, stream.record), now });
+    expect(requests(roundTrip.events)).toEqual(requests(stream.events));
+    expect(new Set(requests(roundTrip.events)).size).toBe(requests(roundTrip.events).length);
+  });
+
+  it("names the first path that differs in the whole table and still counts every node", async () => {
     const { events, record } = eventLog();
-    const report = await roundTripEntry(datasetWith(lossy), { fetch: resourceServing(["a1,Open,1\n", "a2,Open,2\n", "a3,Open,4\n", "a4,Open,3\n", "a5,Open,8\n"], record), now });
-    expect(report).toMatchObject({ holds: false, path: `nodes[${String(LOSSY_ROW)}].borough` });
-    expect(events.filter((event) => "request" in event && event.request.includes("offset=4"))).toEqual([]);
+    const report = await roundTripEntry(datasetWith(lossy), { fetch: resourceServing(lossyRows, record), now });
+    expect(report).toMatchObject({ holds: false, path: `nodes[${String(LOSSY_ROW)}].borough`, provenance: { byteLength: new TextEncoder().encode(header + lossyRows.join("")).length } });
+    expect(report.counts).toEqual(new Map([["nodes", lossyRows.length]]));
+    expect(requests(events).filter((request) => request.includes("offset=4"))).toHaveLength(1);
+  });
+
+  it("fails at the validate step on a node the category refuses, as streamEntry does", async () => {
+    const latitude = { ...streamedEntry, recipe: { ...streamedEntry.recipe, parser: { ...streamedEntry.recipe.parser, numericColumns: [{ column: "borough", factor: 1 }] } }, crosswalk: { ...socrataEntry.crosswalk, rules: [...rulesBesideBorough, { op: "move", from: "nodes[].borough", to: "nodes[].lat" }] } };
+    const error = await failure(roundTripEntry(datasetWith(latitude), { fetch: resourceServing(["a1,Open,10\n", "a2,Open,20\n", "a3,Open,95\n"], ignore), now }));
+    expect(error.step).toBe("validate");
+    expect(error.message).toContain(`nodes.${String(OUT_OF_RANGE_ROW)}.lat:`);
   });
 });
 
