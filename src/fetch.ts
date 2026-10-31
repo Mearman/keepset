@@ -319,7 +319,7 @@ async function runToNative(dataset: Dataset, options: FetchOptions): Promise<Nat
 /**
  * Runs a dataset's recipe: downloads the source (from its pinned snapshot when the source is dead), unpacks the archive, parses the native shape, applies the crossmap crosswalk and validates the result against the category target. The native document the crosswalk receives is the parser's output with `meta` built from the entry.
  * @param dataset - A dataset from any catalogue.
- * @param options - The network port, abort signal and clock.
+ * @param options - The network port, store, abort signal and clock.
  * @returns The resolved target with its provenance and any count warnings.
  * @throws RecipeError naming the entry and the failing step, including for a recipe that streams, which `streamEntry` reads; nothing partial or default-shaped is ever returned.
  */
@@ -357,7 +357,7 @@ export async function fetchEntry(dataset: Dataset, options: FetchOptions): Promi
 /**
  * Fetches a dataset of the bundled catalogue by id and resolves it to its category's target shape, so `fetchDataset("cora")` yields graph/v1 `{ meta, nodes, edges }` directly. Node-only: it downloads with Node's http and https clients and unpacks with Node's zlib.
  * @param id - The entry id.
- * @param options - The network port, abort signal and clock.
+ * @param options - The network port, store, abort signal and clock.
  * @returns The resolved target with its provenance and any count warnings.
  * @throws DatasetNotFoundError when no entry has that id, and RecipeError naming the entry and the failing step when the recipe fails.
  */
@@ -368,7 +368,7 @@ export async function fetchDataset(id: string, options: FetchOptions): Promise<F
 /**
  * Checks a dataset's crosswalk on its real data: runs the recipe to the native document, then crossmap's `assertRoundTrip`, which encodes it, decodes the result and compares the two over every path the crosswalk promises to preserve. A streamed recipe is checked a page at a time, with the round trip holding on the whole table exactly when it holds on every page, so the table is never held.
  * @param dataset - A dataset from any catalogue.
- * @param options - The network port, abort signal and clock.
+ * @param options - The network port, store, abort signal and clock.
  * @returns Whether the round trip holds, and where it first differs when it does not.
  * @throws RecipeError naming the entry and the failing step when the recipe fails before the comparison, or when the crosswalk cannot run.
  */
@@ -393,7 +393,7 @@ export async function roundTripEntry(dataset: Dataset, options: FetchOptions): P
 /**
  * Runs `roundTripEntry` on a dataset of the bundled catalogue by id.
  * @param id - The entry id.
- * @param options - The network port, abort signal and clock.
+ * @param options - The network port, store, abort signal and clock.
  * @returns Whether the round trip holds.
  * @throws DatasetNotFoundError when no entry has that id, and RecipeError as `roundTripEntry` does.
  */
