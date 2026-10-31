@@ -1,3 +1,10 @@
+# [0.91.0](https://github.com/Mearman/keepset/compare/v0.90.1...v0.91.0) (2026-10-31)
+
+
+### Features
+
+* **catalogue:** add the ESC-50 environmental sound clips ([f70bbb1](https://github.com/Mearman/keepset/commit/f70bbb1588dd4eb6d6da73a760a7349b8231f731))
+
 ## [0.90.1](https://github.com/Mearman/keepset/compare/v0.90.0...v0.90.1) (2026-10-31)
 
 # [0.90.0](https://github.com/Mearman/keepset/compare/v0.89.0...v0.90.0) (2026-10-31)
