@@ -1,0 +1,50 @@
+{
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/utterance-lines.json"
+  },
+  "description": "The transcripts of ALFFA (African Languages in the Field: speech Fundamentals and Automation) (sw): each record is an utterance with its identifier and text. It carries none of the audio, which the download list of openslr-slr25 gives.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "instances": 2
+  },
+  "id": "openslr-slr25-sw-transcripts",
+  "licence": {
+    "id": "MIT",
+    "kind": "spdx"
+  },
+  "name": "ALFFA (African Languages in the Field: speech Fundamentals and Automation) (sw) transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "tar.bz2",
+      "members": {
+        "pattern": "data_broadcastnews_sw/data/(?:train|dev|test)/text"
+      }
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "utterance-lines"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/25/data_broadcastnews_sw.tar.bz2"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "text"
+  ]
+}
