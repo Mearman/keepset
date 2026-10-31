@@ -40,7 +40,7 @@ describe("the chat parser", () => {
 
   it("does not read a header, a dependent tier or the lines that continue them as part of a turn, and reads a byte order mark and CR LF line ends", () => {
     const rows = parseChat([file("a.cha", `${BOM}${chat.replaceAll("\n", "\r\n")}`)], parser()).nodes;
-    expect(rows.map((row) => row.text)).toEqual(["(..) So you don't need to go to +/.", "⌊ &=in well ⌋", null, "no marks here"]);
+    expect(rows.map(({ text }) => text)).toEqual(["(..) So you don't need to go to +/.", "⌊ &=in well ⌋", null, "no marks here"]);
   });
 
   it("refuses a malformed main line, a stray line, an unclosed or malformed time mark, a repeated id and a path the pattern misses", () => {
