@@ -2,6 +2,10 @@ import { z } from "zod";
 import { UnknownCategoryError } from "./errors";
 import { GraphV1Schema, type GraphV1 } from "./targets/graph-v1";
 import { COLLECTION_COUNTED, collectionOf, type Collection } from "./targets/collection";
+import { ClipSchema, AudioMetaSchema, AudioV1Schema, type Clip, type AudioV1 } from "./targets/audio-v1";
+import { LexiconEntrySchema, LexiconMetaSchema, LexiconV1Schema, type LexiconEntry, type LexiconV1 } from "./targets/lexicon-v1";
+import { SpeakerSchema, SpeakersMetaSchema, SpeakersV1Schema, type Speaker, type SpeakersV1 } from "./targets/speakers-v1";
+import { SplitSchema, SplitsMetaSchema, SplitsV1Schema, type Split, type SplitsV1 } from "./targets/splits-v1";
 import { ResourceFileSchema, ResourcesMetaSchema, ResourcesV1Schema, type ResourceFile, type ResourcesV1 } from "./targets/resources-v1";
 import { SpeechMetaSchema, SpeechV1Schema, UtteranceSchema, type SpeechV1, type Utterance } from "./targets/speech-v1";
 import { TaskSchema, TasksMetaSchema, TasksV1Schema, type Task, type TasksV1 } from "./targets/tasks-v1";
@@ -9,7 +13,7 @@ import { TextSchema, TextsMetaSchema, TextsV1Schema, type Text, type TextsV1 } f
 import type { JsonScalar } from "./targets/json-scalar";
 
 /** Every category id the registry knows. A category id is `<kind>/v<version>`: the kind of data, and the version of its normalisation target, so a breaking change to a target is a new category rather than an edit to an old one. */
-export const CategoryIdSchema = z.enum(["graph/v1", "resources/v1", "speech/v1", "tasks/v1", "texts/v1"]);
+export const CategoryIdSchema = z.enum(["audio/v1", "graph/v1", "lexicon/v1", "resources/v1", "speakers/v1", "speech/v1", "splits/v1", "tasks/v1", "texts/v1"]);
 export type CategoryId = z.infer<typeof CategoryIdSchema>;
 
 /** The normalisation target each category resolves to, keyed by category id. */
@@ -19,6 +23,10 @@ export interface CategoryTargets {
   readonly "texts/v1": TextsV1;
   readonly "resources/v1": ResourcesV1;
   readonly "speech/v1": SpeechV1;
+  readonly "audio/v1": AudioV1;
+  readonly "lexicon/v1": LexiconV1;
+  readonly "speakers/v1": SpeakersV1;
+  readonly "splits/v1": SplitsV1;
 }
 
 /** The normalised shape of any category: what `fetchDataset` can resolve to. */
@@ -36,6 +44,10 @@ export interface StreamedNodes {
   readonly "texts/v1": Text;
   readonly "resources/v1": ResourceFile;
   readonly "speech/v1": Utterance;
+  readonly "audio/v1": Clip;
+  readonly "lexicon/v1": LexiconEntry;
+  readonly "speakers/v1": Speaker;
+  readonly "splits/v1": Split;
 }
 
 /** The categories that can be streamed. */
@@ -101,6 +113,38 @@ const registry: { readonly [Id in CategoryId]: CategoryOf<Id> } = {
     collection: collectionOf(SpeechV1Schema),
     counted: ["nodes"],
     streamed: { meta: SpeechMetaSchema, node: UtteranceSchema },
+  },
+  "audio/v1": {
+    id: "audio/v1",
+    description: "A collection of sounds that are not transcribed speech (noise, music, room impulse responses, vocalisations) as { meta, nodes }: a flat record of scalar metadata and nodes carrying at least an id, one per clip, with optional label, speaker, duration in seconds and split.",
+    target: AudioV1Schema,
+    collection: collectionOf(AudioV1Schema),
+    counted: ["nodes"],
+    streamed: { meta: AudioMetaSchema, node: ClipSchema },
+  },
+  "lexicon/v1": {
+    id: "lexicon/v1",
+    description: "A word list or pronunciation dictionary as { meta, nodes }: a flat record of scalar metadata and nodes carrying at least an id, one per line of the source, with optional word, pronunciation and count.",
+    target: LexiconV1Schema,
+    collection: collectionOf(LexiconV1Schema),
+    counted: ["nodes"],
+    streamed: { meta: LexiconMetaSchema, node: LexiconEntrySchema },
+  },
+  "speakers/v1": {
+    id: "speakers/v1",
+    description: "A speaker list as { meta, nodes }: a flat record of scalar metadata and nodes carrying at least an id, one per speaker, with optional gender, nationality, language, set and name.",
+    target: SpeakersV1Schema,
+    collection: collectionOf(SpeakersV1Schema),
+    counted: ["nodes"],
+    streamed: { meta: SpeakersMetaSchema, node: SpeakerSchema },
+  },
+  "splits/v1": {
+    id: "splits/v1",
+    description: "A corpus's division into training, validation and test data as { meta, nodes }: a flat record of scalar metadata and nodes carrying at least an id, one per item, with optional split, document and line.",
+    target: SplitsV1Schema,
+    collection: collectionOf(SplitsV1Schema),
+    counted: ["nodes"],
+    streamed: { meta: SplitsMetaSchema, node: SplitSchema },
   },
 };
 
