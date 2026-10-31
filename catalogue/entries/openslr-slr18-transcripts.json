@@ -1,0 +1,56 @@
+{
+  "aliases": [
+    "slr18-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/member-text.json"
+  },
+  "description": "The transcripts of THCHS-30: each record is an utterance with its identifier and text. It carries none of the audio, which the download list of openslr-slr18 gives.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 13388
+  },
+  "id": "openslr-slr18-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Apache License v.2.0",
+    "url": "https://www.openslr.org/18/"
+  },
+  "name": "THCHS-30 transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "files": {
+        "pattern": "data_thchs30/data/[^/]+\\.wav\\.trn"
+      },
+      "kind": "tar.gz"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "member-text",
+      "idPattern": "data_thchs30/data/([^/]+)\\.wav\\.trn",
+      "line": 0
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/18/data_thchs30.tgz"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "text"
+  ]
+}
