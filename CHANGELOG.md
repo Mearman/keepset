@@ -1,3 +1,12 @@
+# [0.96.0](https://github.com/Mearman/keepset/compare/v0.95.0...v0.96.0) (2026-10-31)
+
+
+### Features
+
+* **catalogue:** read the SlideSpeech transcripts from the tarball inside the related files ([a67c7c8](https://github.com/Mearman/keepset/commit/a67c7c8ab0fd0487571eaf8bfa40abac1b925e6b))
+* **catalogue:** record the fetched count of the SlideSpeech transcripts ([e487f31](https://github.com/Mearman/keepset/commit/e487f31bf9391e9bb76943050773c7af2440c590))
+* **fetch:** read a collection from the files of an archive that is itself a member ([673b5e0](https://github.com/Mearman/keepset/commit/673b5e0a8c85a15d6599144b8607c30939523085))
+
 # [0.95.0](https://github.com/Mearman/keepset/compare/v0.94.0...v0.95.0) (2026-10-31)
 
 
