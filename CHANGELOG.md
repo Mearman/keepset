@@ -1,3 +1,20 @@
+# [0.94.0](https://github.com/Mearman/keepset/compare/v0.93.0...v0.94.0) (2026-10-31)
+
+
+### Bug Fixes
+
+* **archive:** refuse a 7z archive in the streamed files path ([a9c12e1](https://github.com/Mearman/keepset/commit/a9c12e112c4d2b701dd798b43cb1107fb30e3cd3))
+* **cli:** show the selector of a files archive's inner archive ([9c5ee23](https://github.com/Mearman/keepset/commit/9c5ee23a5bb88ee8d53f1d4ab097265d266f37b1))
+
+
+### Features
+
+* **catalogue:** add the Project Gutenberg texts ([46a8863](https://github.com/Mearman/keepset/commit/46a886384f768caf93ce7c21e61b8e171f00eacd))
+* **catalogue:** record the fetched count of the Project Gutenberg texts ([8d8a7f7](https://github.com/Mearman/keepset/commit/8d8a7f754bce712df68eb8016673b8e38a1e0406))
+* **categories:** add corpus/v1 for text corpora with their full texts ([8649801](https://github.com/Mearman/keepset/commit/86498013387c2f161250bdfa1540bdb9dff3a0cc))
+* **parsers:** let member-text keep a file's text verbatim ([07360fe](https://github.com/Mearman/keepset/commit/07360fe76b3410609cdf64d6d1f2334e35e5482e))
+* **stream:** stream a files archive a file at a time ([628580f](https://github.com/Mearman/keepset/commit/628580f6a70c7371102d7d2e67afa84b68fe3e16))
+
 # [0.93.0](https://github.com/Mearman/keepset/compare/v0.92.0...v0.93.0) (2026-10-31)
 
 
