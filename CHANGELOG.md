@@ -1,3 +1,12 @@
+# [0.100.0](https://github.com/Mearman/keepset/compare/v0.99.0...v0.100.0) (2026-10-31)
+
+
+### Features
+
+* **catalogue:** read the Quran speech transcripts from their tar.xz archive ([6bbd8be](https://github.com/Mearman/keepset/commit/6bbd8beb8a8fc060107bd19d951e9cf28408255d))
+* **catalogue:** record the fetched count of the Quran transcripts ([c2d361e](https://github.com/Mearman/keepset/commit/c2d361e6b742045b8c3eaeeb324454c1414f0443))
+* **parsers:** read a table whose cells hold unquoted line breaks ([ada4ea5](https://github.com/Mearman/keepset/commit/ada4ea572b95360d35a09bb3c674631e6125bca1))
+
 # [0.99.0](https://github.com/Mearman/keepset/compare/v0.98.0...v0.99.0) (2026-10-31)
 
 
