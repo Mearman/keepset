@@ -1,3 +1,11 @@
+# [0.89.0](https://github.com/Mearman/keepset/compare/v0.88.0...v0.89.0) (2026-10-31)
+
+
+### Features
+
+* **catalogue:** read EmoV_DB prompts and AliMeeting transcripts from where they are hosted ([cad0f37](https://github.com/Mearman/keepset/commit/cad0f371773934ef4ee8389ce5313ec2d3519d3c))
+* **fetch:** read a TextGrid collection per download and every tier of a file ([5d53d96](https://github.com/Mearman/keepset/commit/5d53d964a9d070e9ff805bdc6c68fb3d96fe3490))
+
 # [0.88.0](https://github.com/Mearman/keepset/compare/v0.87.0...v0.88.0) (2026-10-31)
 
 
