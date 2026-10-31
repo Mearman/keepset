@@ -365,6 +365,8 @@ export const ParserSchema = z.discriminatedUnion("format", [
   z.object({ format: z.literal("eaf"), encoding: z.literal("utf-8"), idPattern: MemberPatternSchema }).strict(),
   /** CHAT files (the TalkBank transcript format), which are always UTF-8: each main line is a turn, read from the several files a `files` archive selects. */
   z.object({ format: z.literal("chat"), encoding: z.literal("utf-8"), idPattern: MemberPatternSchema }).strict(),
+  /** A Multilingual TEDx (mTEDx) language directory: each split's line-aligned `segments`, `<split>.yaml` and `<split>.<language>` files, read from the several files a `files` archive selects. */
+  z.object({ format: z.literal("mtedx"), encoding: z.literal("utf-8") }).strict(),
   z
     .object({
       format: z.literal("option-list"),
@@ -504,7 +506,7 @@ export const PagingSchema = z.discriminatedUnion("kind", [
 export type Paging = z.infer<typeof PagingSchema>;
 
 /** The parser formats that read a dataset spread over several files of one archive, and so the only ones a `files` archive is given to. */
-export const MULTI_FILE_FORMATS: ReadonlySet<Parser["format"]> = new Set(["ogb", "member-text", "nxt-words", "eaf", "textgrid", "option-list", "chat"]);
+export const MULTI_FILE_FORMATS: ReadonlySet<Parser["format"]> = new Set(["ogb", "member-text", "nxt-words", "eaf", "textgrid", "option-list", "chat", "mtedx"]);
 /** The multi-file formats that read each file of a files archive into one row of its own, so a streamed recipe can hand the files to them one at a time. */
 export type StreamedFileFormat = Extract<Parser["format"], "member-text">;
 export const STREAMED_FILE_FORMATS: ReadonlySet<Parser["format"]> = new Set<StreamedFileFormat>(["member-text"]);
