@@ -633,6 +633,15 @@ export function concatenateFiles(files: readonly Member[]): Uint8Array {
 }
 
 /**
+ * Gives chunks held in memory or arriving as a stream as the stream a decoder port reads.
+ * @param chunks - The chunks, in order.
+ * @returns The same chunks, as an async iterable.
+ */
+async function* asyncChunks(chunks: Readonly<AsyncIterable<Uint8Array> | Iterable<Uint8Array>>): AsyncGenerator<Uint8Array, void, undefined> {
+  yield* chunks;
+}
+
+/**
  * The xz decoder a recipe needs.
  * @param options - What the reader was given.
  * @returns The decoder.
@@ -684,7 +693,7 @@ async function* tarChunks(chunks: Readonly<AsyncIterable<Uint8Array> | Iterable<
     return;
   }
   if (kind === "tar.xz") {
-    yield* xzOf(options)(chunks);
+    yield* xzOf(options)(asyncChunks(chunks));
 
     return;
   }
