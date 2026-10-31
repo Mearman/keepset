@@ -126,10 +126,10 @@ describe("a fetch of a source larger than memory", () => {
 });
 
 describe("a fetch of a solid 7z archive larger than memory", () => {
-  /** The time one mebibyte of the filler may take through the whole pipeline here (written to disk, compressed with LZMA, read back as the download, hashed, kept, and decoded by 7-Zip in its worker), set as far above an unloaded host's need as the tar.gz test's allowance and scaled by the work LZMA adds: compressing with it costs several times what gzipping does, so the allowance is ten of the tar.gz test's. */
+  /** The time one mebibyte of the filler takes through the whole pipeline here (written to disk, compressed with LZMA, read back as the download, hashed, kept, and decoded by 7-Zip in its worker) alone on a quiet host: the tar.gz test's figure scaled by the work LZMA adds, since compressing with it costs several times what gzipping does. */
   const LZMA_WORK_FACTOR = 10;
-  const MILLISECONDS_PER_SOLID_MEBIBYTE = LZMA_WORK_FACTOR * MILLISECONDS_PER_FILLER_MEBIBYTE;
-  const SOLID_TIMEOUT_MILLISECONDS = (FILLER_BYTES / MEBIBYTE) * MILLISECONDS_PER_SOLID_MEBIBYTE;
+  const QUIET_MILLISECONDS_PER_SOLID_MEBIBYTE = LZMA_WORK_FACTOR * QUIET_MILLISECONDS_PER_FILLER_MEBIBYTE;
+  const SOLID_TIMEOUT_MILLISECONDS = allowance((FILLER_BYTES / MEBIBYTE) * QUIET_MILLISECONDS_PER_SOLID_MEBIBYTE);
 
   it(
     "downloads, hashes and decodes a solid 7z far larger than the memory budget while retaining less than it in the process and in 7-Zip's heap, and keeps only the selected member",
