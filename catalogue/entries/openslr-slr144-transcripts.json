@@ -7,7 +7,7 @@
   "crosswalk": {
     "file": "crosswalks/speech-v1/id-text.json"
   },
-  "description": "The transcripts of SlideSpeech. No recipe reads them. The data is hosted on Alibaba cloud storage, not on OpenSLR: the OpenSLR directory holds only a description.",
+  "description": "The transcripts of SlideSpeech as the segment records of its video metadata files give them, with the start and end of each segment and its text with and without punctuation. No recipe reads them yet. The transcripts are the segment records (each with a text and a punctuated text, a start and an end) of the video metadata files under info/ (dev_meta_info.json and test_meta_info.json among them) in preprocessed_ocr.tar.gz, which is the member of related_files.tar.gz that holds the segments and OCR results as one gzip stream; the audio and video archives hold no transcripts. No recipe reads that layout yet: its field names have not been confirmed against a complete read of the metadata file, and a recipe is written from a read of the real file.",
   "domain": "Audio-Visual Speech",
   "expectedCounts": {},
   "id": "openslr-slr144-transcripts",
@@ -23,20 +23,14 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "The data is hosted on Alibaba cloud storage, not on OpenSLR: the OpenSLR directory holds only a description.",
+    "reason": "The transcripts are the segment records (each with a text and a punctuated text, a start and an end) of the video metadata files under info/ (dev_meta_info.json and test_meta_info.json among them) in preprocessed_ocr.tar.gz, which is the member of related_files.tar.gz that holds the segments and OCR results as one gzip stream; the audio and video archives hold no transcripts. No recipe reads that layout yet: its field names have not been confirmed against a complete read of the metadata file, and a recipe is written from a read of the real file.",
     "status": "not-fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 5060,
-        "sha256": "d1aae5db78b8c5715ac8a7879bc3707a418f8b1f87a13a23ef904ea44d2eb0f5",
-        "timestamp": "20260516195025",
-        "url": "https://web.archive.org/web/20260516195025/https://www.openslr.org/144/"
-      },
+      "retrieved": "2026-10-31",
       "status": "live",
-      "url": "https://www.openslr.org/144/"
+      "url": "https://speech-lab-share-data.oss-cn-shanghai.aliyuncs.com/SlideSpeech/related_files.tar.gz"
     }
   ],
   "subjects": [
