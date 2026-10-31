@@ -10,7 +10,7 @@
   "description": "The transcripts of SlideSpeech: each instance is one split of the corpus (L95, S95, dev and test), named by the path of its text file inside the all_information.tar.gz member of the related files archive, and each of its records is an utterance with its identifier and its transcript as the corpus writes it, in capitals. It carries none of the audio or video, the start and end times that the segments file beside each text file gives, or the slide text and keywords, and a split's identifiers are its own, so the same identifier can occur in two splits.",
   "domain": "Audio-Visual Speech",
   "expectedCounts": {
-    "instances": 0
+    "instances": 4
   },
   "id": "openslr-slr144-transcripts",
   "licence": {
