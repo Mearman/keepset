@@ -1,3 +1,10 @@
+## [0.73.1](https://github.com/Mearman/keepset/compare/v0.73.0...v0.73.1) (2026-10-31)
+
+
+### Bug Fixes
+
+* **archive:** read a tar.gz in chunks so a large archive is never held decompressed ([22bfb9e](https://github.com/Mearman/keepset/commit/22bfb9e499bdf1186b08303585c3cf8092112ca1))
+
 # [0.73.0](https://github.com/Mearman/keepset/compare/v0.72.0...v0.73.0) (2026-10-30)
 
 
