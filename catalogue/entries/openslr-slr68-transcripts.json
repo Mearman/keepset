@@ -5,11 +5,37 @@
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "file": "crosswalks/speech-v1/id-text.json"
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].SpeakerID",
+        "op": "move",
+        "to": "nodes[].speaker"
+      },
+      {
+        "from": "nodes[].Transcription",
+        "op": "move",
+        "to": "nodes[].text"
+      }
+    ],
+    "source": "csv-table",
+    "target": "speech/v1"
   },
-  "description": "The transcripts of MAGICDATA Mandarin Chinese Read Speech Corpus. No recipe reads them. Its transcripts are MAGICDATA's `TRANS.txt` files, inside archives that total about 55 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "description": "The transcripts of MAGICDATA Mandarin Chinese Read Speech Corpus: one instance per set (training, development or test), each record being an utterance with its audio file name as identifier, its speaker and its text. It carries none of the audio, which the download list of openslr-slr68 gives.",
   "domain": "Speech",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "instances": 0
+  },
   "id": "openslr-slr68-transcripts",
   "licence": {
     "kind": "custom",
@@ -23,24 +49,74 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "Its transcripts are MAGICDATA's `TRANS.txt` files, inside archives that total about 55 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
-    "status": "not-fetchable"
+    "files": [
+      {
+        "archive": {
+          "kind": "tar.gz",
+          "members": {
+            "pattern": "(?:train|dev|test)/TRANS\\.txt"
+          }
+        },
+        "path": "train_set.tar.gz",
+        "source": 0
+      },
+      {
+        "archive": {
+          "kind": "tar.gz",
+          "members": {
+            "pattern": "(?:train|dev|test)/TRANS\\.txt"
+          }
+        },
+        "path": "dev_set.tar.gz",
+        "source": 1
+      },
+      {
+        "archive": {
+          "kind": "tar.gz",
+          "members": {
+            "pattern": "(?:train|dev|test)/TRANS\\.txt"
+          }
+        },
+        "path": "test_set.tar.gz",
+        "source": 2
+      }
+    ],
+    "parser": {
+      "columns": [
+        "SpeakerID",
+        "Transcription"
+      ],
+      "delimiter": "tab",
+      "encoding": "utf-8",
+      "format": "csv-table",
+      "idColumn": "UtteranceID",
+      "numericColumns": [],
+      "skipLines": 0
+    },
+    "status": "fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 6796,
-        "sha256": "e316110bda8fdf4cb763ba1b963cc2b5c9a5a084901ba73efc32be5b1e06194e",
-        "timestamp": "20260705094040",
-        "url": "https://web.archive.org/web/20260705094040/https://www.openslr.org/68/"
-      },
+      "retrieved": "2026-10-31",
       "status": "live",
-      "url": "https://www.openslr.org/68/"
+      "url": "https://www.openslr.org/resources/68/train_set.tar.gz"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/68/dev_set.tar.gz"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/68/test_set.tar.gz"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "speaker",
+    "text"
+  ]
 }

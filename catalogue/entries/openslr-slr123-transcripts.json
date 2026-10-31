@@ -5,11 +5,47 @@
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "file": "crosswalks/speech-v1/id-text.json"
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].span",
+        "op": "move",
+        "to": "nodes[].span"
+      },
+      {
+        "from": "nodes[].speaker",
+        "op": "move",
+        "to": "nodes[].speaker"
+      },
+      {
+        "from": "nodes[].gender_dialect",
+        "op": "move",
+        "to": "nodes[].gender_dialect"
+      },
+      {
+        "from": "nodes[].text",
+        "op": "move",
+        "to": "nodes[].text"
+      }
+    ],
+    "source": "csv-table",
+    "target": "speech/v1"
   },
-  "description": "The transcripts of MAGICDATA Mandarin Chinese Conversational Speech Corpus. No recipe reads them. Its transcripts are MagicData-RAMC's per-recording text files, inside archives that total about 15 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "description": "The transcripts of MAGICDATA Mandarin Chinese Conversational Speech Corpus: one instance per conversation, each record being an utterance with its line number in the conversation as identifier, the span of the conversation it covers (start and end in seconds, as the source writes them), its speaker, the speaker's gender and dialect as one field, and its text. It carries none of the audio, which the download list of openslr-slr123 gives.",
   "domain": "Speech",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "instances": 0
+  },
   "id": "openslr-slr123-transcripts",
   "licence": {
     "kind": "custom",
@@ -23,24 +59,50 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "Its transcripts are MagicData-RAMC's per-recording text files, inside archives that total about 15 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
-    "status": "not-fetchable"
+    "archive": {
+      "kind": "tar.gz",
+      "members": {
+        "pattern": "(?:\\./)?MDT2021S003/TXT/(?:.*/)?[^/]+\\.txt"
+      }
+    },
+    "parser": {
+      "columns": [
+        "span",
+        "speaker",
+        "gender_dialect",
+        "text"
+      ],
+      "delimiter": "tab",
+      "encoding": "utf-8",
+      "format": "csv-table",
+      "headerNames": [
+        "span",
+        "speaker",
+        "gender_dialect",
+        "text"
+      ],
+      "idColumn": null,
+      "numericColumns": [],
+      "skipLines": 0,
+      "unquoted": true
+    },
+    "source": 0,
+    "status": "fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 5290,
-        "sha256": "6e6ad165cdae6b85851243ec6ec539c3f80003527da5a7f52dfa19f28a92f9e7",
-        "timestamp": "20260624173739",
-        "url": "https://web.archive.org/web/20260624173739/https://www.openslr.org/123/"
-      },
+      "retrieved": "2026-10-31",
       "status": "live",
-      "url": "https://www.openslr.org/123/"
+      "url": "https://www.openslr.org/resources/123/MagicData-RAMC.tar.gz"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "span",
+    "speaker",
+    "gender_dialect",
+    "text"
+  ]
 }
