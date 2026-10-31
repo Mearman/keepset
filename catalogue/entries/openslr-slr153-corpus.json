@@ -7,7 +7,7 @@
   "crosswalk": {
     "file": "crosswalks/corpus-v1/word-text.json"
   },
-  "description": "The text of the Yerevan City Magazine corpus of Armenian articles: each document is one Word file of the archive, a .docx package or a legacy .doc file, read as the plain text of its main story with its paragraphs separated by line feeds and named by its path beneath the archive's top directory without the extension.",
+  "description": "The text of the Yerevan City Magazine corpus of Armenian articles: each document is one Word file of the archive, a .docx package or a legacy .doc file, read as the plain text of its main story with its paragraphs separated by line feeds and named by its path beneath the archive's top directory, its extension kept because one issue's folder holds a .docx and a .doc of the same name.",
   "domain": "Text",
   "expectedCounts": {
     "nodes": 0
@@ -34,7 +34,7 @@
     "parser": {
       "encoding": "utf-8",
       "format": "word-text",
-      "idPattern": "data_evnmag/(.+)\\.docx?"
+      "idPattern": "data_evnmag/(.+\\.docx?)"
     },
     "source": 0,
     "status": "fetchable"
