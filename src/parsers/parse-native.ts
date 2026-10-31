@@ -14,6 +14,7 @@ import { parseHhcrsp } from "./hhcrsp";
 import { parseOpenslrResource } from "./openslr-resource";
 import { parseUtteranceLines } from "./utterance-lines";
 import { parseJsonTable } from "./json-table";
+import { parseJsonWordCounts } from "./json-word-counts";
 import { parseLexiconLines } from "./lexicon-lines";
 import { parseEaf } from "./eaf";
 import { parseMemberText } from "./member-text";
@@ -135,7 +136,7 @@ export function* decodePieces(bytes: Uint8Array, parser: Parser, pieceBytes: num
   }
 }
 
-type TableParser = Extract<Parser, { format: "csv-table" | "geojson" | "json-table" | "lexicon-lines" }>;
+type TableParser = Extract<Parser, { format: "csv-table" | "geojson" | "json-table" | "json-word-counts" | "lexicon-lines" }>;
 
 /**
  * Reads a file into the native shape of the recipe's parser: a graph for the graph formats, a table of rows for the table formats.
@@ -178,6 +179,9 @@ export function parseNative(bytes: Uint8Array, parser: Parser): NativeDocument {
   }
   if (parser.format === "json-table") {
     return parseJsonTable(text, parser);
+  }
+  if (parser.format === "json-word-counts") {
+    return parseJsonWordCounts(text);
   }
   if (parser.format === "lexicon-lines") {
     return parseLexiconLines(text, parser);
