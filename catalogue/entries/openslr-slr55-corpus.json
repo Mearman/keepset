@@ -15,7 +15,7 @@
   "description": "The text of CLMAD, a Chinese language model adaptation dataset of news in 14 classes: one instance for the training archive and one for the test archive, each document being a class's file, its sentences one to a line with the words separated by spaces, exactly as the file is distributed. It carries the corpus's text and none of its original news items, which the source splits into sentences and removes the punctuation from.",
   "domain": "Text",
   "expectedCounts": {
-    "instances": 0
+    "instances": 2
   },
   "id": "openslr-slr55-corpus",
   "licence": {
