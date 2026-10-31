@@ -1,3 +1,17 @@
+# [0.95.0](https://github.com/Mearman/keepset/compare/v0.94.0...v0.95.0) (2026-10-31)
+
+
+### Features
+
+* **catalogue:** leave the MAGICDATA entry a record until its fetch has passed ([a40e27c](https://github.com/Mearman/keepset/commit/a40e27c1940caf769ed816baa333a767c0a476a6))
+* **catalogue:** read the Aishell, MAGICDATA and AISHELL-3 transcripts from their archives ([f1ddd9e](https://github.com/Mearman/keepset/commit/f1ddd9e334fba120fe1faa7402a93f3c12550774))
+* **catalogue:** read the Hi-Fi TTS and Golos transcripts from their manifests ([71f6980](https://github.com/Mearman/keepset/commit/71f69809bc824d5c419ba8df66dc0740cd667ed4))
+* **catalogue:** read the Kazakh Speech Corpus and Kazakh Speech Dataset transcripts ([cba5197](https://github.com/Mearman/keepset/commit/cba51975cb772f2b503d531e8e7e6a167aee1fd3))
+* **catalogue:** read the MUCS 2021 transcripts from each language's archives ([2b7ad99](https://github.com/Mearman/keepset/commit/2b7ad998841b240fc6ff2554b354eb6361276be1))
+* **catalogue:** read the SASPEECH subsets' transcripts from their metadata tables ([9dbe35e](https://github.com/Mearman/keepset/commit/9dbe35eef3f6256d9e4700c182add267cff1af5a))
+* **catalogue:** record the fetched counts of Aishell and the SASPEECH gold subset ([ad001a6](https://github.com/Mearman/keepset/commit/ad001a67991d1042c808f815602383fc508ddf63))
+* **catalogue:** record the fetched counts of nine more OpenSLR transcript sets ([f4c881e](https://github.com/Mearman/keepset/commit/f4c881e8ad1a71b15e2af7cf6886cf823c5f34c6))
+
 # [0.94.0](https://github.com/Mearman/keepset/compare/v0.93.0...v0.94.0) (2026-10-31)
 
 
