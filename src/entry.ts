@@ -146,7 +146,7 @@ const FileArchiveKindSchema = z.enum(["zip", "tar", "tar.gz", "tar.bz2"]);
 /** An archive a collection is read from: every file a selector matches, at least one. With `inner` of kind `xlsx`, every matched member is a workbook and each of its sheets, in the workbook's order, is one file of the collection: the sheet's CSV, at the path of the member and the sheet's name joined by `/`, for an instance format laid out on a sheet. `sheets` is a regular expression a sheet's whole name must match for the sheet to be read (every sheet when it is absent), and it must match at least one sheet of every workbook. */
 export const CollectionArchiveSchema = z.object({ kind: FileArchiveKindSchema, members: ArchiveMemberSchema, inner: z.object({ kind: z.literal("xlsx"), sheets: MemberPatternSchema.optional() }).strict().optional() }).strict();
 
-/** An archive whose dataset is spread over several of its files, which a parser of a multi-file format (`ogb`) reads together into one document: every file the `files` selector matches, at least one, in path order, each gunzipped first when `inner` says so (an OGB dataset zip holds its tables as `.csv.gz` files). */
+/** An archive whose dataset is spread over several of its files, which a parser of a multi-file format (`ogb`, `member-text`) reads together into one document: every file the `files` selector matches, at least one, in path order, each gunzipped first when `inner` says so (an OGB dataset zip holds its tables as `.csv.gz` files). */
 export const FilesArchiveSchema = z.object({ kind: FileArchiveKindSchema, files: ArchiveMemberSchema, inner: z.object({ kind: z.literal("gzip") }).strict().optional() }).strict();
 
 /** A spreadsheet read as the CSV of one of its sheets (the sheet's name, as the workbook gives it): an Excel workbook (`xlsx`), a legacy binary Excel 97 to 2003 workbook (`xls`, BIFF8) or an OpenDocument spreadsheet (`ods`, whose sheets are its tables). The three give the same text for the same cells. */
@@ -307,6 +307,16 @@ export const ParserSchema = z.discriminatedUnion("format", [
   z.object({ format: z.literal("witvliet-synapses"), encoding: z.literal("utf-8") }).strict(),
   /** An Open Graph Benchmark dataset's raw directory, read from the several files a `files` archive selects. */
   z.object({ format: z.literal("ogb"), encoding: z.literal("utf-8") }).strict(),
+  z
+    .object({
+      format: z.literal("member-text"),
+      encoding: EncodingSchema,
+      /** A regular expression the file's whole path matches, with one capture group: the recording's id. */
+      idPattern: MemberPatternSchema,
+      /** The 0-based line of each file that is the text, when a file holds more than the transcript; the whole file otherwise. */
+      line: z.int().min(0).optional(),
+    })
+    .strict(),
   z.object({ format: z.literal("customer-points"), encoding: EncodingSchema }).strict(),
   z.object({ format: z.literal("solomon"), encoding: EncodingSchema }).strict(),
   z.object({ format: z.literal("top"), encoding: EncodingSchema }).strict(),
@@ -393,7 +403,7 @@ export const PagingSchema = z.discriminatedUnion("kind", [
 export type Paging = z.infer<typeof PagingSchema>;
 
 /** The parser formats that read a dataset spread over several files of one archive, and so the only ones a `files` archive is given to. */
-export const MULTI_FILE_FORMATS: ReadonlySet<Parser["format"]> = new Set(["ogb"]);
+export const MULTI_FILE_FORMATS: ReadonlySet<Parser["format"]> = new Set(["ogb", "member-text"]);
 /** The parser formats that read a document from named parts, and the part names each requires (none for a format whose part names are its own, such as the splits of a triples download). */
 const PART_FORMATS: ReadonlyMap<Parser["format"], readonly string[] | undefined> = new Map([
   ["kg-triples", undefined],

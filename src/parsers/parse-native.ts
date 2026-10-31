@@ -14,6 +14,7 @@ import { parseHhcrsp } from "./hhcrsp";
 import { parseOpenslrResource } from "./openslr-resource";
 import { parseUtteranceLines } from "./utterance-lines";
 import { parseJsonTable } from "./json-table";
+import { parseMemberText } from "./member-text";
 import { parseMankowska } from "./mankowska";
 import { parseTdc } from "./tdc";
 import { parseVerolog2017 } from "./verolog-2017";
@@ -273,10 +274,16 @@ export function parseNativeParts(parts: readonly NamedBytes[], parser: Parser): 
  * Reads the several files of a multi-file format into the one native document they make together.
  * @param files - The files a `files` archive selects, each with its path in the archive, in path order.
  * @param parser - The recipe's parser, which must be a multi-file format.
- * @returns The native graph.
+ * @returns The native graph or table.
  * @throws NativeParseError when a file is not valid in the stated encoding or the files are not in the stated format, or when the parser reads one file and not several.
  */
-export function parseNativeFiles(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Parser): NativeGraph {
+export function parseNativeFiles(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Readonly<Extract<Parser, { format: "member-text" }>>): NativeTable;
+export function parseNativeFiles(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Exclude<Parser, { format: "member-text" }>): NativeGraph;
+export function parseNativeFiles(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Parser): NativeGraph | NativeTable;
+export function parseNativeFiles(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Parser): NativeGraph | NativeTable {
+  if (parser.format === "member-text") {
+    return parseMemberText(files, parser);
+  }
   if (parser.format !== "ogb") {
     // The recipe schema gives a files archive only to a multi-file parser, so a parsed entry never reaches this.
     throw new NativeParseError(parser.format, 1, "the format reads one file, not the several a files archive selects");
