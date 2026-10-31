@@ -1,0 +1,139 @@
+{
+  "aliases": [
+    "esc-50"
+  ],
+  "category": "audio/v1",
+  "citations": [
+    {
+      "doi": "10.1145/2733373.2806390",
+      "text": "K. J. Piczak (2015). ESC: Dataset for Environmental Sound Classification. Proceedings of the 23rd Annual ACM Conference on Multimedia, Brisbane, Australia, 1015-1018."
+    }
+  ],
+  "crosswalk": {
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].category",
+        "op": "move",
+        "to": "nodes[].label"
+      },
+      {
+        "from": "nodes[].fold",
+        "op": "move",
+        "to": "nodes[].split"
+      },
+      {
+        "from": "nodes[].target",
+        "op": "move",
+        "to": "nodes[].target"
+      },
+      {
+        "from": "nodes[].esc10",
+        "op": "move",
+        "to": "nodes[].esc10"
+      },
+      {
+        "from": "nodes[].src_file",
+        "op": "move",
+        "to": "nodes[].src_file"
+      },
+      {
+        "from": "nodes[].take",
+        "op": "move",
+        "to": "nodes[].take"
+      }
+    ],
+    "source": "csv-table",
+    "target": "audio/v1"
+  },
+  "description": "A labelled collection of short environmental audio recordings (animals, natural soundscapes, non-speech human sounds, domestic and urban noises) for benchmarking environmental sound classification, as the clips its annotation table lists: one record per recording, named by its file, with its sound class (category and its numeric target), the cross-validation fold it belongs to (the split), whether it is in the ESC-10 subset, and the Freesound clip it was cut from (src_file) with the letter that tells fragments of one Freesound clip apart (take). The dataset as a whole is under CC BY-NC 3.0, and the ESC-10 subset is also licensed CC BY 3.0. It carries none of the audio, which is the WAV files in the audio directory of the same repository, downloadable as one archive.",
+  "domain": "Audio",
+  "expectedCounts": {
+    "nodes": 2000
+  },
+  "id": "esc50",
+  "licence": {
+    "id": "CC-BY-NC-3.0",
+    "kind": "spdx"
+  },
+  "name": "ESC-50: Dataset for Environmental Sound Classification",
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "columns": [
+        "fold",
+        "target",
+        "category",
+        "esc10",
+        "src_file",
+        "take"
+      ],
+      "delimiter": "comma",
+      "encoding": "utf-8",
+      "format": "csv-table",
+      "idColumn": "filename",
+      "numericColumns": [
+        {
+          "column": "target",
+          "factor": 1
+        }
+      ],
+      "skipLines": 0
+    },
+    "source": 1,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-31",
+      "snapshot": {
+        "timestamp": "20261031113231",
+        "url": "https://web.archive.org/web/20261031113231/https://github.com/karolpiczak/ESC-50"
+      },
+      "status": "live",
+      "url": "https://github.com/karolpiczak/ESC-50"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "snapshot": {
+        "timestamp": "20261031113059",
+        "url": "https://web.archive.org/web/20261031113059/https://raw.githubusercontent.com/karolpiczak/ESC-50/33c8ce9eb2cf0b1c2f8bcf322eb349b6be34dbb6/meta/esc50.csv"
+      },
+      "status": "live",
+      "url": "https://raw.githubusercontent.com/karolpiczak/ESC-50/33c8ce9eb2cf0b1c2f8bcf322eb349b6be34dbb6/meta/esc50.csv"
+    },
+    {
+      "retrieved": "2026-10-31",
+      "snapshot": {
+        "timestamp": "20261031113240",
+        "url": "https://web.archive.org/web/20261031113240/https://huggingface.co/datasets/ashraq/esc50"
+      },
+      "status": "live",
+      "url": "https://huggingface.co/datasets/ashraq/esc50"
+    }
+  ],
+  "subjects": [
+    "audio-signal-processing"
+  ],
+  "tags": [
+    "label",
+    "split",
+    "target",
+    "esc10",
+    "src_file",
+    "take"
+  ]
+}

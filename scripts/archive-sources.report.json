@@ -14695,6 +14695,10 @@
       "url": "https://github.com/benmaier/BFMaierFBnetwork"
     },
     {
+      "timestamp": "20261031113231",
+      "url": "https://github.com/karolpiczak/ESC-50"
+    },
+    {
       "timestamp": "20261022021217",
       "url": "https://github.com/rionbr/DDIBlumenau/tree/master/csv"
     },
@@ -14709,6 +14713,10 @@
     {
       "timestamp": "20261022010716",
       "url": "https://huggingface.co/datasets/Mearman/OpenAlex"
+    },
+    {
+      "timestamp": "20261031113240",
+      "url": "https://huggingface.co/datasets/ashraq/esc50"
     },
     {
       "timestamp": "20261022010652",
@@ -15733,6 +15741,10 @@
     {
       "timestamp": "20260731105649",
       "url": "https://raw.githubusercontent.com/jpatokal/openflights/master/data/routes.dat"
+    },
+    {
+      "timestamp": "20261031113059",
+      "url": "https://raw.githubusercontent.com/karolpiczak/ESC-50/33c8ce9eb2cf0b1c2f8bcf322eb349b6be34dbb6/meta/esc50.csv"
     },
     {
       "timestamp": "20261022040339",
