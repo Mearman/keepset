@@ -31,8 +31,8 @@ const FILLER_BYTES = BUDGETS_OF_FILLER * MEMORY_BUDGET;
 const PIECES_PER_MEBIBYTE = 4;
 const PIECE_BYTES = MEBIBYTE / PIECES_PER_MEBIBYTE;
 const MEASURE_EVERY = 16;
-/** The time one mebibyte of the filler takes through the whole pipeline (generated, gzipped, hashed, written to the kept file, read back, gunzipped and scanned, with a garbage collection at each measurement) alone on a quiet host, rounded up. */
-const QUIET_MILLISECONDS_PER_FILLER_MEBIBYTE = 70;
+/** The time one mebibyte of the filler takes through the whole pipeline (generated, gzipped, hashed, written to the kept file, read back, gunzipped with every member's CRC-32 and length verified, and scanned, with a garbage collection at each measurement) alone on a quiet host, rounded up. */
+const QUIET_MILLISECONDS_PER_FILLER_MEBIBYTE = 90;
 const FETCH_TIMEOUT_MILLISECONDS = allowance((FILLER_BYTES / MEBIBYTE) * QUIET_MILLISECONDS_PER_FILLER_MEBIBYTE);
 
 const karate = "% karate excerpt\n1 2\n2 3\n3 1\n";
@@ -62,67 +62,125 @@ class Peak {
   }
 }
 
-describe("a fetch of a source larger than memory", () => {
-  it("downloads, hashes, decompresses and scans a tar.gz far larger than the memory budget while retaining less than it, and keeps only the selected member", async () => {
-    const peak = new Peak();
-    const hash = createHash("sha256");
-    let byteLength = 0;
-    const members = [
-      { path: "net/filler.bin", size: FILLER_BYTES, bytes: (_offset: number, length: number): Uint8Array => randomBytes(length) },
-      { path: "net/karate.txt", size: karate.length, bytes: (offset: number, length: number): Uint8Array => new TextEncoder().encode(karate.slice(offset, offset + length)) },
-    ];
-    const pieces = rechunk(lazyGzip(lazyTar(members, PIECE_BYTES)), PIECE_BYTES);
-    let index = 0;
-    // The archive is made as the fetch pulls it and hashed here as it goes, so neither side of the test holds it.
-    const body = new ReadableStream<Uint8Array>(
-      {
-        async pull(controller) {
-          await peak.measure(index);
-          index += 1;
-          const next = pieces.next();
-          if (next.done === true) {
-            controller.close();
+/** The gzip trailer's length: its CRC-32 is its first four bytes, so the byte this far from the end of the data is the CRC's first. */
+const GZIP_TRAILER_BYTES = 8;
 
-            return;
+/**
+ * Passes pieces on unchanged but for one bit of the CRC-32 in the gzip trailer at their end, which it flips, holding back the last piece until the next arrives so the trailer can be found however the pieces cut it.
+ * @param pieces - The gzip data, in pieces.
+ * @returns The same pieces with the trailer's CRC-32 corrupted.
+ */
+function* withCorruptCrc(pieces: Readonly<Iterable<Uint8Array>>): Generator<Uint8Array, void, undefined> {
+  let held = new Uint8Array(0);
+  for (const piece of pieces) {
+    // Everything but the last trailer's worth of bytes is safe to pass on.
+    const joined = new Uint8Array(held.length + piece.length);
+    joined.set(held);
+    joined.set(piece, held.length);
+    const keep = Math.min(joined.length, GZIP_TRAILER_BYTES);
+    if (joined.length > keep) {
+      yield joined.slice(0, joined.length - keep);
+    }
+    held = joined.slice(joined.length - keep);
+  }
+  held[0] = (held[0] ?? expect.unreachable("the gzip data ends with a trailer")) ^ 1;
+  yield held;
+}
+
+/**
+ * Fetches a karate excerpt from a tar.gz whose filler member is several times the memory budget, made and hashed as the fetch pulls it, with what the process retains measured as the source is downloaded and as it is read back.
+ * @param corrupt - Whether the gzip trailer's CRC-32 is corrupted on the way.
+ * @returns What the fetch gave, or the error it failed with, the source's hash and length, how many pieces were pulled, and the most the process retained.
+ */
+async function fetchLargeTarGz(corrupt: boolean): Promise<{ readonly outcome: PromiseSettledResult<Awaited<ReturnType<typeof fetchEntry>>>; readonly sha256: string; readonly byteLength: number; readonly pulled: number; readonly peak: number }> {
+  const peak = new Peak();
+  const hash = createHash("sha256");
+  let byteLength = 0;
+  const members = [
+    { path: "net/filler.bin", size: FILLER_BYTES, bytes: (_offset: number, length: number): Uint8Array => randomBytes(length) },
+    { path: "net/karate.txt", size: karate.length, bytes: (offset: number, length: number): Uint8Array => new TextEncoder().encode(karate.slice(offset, offset + length)) },
+  ];
+  const gzipped = lazyGzip(lazyTar(members, PIECE_BYTES));
+  const pieces = rechunk(corrupt ? withCorruptCrc(gzipped) : gzipped, PIECE_BYTES);
+  let index = 0;
+  // The archive is made as the fetch pulls it and hashed here as it goes, so neither side of the test holds it.
+  const body = new ReadableStream<Uint8Array>(
+    {
+      async pull(controller) {
+        await peak.measure(index);
+        index += 1;
+        const next = pieces.next();
+        if (next.done === true) {
+          controller.close();
+
+          return;
+        }
+        hash.update(next.value);
+        byteLength += next.value.length;
+        controller.enqueue(next.value);
+      },
+    },
+    { highWaterMark: 0 },
+  );
+  // The source has no snapshot, so the chain asks the availability API first, which holds no capture here, and then reads the live URL.
+  const fetch: FetchPort = async (requested) => Promise.resolve(requested === liveEntry.sources[0]?.url ? new Response(body) : new Response(null, { status: 404 }));
+  const files = fileStore();
+  // Node's own store, with each chunk it reads back from the kept file measured on the way, so the reading is measured as the download is.
+  const store: StorePort = {
+    keep: async (response, request) => {
+      const kept: StoredSource = await files.keep(response, request);
+      let read = 0;
+
+      return {
+        ...kept,
+        async *chunks() {
+          for await (const chunk of kept.chunks()) {
+            await peak.measure(read);
+            read += 1;
+            yield chunk;
           }
-          hash.update(next.value);
-          byteLength += next.value.length;
-          controller.enqueue(next.value);
         },
-      },
-      { highWaterMark: 0 },
-    );
-    // The source has no snapshot, so the chain asks the availability API first, which holds no capture here, and then reads the live URL.
-    const fetch: FetchPort = async (requested) => Promise.resolve(requested === liveEntry.sources[0]?.url ? new Response(body) : new Response(null, { status: 404 }));
-    const files = fileStore();
-    // Node's own store, with each chunk it reads back from the kept file measured on the way, so the reading is measured as the download is.
-    const store: StorePort = {
-      keep: async (response, request) => {
-        const kept: StoredSource = await files.keep(response, request);
-        let read = 0;
+      };
+    },
+    hold: async (bytes) => files.hold(bytes),
+  };
+  const entry = { ...liveEntry, expectedCounts: { nodes: 3, edges: 3 }, recipe: { ...liveEntry.recipe, archive: { kind: "tar.gz", member: { path: "karate.txt" } } } };
+  await peak.start();
+  const [outcome] = await Promise.allSettled([fetchEntry(datasetWith(entry), { fetch, store, now })]);
 
-        return {
-          ...kept,
-          async *chunks() {
-            for await (const chunk of kept.chunks()) {
-              await peak.measure(read);
-              read += 1;
-              yield chunk;
-            }
-          },
-        };
-      },
-      hold: async (bytes) => files.hold(bytes),
-    };
-    const entry = { ...liveEntry, expectedCounts: { nodes: 3, edges: 3 }, recipe: { ...liveEntry.recipe, archive: { kind: "tar.gz", member: { path: "karate.txt" } } } };
-    await peak.start();
-    const fetched = await fetchEntry(datasetWith(entry), { fetch, store, now });
-    expect(fetched.data).toMatchObject({ nodes: [{ id: "1" }, { id: "2" }, { id: "3" }] });
-    expect(fetched.provenance).toMatchObject({ sha256: hash.digest("hex"), byteLength, member: "net/karate.txt" });
-    expect(byteLength).toBeGreaterThan(FILLER_BYTES);
-    expect(index).toBeGreaterThan(MEASURE_EVERY);
-    expect(peak.most).toBeLessThan(MEMORY_BUDGET);
-  }, FETCH_TIMEOUT_MILLISECONDS);
+  return { outcome, sha256: hash.digest("hex"), byteLength, pulled: index, peak: peak.most };
+}
+
+describe("a fetch of a source larger than memory", () => {
+  it(
+    "downloads, hashes, decompresses, verifies and scans a tar.gz far larger than the memory budget while retaining less than it, and keeps only the selected member",
+    async () => {
+      const { outcome, sha256, byteLength, pulled, peak } = await fetchLargeTarGz(false);
+      if (outcome.status === "rejected") {
+        throw outcome.reason;
+      }
+      expect(outcome.value.data).toMatchObject({ nodes: [{ id: "1" }, { id: "2" }, { id: "3" }] });
+      expect(outcome.value.provenance).toMatchObject({ sha256, byteLength, member: "net/karate.txt" });
+      expect(byteLength).toBeGreaterThan(FILLER_BYTES);
+      expect(pulled).toBeGreaterThan(MEASURE_EVERY);
+      expect(peak).toBeLessThan(MEMORY_BUDGET);
+    },
+    FETCH_TIMEOUT_MILLISECONDS,
+  );
+
+  it(
+    "refuses the same tar.gz when its gzip trailer's CRC-32 does not match, after reading it all within the memory budget, rather than handing on the member it found",
+    async () => {
+      const { outcome, byteLength, peak } = await fetchLargeTarGz(true);
+      expect(outcome.status).toBe("rejected");
+      if (outcome.status === "rejected") {
+        expect(String(outcome.reason)).toMatch(/the gzip stream fails its checksum/);
+      }
+      expect(byteLength).toBeGreaterThan(FILLER_BYTES);
+      expect(peak).toBeLessThan(MEMORY_BUDGET);
+    },
+    FETCH_TIMEOUT_MILLISECONDS,
+  );
 });
 
 describe("a fetch of a solid 7z archive larger than memory", () => {
