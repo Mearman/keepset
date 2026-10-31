@@ -5,11 +5,13 @@
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "file": "crosswalks/speech-v1/id-text.json"
+    "file": "crosswalks/speech-v1/utterance-lines.json"
   },
-  "description": "The transcripts of SlideSpeech as the segment records of its video metadata files give them, with the start and end of each segment and its text with and without punctuation. No recipe reads them yet. The transcripts are the segment records (each with a text and a punctuated text, a start and an end) of the video metadata files under info/ (dev_meta_info.json and test_meta_info.json among them) in preprocessed_ocr.tar.gz, which is the member of related_files.tar.gz that holds the segments and OCR results as one gzip stream; the audio and video archives hold no transcripts. No recipe reads that layout yet: its field names have not been confirmed against a complete read of the metadata file, and a recipe is written from a read of the real file.",
+  "description": "The transcripts of SlideSpeech: each instance is one split of the corpus (L95, S95, dev and test), named by the path of its text file inside the all_information.tar.gz member of the related files archive, and each of its records is an utterance with its identifier and its transcript as the corpus writes it, in capitals. It carries none of the audio or video, the start and end times that the segments file beside each text file gives, or the slide text and keywords, and a split's identifiers are its own, so the same identifier can occur in two splits.",
   "domain": "Audio-Visual Speech",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "instances": 0
+  },
   "id": "openslr-slr144-transcripts",
   "licence": {
     "kind": "custom",
@@ -23,8 +25,24 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "The transcripts are the segment records (each with a text and a punctuated text, a start and an end) of the video metadata files under info/ (dev_meta_info.json and test_meta_info.json among them) in preprocessed_ocr.tar.gz, which is the member of related_files.tar.gz that holds the segments and OCR results as one gzip stream; the audio and video archives hold no transcripts. No recipe reads that layout yet: its field names have not been confirmed against a complete read of the metadata file, and a recipe is written from a read of the real file.",
-    "status": "not-fetchable"
+    "archive": {
+      "inner": {
+        "kind": "tar.gz",
+        "members": {
+          "pattern": "(?:L95|S95|dev|test)/text"
+        }
+      },
+      "kind": "tar.gz",
+      "members": {
+        "path": "all_information.tar.gz"
+      }
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "utterance-lines"
+    },
+    "source": 0,
+    "status": "fetchable"
   },
   "sources": [
     {
@@ -36,5 +54,7 @@
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "text"
+  ]
 }
