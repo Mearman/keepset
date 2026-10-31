@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { Parser } from "../entry";
+import { ParserSchema, type Parser } from "../entry";
 import { NativeParseError } from "../errors";
 import { parseMemberText } from "./member-text";
 import { parseNativeFiles } from "./parse-native";
@@ -45,6 +45,21 @@ describe("the member-text parser", () => {
     expect(fails(() => parseMemberText([file("notes.md", "x")], parser())).message).toMatch(/gives no id/);
     expect(fails(() => parseMemberText([file("a/x.wav.trn", "1"), file("b/x.wav.trn", "2")], parser())).message).toMatch(/id x is given by two files/);
     expect(fails(() => parseMemberText([file("x.wav.trn", "only")], parser({ line: 2 }))).message).toMatch(/no line 3/);
+  });
+
+  it("keeps a verbatim file's text exactly as decoded, its whitespace and line endings with it, and an empty file as an empty text", () => {
+    const books = [file("10000/pg10000.txt", "﻿  The Magna Carta\r\n\r\nEnd \r\n"), file("10001/pg10001.txt", ""), file("10002/pg10002.txt", " \n")];
+    expect(parseMemberText(books, parser({ idPattern: "([0-9]+)/pg\\1\\.txt", verbatim: true })).nodes).toEqual([
+      { id: "10000", text: "  The Magna Carta\r\n\r\nEnd \r\n" },
+      { id: "10001", text: "" },
+      { id: "10002", text: " \n" },
+    ]);
+  });
+
+  it("refuses a verbatim recipe that also names a line", () => {
+    const entryParser = ParserSchema.safeParse(parser({ verbatim: true, line: 0 }));
+    expect(entryParser.error?.issues.map((issue) => issue.message)).toEqual(["a verbatim file is read whole, so it names no line"]);
+    expect(ParserSchema.safeParse(parser({ verbatim: true })).success).toBe(true);
   });
 
   it("is what parseNativeFiles runs for the format", () => {

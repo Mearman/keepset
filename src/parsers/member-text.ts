@@ -12,7 +12,7 @@ const FORMAT = "member-text";
 const BYTE_ORDER_MARK = "﻿";
 
 /**
- * Reads a corpus whose transcripts are one small text file per recording: each file is a row, its id taken from the file's path and its text from the file's contents. The id is the capture group of the recipe's `idPattern`, which must match the file's whole path, so the same pattern that names the recording (`.../F01_a1_s001_v01.txt`) says which part of the path is its id. The text is the file's contents without a byte order mark and without surrounding whitespace, or when the recipe names a `line` only that line (a file that holds the words, then their pinyin, then their phones, one per line). Line endings of any kind separate lines, and a file with no text is a row with a null text.
+ * Reads a corpus whose texts are one text file each, such as the transcripts of one recording each or the books of a library: each file is a row, its id taken from the file's path and its text from the file's contents. The id is the capture group of the recipe's `idPattern`, which must match the file's whole path, so the same pattern that names the recording (`.../F01_a1_s001_v01.txt`) says which part of the path is its id. The text is the file's contents without a byte order mark and without surrounding whitespace, or when the recipe names a `line` only that line (a file that holds the words, then their pinyin, then their phones, one per line). Line endings of any kind separate lines, and a file with no text is a row with a null text. A `verbatim` recipe keeps the contents exactly as decoded instead, without only the byte order mark, so an empty file is an empty text.
  * @param files - The files a `files` archive selects, each with its path in the archive, in path order.
  * @param parser - The recipe's parser.
  * @returns One row per file, in path order.
@@ -28,7 +28,12 @@ export function parseMemberText(files: readonly { readonly path: string; readonl
     }
     seen.add(id);
     const decoded = decode(file.bytes, parser);
-    const content = (decoded.startsWith(BYTE_ORDER_MARK) ? decoded.slice(BYTE_ORDER_MARK.length) : decoded).trim();
+    const unmarked = decoded.startsWith(BYTE_ORDER_MARK) ? decoded.slice(BYTE_ORDER_MARK.length) : decoded;
+    if (parser.verbatim === true) {
+      nodes.push({ id, text: unmarked });
+      continue;
+    }
+    const content = unmarked.trim();
     let text = content;
     if (parser.line !== undefined) {
       const lines = content.split(/\r\n|\n|\r/);

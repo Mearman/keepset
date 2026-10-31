@@ -387,8 +387,11 @@ export const ParserSchema = z.discriminatedUnion("format", [
       idPattern: MemberPatternSchema,
       /** The 0-based line of each file that is the text, when a file holds more than the transcript; the whole file otherwise. */
       line: z.int().min(0).optional(),
+      /** Set to pass each file's text on exactly as decoded, for a corpus whose documents are the files: surrounding whitespace and line endings are kept and an empty file is an empty text, where otherwise the text is trimmed and an empty one is null. A byte order mark is still not part of the text, being the encoding's mark. A verbatim file is read whole, so it names no `line`. */
+      verbatim: z.literal(true).optional(),
     })
-    .strict(),
+    .strict()
+    .refine((parser) => parser.verbatim === undefined || parser.line === undefined, { message: "a verbatim file is read whole, so it names no line", path: ["line"] }),
   z.object({ format: z.literal("customer-points"), encoding: EncodingSchema }).strict(),
   z.object({ format: z.literal("solomon"), encoding: EncodingSchema }).strict(),
   z.object({ format: z.literal("top"), encoding: EncodingSchema }).strict(),
