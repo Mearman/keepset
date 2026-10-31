@@ -22,6 +22,7 @@ import { parseNxtWords } from "./nxt-words";
 import { parseChat } from "./chat";
 import { parseMtedx } from "./mtedx";
 import { parseOptionList } from "./option-list";
+import { parseStm } from "./stm";
 import { parseTextGrid } from "./textgrid";
 import { parseMankowska } from "./mankowska";
 import { parseTdc } from "./tdc";
@@ -291,8 +292,8 @@ export function parseNativeParts(parts: readonly NamedBytes[], parser: Parser): 
  * @returns The native graph or table.
  * @throws NativeParseError when a file is not valid in the stated encoding or the files are not in the stated format, or when the parser reads one file and not several.
  */
-export function parseNativeFiles(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Readonly<Extract<Parser, { format: "member-text" | "nxt-words" | "eaf" | "textgrid" | "option-list" | "chat" | "mtedx" }>>): NativeTable;
-export function parseNativeFiles(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Exclude<Parser, { format: "member-text" | "nxt-words" | "eaf" | "textgrid" | "option-list" | "chat" | "mtedx" }>): NativeGraph;
+export function parseNativeFiles(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Readonly<Extract<Parser, { format: "member-text" | "nxt-words" | "eaf" | "textgrid" | "option-list" | "chat" | "mtedx" | "stm" }>>): NativeTable;
+export function parseNativeFiles(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Exclude<Parser, { format: "member-text" | "nxt-words" | "eaf" | "textgrid" | "option-list" | "chat" | "mtedx" | "stm" }>): NativeGraph;
 export function parseNativeFiles(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Parser): NativeGraph | NativeTable;
 export function parseNativeFiles(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Parser): NativeGraph | NativeTable {
   if (parser.format === "member-text") {
@@ -315,6 +316,9 @@ export function parseNativeFiles(files: readonly { readonly path: string; readon
   }
   if (parser.format === "chat") {
     return parseChat(files, parser);
+  }
+  if (parser.format === "stm") {
+    return parseStm(files, parser);
   }
   if (parser.format !== "ogb") {
     // The recipe schema gives a files archive only to a multi-file parser, so a parsed entry never reaches this.

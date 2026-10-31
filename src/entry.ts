@@ -153,7 +153,7 @@ export const CollectionArchiveSchema = z
   })
   .strict();
 
-/** An archive whose dataset is spread over several of its files, which a parser of a multi-file format (`ogb`, `member-text`, `nxt-words`, `eaf`, `textgrid`, `option-list`, `chat`, `mtedx`) reads together into one document: every file the `files` selector matches, at least one, in path order, each gunzipped first when `inner` is `gzip` (an OGB dataset zip holds its tables as `.csv.gz` files). When `inner` is a file archive kind with its own `files` selector, each matched member is an archive in its turn and the files are those its selector matches, at least one in each, filed under the member's path and the file's path joined by `/` (a tarball that holds its annotations as one zip). With `concatenate`, the files are instead one file for a parser that reads one: their texts one after another in path order, a line break added after a file that does not end with one, so a transcript table split over a file for each chapter is read as the one table it is. */
+/** An archive whose dataset is spread over several of its files, which a parser of a multi-file format (`ogb`, `member-text`, `nxt-words`, `eaf`, `textgrid`, `option-list`, `chat`, `mtedx`, `stm`) reads together into one document: every file the `files` selector matches, at least one, in path order, each gunzipped first when `inner` is `gzip` (an OGB dataset zip holds its tables as `.csv.gz` files). When `inner` is a file archive kind with its own `files` selector, each matched member is an archive in its turn and the files are those its selector matches, at least one in each, filed under the member's path and the file's path joined by `/` (a tarball that holds its annotations as one zip). With `concatenate`, the files are instead one file for a parser that reads one: their texts one after another in path order, a line break added after a file that does not end with one, so a transcript table split over a file for each chapter is read as the one table it is. */
 export const FilesArchiveSchema = z
   .object({
     kind: FileArchiveKindSchema,
@@ -368,6 +368,8 @@ export const ParserSchema = z.discriminatedUnion("format", [
   z.object({ format: z.literal("chat"), encoding: z.literal("utf-8"), idPattern: MemberPatternSchema }).strict(),
   /** A Multilingual TEDx (mTEDx) language directory: each split's line-aligned `segments`, `<split>.yaml` and `<split>.<language>` files, read from the several files a `files` archive selects. */
   z.object({ format: z.literal("mtedx"), encoding: z.literal("utf-8") }).strict(),
+  /** NIST STM files, which are UTF-8 in the corpora that use them: each segment line is a row, read from the several files a `files` archive selects. */
+  z.object({ format: z.literal("stm"), encoding: z.literal("utf-8"), idPattern: MemberPatternSchema }).strict(),
   z
     .object({
       format: z.literal("option-list"),
@@ -510,7 +512,7 @@ export const PagingSchema = z.discriminatedUnion("kind", [
 export type Paging = z.infer<typeof PagingSchema>;
 
 /** The parser formats that read a dataset spread over several files of one archive, and so the only ones a `files` archive is given to. */
-export const MULTI_FILE_FORMATS: ReadonlySet<Parser["format"]> = new Set(["ogb", "member-text", "nxt-words", "eaf", "textgrid", "option-list", "chat", "mtedx"]);
+export const MULTI_FILE_FORMATS: ReadonlySet<Parser["format"]> = new Set(["ogb", "member-text", "nxt-words", "eaf", "textgrid", "option-list", "chat", "mtedx", "stm"]);
 /** The multi-file formats that read each file of a files archive into one row of its own, so a streamed recipe can hand the files to them one at a time. */
 export type StreamedFileFormat = Extract<Parser["format"], "member-text">;
 export const STREAMED_FILE_FORMATS: ReadonlySet<Parser["format"]> = new Set<StreamedFileFormat>(["member-text"]);
