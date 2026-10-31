@@ -14,7 +14,9 @@ import { parseHhcrsp } from "./hhcrsp";
 import { parseOpenslrResource } from "./openslr-resource";
 import { parseUtteranceLines } from "./utterance-lines";
 import { parseJsonTable } from "./json-table";
+import { parseEaf } from "./eaf";
 import { parseMemberText } from "./member-text";
+import { parseNxtWords } from "./nxt-words";
 import { parseMankowska } from "./mankowska";
 import { parseTdc } from "./tdc";
 import { parseVerolog2017 } from "./verolog-2017";
@@ -222,7 +224,7 @@ export function parseNative(bytes: Uint8Array, parser: Parser): NativeDocument {
     return parseOpenslrResource(text);
   }
   if (parser.format === "utterance-lines") {
-    return parseUtteranceLines(text);
+    return parseUtteranceLines(text, parser);
   }
   if (parser.format === "ogb") {
     // The recipe schema gives a multi-file parser only a files archive, which is read by parseNativeFiles, so a parsed entry never reaches this.
@@ -277,12 +279,18 @@ export function parseNativeParts(parts: readonly NamedBytes[], parser: Parser): 
  * @returns The native graph or table.
  * @throws NativeParseError when a file is not valid in the stated encoding or the files are not in the stated format, or when the parser reads one file and not several.
  */
-export function parseNativeFiles(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Readonly<Extract<Parser, { format: "member-text" }>>): NativeTable;
-export function parseNativeFiles(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Exclude<Parser, { format: "member-text" }>): NativeGraph;
+export function parseNativeFiles(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Readonly<Extract<Parser, { format: "member-text" | "nxt-words" | "eaf" }>>): NativeTable;
+export function parseNativeFiles(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Exclude<Parser, { format: "member-text" | "nxt-words" | "eaf" }>): NativeGraph;
 export function parseNativeFiles(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Parser): NativeGraph | NativeTable;
 export function parseNativeFiles(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Parser): NativeGraph | NativeTable {
   if (parser.format === "member-text") {
     return parseMemberText(files, parser);
+  }
+  if (parser.format === "nxt-words") {
+    return parseNxtWords(files, parser);
+  }
+  if (parser.format === "eaf") {
+    return parseEaf(files, parser);
   }
   if (parser.format !== "ogb") {
     // The recipe schema gives a files archive only to a multi-file parser, so a parsed entry never reaches this.
