@@ -105,13 +105,14 @@ export function readsByRanges(archive: Archive): boolean {
 }
 
 /**
- * Unpacks a source into the one file the parser reads. A member with an `inner` archive is unpacked again by that layout, and the path reported is the outer member's, joined by `/` to the inner member's or the inner sheet's name when the inner layout selects one, as though the inner archive were a directory. A tar archive is read as it arrives and a zip by the ranges its directory names, so only the selected member is ever held; a plain or compressed file and a workbook are read whole, as their parsers read them.
+ * Unpacks a source into the one file the parser reads. A member with an `inner` archive is unpacked again by that layout, and the path reported is the outer member's, joined by `/` to the inner member's or the inner sheet's name when the inner layout selects one, as though the inner archive were a directory. A tar archive is read as it arrives, a zip by the ranges its directory names and a 7z archive by the platform's 7z reader, so only the selected member is ever held; a plain or compressed file and a workbook are read whole, as their parsers read them.
  * @param input - The downloaded bytes, held in memory or kept anywhere.
  * @param archive - The recipe's archive layout.
+ * @param options - The platform's 7z reader and the abort signal, which only a 7z archive needs.
  * @returns The file's bytes, and its member path for a multi-file archive.
  * @throws ArchiveError when the bytes, or a member's bytes that an `inner` layout reads, are not a well-formed archive of the stated kind or a selector does not match exactly one member.
  */
-export async function unpack(input: Uint8Array | Readonly<SourceBytes>, archive: DocumentArchive): Promise<Unpacked> {
+export async function unpack(input: Uint8Array | Readonly<SourceBytes>, archive: DocumentArchive, options?: Readonly<UnpackOptions>): Promise<Unpacked> {
   const source = asSource(input);
   if (archive.kind === "none") {
     return { bytes: await source.bytes() };
@@ -128,7 +129,7 @@ export async function unpack(input: Uint8Array | Readonly<SourceBytes>, archive:
   if (archive.kind === "shapefile") {
     return unpackShapefile(source, archive.member);
   }
-  const outer = await selectMember(source, archive);
+  const outer = await selectMember(source, archive, options);
   if (archive.inner === undefined) {
     return outer;
   }
@@ -138,7 +139,7 @@ export async function unpack(input: Uint8Array | Readonly<SourceBytes>, archive:
   if ("sheet" in archive.inner) {
     return { bytes: sheetToCsv(outer.bytes, archive.inner), member: `${outer.member}/${archive.inner.sheet}` };
   }
-  const inner = await selectMember(bytesSource(outer.bytes), archive.inner);
+  const inner = await selectMember(bytesSource(outer.bytes), archive.inner, options);
 
   return { bytes: inner.bytes, member: `${outer.member}/${inner.member}` };
 }
@@ -147,15 +148,16 @@ export async function unpack(input: Uint8Array | Readonly<SourceBytes>, archive:
  * Unpacks the one member a file archive's selector matches.
  * @param source - The archive.
  * @param archive - A file archive layout and its selector.
+ * @param options - The platform's 7z reader and the abort signal, which only a 7z archive needs.
  * @returns The member's bytes and path.
  * @throws ArchiveError when the bytes are not a well-formed archive of the stated kind or the selector does not match exactly one member.
  */
-async function selectMember(source: Readonly<SourceBytes>, archive: Extract<InnerArchive, { readonly member: ArchiveMember }>): Promise<{ readonly bytes: Uint8Array; readonly member: string }> {
+async function selectMember(source: Readonly<SourceBytes>, archive: Extract<InnerArchive, { readonly member: ArchiveMember }>, options: Readonly<UnpackOptions> | undefined): Promise<{ readonly bytes: Uint8Array; readonly member: string }> {
   const members = readMembers(
     source,
     archive.kind,
-    (path) => selects(path, archive.member),
-    (paths) => [{ path: pick(paths, archive.member) }],
+    { candidate: (path) => selects(path, archive.member), choose: (paths) => [{ path: pick(paths, archive.member) }] },
+    options,
   );
   for await (const member of members) {
     return { bytes: member.bytes, member: member.path };
@@ -210,16 +212,17 @@ export interface Member {
 }
 
 /**
- * Unpacks a source into every file a collection's selector matches, or, with an `xlsx` inner layout, into every sheet of every matched workbook that its `sheets` pattern matches as the sheet's CSV, at the member's path and the sheet's name joined by `/`, members in path order and sheets in the workbook's order. The files are given one at a time: a zip member is read and inflated only when it is reached, so a reader that lets each file go before taking the next holds one member's bytes, never every member at once; a tar archive is read once as it arrives, keeping the members the selector matches.
+ * Unpacks a source into every file a collection's selector matches, or, with an `xlsx` inner layout, into every sheet of every matched workbook that its `sheets` pattern matches as the sheet's CSV, at the member's path and the sheet's name joined by `/`, members in path order and sheets in the workbook's order. The files are given one at a time: a zip member is read and inflated only when it is reached, so a reader that lets each file go before taking the next holds one member's bytes, never every member at once; a tar archive is read once as it arrives, keeping the members the selector matches; a 7z archive is decoded once by the platform's 7z reader, which keeps the members the selector matches where it can give them one at a time.
  * @param input - The downloaded bytes, held in memory or kept anywhere.
  * @param archive - The recipe's archive layout, which selects members with `members`.
+ * @param options - The platform's 7z reader and the abort signal, which only a 7z archive needs.
  * @returns Each file.
  * @throws ArchiveError when the bytes are not a well-formed archive of the stated kind, the selector matches no member (at the first file taken), or a member an `xlsx` layout reads is not a workbook or has no sheet the pattern matches (at that member).
  */
-export async function* unpackMembers(input: Uint8Array | Readonly<SourceBytes>, archive: CollectionArchive): AsyncGenerator<Member, void, undefined> {
+export async function* unpackMembers(input: Uint8Array | Readonly<SourceBytes>, archive: CollectionArchive, options?: Readonly<UnpackOptions>): AsyncGenerator<Member, void, undefined> {
   const { sheets } = archive.inner ?? {};
   const wanted = sheets === undefined ? undefined : new RegExp(`^(?:${sheets})$`, "u");
-  for await (const member of selectMembers(asSource(input), archive)) {
+  for await (const member of selectMembers(asSource(input), archive, options)) {
     if (archive.inner === undefined) {
       yield member;
       continue;
@@ -241,15 +244,16 @@ export async function* unpackMembers(input: Uint8Array | Readonly<SourceBytes>, 
  * Unpacks every member a collection's selector matches, one at a time.
  * @param source - The archive.
  * @param archive - The recipe's archive layout.
+ * @param options - The platform's 7z reader and the abort signal, which only a 7z archive needs.
  * @returns Each matching member, in path order.
  * @throws ArchiveError when the bytes are not a well-formed archive of the stated kind or the selector matches no member, at the first member taken.
  */
-async function* selectMembers(source: Readonly<SourceBytes>, archive: CollectionArchive): AsyncGenerator<Member, void, undefined> {
+async function* selectMembers(source: Readonly<SourceBytes>, archive: CollectionArchive, options: Readonly<UnpackOptions> | undefined): AsyncGenerator<Member, void, undefined> {
   yield* readMembers(
     source,
     archive.kind,
-    (path) => selects(path, archive.members),
-    (paths) => pickAll(paths, archive.members).map((path) => ({ path })),
+    { candidate: (path) => selects(path, archive.members), choose: (paths) => pickAll(paths, archive.members).map((path) => ({ path })) },
+    options,
   );
 }
 
@@ -262,35 +266,48 @@ export interface Part extends Member {
  * Unpacks a source into the files a parts archive names, each the one member its selector matches.
  * @param input - The downloaded bytes, held in memory or kept anywhere.
  * @param archive - The recipe's archive layout, which names its parts.
+ * @param options - The platform's 7z reader and the abort signal, which only a 7z archive needs.
  * @returns Each part, in the order the recipe names them.
  * @throws ArchiveError when the bytes are not a well-formed archive of the stated kind or a part's selector does not match exactly one member.
  */
-export async function unpackParts(input: Uint8Array | Readonly<SourceBytes>, archive: PartsArchive): Promise<Part[]> {
+export async function unpackParts(input: Uint8Array | Readonly<SourceBytes>, archive: PartsArchive, options?: Readonly<UnpackOptions>): Promise<Part[]> {
   return collect(
     readMembers(
       asSource(input),
       archive.kind,
-      (path) => archive.parts.some((part) => selects(path, part.member)),
-      (paths) => archive.parts.map((part) => ({ name: part.name, path: pick(paths, part.member) })),
+      { candidate: (path) => archive.parts.some((part) => selects(path, part.member)), choose: (paths) => archive.parts.map((part) => ({ name: part.name, path: pick(paths, part.member) })) },
+      options,
     ),
   );
 }
 
+/** How a reader of a file archive chooses its members: which member paths the choice may take, known before the archive's paths are (a tar archive is read once, keeping what may be chosen), and, given every path, the members to read in the order wanted. */
+interface Selection<Choice extends { readonly path: string }> {
+  readonly candidate: (path: string) => boolean;
+  readonly choose: (paths: readonly string[]) => readonly Choice[];
+}
+
 /**
- * Reads the members of a file archive that a choice makes from its member paths, one at a time. A zip is listed from its central directory and each chosen member read and inflated only when it is reached. A tar archive is read once, as it arrives: its member paths are known only at its end, so the data of every member `candidate` accepts is kept on the way, which must include every member the choice can make.
+ * Reads the members of a file archive that a choice makes from its member paths, one at a time. A zip is listed from its central directory and each chosen member read and inflated only when it is reached. A tar archive is read once, as it arrives: its member paths are known only at its end, so the data of every member `candidate` accepts is kept on the way, which must include every member the choice can make. A 7z archive is listed from its headers and decoded once by the platform's 7z reader, which keeps the chosen members.
  * @param source - The archive.
  * @param kind - The archive kind.
- * @param candidate - Given a member path, whether the choice may take it.
- * @param choose - Given every member path, the members to read, in the order wanted, each naming its path.
+ * @param selection - What the choice is made by: `candidate`, given a member path, whether the choice may take it, and `choose`, given every member path, the members to read, in the order wanted, each naming its path.
+ * @param options - The platform's 7z reader and the abort signal, which only a 7z archive needs.
  * @returns Each choice with the bytes of the member it names, in the order chosen.
  * @throws ArchiveError when the bytes are not a well-formed archive of the stated kind or a chosen member cannot be read; whatever `choose` throws.
  */
 async function* readMembers<Choice extends { readonly path: string }>(
   source: Readonly<SourceBytes>,
   kind: CollectionArchive["kind"],
-  candidate: (path: string) => boolean,
-  choose: (paths: readonly string[]) => readonly Choice[],
+  selection: Readonly<Selection<Choice>>,
+  options: Readonly<UnpackOptions> | undefined,
 ): AsyncGenerator<Choice & { readonly bytes: Uint8Array }, void, undefined> {
+  const { candidate, choose } = selection;
+  if (kind === "7z") {
+    yield* readSevenZip(source, choose, options);
+
+    return;
+  }
   if (kind === "zip") {
     const entries = await zipEntries(source);
     yield* inTurn(choose(entries.map((entry) => entry.name)), async (choice) => {
@@ -312,6 +329,73 @@ async function* readMembers<Choice extends { readonly path: string }>(
       throw new ArchiveError(`tar member ${choice.path} could not be read`);
     }
     yield { ...choice, bytes: found.data };
+  }
+}
+
+/** What a 7z reader has extracted of an archive: the bytes of each member it was asked for, read one at a time, and the means to let them go. */
+export interface ExtractedMembers {
+  /**
+   * The bytes of one member extracted.
+   * @param path - A member path the extraction was asked for.
+   * @returns Its bytes, a fresh array the reader may keep.
+   * @throws ArchiveError when the extraction was not asked for the path.
+   */
+  readonly read: (path: string) => Promise<Uint8Array>;
+  /** Lets the extracted members go: whatever holds them is deleted, and nothing more may be read. */
+  readonly close: () => Promise<void>;
+}
+
+/** The 7z port: reads the members of a 7z archive. A solid 7z archive compresses its members as one stream, so a member is reached only by decoding every member before it in its block; a reader therefore decodes the archive once for every member asked of it, and keeps only those members. It is a port because the decoder is the platform's to give: Node's (`keepset/node`) is 7-Zip itself, and a platform that gives none reads no 7z archive. */
+export interface SevenZipPort {
+  /**
+   * Lists the archive's member paths from its headers, without decoding any member.
+   * @param source - The archive.
+   * @param signal - Aborts the listing.
+   * @returns Every member that is a file (no directory), with `/` between its path segments, in the archive's order.
+   * @throws ArchiveError when the bytes are not a readable 7z archive; the signal's reason when it aborts.
+   */
+  readonly list: (source: Readonly<SourceBytes>, signal?: AbortSignal) => Promise<readonly string[]>;
+  /**
+   * Decodes the archive once, keeping the members asked for and no other.
+   * @param source - The archive.
+   * @param paths - Member paths `list` gave, each once.
+   * @param signal - Aborts the extraction.
+   * @returns The members extracted, to read one at a time and then close.
+   * @throws ArchiveError when the archive is truncated or corrupt, or a member cannot be decoded; the signal's reason when it aborts.
+   */
+  readonly extract: (source: Readonly<SourceBytes>, paths: readonly string[], signal?: AbortSignal) => Promise<ExtractedMembers>;
+}
+
+/** What unpacking may be given beside the archive: the platform's 7z reader, without which a 7z archive is refused, and an abort signal for a reader that runs long. */
+export interface UnpackOptions {
+  readonly sevenZip?: SevenZipPort;
+  readonly signal?: AbortSignal;
+}
+
+/**
+ * Reads the members of a 7z archive that a choice makes from its member paths, through the platform's 7z reader: listed from the headers, decoded once for every member chosen, and each given in the order chosen, read from where the reader keeps it only when it is reached.
+ * @param source - The archive.
+ * @param choose - Given every member path, the members to read, in the order wanted, each naming its path.
+ * @param options - The platform's 7z reader and the abort signal.
+ * @returns Each choice with the bytes of the member it names, in the order chosen.
+ * @throws ArchiveError when no 7z reader is given, or when the reader reports the archive unreadable; whatever `choose` throws.
+ */
+async function* readSevenZip<Choice extends { readonly path: string }>(
+  source: Readonly<SourceBytes>,
+  choose: (paths: readonly string[]) => readonly Choice[],
+  options: Readonly<UnpackOptions> | undefined,
+): AsyncGenerator<Choice & { readonly bytes: Uint8Array }, void, undefined> {
+  const reader = options?.sevenZip;
+  if (reader === undefined) {
+    throw new ArchiveError("a 7z archive is read only where the platform gives a 7z reader, as keepset/node does; this one gives none");
+  }
+  const { signal } = options ?? {};
+  const choices = choose(await reader.list(source, signal));
+  const extracted = await reader.extract(source, [...new Set(choices.map((choice) => choice.path))], signal);
+  try {
+    yield* inTurn(choices, async (choice) => ({ ...choice, bytes: await extracted.read(choice.path) }));
+  } finally {
+    await extracted.close();
   }
 }
 
@@ -346,11 +430,12 @@ export function sheetToCsv(bytes: Uint8Array, archive: Readonly<SheetArchive>): 
  * Unpacks a source into every file a multi-file format's selector matches, gunzipping each when the layout's `inner` is `gzip` and, when it is an archive kind with its own selector, unpacking each matched member into the files that selector matches. The paths stay the archive's own, so a gunzipped `edge.csv.gz` keeps its name, and a file of an inner archive is filed under its member's path and its own joined by `/`.
  * @param input - The downloaded bytes, held in memory or kept anywhere.
  * @param archive - The recipe's archive layout, which selects files with `files`.
+ * @param options - The platform's 7z reader and the abort signal, which only a 7z archive needs.
  * @returns Each matching file, in path order (the outer members in path order, and the files of each in path order).
  * @throws ArchiveError when the bytes, or a member `inner` reads, are not well-formed, or a selector matches no member.
  */
-export async function unpackFiles(input: Uint8Array | Readonly<SourceBytes>, archive: FilesArchive): Promise<Member[]> {
-  const files = await collect(unpackMembers(input, { kind: archive.kind, members: archive.files }));
+export async function unpackFiles(input: Uint8Array | Readonly<SourceBytes>, archive: FilesArchive, options?: Readonly<UnpackOptions>): Promise<Member[]> {
+  const files = await collect(unpackMembers(input, { kind: archive.kind, members: archive.files }, options));
   const { inner } = archive;
   if (inner === undefined) {
     return files;
@@ -368,7 +453,7 @@ export async function unpackFiles(input: Uint8Array | Readonly<SourceBytes>, arc
   // Each outer member's bytes are already held, so its inner archive is read from them in memory, one member after another.
   const unpacked = await collect(
     inTurn(files, async (file) => {
-      const members = await inside(file, async () => collect(unpackMembers(file.bytes, { kind: inner.kind, members: inner.files })));
+      const members = await inside(file, async () => collect(unpackMembers(file.bytes, { kind: inner.kind, members: inner.files }, options)));
 
       return members.map((member) => ({ path: `${file.path}/${member.path}`, bytes: member.bytes }));
     }),

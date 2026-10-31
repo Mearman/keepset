@@ -21,6 +21,7 @@ const digest: DigestPort = async (bytes) => {
 
 export type { Download, DownloadProvenance, FetchedDataset, FetchOptions, FetchPort, FilesProvenance, Provenance, RoundTripReport } from "../fetch";
 export type { ByteRange, DigestPort, KeepRequest, Received, SourceBytes, StoredSource, StorePort } from "../source-bytes";
+export type { ExtractedMembers, SevenZipPort } from "../archive";
 export { downloadUrl } from "../fetch";
 export { captureRequestsFor } from "../resolve";
 export { RecipeError, UnreachableSourceError } from "../errors";
