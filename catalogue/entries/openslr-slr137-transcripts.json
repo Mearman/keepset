@@ -1,0 +1,122 @@
+{
+  "aliases": [
+    "slr137-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].transcription",
+        "op": "move",
+        "to": "nodes[].text"
+      },
+      {
+        "from": "nodes[].author",
+        "op": "move",
+        "to": "nodes[].speaker"
+      }
+    ],
+    "source": "csv-table",
+    "target": "speech/v1"
+  },
+  "description": "The transcripts of Silbo Gomero Speech Corpus: one instance per transcript table, each record being an utterance with its identifier and text. It carries none of the audio, which the download list of openslr-slr137 gives.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "instances": 3
+  },
+  "id": "openslr-slr137-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)",
+    "url": "https://www.openslr.org/137/"
+  },
+  "name": "Silbo Gomero Speech Corpus transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "files": [
+      {
+        "archive": {
+          "kind": "zip",
+          "members": {
+            "pattern": "[^/]+/transc\\.csv"
+          }
+        },
+        "path": "words.zip",
+        "source": 0
+      },
+      {
+        "archive": {
+          "kind": "zip",
+          "members": {
+            "pattern": "[^/]+/transc\\.csv"
+          }
+        },
+        "path": "fragments.zip",
+        "source": 1
+      },
+      {
+        "archive": {
+          "kind": "zip",
+          "members": {
+            "pattern": "[^/]+/transc\\.csv"
+          }
+        },
+        "path": "sentences.zip",
+        "source": 2
+      }
+    ],
+    "parser": {
+      "columns": [
+        "author",
+        "transcription"
+      ],
+      "delimiter": "comma",
+      "encoding": "utf-8",
+      "format": "csv-table",
+      "idColumn": "path",
+      "numericColumns": [],
+      "skipLines": 0
+    },
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/137/words.zip"
+    },
+    {
+      "retrieved": "2026-10-30",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/137/fragments.zip"
+    },
+    {
+      "retrieved": "2026-10-30",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/137/sentences.zip"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "text",
+    "speaker"
+  ]
+}

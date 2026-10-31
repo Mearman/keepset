@@ -1,0 +1,87 @@
+{
+  "aliases": [
+    "slr44-transcripts"
+  ],
+  "category": "speech/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/speech-v1/id-text.json"
+  },
+  "description": "The transcripts of High quality TTS data for Sundanese: one instance per transcript table, each record being an utterance with its identifier and text. It carries none of the audio, which the download list of openslr-slr44 gives.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "instances": 2
+  },
+  "id": "openslr-slr44-transcripts",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 4.0 (CC BY-SA 4.0)",
+    "url": "https://www.openslr.org/44/"
+  },
+  "name": "High quality TTS data for Sundanese transcripts",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "files": [
+      {
+        "archive": {
+          "kind": "zip",
+          "members": {
+            "pattern": "[^/]+/line_index\\.tsv"
+          }
+        },
+        "path": "su_id_female.zip",
+        "source": 0
+      },
+      {
+        "archive": {
+          "kind": "zip",
+          "members": {
+            "pattern": "[^/]+/line_index\\.tsv"
+          }
+        },
+        "path": "su_id_male.zip",
+        "source": 1
+      }
+    ],
+    "parser": {
+      "columns": [
+        "text"
+      ],
+      "delimiter": "tab",
+      "encoding": "utf-8",
+      "format": "csv-table",
+      "headerNames": [
+        "file_id",
+        "speaker_ref",
+        "text"
+      ],
+      "idColumn": "file_id",
+      "numericColumns": [],
+      "skipLines": 0,
+      "unquoted": true
+    },
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-10-30",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/44/su_id_female.zip"
+    },
+    {
+      "retrieved": "2026-10-30",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/44/su_id_male.zip"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "text"
+  ]
+}
