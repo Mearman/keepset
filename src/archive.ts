@@ -1,10 +1,11 @@
-import { Gunzip, gunzipSync, unzipSync, type UnzipFileFilter } from "fflate";
+import { Gunzip, gunzipSync } from "fflate";
 import type { CollectionArchive, DocumentArchive, ArchiveMember, FilesArchive, InnerArchive, PartsArchive, SheetArchive } from "./entry";
 import { ArchiveError } from "./errors";
 import { getOwn } from "./own";
 import { bunzip2 } from "./node/bzip2";
 import { pointShapefileToCsv } from "./node/shapefile";
 import { scanTar } from "./node/tar";
+import { unzipEntries, type ZipEntryInfo } from "./node/zip";
 import { odsGrid } from "./node/ods";
 import { gridToCsv } from "./node/sheet";
 import { xlsGrid } from "./node/xls";
@@ -140,7 +141,7 @@ export function unpack(bytes: Uint8Array, archive: DocumentArchive): Unpacked {
 function selectMember(bytes: Uint8Array, archive: Extract<InnerArchive, { readonly member: ArchiveMember }>): { readonly bytes: Uint8Array; readonly member: string } {
   if (archive.kind === "zip") {
     const names: string[] = [];
-    // fflate's filter sees every entry's name before inflating, so listing the names decompresses nothing and only the chosen member is ever inflated.
+    // The filter sees every entry's name before inflating, so listing the names decompresses nothing and only the chosen member is ever inflated.
     unzip(bytes, (file) => {
       names.push(file.name);
 
@@ -281,7 +282,7 @@ export function unpackParts(bytes: Uint8Array, archive: PartsArchive): Part[] {
 function* readMembers<Choice extends { readonly path: string }>(bytes: Uint8Array, kind: CollectionArchive["kind"], choose: (paths: readonly string[]) => readonly Choice[]): Generator<Choice & { readonly bytes: Uint8Array }, void, undefined> {
   if (kind === "zip") {
     const names: string[] = [];
-    // fflate's filter sees every entry's name before inflating, so listing the names decompresses nothing.
+    // The filter sees every entry's name before inflating, so listing the names decompresses nothing.
     unzip(bytes, (file) => {
       names.push(file.name);
 
@@ -403,15 +404,18 @@ function gunzip(bytes: Uint8Array): Uint8Array {
 }
 
 /**
- * Unzips the entries a filter accepts, rethrowing fflate's failure in the package's taxonomy.
+ * Unzips the entries a filter accepts, rethrowing the reader's failure in the package's taxonomy.
  * @param bytes - Zip data.
  * @param filter - Which entries to inflate.
  * @returns The inflated entries, by name.
  */
-function unzip(bytes: Uint8Array, filter: UnzipFileFilter): Readonly<Record<string, Uint8Array>> {
+function unzip(bytes: Uint8Array, filter: (entry: ZipEntryInfo) => boolean): Readonly<Record<string, Uint8Array>> {
   try {
-    return unzipSync(bytes, { filter });
+    return unzipEntries(bytes, filter);
   } catch (error) {
+    if (error instanceof ArchiveError) {
+      throw error;
+    }
     throw new ArchiveError(`not valid zip data: ${error instanceof Error ? error.message : String(error)}`, { cause: error });
   }
 }
