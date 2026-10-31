@@ -73,38 +73,72 @@ function isRecord(value: unknown): value is Readonly<Record<string, unknown>> {
  * Builds the row of one record.
  * @param value - The parsed record.
  * @param options - The recipe's parser.
- * @param position - The 1-based line of the record in a lines file, or its 1-based position in an array.
+ * @param position - The 1-based line of the record in a lines file, or its 1-based position in an array or beneath the keys of a nested layout.
+ * @param trail - For a nested layout, the keys the record sits beneath, outermost first, each with the name of its level; none otherwise.
  * @returns The row.
  * @throws NativeParseError when the record is not an object, has no id or holds a non-scalar kept field.
  */
-function rowOf(value: unknown, options: JsonTableParser, position: number): NativeRow {
+function rowOf(value: unknown, options: JsonTableParser, position: number, trail: readonly Level[]): NativeRow {
   if (!isRecord(value)) {
     throw new NativeParseError(FORMAT, position, "the record is not an object");
   }
-  const idFields = typeof options.idField === "string" ? [options.idField] : options.idField;
+  const numeric = new Set(options.numericFields ?? []);
+  const cells = options.fields.map((field): [string, string | number | null] => [field, numeric.has(field) ? numberCell(value, field, position) : cell(value, field, position)]);
+  const { idField } = options;
+  if (idField === undefined) {
+    // The schema gives a nested layout, and only that, no id field: its record is named by the keys it sits beneath.
+    return { ...Object.fromEntries(trail.map((level): [string, string] => [level.name, level.key])), ...Object.fromEntries(cells), id: trail.map((level) => level.key).join("/") };
+  }
+  const idFields = typeof idField === "string" ? [idField] : idField;
   const parts = idFields.map((field) => cell(value, field, position));
   if (parts.some((part) => part === null || String(part) === "")) {
     throw new NativeParseError(FORMAT, position, `the id field ${idFields.join(", ")} is missing or empty`);
   }
-  const id = parts.map(String).join("/");
-  const numeric = new Set(options.numericFields ?? []);
-  const cells = options.fields.map((field): [string, string | number | null] => [field, numeric.has(field) ? numberCell(value, field, position) : cell(value, field, position)]);
 
-  return { ...Object.fromEntries(cells), id };
+  return { ...Object.fromEntries(cells), id: parts.map(String).join("/") };
+}
+
+/** One level of keys above the records of a nested document: the level's name, and the key a record sits beneath at it. */
+interface Level {
+  readonly name: string;
+  readonly key: string;
 }
 
 /**
- * Parses a file of JSON records into table rows: either one record per line (JSON Lines, as speech manifests are written) or one array of records. Each row has the record's `idField` as its id, as text, and every field the recipe keeps, a string or number as the record holds it and null where the record lacks it. A field the recipe does not keep is left out, as the csv-table parser's `columns` do. A record repeated exactly is read once. Blank lines are skipped.
+ * Finds the records of a nested document: the values beneath one key for each level, in document order.
+ * @param value - The parsed document, or the part of it beneath the keys so far.
+ * @param levels - The names of the levels still to descend, outermost first.
+ * @param trail - The keys descended so far, outermost first.
+ * @returns Each record with the keys it sits beneath.
+ * @throws NativeParseError when a value above the records is not an object.
+ */
+function* nestedRecords(value: unknown, levels: readonly string[], trail: readonly Level[]): Generator<{ readonly trail: readonly Level[]; readonly record: unknown }, void, undefined> {
+  const [name, ...deeper] = levels;
+  if (name === undefined) {
+    yield { trail, record: value };
+
+    return;
+  }
+  if (!isRecord(value)) {
+    throw new NativeParseError(FORMAT, 1, trail.length === 0 ? "the document is not an object" : `the value beneath ${trail.map((level) => level.key).join("/")} is not an object`);
+  }
+  for (const [key, child] of Object.entries(value)) {
+    yield* nestedRecords(child, deeper, [...trail, { name, key }]);
+  }
+}
+
+/**
+ * Parses a file of JSON records into table rows: either one record per line (JSON Lines, as speech manifests are written), one array of records, or one object nested beneath a key for each of the recipe's levels (an annotation file keyed by sound class and then by file name). Each row has the record's `idField` as its id, as text (the keys it sits beneath joined with `/` for a nested document, which also gives the row the key at each level under that level's name), and every field the recipe keeps, a string or number as the record holds it and null where the record lacks it. A field the recipe does not keep is left out, as the csv-table parser's `columns` do. A record repeated exactly is read once. Blank lines are skipped.
  * @param text - The file text.
  * @param options - The recipe's parser.
- * @returns The rows, in file order.
- * @throws NativeParseError naming the line (or the array position) of the first problem: text that is not JSON, a record that is not an object, a missing or empty id, a kept field that is not a string, number or null, an id used twice by records that differ, or for an array layout a document that is not an array.
+ * @returns The rows, in file order (in document order for a nested document).
+ * @throws NativeParseError naming the line (or the array position) of the first problem: text that is not JSON, a record that is not an object, a missing or empty id, a kept field that is not a string, number or null, an id used twice by records that differ, for an array layout a document that is not an array, or for a nested layout a value above the records that is not an object.
  */
 export function parseJsonTable(text: string, options: JsonTableParser): NativeTable {
   const nodes: NativeRow[] = [];
   const seen = new Map<string, string>();
-  const add = (value: unknown, position: number): void => {
-    const row = rowOf(value, options, position);
+  const add = (value: unknown, position: number, trail: readonly Level[] = []): void => {
+    const row = rowOf(value, options, position, trail);
     const content = JSON.stringify(row);
     const earlier = seen.get(row.id);
     if (earlier !== undefined) {
@@ -117,6 +151,14 @@ export function parseJsonTable(text: string, options: JsonTableParser): NativeTa
     seen.set(row.id, content);
     nodes.push(row);
   };
+  if (options.layout === "nested") {
+    const parsed = parseJson(text.startsWith(BYTE_ORDER_MARK) ? text.slice(BYTE_ORDER_MARK.length) : text, 1);
+    for (const [index, { trail, record }] of Array.from(nestedRecords(parsed, options.levels ?? [], [])).entries()) {
+      add(record, index + 1, trail);
+    }
+
+    return { nodes };
+  }
   if (options.layout === "array") {
     const parsed = parseJson(text, 1);
     if (!Array.isArray(parsed)) {
