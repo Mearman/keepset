@@ -75,6 +75,16 @@ describe("the csv-table parser", () => {
     expect(parseError(() => parseNative(utf8('a1\tthe "quoted" word\n'), { ...options, unquoted: undefined })).message).toContain("a quote opens inside an unquoted field");
   });
 
+  it("keeps a line break inside a cell until the record holds every cell the recipe names", () => {
+    const options = table({ delimiter: "tab", idColumn: "path", headerNames: ["path", "duration", "text"], numericColumns: [{ column: "duration", factor: 1 }], skipLines: 1, unquoted: true, lineBreaksInCells: true });
+    const file = "PATH\tDURATION\tTRANSCRIPT\na/1.mp3\t2.5\n\tfirst words\nb/2.mp3\t10\n\tsecond words\n";
+    expect(parseNative(utf8(file), options).nodes).toEqual([
+      { id: "a/1.mp3", duration: 2.5, text: "first words" },
+      { id: "b/2.mp3", duration: 10, text: "second words" },
+    ]);
+    expect(parseError(() => parseNative(utf8(file), { ...options, lineBreaksInCells: undefined })).message).toContain("the row has 2 fields, the header has 3");
+  });
+
   it("reports a row whose width differs from the names the recipe gives", () => {
     const error = parseError(() => parseNative(utf8("a1\thello\tmore\n"), table({ delimiter: "tab", idColumn: "file_id", headerNames: ["file_id", "text"] })));
     expect(error.message).toContain("the row has 3 fields, the header has 2");
