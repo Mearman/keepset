@@ -1,8 +1,10 @@
 import type { Parser } from "../entry";
 import { NativeParseError } from "../errors";
+import { readTemplate } from "./column-template";
 import type { NativeRow, NativeTable } from "./native";
 
 type CsvTableParser = Extract<Parser, { format: "csv-table" }>;
+type DerivedColumn = NonNullable<CsvTableParser["derivedColumns"]>[number];
 
 /** The character each delimiter option splits fields on. */
 const DELIMITERS: Readonly<Record<CsvTableParser["delimiter"], string>> = { comma: ",", tab: "\t", semicolon: ";", pipe: "|", space: " " };
@@ -317,11 +319,19 @@ export function headerCells(text: string, options: RecordOptions): readonly stri
   return header.fields;
 }
 
-/** How the rows of a table are built once its header is read: the header's width, where the id is, and each kept column's name, position and numeric factor. */
+/** A derived column once the header is read: its name, its template with each placeholder resolved to the position of the cell that fills it, and the position and value of its condition, if it has one. */
+interface DerivedLayout {
+  readonly name: string;
+  readonly parts: readonly (string | number)[];
+  readonly when: { readonly position: number; readonly equals: string } | undefined;
+}
+
+/** How the rows of a table are built once its header is read: the header's width, where the id is, each kept column's name, position and numeric factor, and the derived columns. */
 interface RowLayout {
   readonly width: number;
   readonly idPosition: number;
   readonly kept: readonly { readonly name: string; readonly position: number; readonly factor: number | undefined }[];
+  readonly derived: readonly DerivedLayout[];
 }
 
 /**
@@ -403,15 +413,46 @@ export class TableReader {
     if (id === "") {
       throw new NativeParseError("csv-table", record.line, `the id column ${idColumn ?? ""} is empty`);
     }
-    const cells = layout.kept.map(({ name, position, factor }): [string, string | number | null] => {
+    const cellAt = (position: number): string => {
       const trimmed = (record.fields[position] ?? "").trim();
-      const cell = this.missing.has(trimmed) ? "" : trimmed;
+
+      return this.missing.has(trimmed) ? "" : trimmed;
+    };
+    const cells = layout.kept.map(({ name, position, factor }): [string, string | number | null] => {
+      const cell = cellAt(position);
 
       return [name, factor === undefined ? (cell === "" ? null : cell) : numeric(cell, factor, name, record.line)];
     });
+    const derived = layout.derived.map((column): [string, string | null] => [column.name, derive(column, cellAt)]);
 
-    return { ...Object.fromEntries(cells), id };
+    return { ...Object.fromEntries(cells), ...Object.fromEntries(derived), id };
   }
+}
+
+/**
+ * Builds a derived column's cell for one row.
+ * @param column - The derived column.
+ * @param cellAt - A row's cell by position, trimmed, empty when the cell is empty or a missing-value text.
+ * @returns The template with each placeholder replaced by its cell as written, or null when the column's condition fails or a cell it names is empty.
+ */
+function derive(column: DerivedLayout, cellAt: (position: number) => string): string | null {
+  if (column.when !== undefined && cellAt(column.when.position) !== column.when.equals) {
+    return null;
+  }
+  let value = "";
+  for (const part of column.parts) {
+    if (typeof part === "string") {
+      value += part;
+    } else {
+      const cell = cellAt(part);
+      if (cell === "") {
+        return null;
+      }
+      value += cell;
+    }
+  }
+
+  return value;
 }
 
 /**
@@ -419,7 +460,7 @@ export class TableReader {
  * @param header - The header record.
  * @param options - The recipe's table parser.
  * @returns The layout.
- * @throws NativeParseError when two header cells get the same name, the recipe names a column the header lacks, lists the id column among the columns, or declares numeric a column it does not keep.
+ * @throws NativeParseError when two header cells get the same name, the recipe names a column the header lacks, lists the id column among the columns, declares numeric a column it does not keep, or derives a column whose name a header column has or whose template or condition names a column the header lacks.
  */
 function layoutOf(header: CsvRecord, options: CsvTableParser): RowLayout {
   const names = columnNames(header.fields, options.idColumn, header.line);
@@ -444,11 +485,41 @@ function layoutOf(header: CsvRecord, options: CsvTableParser): RowLayout {
     width: names.length,
     idPosition: idColumn === null ? -1 : names.indexOf(idColumn),
     kept: names.flatMap((name, position) => (name !== idColumn && wanted.has(name) ? [{ name, position, factor: factors.get(name) }] : [])),
+    derived: (options.derivedColumns ?? []).map((column) => derivedLayout(column, names, header.line)),
   };
 }
 
 /**
- * Parses a delimited table into rows (a cell whose text is one of the recipe's `nullValues` is empty, so null): the first record after `skipLines` lines is the header, each later record is a row (or, when the recipe gives `headerNames`, the file has no header and every record after `skipLines` lines is a row, its cells named by those in order), and every row carries every column but the id column (or, when the recipe lists `columns`, exactly those, so a wide table is not held cell for cell), an empty cell being null. Cells are trimmed. A column the recipe declares numeric is read as a decimal number times its factor and any other column stays a string. `id` is the row's id, so a column of that name which is not the id column is named by its position. A row's id is the cell of the recipe's id column, which is then not also a column, or its 1-based row number when the recipe names none. Blank lines are skipped; a row with a different number of fields than the header, two columns with the same name, and an id cell that is empty are errors.
+ * Resolves a derived column against the header.
+ * @param column - The recipe's derived column.
+ * @param names - The names the header's cells get, in order.
+ * @param line - The 1-based line of the header, for the error.
+ * @returns The column with each placeholder and its condition resolved to a cell position.
+ * @throws NativeParseError when the name is a header column's, the template is malformed, or the template or condition names a column the header lacks.
+ */
+function derivedLayout(column: DerivedColumn, names: readonly string[], line: number): DerivedLayout {
+  if (names.includes(column.name)) {
+    throw new NativeParseError("csv-table", line, `the derived column ${column.name} has the name of a column the header has`);
+  }
+  const reading = readTemplate(column.template);
+  if (reading.problem !== undefined) {
+    throw new NativeParseError("csv-table", line, `the template of ${column.name} has ${reading.problem}`);
+  }
+  const positionOf = (named: string): number => {
+    const position = names.indexOf(named);
+    if (position === -1) {
+      throw new NativeParseError("csv-table", line, `the template or condition of the derived column ${column.name} names the column ${named}, which the header does not have`);
+    }
+
+    return position;
+  };
+  const parts = reading.parts.map((part) => (typeof part === "string" ? part : positionOf(part.column)));
+
+  return { name: column.name, parts, when: column.when === undefined ? undefined : { position: positionOf(column.when.column), equals: column.when.equals } };
+}
+
+/**
+ * Parses a delimited table into rows (a cell whose text is one of the recipe's `nullValues` is empty, so null): the first record after `skipLines` lines is the header, each later record is a row (or, when the recipe gives `headerNames`, the file has no header and every record after `skipLines` lines is a row, its cells named by those in order), and every row carries every column but the id column (or, when the recipe lists `columns`, exactly those, so a wide table is not held cell for cell), an empty cell being null. Cells are trimmed. A column the recipe declares numeric is read as a decimal number times its factor and any other column stays a string. `id` is the row's id, so a column of that name which is not the id column is named by its position. A row's id is the cell of the recipe's id column, which is then not also a column, or its 1-based row number when the recipe names none. Each of the recipe's `derivedColumns` is added to every row, its template filled with the trimmed cells of the header columns it names (the id column included, unscaled), or null when its `when` condition fails or one of those cells is empty. Blank lines are skipped; a row with a different number of fields than the header, two columns with the same name, and an id cell that is empty are errors.
  * @param text - The file text, or its pieces in order.
  * @param options - The recipe's table parser.
  * @returns The rows, in file order.
