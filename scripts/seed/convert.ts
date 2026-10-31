@@ -310,7 +310,7 @@ function archiveKindOf(url: string): Exclude<Archive["kind"], SheetArchive["kind
 }
 
 /** The parser formats the graph import maps a catalogue format to by name alone: those that read a graph from one file and need no option beyond the encoding. The ratings and KONECT parsers have options, which the import reads from the file, and the multi-file `ogb` format is never mapped by name. */
-type GraphFormat = Exclude<Parser["format"], "csv-table" | "geojson" | "json-table" | "user-item-ratings" | "konect" | "kg-triples" | "hgb" | "user-item-counts" | "ogb" | "member-text" | "nxt-words" | "eaf" | InstanceFormat>;
+type GraphFormat = Exclude<Parser["format"], "csv-table" | "geojson" | "json-table" | "lexicon-lines" | "user-item-ratings" | "konect" | "kg-triples" | "hgb" | "user-item-counts" | "ogb" | "member-text" | "nxt-words" | "eaf" | InstanceFormat>;
 
 /** The keepset parser each catalogue format reads with, by the pipeline's own dispatch (the format branches of experiments/pipeline/scripts/download_benchmark_graph.py in Mearman/Thesis): formats whose pipeline parser is the generic edge list, GML, Pajek, Matrix Market, UCINet DL or GD contest reader. */
 const PARSERS: ReadonlyMap<string, GraphFormat | "linqs"> = new Map([
