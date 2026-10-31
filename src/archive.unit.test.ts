@@ -381,5 +381,25 @@ describe("unpackFiles", () => {
   it("rejects a selector that matches nothing", () => {
     expect(() => unpackFiles(archive, { kind: "zip", files: { extensions: [".parquet"] } })).toThrow(ArchiveError);
   });
+
+  describe("when each selected member is an archive in its turn", () => {
+    /** A zip that ships its annotations as a zip, as a Mac writes one with a resource fork beside each file. */
+    const inner = zipSync({ "s2.TextGrid": new TextEncoder().encode("two"), "s1.TextGrid": new TextEncoder().encode("one"), "__MACOSX/._s1.TextGrid": new TextEncoder().encode("fork"), "notes.txt": new TextEncoder().encode("notes") });
+    const outer = zipSync({ "a.zip": inner, "readme.txt": new TextEncoder().encode("read me") });
+    const select = { kind: "zip" as const, files: { extensions: [".zip"] } };
+
+    it("gives the files the inner selector matches, in path order, under the member's path and their own", () => {
+      const unpacked = unpackFiles(outer, { ...select, inner: { kind: "zip", files: { extensions: [".TextGrid"] } } });
+      expect(unpacked.map((file) => [file.path, text(file.bytes)])).toEqual([
+        ["a.zip/s1.TextGrid", "one"],
+        ["a.zip/s2.TextGrid", "two"],
+      ]);
+    });
+
+    it("rejects a member that is not an archive of the inner kind, naming it, and an inner selector that matches nothing", () => {
+      expect(() => unpackFiles(zipSync({ "a.zip": new TextEncoder().encode("not a zip") }), { ...select, inner: { kind: "zip", files: { extensions: [".TextGrid"] } } })).toThrow(/member a\.zip: not a zip archive/);
+      expect(() => unpackFiles(outer, { ...select, inner: { kind: "zip", files: { extensions: [".eaf"] } } })).toThrow(/member a\.zip: expected at least one member ending \.eaf/);
+    });
+  });
 });
 
