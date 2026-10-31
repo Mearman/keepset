@@ -40,7 +40,7 @@ describe("the openslr-slr55-corpus recipe", () => {
 });
 
 describe("the openslr-slr153-corpus recipe", () => {
-  it("reads each .docx and .doc file of the archive as a document named by its path beneath the top directory, leaving the other files out", async () => {
+  it("reads each .docx and .doc file of the archive as a document named by its path beneath the top directory with its extension, leaving the other files out", async () => {
     const fetch = serving({
       [download("153", "data_evnmag.tgz")]: gzip(
         tar([
@@ -54,8 +54,8 @@ describe("the openslr-slr153-corpus recipe", () => {
     const { data } = await fetchEntry(getDataset("openslr-slr153-corpus"), { fetch });
     expect(data).toMatchObject({
       nodes: [
-        { id: "evnmag1/Բովանդակություն", text: "Առաջին\nԵրկրորդ" },
-        { id: "evnmag2/old article", text: "Հին\n" },
+        { id: "evnmag1/Բովանդակություն.docx", text: "Առաջին\nԵրկրորդ" },
+        { id: "evnmag2/old article.doc", text: "Հին\n" },
       ],
     });
   });
