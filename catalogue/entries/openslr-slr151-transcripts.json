@@ -54,7 +54,7 @@
   "description": "The transcripts of Kallaama: one instance for each of the three archives of the download (Wolof, Pulaar and Sereer), and in it each record is a speaker's turn in a radio programme, named by the recording and the turn's line in its STM file, with its text, speaker, channel, start and end in seconds and the label field of its line (the labels the file's header declares). Stretches the files mark as untranscribed gaps or excluded from scoring are left out. The archives also hold an expert's corrected copies of a subset of the files in a separate checked_transcriptions folder under the same file names, which are not read, so each recording appears once. It carries none of the audio, which the download list of openslr-slr151 gives.",
   "domain": "Speech",
   "expectedCounts": {
-    "instances": 0
+    "instances": 3
   },
   "id": "openslr-slr151-transcripts",
   "licence": {
