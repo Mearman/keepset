@@ -22,6 +22,10 @@ beforeAll(async () => {
       // What the Wayback Machine and many static hosts do with a .gz file: label it with a transport encoding the platform fetch would undo.
       response.writeHead(STATUS.ok, { "content-encoding": "gzip", "content-type": "text/plain" });
       response.end(gzipped);
+    } else if (path === "/truncated") {
+      // What the Wayback Machine replays for a capture that stopped at its size limit.
+      response.writeHead(STATUS.ok, { warning: '299 wayback content truncated by "length"' });
+      response.end("prefix");
     } else if (path.startsWith("/hop/")) {
       const remaining = Number(path.slice("/hop/".length));
       response.writeHead(STATUS.found, { location: remaining === 0 ? "/labelled.gz" : `/hop/${String(remaining - 1)}` });
@@ -83,6 +87,11 @@ describe("downloadRaw", () => {
 
   it("reports the server's Content-Encoding on the response, so a caller can tell a transport encoding from a compressed file", async () => {
     expect((await downloadRaw(`${base}/labelled.gz`, {})).headers.get("content-encoding")).toBe("gzip");
+  });
+
+  it("reports the Warning header, so a caller can tell a truncated capture from a whole file", async () => {
+    expect((await downloadRaw(`${base}/truncated`, {})).headers.get("warning")).toBe('299 wayback content truncated by "length"');
+    expect((await downloadRaw(`${base}/agent`, {})).headers.get("warning")).toBeNull();
   });
 
   it("follows redirects to the final response", async () => {
