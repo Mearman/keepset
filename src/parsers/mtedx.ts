@@ -19,7 +19,7 @@ const YAML_EXTENSION = ".yaml";
 /** A line of a split's YAML file, a flow mapping in a block sequence: `- {duration: 8.73, offset: 10.94, speaker_id: talk, wav: talk.wav}`. */
 const YAML_LINE = /^- \{duration: ([^,{}]+), offset: ([^,{}]+), speaker_id: ([^,{}]+), wav: ([^,{}]+)\}$/;
 
-/** What each line of a split's `segments` file holds: the segment's id, its talk, its start and its end. */
+/** What each line of a split's `segments` file holds: the segment's id, its talk, its start and its end, separated by single spaces and, in some of the distributed files, followed by trailing spaces that are not a field. */
 const SEGMENT_FIELDS = 4;
 
 /** A file of the archive as the archive step gives it. */
@@ -136,7 +136,7 @@ function rowsOf(split: Split, parser: Readonly<MtedxParser>): NativeRow[] {
 
   return segmentLines.map((segmentLine, index): NativeRow => {
     const where = `${split.directory}:${String(index + 1)}`;
-    const fields = segmentLine.split(" ");
+    const fields = segmentLine.trimEnd().split(" ");
     const [id, talk, start, end] = fields;
     if (fields.length !== SEGMENT_FIELDS || id === undefined || talk === undefined || start === undefined || end === undefined || id === "") {
       throw new NativeParseError(FORMAT, index + 1, `${where}: a segments line is ${String(SEGMENT_FIELDS)} space-separated fields, the segment, its talk, its start and its end`);
