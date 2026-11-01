@@ -1,3 +1,16 @@
+# [0.105.0](https://github.com/Mearman/keepset/compare/v0.104.0...v0.105.0) (2026-11-01)
+
+
+### Bug Fixes
+
+* **site:** type a crosswalk rule's table row as a React element ([1a19f79](https://github.com/Mearman/keepset/commit/1a19f79569c88753bc27a84264a25b753dc64730))
+
+
+### Features
+
+* **catalogue:** name each file's JSON Schema and write carried-over paths as keep ([d3fe33f](https://github.com/Mearman/keepset/commit/d3fe33f2fe1f1befde2b157cbd849b8519231a2f))
+* **crosswalk:** read every rule operation crossmap has through one description ([b628712](https://github.com/Mearman/keepset/commit/b6287120f8e251c0d62c30dae7ba17c1222940e7))
+
 # [0.104.0](https://github.com/Mearman/keepset/compare/v0.103.0...v0.104.0) (2026-11-01)
 
 
