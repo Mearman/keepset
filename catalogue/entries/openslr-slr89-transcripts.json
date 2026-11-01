@@ -5,11 +5,47 @@
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "file": "crosswalks/speech-v1/id-text.json"
+    "oneWay": [],
+    "rules": [
+      {
+        "from": "meta",
+        "op": "move",
+        "to": "meta"
+      },
+      {
+        "from": "nodes[].id",
+        "op": "move",
+        "to": "nodes[].id"
+      },
+      {
+        "from": "nodes[].text",
+        "op": "move",
+        "to": "nodes[].text"
+      },
+      {
+        "from": "nodes[].tier",
+        "op": "move",
+        "to": "nodes[].tier"
+      },
+      {
+        "from": "nodes[].start",
+        "op": "move",
+        "to": "nodes[].start"
+      },
+      {
+        "from": "nodes[].end",
+        "op": "move",
+        "to": "nodes[].end"
+      }
+    ],
+    "source": "eaf",
+    "target": "speech/v1"
   },
-  "description": "The transcripts of Yoloxóchitl-Mixtec. No recipe reads them. Its transcripts are the Mixtec transcription files, inside archives that total about 86 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
+  "description": "The transcripts of Yoloxóchitl-Mixtec as its ELAN files with underlying and surface tiers give them: each record is an annotation, named by the recording and the annotation's identifier in its file, with its text, the tier it is on (the underlying or the surface form) and its start and end in milliseconds, null for an annotation that refers to another and has no times of its own. The download also holds the same recordings' Transcriber files, which are not read. It carries none of the audio, which the download list of openslr-slr89 gives.",
   "domain": "Speech",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "nodes": 173369
+  },
   "id": "openslr-slr89-transcripts",
   "licence": {
     "kind": "custom",
@@ -23,24 +59,34 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "Its transcripts are the Mixtec transcription files, inside archives that total about 86 GB, and a fetch holds a whole download in memory, so no fetch can read them (see https://github.com/Mearman/keepset/issues/212).",
-    "status": "not-fetchable"
+    "archive": {
+      "files": {
+        "pattern": "Yoloxochitl-Mixtec-for-ASR/Transcriptions-for-ASR/ELAN-files-with-underlying-and-surface-tiers/[^/]+/[^/]+\\.eaf"
+      },
+      "kind": "tar.gz"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "eaf",
+      "idPattern": "Yoloxochitl-Mixtec-for-ASR/Transcriptions-for-ASR/ELAN-files-with-underlying-and-surface-tiers/[^/]+/([^/]+)\\.eaf"
+    },
+    "source": 0,
+    "status": "fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 6664,
-        "sha256": "b8a4ba79bd2eb2807b5bec6a03c02a4bcfbb4642cd6bb05dcac8b6e358e4a045",
-        "timestamp": "20260516212200",
-        "url": "https://web.archive.org/web/20260516212200/https://www.openslr.org/89/"
-      },
+      "retrieved": "2026-10-31",
       "status": "live",
-      "url": "https://www.openslr.org/89/"
+      "url": "https://www.openslr.org/resources/89/Yoloxochitl-Mixtec-Data.tgz"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "text",
+    "tier",
+    "start",
+    "end"
+  ]
 }
