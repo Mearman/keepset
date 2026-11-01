@@ -9,7 +9,9 @@
   },
   "description": "The transcripts of the TIBMD@MUC speech data set: each text file of a speaker's reading or spoken recordings is one instance, each record an utterance with its identifier and its transcript in Tibetan script, its syllables separated by spaces. It carries none of the audio, which the download list of openslr-slr124 gives.",
   "domain": "Speech",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "instances": 98
+  },
   "id": "openslr-slr124-transcripts",
   "licence": {
     "kind": "custom",
