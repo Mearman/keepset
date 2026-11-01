@@ -71,6 +71,12 @@ describe("the mtedx parser", () => {
     expect(() => parseMtedx([...all, file("it-es/data/valid/txt/valid.es", "uno\ndos\n")], parser)).toThrow(/more than one text file/);
   });
 
+  it("ignores the spaces some distributed segments lines end with, which are not a fifth field", () => {
+    const { segments, yaml, text } = split("it-it/data/valid/txt", "valid", "it", [first, second]);
+    const padded = file(segments.path, new TextDecoder().decode(segments.bytes).replace(/\n/g, "  \n"));
+    expect(parseMtedx([padded, yaml, text], parser)).toEqual(parseMtedx([segments, yaml, text], parser));
+  });
+
   it("refuses a segments line that is not four fields, a malformed YAML line and a segment listed twice", () => {
     const { segments, yaml, text } = split("it-it/data/valid/txt", "valid", "it", [first, second]);
     expect(() => parseMtedx([file("it-it/data/valid/txt/segments", "a b c\nd e f g\n"), yaml, text], parser)).toThrow(/a segments line is 4 space-separated fields/);
