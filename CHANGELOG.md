@@ -1,3 +1,11 @@
+# [0.103.0](https://github.com/Mearman/keepset/compare/v0.102.0...v0.103.0) (2026-11-01)
+
+
+### Features
+
+* **catalogue:** read the TIBMD@MUC transcripts from each speaker's text file ([766cc0b](https://github.com/Mearman/keepset/commit/766cc0b65c92c55fd55cf3f774dab13ffdafd354))
+* **catalogue:** record the fetched TIBMD@MUC transcript count ([28a3d4b](https://github.com/Mearman/keepset/commit/28a3d4b22955f075453adaef3b9eb7341de4b349))
+
 # [0.102.0](https://github.com/Mearman/keepset/compare/v0.101.1...v0.102.0) (2026-11-01)
 
 
