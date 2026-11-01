@@ -192,6 +192,27 @@ describe("the ELAN recipes", () => {
     const { data } = await fetchEntry(getDataset("openslr-slr107-transcripts"), { fetch: serving({ [download("107", "Totonac_Corpus.tgz")]: archive }) });
     expect(data).toMatchObject({ nodes: [{ id: "Zongo_Botan_1_ed-2019-08-19/a1", text: "wa: skaw", tier: "spk1", start: 0, end: 1000 }] });
   });
+
+  const ELAN_DIR = "Yoloxochitl-Mixtec-for-ASR/Transcriptions-for-ASR/ELAN-files-with-underlying-and-surface-tiers";
+
+  it("reads the ELAN files of the Mixtec archive with their tiers and times, and neither the Transcriber files nor the audio", async () => {
+    const archive = gzip(
+      tar([
+        { path: "Yoloxochitl-Mixtec-for-ASR/Metadata-recordings-and-speakers/Metadata.txt", text: "toolbox" },
+        { path: "Yoloxochitl-Mixtec-for-ASR/Sound-files-Narratives-for-ASR/Agricultura/Yolox_Agric_1.wav", text: "RIFF" },
+        { path: `${ELAN_DIR}/Agricultura_14/Yolox_Agric_1_ed-2018-04-14.eaf`, text: eaf("surface", [{ start: 0, end: 3578, text: "ki3ta" }, { start: 3578, end: 6196, text: "ña3" }]) },
+        { path: `${ELAN_DIR}/Agricultura_14/._Yolox_Agric_1_ed-2018-04-14.eaf`, text: "fork" },
+        { path: "Yoloxochitl-Mixtec-for-ASR/Transcriptions-for-ASR/Transcriber_513/Agricultura_14/Yolox_Agric_1_ed-2018-04-14.trs", text: "<Trans/>" },
+      ]),
+    );
+    const { data } = await fetchEntry(getDataset("openslr-slr89-transcripts"), { fetch: serving({ [download("89", "Yoloxochitl-Mixtec-Data.tgz")]: archive }) });
+    expect(data).toMatchObject({
+      nodes: [
+        { id: "Yolox_Agric_1_ed-2018-04-14/a1", text: "ki3ta", tier: "surface", start: 0, end: 3578 },
+        { id: "Yolox_Agric_1_ed-2018-04-14/a2", text: "ña3", tier: "surface", start: 3578, end: 6196 },
+      ],
+    });
+  });
 });
 
 describe("the TextGrid recipes", () => {
