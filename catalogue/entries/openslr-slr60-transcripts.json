@@ -1,31 +1,21 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "aliases": [
     "slr60-transcripts"
   ],
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "oneWay": [],
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].normalized_text"
+    ],
     "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
       {
         "from": "nodes[].original_text",
         "op": "move",
         "to": "nodes[].text"
-      },
-      {
-        "from": "nodes[].normalized_text",
-        "op": "move",
-        "to": "nodes[].normalized_text"
       }
     ],
     "source": "csv-table",

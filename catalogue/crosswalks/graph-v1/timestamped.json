@@ -1,31 +1,11 @@
 {
-  "oneWay": [],
-  "rules": [
-    {
-      "from": "meta",
-      "op": "move",
-      "to": "meta"
-    },
-    {
-      "from": "nodes[].id",
-      "op": "move",
-      "to": "nodes[].id"
-    },
-    {
-      "from": "edges[].source",
-      "op": "move",
-      "to": "edges[].source"
-    },
-    {
-      "from": "edges[].target",
-      "op": "move",
-      "to": "edges[].target"
-    },
-    {
-      "from": "edges[].timestamp",
-      "op": "move",
-      "to": "edges[].timestamp"
-    }
+  "$schema": "https://cdn.jsdelivr.net/npm/crossmap/schemas/crossmap.schema.json",
+  "keep": [
+    "meta",
+    "nodes[].id",
+    "edges[].source",
+    "edges[].target",
+    "edges[].timestamp"
   ],
   "source": "keepset/timestamped",
   "target": "graph/v1"

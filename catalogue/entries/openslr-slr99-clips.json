@@ -1,48 +1,26 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "category": "audio/v1",
   "citations": [],
   "crosswalk": {
-    "oneWay": [],
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].file",
+      "nodes[].age",
+      "nodes[].sex",
+      "nodes[].noise"
+    ],
     "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
       {
         "from": "nodes[].class",
         "op": "move",
         "to": "nodes[].label"
       },
       {
-        "from": "nodes[].file",
-        "op": "move",
-        "to": "nodes[].file"
-      },
-      {
         "from": "nodes[].speakerID",
         "op": "move",
         "to": "nodes[].speaker"
-      },
-      {
-        "from": "nodes[].age",
-        "op": "move",
-        "to": "nodes[].age"
-      },
-      {
-        "from": "nodes[].sex",
-        "op": "move",
-        "to": "nodes[].sex"
-      },
-      {
-        "from": "nodes[].noise",
-        "op": "move",
-        "to": "nodes[].noise"
       }
     ],
     "source": "json-table",

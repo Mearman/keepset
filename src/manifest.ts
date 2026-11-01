@@ -25,6 +25,7 @@ export type Lineage = z.infer<typeof LineageSchema>;
 export const ManifestSchema = define(
   z
     .object({
+      $schema: HttpUrlSchema.optional(),
       id: IdSchema,
       name: z.string().min(1),
       description: z.string().min(1),

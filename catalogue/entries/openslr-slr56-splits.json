@@ -1,22 +1,14 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "aliases": [
     "slr56-splits"
   ],
   "category": "splits/v1",
   "citations": [],
   "crosswalk": {
-    "oneWay": [],
-    "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      }
+    "keep": [
+      "meta",
+      "nodes[].id"
     ],
     "source": "csv-table",
     "target": "splits/v1"

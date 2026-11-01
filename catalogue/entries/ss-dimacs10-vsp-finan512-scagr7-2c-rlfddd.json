@@ -1,4 +1,5 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "aliases": [
     "vsp-finan512-scagr7-2c-rlfddd"
   ],

@@ -1,61 +1,27 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "aliases": [
     "slr87-transcripts"
   ],
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "oneWay": [],
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].gender",
+      "nodes[].age",
+      "nodes[].keyword_id",
+      "nodes[].distance",
+      "nodes[].angle",
+      "nodes[].noise_volume",
+      "nodes[].noise_type"
+    ],
     "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
       {
         "from": "nodes[].speaker_id",
         "op": "move",
         "to": "nodes[].speaker"
-      },
-      {
-        "from": "nodes[].gender",
-        "op": "move",
-        "to": "nodes[].gender"
-      },
-      {
-        "from": "nodes[].age",
-        "op": "move",
-        "to": "nodes[].age"
-      },
-      {
-        "from": "nodes[].keyword_id",
-        "op": "move",
-        "to": "nodes[].keyword_id"
-      },
-      {
-        "from": "nodes[].distance",
-        "op": "move",
-        "to": "nodes[].distance"
-      },
-      {
-        "from": "nodes[].angle",
-        "op": "move",
-        "to": "nodes[].angle"
-      },
-      {
-        "from": "nodes[].noise_volume",
-        "op": "move",
-        "to": "nodes[].noise_volume"
-      },
-      {
-        "from": "nodes[].noise_type",
-        "op": "move",
-        "to": "nodes[].noise_type"
       }
     ],
     "source": "json-table",

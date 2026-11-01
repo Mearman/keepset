@@ -1,22 +1,17 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "aliases": [
     "transportation-work-orders-public-view"
   ],
   "category": "tasks/v1",
   "citations": [],
   "crosswalk": {
-    "oneWay": [],
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].status"
+    ],
     "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
       {
         "from": "nodes[].date_work_order_closed",
         "op": "move",
@@ -51,11 +46,6 @@
         "from": "nodes[].work_order_category",
         "op": "move",
         "to": "nodes[].skill"
-      },
-      {
-        "from": "nodes[].status",
-        "op": "move",
-        "to": "nodes[].status"
       }
     ],
     "source": "csv-table",

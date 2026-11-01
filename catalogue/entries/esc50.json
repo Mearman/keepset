@@ -1,4 +1,5 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "aliases": [
     "esc-50"
   ],
@@ -10,18 +11,15 @@
     }
   ],
   "crosswalk": {
-    "oneWay": [],
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].target",
+      "nodes[].esc10",
+      "nodes[].src_file",
+      "nodes[].take"
+    ],
     "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
       {
         "from": "nodes[].category",
         "op": "move",
@@ -31,26 +29,6 @@
         "from": "nodes[].fold",
         "op": "move",
         "to": "nodes[].split"
-      },
-      {
-        "from": "nodes[].target",
-        "op": "move",
-        "to": "nodes[].target"
-      },
-      {
-        "from": "nodes[].esc10",
-        "op": "move",
-        "to": "nodes[].esc10"
-      },
-      {
-        "from": "nodes[].src_file",
-        "op": "move",
-        "to": "nodes[].src_file"
-      },
-      {
-        "from": "nodes[].take",
-        "op": "move",
-        "to": "nodes[].take"
       }
     ],
     "source": "csv-table",

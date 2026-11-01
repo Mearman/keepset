@@ -1,32 +1,16 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "aliases": [
     "slr48-splits"
   ],
   "category": "splits/v1",
   "citations": [],
   "crosswalk": {
-    "oneWay": [],
-    "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
-      {
-        "from": "nodes[].document",
-        "op": "move",
-        "to": "nodes[].document"
-      },
-      {
-        "from": "nodes[].line",
-        "op": "move",
-        "to": "nodes[].line"
-      }
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].document",
+      "nodes[].line"
     ],
     "source": "csv-table",
     "target": "splits/v1"

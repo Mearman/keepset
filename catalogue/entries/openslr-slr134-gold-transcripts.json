@@ -1,32 +1,16 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "aliases": [
     "slr134-gold-transcripts"
   ],
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "oneWay": [],
-    "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
-      {
-        "from": "nodes[].text",
-        "op": "move",
-        "to": "nodes[].text"
-      },
-      {
-        "from": "nodes[].text_normalised",
-        "op": "move",
-        "to": "nodes[].text_normalised"
-      }
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].text",
+      "nodes[].text_normalised"
     ],
     "source": "csv-table",
     "target": "speech/v1"

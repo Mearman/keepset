@@ -1,36 +1,22 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "aliases": [
     "live-power-cuts"
   ],
   "category": "tasks/v1",
   "citations": [],
   "crosswalk": {
-    "oneWay": [],
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].duration",
+      "nodes[].lat"
+    ],
     "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
       {
         "from": "nodes[].estimatedtimetillresolution",
         "op": "move",
         "to": "nodes[].deadline"
-      },
-      {
-        "from": "nodes[].duration",
-        "op": "move",
-        "to": "nodes[].duration"
-      },
-      {
-        "from": "nodes[].lat",
-        "op": "move",
-        "to": "nodes[].lat"
       },
       {
         "from": "nodes[].lng",

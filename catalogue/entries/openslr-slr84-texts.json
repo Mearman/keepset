@@ -1,19 +1,20 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "category": "texts/v1",
   "citations": [],
   "crosswalk": {
-    "oneWay": [],
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].transcription",
+      "nodes[].transcribed",
+      "nodes[].page_id",
+      "nodes[].page",
+      "nodes[].line_index",
+      "nodes[].scribe_id",
+      "nodes[].colormode"
+    ],
     "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
       {
         "from": "nodes[].scribe",
         "op": "move",
@@ -23,41 +24,6 @@
         "from": "nodes[].split",
         "op": "move",
         "to": "nodes[].collections"
-      },
-      {
-        "from": "nodes[].transcription",
-        "op": "move",
-        "to": "nodes[].transcription"
-      },
-      {
-        "from": "nodes[].transcribed",
-        "op": "move",
-        "to": "nodes[].transcribed"
-      },
-      {
-        "from": "nodes[].page_id",
-        "op": "move",
-        "to": "nodes[].page_id"
-      },
-      {
-        "from": "nodes[].page",
-        "op": "move",
-        "to": "nodes[].page"
-      },
-      {
-        "from": "nodes[].line_index",
-        "op": "move",
-        "to": "nodes[].line_index"
-      },
-      {
-        "from": "nodes[].scribe_id",
-        "op": "move",
-        "to": "nodes[].scribe_id"
-      },
-      {
-        "from": "nodes[].colormode",
-        "op": "move",
-        "to": "nodes[].colormode"
       }
     ],
     "source": "csv-table",

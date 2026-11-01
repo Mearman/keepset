@@ -1,59 +1,19 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "category": "audio/v1",
   "citations": [],
   "crosswalk": {
-    "oneWay": [],
-    "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
-      {
-        "from": "nodes[].label",
-        "op": "move",
-        "to": "nodes[].label"
-      },
-      {
-        "from": "nodes[].source",
-        "op": "move",
-        "to": "nodes[].source"
-      },
-      {
-        "from": "nodes[].genre",
-        "op": "move",
-        "to": "nodes[].genre"
-      },
-      {
-        "from": "nodes[].vocals",
-        "op": "move",
-        "to": "nodes[].vocals"
-      },
-      {
-        "from": "nodes[].artist",
-        "op": "move",
-        "to": "nodes[].artist"
-      },
-      {
-        "from": "nodes[].composer",
-        "op": "move",
-        "to": "nodes[].composer"
-      },
-      {
-        "from": "nodes[].gender",
-        "op": "move",
-        "to": "nodes[].gender"
-      },
-      {
-        "from": "nodes[].language",
-        "op": "move",
-        "to": "nodes[].language"
-      }
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].label",
+      "nodes[].source",
+      "nodes[].genre",
+      "nodes[].vocals",
+      "nodes[].artist",
+      "nodes[].composer",
+      "nodes[].gender",
+      "nodes[].language"
     ],
     "source": "musan-annotations",
     "target": "audio/v1"

@@ -1,4 +1,5 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "aliases": [
     "hartford-meter-reading-instance"
   ],
@@ -10,28 +11,11 @@
     }
   ],
   "crosswalk": {
-    "oneWay": [],
-    "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
-      {
-        "from": "nodes[].x",
-        "op": "move",
-        "to": "nodes[].x"
-      },
-      {
-        "from": "nodes[].y",
-        "op": "move",
-        "to": "nodes[].y"
-      }
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].x",
+      "nodes[].y"
     ],
     "source": "customer-points",
     "target": "tasks/v1"

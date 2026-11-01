@@ -1,4 +1,5 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "aliases": [
     "movrptw-real-tenerife-instances"
   ],
@@ -10,18 +11,13 @@
     }
   ],
   "crosswalk": {
-    "oneWay": [],
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].demand",
+      "nodes[].ready"
+    ],
     "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
       {
         "from": "nodes[].due",
         "op": "move",
@@ -41,16 +37,6 @@
         "from": "nodes[].y",
         "op": "move",
         "to": "nodes[].lon"
-      },
-      {
-        "from": "nodes[].demand",
-        "op": "move",
-        "to": "nodes[].demand"
-      },
-      {
-        "from": "nodes[].ready",
-        "op": "move",
-        "to": "nodes[].ready"
       }
     ],
     "source": "solomon",

@@ -1,4 +1,5 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "aliases": [
     "solomon-vrptw-benchmark"
   ],
@@ -10,47 +11,20 @@
     }
   ],
   "crosswalk": {
-    "oneWay": [],
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].x",
+      "nodes[].y",
+      "nodes[].demand",
+      "nodes[].ready",
+      "nodes[].service"
+    ],
     "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
       {
         "from": "nodes[].due",
         "op": "move",
         "to": "nodes[].deadline"
-      },
-      {
-        "from": "nodes[].x",
-        "op": "move",
-        "to": "nodes[].x"
-      },
-      {
-        "from": "nodes[].y",
-        "op": "move",
-        "to": "nodes[].y"
-      },
-      {
-        "from": "nodes[].demand",
-        "op": "move",
-        "to": "nodes[].demand"
-      },
-      {
-        "from": "nodes[].ready",
-        "op": "move",
-        "to": "nodes[].ready"
-      },
-      {
-        "from": "nodes[].service",
-        "op": "move",
-        "to": "nodes[].service"
       }
     ],
     "source": "solomon",

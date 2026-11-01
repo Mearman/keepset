@@ -90,6 +90,8 @@ for (const document of documents) {
   registry.add(CrosswalkSchema, { id: "Crosswalk" });
 
   const { schemas } = z.toJSONSchema(registry, {
+    // The documents are what the schemas describe, so the shape they are written in (a crosswalk's `keep` list, a field with a default left out) is the one a schema states, not the shape parsing turns them into.
+    io: "input",
     uri: (id) => (id === "__shared" ? "" : `#/$defs/${id}`),
   });
 

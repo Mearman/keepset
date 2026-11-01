@@ -1,4 +1,5 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/manifest.schema.json",
   "description": "The keepset catalogue: datasets with machine-readable recipes that fetch each one and normalise it into its category's target shape.",
   "id": "keepset",
   "name": "keepset",

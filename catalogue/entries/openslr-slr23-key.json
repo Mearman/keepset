@@ -1,48 +1,43 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "category": "speakers/v1",
   "citations": [],
   "crosswalk": {
-    "oneWay": [],
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].file",
+      "nodes[].chan",
+      "nodes[].cut",
+      "nodes[].nom_dur",
+      "nodes[].corpus",
+      "nodes[].yob",
+      "nodes[].age",
+      "nodes[].edu",
+      "nodes[].esl_age",
+      "nodes[].native_lang",
+      "nodes[].second_lang",
+      "nodes[].occupation",
+      "nodes[].country_born",
+      "nodes[].country_raised",
+      "nodes[].state_born",
+      "nodes[].state_raised",
+      "nodes[].city_born",
+      "nodes[].city_raised",
+      "nodes[].smoker",
+      "nodes[].ethnicity",
+      "nodes[].height",
+      "nodes[].weight",
+      "nodes[].loc",
+      "nodes[].phn_type",
+      "nodes[].topic",
+      "nodes[].type"
+    ],
     "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
       {
         "from": "nodes[].seg_lng",
         "op": "move",
         "to": "nodes[].language"
-      },
-      {
-        "from": "nodes[].file",
-        "op": "move",
-        "to": "nodes[].file"
-      },
-      {
-        "from": "nodes[].chan",
-        "op": "move",
-        "to": "nodes[].chan"
-      },
-      {
-        "from": "nodes[].cut",
-        "op": "move",
-        "to": "nodes[].cut"
-      },
-      {
-        "from": "nodes[].nom_dur",
-        "op": "move",
-        "to": "nodes[].nom_dur"
-      },
-      {
-        "from": "nodes[].corpus",
-        "op": "move",
-        "to": "nodes[].corpus"
       },
       {
         "from": "nodes[].spkr_id",
@@ -53,111 +48,6 @@
         "from": "nodes[].sex",
         "op": "move",
         "to": "nodes[].gender"
-      },
-      {
-        "from": "nodes[].yob",
-        "op": "move",
-        "to": "nodes[].yob"
-      },
-      {
-        "from": "nodes[].age",
-        "op": "move",
-        "to": "nodes[].age"
-      },
-      {
-        "from": "nodes[].edu",
-        "op": "move",
-        "to": "nodes[].edu"
-      },
-      {
-        "from": "nodes[].esl_age",
-        "op": "move",
-        "to": "nodes[].esl_age"
-      },
-      {
-        "from": "nodes[].native_lang",
-        "op": "move",
-        "to": "nodes[].native_lang"
-      },
-      {
-        "from": "nodes[].second_lang",
-        "op": "move",
-        "to": "nodes[].second_lang"
-      },
-      {
-        "from": "nodes[].occupation",
-        "op": "move",
-        "to": "nodes[].occupation"
-      },
-      {
-        "from": "nodes[].country_born",
-        "op": "move",
-        "to": "nodes[].country_born"
-      },
-      {
-        "from": "nodes[].country_raised",
-        "op": "move",
-        "to": "nodes[].country_raised"
-      },
-      {
-        "from": "nodes[].state_born",
-        "op": "move",
-        "to": "nodes[].state_born"
-      },
-      {
-        "from": "nodes[].state_raised",
-        "op": "move",
-        "to": "nodes[].state_raised"
-      },
-      {
-        "from": "nodes[].city_born",
-        "op": "move",
-        "to": "nodes[].city_born"
-      },
-      {
-        "from": "nodes[].city_raised",
-        "op": "move",
-        "to": "nodes[].city_raised"
-      },
-      {
-        "from": "nodes[].smoker",
-        "op": "move",
-        "to": "nodes[].smoker"
-      },
-      {
-        "from": "nodes[].ethnicity",
-        "op": "move",
-        "to": "nodes[].ethnicity"
-      },
-      {
-        "from": "nodes[].height",
-        "op": "move",
-        "to": "nodes[].height"
-      },
-      {
-        "from": "nodes[].weight",
-        "op": "move",
-        "to": "nodes[].weight"
-      },
-      {
-        "from": "nodes[].loc",
-        "op": "move",
-        "to": "nodes[].loc"
-      },
-      {
-        "from": "nodes[].phn_type",
-        "op": "move",
-        "to": "nodes[].phn_type"
-      },
-      {
-        "from": "nodes[].topic",
-        "op": "move",
-        "to": "nodes[].topic"
-      },
-      {
-        "from": "nodes[].type",
-        "op": "move",
-        "to": "nodes[].type"
       }
     ],
     "source": "csv-table",

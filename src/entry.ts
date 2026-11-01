@@ -651,6 +651,7 @@ export const RESERVED_META_KEYS = ["id", "name"] as const;
 export const EntrySchema = define(
   z
     .object({
+      $schema: HttpUrlSchema.optional(),
       id: IdSchema,
       namespace: NamespaceSchema.optional(),
       aliases: z.array(AliasSchema).min(1).optional(),

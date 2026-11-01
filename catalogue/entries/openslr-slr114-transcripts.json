@@ -1,32 +1,18 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "aliases": [
     "slr114-transcripts"
   ],
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "oneWay": [],
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].text",
+      "nodes[].duration"
+    ],
     "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
-      {
-        "from": "nodes[].text",
-        "op": "move",
-        "to": "nodes[].text"
-      },
-      {
-        "from": "nodes[].duration",
-        "op": "move",
-        "to": "nodes[].duration"
-      },
       {
         "from": "nodes[].audio_filepath",
         "op": "move",

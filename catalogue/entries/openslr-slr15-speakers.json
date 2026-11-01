@@ -1,46 +1,24 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "aliases": [
     "slr15-speakers"
   ],
   "category": "speakers/v1",
   "citations": [],
   "crosswalk": {
-    "oneWay": [],
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].gender",
+      "nodes[].corpus",
+      "nodes[].code",
+      "nodes[].side"
+    ],
     "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
       {
         "from": "nodes[].speaker",
         "op": "move",
         "to": "nodes[].name"
-      },
-      {
-        "from": "nodes[].gender",
-        "op": "move",
-        "to": "nodes[].gender"
-      },
-      {
-        "from": "nodes[].corpus",
-        "op": "move",
-        "to": "nodes[].corpus"
-      },
-      {
-        "from": "nodes[].code",
-        "op": "move",
-        "to": "nodes[].code"
-      },
-      {
-        "from": "nodes[].side",
-        "op": "move",
-        "to": "nodes[].side"
       }
     ],
     "source": "csv-table",

@@ -1,48 +1,22 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "category": "audio/v1",
   "citations": [],
   "crosswalk": {
-    "oneWay": [],
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].rir_id",
+      "nodes[].room_id",
+      "nodes[].noise_id",
+      "nodes[].bg_fg_type",
+      "nodes[].room_linkage"
+    ],
     "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
       {
         "from": "nodes[].noise_type",
         "op": "move",
         "to": "nodes[].label"
-      },
-      {
-        "from": "nodes[].rir_id",
-        "op": "move",
-        "to": "nodes[].rir_id"
-      },
-      {
-        "from": "nodes[].room_id",
-        "op": "move",
-        "to": "nodes[].room_id"
-      },
-      {
-        "from": "nodes[].noise_id",
-        "op": "move",
-        "to": "nodes[].noise_id"
-      },
-      {
-        "from": "nodes[].bg_fg_type",
-        "op": "move",
-        "to": "nodes[].bg_fg_type"
-      },
-      {
-        "from": "nodes[].room_linkage",
-        "op": "move",
-        "to": "nodes[].room_linkage"
       }
     ],
     "source": "option-list",

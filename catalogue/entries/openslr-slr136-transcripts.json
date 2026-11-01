@@ -1,46 +1,24 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "aliases": [
     "slr136-transcripts"
   ],
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "oneWay": [],
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].emotion",
+      "nodes[].gender",
+      "nodes[].age",
+      "nodes[].level"
+    ],
     "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
       {
         "from": "nodes[].utterance",
         "op": "move",
         "to": "nodes[].text"
-      },
-      {
-        "from": "nodes[].emotion",
-        "op": "move",
-        "to": "nodes[].emotion"
-      },
-      {
-        "from": "nodes[].gender",
-        "op": "move",
-        "to": "nodes[].gender"
-      },
-      {
-        "from": "nodes[].age",
-        "op": "move",
-        "to": "nodes[].age"
-      },
-      {
-        "from": "nodes[].level",
-        "op": "move",
-        "to": "nodes[].level"
       },
       {
         "from": "nodes[].audio_recording",
