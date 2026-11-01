@@ -1,3 +1,10 @@
+# [0.106.0](https://github.com/Mearman/keepset/compare/v0.105.0...v0.106.0) (2026-11-01)
+
+
+### Features
+
+* **catalogue:** read the Multilingual LibriSpeech transcripts from the streamed archives ([debd141](https://github.com/Mearman/keepset/commit/debd1418764eb3666689ac33767ed7d53948f4a6))
+
 # [0.105.0](https://github.com/Mearman/keepset/compare/v0.104.0...v0.105.0) (2026-11-01)
 
 
