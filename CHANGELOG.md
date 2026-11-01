@@ -1,3 +1,10 @@
+# [0.108.0](https://github.com/Mearman/keepset/compare/v0.107.0...v0.108.0) (2026-11-01)
+
+
+### Features
+
+* **catalogue:** read the Multilingual TEDx transcripts from the streamed archives ([1eb1ec5](https://github.com/Mearman/keepset/commit/1eb1ec51ae3dd093d2fb19c1e25968b41aa30790))
+
 # [0.107.0](https://github.com/Mearman/keepset/compare/v0.106.0...v0.107.0) (2026-11-01)
 
 
