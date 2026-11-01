@@ -185,8 +185,8 @@ importers:
         specifier: 1.21.3
         version: 1.21.3
       crossmap:
-        specifier: 0.2.0
-        version: 0.2.0
+        specifier: 0.11.0
+        version: 0.11.0
       fflate:
         specifier: 0.8.3
         version: 0.8.3
@@ -1733,8 +1733,8 @@ packages:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
 
-  crossmap@0.2.0:
-    resolution: {integrity: sha512-42ZfQrxU/nTxx27nl3T9ZwUBFbm5+XqSi41cTadoDhRqWJVqiBUgNki9NSMvN7jd4yQM6n8pnXuNht+xDRx+Kw==}
+  crossmap@0.11.0:
+    resolution: {integrity: sha512-vQVR1ysCYovrOBTJ6w71yX6LMdzs3sc1ir7yW1zjSR5Xv/YW1ShEffFPG09JTg++urXsjIzEi0Y7M5+Wi4COqQ==}
     engines: {node: '>=22'}
     hasBin: true
 
@@ -5030,7 +5030,7 @@ snapshots:
       shebang-command: 2.0.0
       which: 2.0.2
 
-  crossmap@0.2.0:
+  crossmap@0.11.0:
     dependencies:
       trilean: 1.9.0
       zod: 4.6.6

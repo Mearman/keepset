@@ -39,6 +39,8 @@ export { groupsOf, NAME_SEPARATOR, namesOf } from "./names";
 export type { EntryNames, SegmentAliases } from "./names";
 export { LineageSchema, ManifestSchema, parseManifest, SemVerSchema } from "./manifest";
 export type { Lineage, Manifest } from "./manifest";
+export { describeRule } from "./rules";
+export type { RuleView } from "./rules";
 export { serialise } from "./serialise";
 export { GraphEdgeSchema, GraphNodeSchema, GraphV1Schema } from "./targets/graph-v1";
 export type { GraphEdge, GraphNode, GraphV1 } from "./targets/graph-v1";
