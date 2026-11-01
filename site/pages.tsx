@@ -1,7 +1,7 @@
 /* @jsxRuntime automatic */
 /** The site's page templates as React components, rendered to static markup in the generator: JSX makes escaping structural (React escapes every text node and attribute value, so catalogue data can never become markup) and lets the facts table take typed nodes instead of pre-escaped HTML strings. These components run only at build time; nothing here reaches the browser. The runtime pragma is a plain block comment because tsx, which runs the generator, transpiles JSX from pragmas rather than the tsconfig the typechecker reads, and a JSDoc-shaped one fails the tag-name lint. */
 
-import { Fragment, type ReactNode } from "react";
+import { Fragment, type ReactElement, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describeRule, groupsOf, NAME_SEPARATOR, rawSnapshotUrl, type Archive, type ArchiveMember, type Dataset, type Manifest, type NamespaceNode, type Parser, type RuleView } from "keepset";
 import { dimensionsOf, entitiesText, formatCount, sizeText } from "./dimensions";
@@ -181,7 +181,7 @@ export interface SameDataEntry {
  * @param index - The rule's position among the crosswalk's rules, which keeps a row's key unique.
  * @returns The table row.
  */
-function ruleRow(rule: RuleView, index: number): ReactNode {
+function ruleRow(rule: RuleView, index: number): ReactElement {
   const reads = rule.op === "default" ? rule.detail : rule.from.join(", ");
 
   return (
