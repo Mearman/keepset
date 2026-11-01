@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { CatalogueSyntaxError } from "./errors";
 import { ManifestSchema, parseManifest } from "./manifest";
-import { serialise } from "./serialise";
+import { MANIFEST_SCHEMA_URL, serialise } from "./serialise";
 
 const root = {
   id: "keepset-graphs",
@@ -23,7 +23,7 @@ describe("the catalogue manifest", () => {
   it("round-trips a root catalogue and a fork through parse and serialise", () => {
     for (const doc of [root, fork]) {
       const text = serialise(parseManifest(doc));
-      expect(parseManifest(JSON.parse(text))).toEqual(doc);
+      expect(parseManifest(JSON.parse(text))).toEqual({ ...doc, $schema: MANIFEST_SCHEMA_URL });
       expect(serialise(parseManifest(JSON.parse(text)))).toBe(text);
     }
   });
@@ -48,7 +48,7 @@ describe("the catalogue manifest", () => {
 
   it("accepts aliases for namespace segments and round-trips them", () => {
     const doc = { ...root, namespaceAliases: { suitesparse: ["ss", "sparse"], networkrepository: ["nr"] } };
-    expect(parseManifest(JSON.parse(serialise(parseManifest(doc))))).toEqual(doc);
+    expect(parseManifest(JSON.parse(serialise(parseManifest(doc))))).toEqual({ ...doc, $schema: MANIFEST_SCHEMA_URL });
   });
 
   it("refuses a segment alias that repeats, names itself, or is the key of another segment's aliases", () => {

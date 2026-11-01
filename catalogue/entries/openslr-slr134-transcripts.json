@@ -1,51 +1,25 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "aliases": [
     "slr134-transcripts"
   ],
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "oneWay": [],
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].file_id",
+      "nodes[].start_time",
+      "nodes[].end_time",
+      "nodes[].source_file_audio",
+      "nodes[].source_session"
+    ],
     "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
       {
         "from": "nodes[].transcript",
         "op": "move",
         "to": "nodes[].text"
-      },
-      {
-        "from": "nodes[].file_id",
-        "op": "move",
-        "to": "nodes[].file_id"
-      },
-      {
-        "from": "nodes[].start_time",
-        "op": "move",
-        "to": "nodes[].start_time"
-      },
-      {
-        "from": "nodes[].end_time",
-        "op": "move",
-        "to": "nodes[].end_time"
-      },
-      {
-        "from": "nodes[].source_file_audio",
-        "op": "move",
-        "to": "nodes[].source_file_audio"
-      },
-      {
-        "from": "nodes[].source_session",
-        "op": "move",
-        "to": "nodes[].source_session"
       }
     ],
     "source": "csv-table",

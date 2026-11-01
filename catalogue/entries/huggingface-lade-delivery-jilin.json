@@ -1,4 +1,5 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "aliases": [
     "lade-delivery-jilin"
   ],
@@ -11,27 +12,16 @@
     }
   ],
   "crosswalk": {
-    "oneWay": [],
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].lat"
+    ],
     "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
       {
         "from": "nodes[].delivery_time",
         "op": "move",
         "to": "nodes[].closed"
-      },
-      {
-        "from": "nodes[].lat",
-        "op": "move",
-        "to": "nodes[].lat"
       },
       {
         "from": "nodes[].lng",

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { EntrySchema, MULTI_FILE_FORMATS, parseEntry, SourceSchema, waybackUrl } from "./entry";
+import { EntrySchema, MULTI_FILE_FORMATS, parseEntry, type Entry, SourceSchema, waybackUrl } from "./entry";
 import { CatalogueSyntaxError } from "./errors";
-import { serialise } from "./serialise";
+import { ENTRY_SCHEMA_URL, serialise } from "./serialise";
 import { arcgisEntry, deadEntry, everyEntryShape, graphCollectionEntry, liveEntry, ogbEntry, taskCollectionEntry, taskEntry } from "./test-support/entries";
 
 const requiredFields = ["id", "name", "tags", "category", "sources", "licence", "citations", "recipe", "crosswalk", "expectedCounts", "properties"] as const;
@@ -10,12 +10,21 @@ function without(doc: Readonly<Record<string, unknown>>, field: string): Record<
   return Object.fromEntries(Object.entries(doc).filter(([key]) => key !== field));
 }
 
+/**
+ * The entry with an inline crosswalk's rules in a fixed order. A crosswalk's rule order carries no meaning and `serialise` writes the paths it carries unchanged as `keep`, which parsing puts after the rules written out, so a round trip can reorder them.
+ * @param entry - A parsed entry.
+ * @returns The entry with its inline crosswalk's rules sorted.
+ */
+function withSortedRules(entry: Entry): Entry {
+  return "rules" in entry.crosswalk ? { ...entry, crosswalk: { ...entry.crosswalk, rules: entry.crosswalk.rules.toSorted((left, right) => JSON.stringify(left).localeCompare(JSON.stringify(right))) } } : entry;
+}
+
 describe("the entry format", () => {
   it("round-trips representative entries through parse and serialise", () => {
     for (const doc of everyEntryShape) {
       const text = serialise(parseEntry(doc));
       const parsed = parseEntry(JSON.parse(text));
-      expect(parsed).toEqual(doc);
+      expect(withSortedRules(parsed)).toEqual(withSortedRules({ ...parseEntry(doc), $schema: ENTRY_SCHEMA_URL }));
       expect(serialise(parsed)).toBe(text);
       expect(EntrySchema.is(doc)).toBe(true);
     }
@@ -135,7 +144,7 @@ describe("a source's snapshot", () => {
 describe("an entry's namespace and aliases", () => {
   it("accepts a namespace and aliases, and round-trips them through parse and serialise", () => {
     const doc = { ...liveEntry, namespace: ["suitesparse", "gset"], aliases: ["g53"] };
-    expect(parseEntry(JSON.parse(serialise(parseEntry(doc))))).toEqual(parseEntry(doc));
+    expect(parseEntry(JSON.parse(serialise(parseEntry(doc))))).toEqual({ ...parseEntry(doc), $schema: ENTRY_SCHEMA_URL });
   });
 
   it("refuses a namespace segment that is not an id, so none can contain the separator", () => {
@@ -173,7 +182,7 @@ describe("an entry's namespace and aliases", () => {
 describe("an entry's sameDataAs", () => {
   it("accepts the ids of other entries and round-trips them through parse and serialise", () => {
     const doc = { ...liveEntry, sameDataAs: ["other-one", "other-two"] };
-    expect(parseEntry(JSON.parse(serialise(parseEntry(doc))))).toEqual(parseEntry(doc));
+    expect(parseEntry(JSON.parse(serialise(parseEntry(doc))))).toEqual({ ...parseEntry(doc), $schema: ENTRY_SCHEMA_URL });
   });
 
   it("refuses an empty list, a repeated id, the entry's own id and a name that is not an id", () => {

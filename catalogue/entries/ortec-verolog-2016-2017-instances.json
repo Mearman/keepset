@@ -1,4 +1,5 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "aliases": [
     "verolog-2016-2017-instances"
   ],
@@ -10,62 +11,23 @@
     }
   ],
   "crosswalk": {
-    "oneWay": [],
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].x",
+      "nodes[].y",
+      "nodes[].kind",
+      "nodes[].location",
+      "nodes[].fromDay",
+      "nodes[].toDay",
+      "nodes[].stayDays",
+      "nodes[].amount"
+    ],
     "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
       {
         "from": "nodes[].tool",
         "op": "move",
         "to": "nodes[].skill"
-      },
-      {
-        "from": "nodes[].x",
-        "op": "move",
-        "to": "nodes[].x"
-      },
-      {
-        "from": "nodes[].y",
-        "op": "move",
-        "to": "nodes[].y"
-      },
-      {
-        "from": "nodes[].kind",
-        "op": "move",
-        "to": "nodes[].kind"
-      },
-      {
-        "from": "nodes[].location",
-        "op": "move",
-        "to": "nodes[].location"
-      },
-      {
-        "from": "nodes[].fromDay",
-        "op": "move",
-        "to": "nodes[].fromDay"
-      },
-      {
-        "from": "nodes[].toDay",
-        "op": "move",
-        "to": "nodes[].toDay"
-      },
-      {
-        "from": "nodes[].stayDays",
-        "op": "move",
-        "to": "nodes[].stayDays"
-      },
-      {
-        "from": "nodes[].amount",
-        "op": "move",
-        "to": "nodes[].amount"
       }
     ],
     "source": "verolog-2017",

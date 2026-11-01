@@ -1,4 +1,5 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "aliases": [
     "tdc-technician-dispatch"
   ],
@@ -10,18 +11,16 @@
     }
   ],
   "crosswalk": {
-    "oneWay": [],
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].earliest",
+      "nodes[].priority",
+      "nodes[].penalty",
+      "nodes[].modified",
+      "nodes[].cancelled"
+    ],
     "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
       {
         "from": "nodes[].latest",
         "op": "move",
@@ -42,31 +41,6 @@
         "from": "nodes[].skills",
         "op": "move",
         "to": "nodes[].skill"
-      },
-      {
-        "from": "nodes[].earliest",
-        "op": "move",
-        "to": "nodes[].earliest"
-      },
-      {
-        "from": "nodes[].priority",
-        "op": "move",
-        "to": "nodes[].priority"
-      },
-      {
-        "from": "nodes[].penalty",
-        "op": "move",
-        "to": "nodes[].penalty"
-      },
-      {
-        "from": "nodes[].modified",
-        "op": "move",
-        "to": "nodes[].modified"
-      },
-      {
-        "from": "nodes[].cancelled",
-        "op": "move",
-        "to": "nodes[].cancelled"
       }
     ],
     "source": "tdc",

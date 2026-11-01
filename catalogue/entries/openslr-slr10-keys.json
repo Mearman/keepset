@@ -1,73 +1,27 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "category": "speakers/v1",
   "citations": [],
   "crosswalk": {
-    "oneWay": [],
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].segment",
+      "nodes[].language",
+      "nodes[].conversation",
+      "nodes[].channel",
+      "nodes[].segment_type",
+      "nodes[].gender",
+      "nodes[].length",
+      "nodes[].dialect",
+      "nodes[].microphone",
+      "nodes[].phone"
+    ],
     "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
-      {
-        "from": "nodes[].segment",
-        "op": "move",
-        "to": "nodes[].segment"
-      },
-      {
-        "from": "nodes[].language",
-        "op": "move",
-        "to": "nodes[].language"
-      },
-      {
-        "from": "nodes[].conversation",
-        "op": "move",
-        "to": "nodes[].conversation"
-      },
-      {
-        "from": "nodes[].channel",
-        "op": "move",
-        "to": "nodes[].channel"
-      },
-      {
-        "from": "nodes[].segment_type",
-        "op": "move",
-        "to": "nodes[].segment_type"
-      },
       {
         "from": "nodes[].speaker",
         "op": "move",
         "to": "nodes[].name"
-      },
-      {
-        "from": "nodes[].gender",
-        "op": "move",
-        "to": "nodes[].gender"
-      },
-      {
-        "from": "nodes[].length",
-        "op": "move",
-        "to": "nodes[].length"
-      },
-      {
-        "from": "nodes[].dialect",
-        "op": "move",
-        "to": "nodes[].dialect"
-      },
-      {
-        "from": "nodes[].microphone",
-        "op": "move",
-        "to": "nodes[].microphone"
-      },
-      {
-        "from": "nodes[].phone",
-        "op": "move",
-        "to": "nodes[].phone"
       }
     ],
     "source": "csv-table",

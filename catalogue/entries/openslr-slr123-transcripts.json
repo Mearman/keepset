@@ -1,42 +1,18 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "aliases": [
     "slr123-transcripts"
   ],
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "oneWay": [],
-    "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
-      {
-        "from": "nodes[].span",
-        "op": "move",
-        "to": "nodes[].span"
-      },
-      {
-        "from": "nodes[].speaker",
-        "op": "move",
-        "to": "nodes[].speaker"
-      },
-      {
-        "from": "nodes[].gender_dialect",
-        "op": "move",
-        "to": "nodes[].gender_dialect"
-      },
-      {
-        "from": "nodes[].text",
-        "op": "move",
-        "to": "nodes[].text"
-      }
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].span",
+      "nodes[].speaker",
+      "nodes[].gender_dialect",
+      "nodes[].text"
     ],
     "source": "csv-table",
     "target": "speech/v1"

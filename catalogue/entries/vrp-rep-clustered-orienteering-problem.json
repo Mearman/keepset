@@ -1,4 +1,5 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "aliases": [
     "clustered-orienteering-problem"
   ],
@@ -10,6 +11,15 @@
     }
   ],
   "crosswalk": {
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].lat",
+      "nodes[].lon",
+      "nodes[].x",
+      "nodes[].y",
+      "nodes[].clusters"
+    ],
     "oneWay": [
       {
         "direction": "encode",
@@ -20,43 +30,6 @@
         "direction": "encode",
         "from": "nodes[].probability",
         "op": "drop"
-      }
-    ],
-    "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
-      {
-        "from": "nodes[].lat",
-        "op": "move",
-        "to": "nodes[].lat"
-      },
-      {
-        "from": "nodes[].lon",
-        "op": "move",
-        "to": "nodes[].lon"
-      },
-      {
-        "from": "nodes[].x",
-        "op": "move",
-        "to": "nodes[].x"
-      },
-      {
-        "from": "nodes[].y",
-        "op": "move",
-        "to": "nodes[].y"
-      },
-      {
-        "from": "nodes[].clusters",
-        "op": "move",
-        "to": "nodes[].clusters"
       }
     ],
     "source": "tsplib",

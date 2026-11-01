@@ -1,32 +1,16 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "aliases": [
     "slr34-lexicon"
   ],
   "category": "lexicon/v1",
   "citations": [],
   "crosswalk": {
-    "oneWay": [],
-    "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
-      {
-        "from": "nodes[].word",
-        "op": "move",
-        "to": "nodes[].word"
-      },
-      {
-        "from": "nodes[].pronunciation",
-        "op": "move",
-        "to": "nodes[].pronunciation"
-      }
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].word",
+      "nodes[].pronunciation"
     ],
     "source": "lexicon-lines",
     "target": "lexicon/v1"

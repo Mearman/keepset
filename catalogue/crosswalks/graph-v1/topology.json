@@ -1,26 +1,10 @@
 {
-  "oneWay": [],
-  "rules": [
-    {
-      "from": "meta",
-      "op": "move",
-      "to": "meta"
-    },
-    {
-      "from": "nodes[].id",
-      "op": "move",
-      "to": "nodes[].id"
-    },
-    {
-      "from": "edges[].source",
-      "op": "move",
-      "to": "edges[].source"
-    },
-    {
-      "from": "edges[].target",
-      "op": "move",
-      "to": "edges[].target"
-    }
+  "$schema": "https://cdn.jsdelivr.net/npm/crossmap/schemas/crossmap.schema.json",
+  "keep": [
+    "meta",
+    "nodes[].id",
+    "edges[].source",
+    "edges[].target"
   ],
   "source": "keepset/topology",
   "target": "graph/v1"

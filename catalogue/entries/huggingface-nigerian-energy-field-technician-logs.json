@@ -1,22 +1,18 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "aliases": [
     "nigerian-energy-field-technician-logs"
   ],
   "category": "tasks/v1",
   "citations": [],
   "crosswalk": {
-    "oneWay": [],
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].lat",
+      "nodes[].lon"
+    ],
     "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
       {
         "from": "nodes[].end_time",
         "op": "move",
@@ -26,16 +22,6 @@
         "from": "nodes[].duration_min",
         "op": "move",
         "to": "nodes[].duration"
-      },
-      {
-        "from": "nodes[].lat",
-        "op": "move",
-        "to": "nodes[].lat"
-      },
-      {
-        "from": "nodes[].lon",
-        "op": "move",
-        "to": "nodes[].lon"
       },
       {
         "from": "nodes[].start_time",

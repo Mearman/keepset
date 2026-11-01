@@ -1,4 +1,5 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "aliases": [
     "technician-routing-pillac"
   ],
@@ -10,48 +11,15 @@
     }
   ],
   "crosswalk": {
-    "oneWay": [],
-    "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
-      {
-        "from": "nodes[].skill",
-        "op": "move",
-        "to": "nodes[].skill"
-      },
-      {
-        "from": "nodes[].x",
-        "op": "move",
-        "to": "nodes[].x"
-      },
-      {
-        "from": "nodes[].y",
-        "op": "move",
-        "to": "nodes[].y"
-      },
-      {
-        "from": "nodes[].type",
-        "op": "move",
-        "to": "nodes[].type"
-      },
-      {
-        "from": "nodes[].skills",
-        "op": "move",
-        "to": "nodes[].skills"
-      },
-      {
-        "from": "nodes[].resources",
-        "op": "move",
-        "to": "nodes[].resources"
-      }
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].skill",
+      "nodes[].x",
+      "nodes[].y",
+      "nodes[].type",
+      "nodes[].skills",
+      "nodes[].resources"
     ],
     "source": "vrp-rep",
     "target": "tasks/v1"

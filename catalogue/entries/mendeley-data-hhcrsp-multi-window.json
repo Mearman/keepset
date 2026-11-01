@@ -1,4 +1,5 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "aliases": [
     "hhcrsp-multi-window"
   ],
@@ -14,67 +15,24 @@
     }
   ],
   "crosswalk": {
-    "oneWay": [],
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].x",
+      "nodes[].y",
+      "nodes[].role",
+      "nodes[].duration1",
+      "nodes[].duration2",
+      "nodes[].earliest1",
+      "nodes[].latest1",
+      "nodes[].earliest2",
+      "nodes[].latest2"
+    ],
     "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
       {
         "from": "nodes[].services",
         "op": "move",
         "to": "nodes[].skill"
-      },
-      {
-        "from": "nodes[].x",
-        "op": "move",
-        "to": "nodes[].x"
-      },
-      {
-        "from": "nodes[].y",
-        "op": "move",
-        "to": "nodes[].y"
-      },
-      {
-        "from": "nodes[].role",
-        "op": "move",
-        "to": "nodes[].role"
-      },
-      {
-        "from": "nodes[].duration1",
-        "op": "move",
-        "to": "nodes[].duration1"
-      },
-      {
-        "from": "nodes[].duration2",
-        "op": "move",
-        "to": "nodes[].duration2"
-      },
-      {
-        "from": "nodes[].earliest1",
-        "op": "move",
-        "to": "nodes[].earliest1"
-      },
-      {
-        "from": "nodes[].latest1",
-        "op": "move",
-        "to": "nodes[].latest1"
-      },
-      {
-        "from": "nodes[].earliest2",
-        "op": "move",
-        "to": "nodes[].earliest2"
-      },
-      {
-        "from": "nodes[].latest2",
-        "op": "move",
-        "to": "nodes[].latest2"
       }
     ],
     "source": "hhcrsp",

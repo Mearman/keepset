@@ -1,4 +1,5 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "aliases": [
     "hhcrsp-curated-instances"
   ],
@@ -14,18 +15,17 @@
     }
   ],
   "crosswalk": {
-    "oneWay": [],
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].role",
+      "nodes[].duration1",
+      "nodes[].duration2",
+      "nodes[].earliest",
+      "nodes[].minGap",
+      "nodes[].maxGap"
+    ],
     "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
       {
         "from": "nodes[].latest",
         "op": "move",
@@ -45,36 +45,6 @@
         "from": "nodes[].services",
         "op": "move",
         "to": "nodes[].skill"
-      },
-      {
-        "from": "nodes[].role",
-        "op": "move",
-        "to": "nodes[].role"
-      },
-      {
-        "from": "nodes[].duration1",
-        "op": "move",
-        "to": "nodes[].duration1"
-      },
-      {
-        "from": "nodes[].duration2",
-        "op": "move",
-        "to": "nodes[].duration2"
-      },
-      {
-        "from": "nodes[].earliest",
-        "op": "move",
-        "to": "nodes[].earliest"
-      },
-      {
-        "from": "nodes[].minGap",
-        "op": "move",
-        "to": "nodes[].minGap"
-      },
-      {
-        "from": "nodes[].maxGap",
-        "op": "move",
-        "to": "nodes[].maxGap"
       }
     ],
     "source": "mankowska",

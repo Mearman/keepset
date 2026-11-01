@@ -1,29 +1,13 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "category": "lexicon/v1",
   "citations": [],
   "crosswalk": {
-    "oneWay": [],
-    "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
-      {
-        "from": "nodes[].word",
-        "op": "move",
-        "to": "nodes[].word"
-      },
-      {
-        "from": "nodes[].count",
-        "op": "move",
-        "to": "nodes[].count"
-      }
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].word",
+      "nodes[].count"
     ],
     "source": "json-word-counts",
     "target": "lexicon/v1"

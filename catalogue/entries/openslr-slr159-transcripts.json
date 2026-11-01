@@ -1,41 +1,23 @@
 {
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
   "aliases": [
     "slr159-transcripts"
   ],
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "oneWay": [],
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].text",
+      "nodes[].start",
+      "nodes[].end"
+    ],
     "rules": [
-      {
-        "from": "meta",
-        "op": "move",
-        "to": "meta"
-      },
-      {
-        "from": "nodes[].id",
-        "op": "move",
-        "to": "nodes[].id"
-      },
-      {
-        "from": "nodes[].text",
-        "op": "move",
-        "to": "nodes[].text"
-      },
       {
         "from": "nodes[].tier",
         "op": "move",
         "to": "nodes[].speaker"
-      },
-      {
-        "from": "nodes[].start",
-        "op": "move",
-        "to": "nodes[].start"
-      },
-      {
-        "from": "nodes[].end",
-        "op": "move",
-        "to": "nodes[].end"
       }
     ],
     "source": "textgrid",

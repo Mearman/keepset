@@ -4,17 +4,15 @@
 
    No try/catch: any failure crashes the script with a non-zero exit, naming the file. */
 
-import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, sep } from "node:path";
-import { fileURLToPath } from "node:url";
 import { parseCrosswalk, type Crosswalk } from "crossmap";
 import { createCatalogue } from "../src/catalogue";
 import { parseEntry, type Entry } from "../src/entry";
 import { parseManifest } from "../src/manifest";
 import { serialise } from "../src/serialise";
+import { catalogueDir, jsonFiles, repoRoot } from "./catalogue-files";
 
-const repoRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
-const catalogueDir = join(repoRoot, "catalogue");
 const outputPath = join(repoRoot, "src/generated/catalogue.json");
 
 /**
@@ -27,22 +25,10 @@ function readCanonical<Doc extends Parameters<typeof serialise>[0]>(path: string
   const text = readFileSync(path, "utf8");
   const doc = parse(JSON.parse(text));
   if (serialise(doc) !== text) {
-    throw new Error(`${relative(repoRoot, path)} is not in canonical form: rewrite it as serialise() writes it (two-space JSON in schema key order, trailing newline)`);
+    throw new Error(`${relative(repoRoot, path)} is not in canonical form: run pnpm catalogue:format, or rewrite it as serialise() writes it (two-space JSON in schema key order, trailing newline)`);
   }
 
   return doc;
-}
-
-/**
- * Lists every `.json` file under a directory, recursively, in path order.
- * @param dir - The directory.
- * @returns Absolute paths.
- */
-function jsonFiles(dir: string): string[] {
-  return readdirSync(dir, { recursive: true, encoding: "utf8" })
-    .filter((path) => path.endsWith(".json"))
-    .sort()
-    .map((path) => join(dir, path));
 }
 
 const manifest = readCanonical(join(catalogueDir, "manifest.json"), parseManifest);

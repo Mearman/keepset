@@ -1,16 +1,8 @@
 {
-  "oneWay": [],
-  "rules": [
-    {
-      "from": "meta",
-      "op": "move",
-      "to": "meta"
-    },
-    {
-      "from": "nodes[].id",
-      "op": "move",
-      "to": "nodes[].id"
-    }
+  "$schema": "https://cdn.jsdelivr.net/npm/crossmap/schemas/crossmap.schema.json",
+  "keep": [
+    "meta",
+    "nodes[].id"
   ],
   "source": "keepset/nodes",
   "target": "tasks/v1"
