@@ -240,3 +240,38 @@ describe("the openslr-slr129-transcripts recipe", () => {
     validates("openslr-slr129-transcripts");
   });
 });
+
+describe("the openslr-slr100-transcripts recipe", () => {
+  it("reads each monolingual archive's splits as one instance of segments, leaving out the audio and the subtitles", async () => {
+    const fetch = serveEntry("openslr-slr100-transcripts", (url) => {
+      const language = stem(url).replace("mtedx_", "");
+      const root = `${language}-${language}/data`;
+      const segments = (talk: string): string => `${talk}_0000 ${talk} 10.94 19.67\n${talk}_0001 ${talk} 21.41 24.31\n`;
+      const yaml = (talk: string): string => `- {duration: 8.730000000000002, offset: 10.94, speaker_id: ${talk}, wav: ${talk}.wav}\n- {duration: 2.8999999999999986, offset: 21.41, speaker_id: ${talk}, wav: ${talk}.wav}\n`;
+
+      return gzip(
+        tar([
+          { path: `${language}-${language}/docs/README`, text: "readme" },
+          { path: `${root}/train/txt/segments`, text: segments("009AJ_5hPZ4") },
+          { path: `${root}/train/txt/train.yaml`, text: yaml("009AJ_5hPZ4") },
+          { path: `${root}/train/txt/train.${language}`, text: "(Applaus) Ich spreche heute hier &amp; dort.\nWir genießen es jeden Tag.\n" },
+          { path: `${root}/train/vtt/009AJ_5hPZ4.${language}.vtt`, text: "WEBVTT" },
+          { path: `${root}/train/wav/009AJ_5hPZ4.flac`, text: "audio" },
+          { path: `${root}/valid/txt/valid.${language}`, text: "Ja.\n\n" },
+          { path: `${root}/valid/txt/valid.yaml`, text: yaml("O7KrwO3pVZ8") },
+          { path: `${root}/valid/txt/segments`, text: segments("O7KrwO3pVZ8") },
+        ]),
+      );
+    });
+    const { data } = await fetchEntry(getDataset("openslr-slr100-transcripts"), { fetch });
+    expect(Object.keys(shape(data))).toEqual(["mtedx_es.tgz", "mtedx_fr.tgz", "mtedx_pt.tgz", "mtedx_it.tgz", "mtedx_ru.tgz", "mtedx_el.tgz", "mtedx_ar.tgz", "mtedx_de.tgz"]);
+    expect(Object.values(shape(data))[0]).toEqual(["009AJ_5hPZ4_0000", "009AJ_5hPZ4_0001", "O7KrwO3pVZ8_0000", "O7KrwO3pVZ8_0001"]);
+    expect(nodesOf(data, 0)).toMatchObject([
+      { id: "009AJ_5hPZ4_0000", text: "(Applaus) Ich spreche heute hier &amp; dort.", speaker: "009AJ_5hPZ4", audio: "009AJ_5hPZ4.wav", start: 10.94, end: 19.67, duration: 8.730000000000002, split: "train", language: "es" },
+      {},
+      { text: "Ja.", split: "valid" },
+      { text: null },
+    ]);
+    validates("openslr-slr100-transcripts");
+  });
+});
