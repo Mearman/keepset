@@ -6,13 +6,13 @@
     "keepset": "./dist-cli/keepset.mjs"
   },
   "dependencies": {
+    "7z-wasm": "1.2.0",
     "@mantine/core": "9.7.2",
     "@mantine/hooks": "9.7.2",
     "@tanstack/react-table": "9.2.8",
     "@tanstack/react-virtual": "3.14.19",
     "@vanilla-extract/css": "1.21.3",
-    "7z-wasm": "1.2.0",
-    "crossmap": "0.2.0",
+    "crossmap": "0.11.0",
     "fflate": "0.8.3",
     "leaflet": "1.9.4",
     "pako": "3.0.2",
@@ -106,6 +106,7 @@
     "archive:check": "tsx scripts/archive-sources.ts --check",
     "build": "pnpm run catalogue && tsdown && tsx scripts/generate-json-schema.ts",
     "catalogue": "tsx scripts/build-catalogue.ts",
+    "catalogue:format": "tsx scripts/format-catalogue.ts",
     "lint": "eslint . --fix --cache --max-warnings 0",
     "lint:check": "eslint . --cache --max-warnings 0",
     "prepare": "husky",

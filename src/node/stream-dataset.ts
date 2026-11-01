@@ -7,6 +7,7 @@ import { KeepsetError, RecipeError, type RecipeStep } from "../errors";
 import { TableReader } from "../parsers/csv-table";
 import type { NativeRow, NativeTable } from "../parsers/native";
 import { parseNativeFiles, PieceDecoder } from "../parsers/parse-native";
+import { describeRule } from "../rules";
 import type { JsonScalar } from "../targets/json-scalar";
 import { IdSet } from "./id-set";
 import { csvPages, type CsvPaging } from "../paged";
@@ -108,7 +109,8 @@ export function inseparableRule(crosswalk: Crosswalk): string | undefined {
     if ("when" in rule && rule.when !== undefined) {
       return `rule ${String(index)} (${rule.op}) has a when, which may read the whole document`;
     }
-    const paths = ["from" in rule ? rule.from : undefined, "to" in rule ? rule.to : undefined].filter((path) => path !== undefined);
+    const { from, to } = describeRule(rule);
+    const paths = [...from, ...to];
     const classes = new Set(paths.map(pathClass));
     const [only] = classes;
     if (classes.size !== 1 || only === "other") {

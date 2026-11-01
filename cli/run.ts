@@ -1,6 +1,6 @@
 import { parseArgs } from "node:util";
 // Through the package's own name, as cli/keepset.ts imports the library: an `instanceof` check needs the very class the library throws, not a second copy bundled into the command.
-import { KeepsetError, NAME_SEPARATOR, type Archive, type ArchiveMember, type Dataset, type DatasetQuery, type NamespaceNode, type SyntaxIssue } from "keepset";
+import { describeRule, KeepsetError, NAME_SEPARATOR, type Archive, type ArchiveMember, type Dataset, type DatasetQuery, type NamespaceNode, type RuleView, type SyntaxIssue } from "keepset";
 import type { FetchedDataset, NodeSink, Provenance, RoundTripReport, StreamedDataset } from "keepset/node";
 
 /**
@@ -204,6 +204,26 @@ export function formatNamespaces(nodes: readonly NamespaceNode[]): string {
 }
 
 /**
+ * One line of `show`'s crosswalk section: the operation and the paths it reads and writes, then for a one-way rule the direction it applies in.
+ * @param rule - The rule, as described.
+ * @returns The line, indented under the crosswalk.
+ */
+function ruleLine(rule: RuleView): string {
+  const reads = rule.from.join(", ");
+  const writes = rule.to.join(", ");
+  switch (rule.op) {
+    case "drop":
+      return `  drop ${reads} (${rule.direction})`;
+    case "default":
+      return `  default ${writes} = ${rule.detail ?? ""} (${rule.direction})`;
+    case "aggregate":
+      return `  aggregate ${rule.detail ?? ""} ${reads} -> ${writes} (${rule.direction})`;
+    default:
+      return `  ${rule.op} ${reads} -> ${writes}`;
+  }
+}
+
+/**
  * The human-readable form of `show`: the descriptor, sources, licence, citations, recipe and crosswalk rules, one labelled section after another.
  * @param dataset - The dataset.
  * @returns The text.
@@ -262,11 +282,8 @@ export function formatShow(dataset: Dataset): string {
     lines.push(`  parser: ${format} ${JSON.stringify(options)}`);
   }
   lines.push("", `crosswalk: ${crosswalk.source} -> ${crosswalk.target}`);
-  for (const rule of crosswalk.rules) {
-    lines.push(`  ${rule.op} ${rule.from} -> ${rule.to}`);
-  }
-  for (const rule of crosswalk.oneWay) {
-    lines.push(rule.op === "drop" ? `  drop ${rule.from} (encode)` : `  default ${rule.to} = ${JSON.stringify(rule.value)} (${rule.direction})`);
+  for (const rule of [...crosswalk.rules, ...crosswalk.oneWay]) {
+    lines.push(ruleLine(describeRule(rule)));
   }
   const counts = Object.entries(entry.expectedCounts);
   if (counts.length > 0) {

@@ -3,7 +3,7 @@
 
 import { Fragment, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { groupsOf, NAME_SEPARATOR, rawSnapshotUrl, type Archive, type ArchiveMember, type Dataset, type Manifest, type NamespaceNode, type Parser } from "keepset";
+import { describeRule, groupsOf, NAME_SEPARATOR, rawSnapshotUrl, type Archive, type ArchiveMember, type Dataset, type Manifest, type NamespaceNode, type Parser, type RuleView } from "keepset";
 import { dimensionsOf, entitiesText, formatCount, sizeText } from "./dimensions";
 import { listingColumnWidths } from "./listing-columns";
 import { propertyLabel, propertyText } from "./properties";
@@ -176,6 +176,25 @@ export interface SameDataEntry {
 }
 
 /**
+ * One row of an entry's crosswalk table: the operation, the paths it reads and writes (a default's value stands where the paths it reads would be) and the direction it applies in.
+ * @param rule - The rule, as described.
+ * @param index - The rule's position among the crosswalk's rules, which keeps a row's key unique.
+ * @returns The table row.
+ */
+function ruleRow(rule: RuleView, index: number): ReactNode {
+  const reads = rule.op === "default" ? rule.detail : rule.from.join(", ");
+
+  return (
+    <tr key={`${rule.op}-${String(index)}`}>
+      <td>{rule.op}</td>
+      <td>{reads === undefined || reads === "" ? null : <code>{reads}</code>}</td>
+      <td>{rule.to.length === 0 ? null : <code>{rule.to.join(", ")}</code>}</td>
+      <td>{rule.direction}</td>
+    </tr>
+  );
+}
+
+/**
  * An entry's page: the descriptor, the copyable fetch command, and tables of sources and provenance, licence and citations, recipe, crosswalk rules, expected counts and properties, with the schema.org Dataset JSON-LD in the head.
  * @param context - The page context (`root` is two levels up).
  * @param dataset - The dataset.
@@ -253,8 +272,7 @@ export function entryPage(context: PageContext, dataset: Dataset, sameData: read
     <h2 key="crosswalk">Crosswalk</h2>,
     <p key="crosswalk-note"><code>{crosswalk.source}</code> to <code>{crosswalk.target}</code>, as a crossmap crosswalk.</p>,
     <div className="table-wrap" key="crosswalk"><table className="crosswalk"><thead><tr><th scope="col">Rule</th><th scope="col">From</th><th scope="col">To</th><th scope="col">Direction</th></tr></thead><tbody>{[
-      ...crosswalk.rules.map((rule) => <tr key={`${rule.op}-${rule.from}-${rule.to}`}><td>{rule.op}</td><td><code>{rule.from}</code></td><td><code>{rule.to}</code></td><td>both</td></tr>),
-      ...crosswalk.oneWay.map((rule, index) => rule.op === "drop" ? <tr key={`drop-${String(index)}`}><td>drop</td><td><code>{rule.from}</code></td><td /><td>{rule.direction}</td></tr> : <tr key={`default-${String(index)}`}><td>default</td><td><code>{JSON.stringify(rule.value)}</code></td><td><code>{rule.to}</code></td><td>{rule.direction}</td></tr>),
+      ...[...crosswalk.rules, ...crosswalk.oneWay].map((rule, index) => ruleRow(describeRule(rule), index)),
     ]}</tbody></table></div>,
     Object.keys(entry.expectedCounts).length === 0 ? null : <h2 key="counts">Expected counts</h2>,
     Object.keys(entry.expectedCounts).length === 0 ? null : <Facts key="counts-facts" rows={Object.entries(entry.expectedCounts).map(([key, count]) => [propertyLabel(key), formatCount(count)] as const)} />,
