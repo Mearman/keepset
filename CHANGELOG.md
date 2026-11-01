@@ -1,3 +1,10 @@
+# [0.104.0](https://github.com/Mearman/keepset/compare/v0.103.0...v0.104.0) (2026-11-01)
+
+
+### Features
+
+* **catalogue:** read the Yoloxochitl-Mixtec transcripts from the ELAN files ([1edd82a](https://github.com/Mearman/keepset/commit/1edd82a9e8741319635b25597f2849ae83700525))
+
 # [0.103.0](https://github.com/Mearman/keepset/compare/v0.102.0...v0.103.0) (2026-11-01)
 
 
