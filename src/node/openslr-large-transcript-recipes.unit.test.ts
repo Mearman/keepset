@@ -217,3 +217,26 @@ describe("the openslr-slr94-transcripts recipe", () => {
     validates("openslr-slr94-transcripts");
   });
 });
+
+describe("the openslr-slr129-transcripts recipe", () => {
+  it("reads each language's archive as one instance, each verse named by its transcript file, leaving out the audio", async () => {
+    const fetch = serveEntry("openslr-slr129-transcripts", (url) => {
+      const language = stem(url);
+
+      return gzip(
+        tar([
+          { path: language, text: "", type: "5" },
+          { path: `${language}/dev/EZR/EZR_002_Verse_000.flac`, text: "audio" },
+          { path: `${language}/dev/EZR/EZR_002_Verse_000.txt`, text: "Anatoti jẹ́ méjìdínlááàdóje (128)\n" },
+          { path: `${language}/train/GEN/GEN_001_Verse_001.txt`, text: "Ní àtètèkọ́ṣe" },
+          { path: `${language}/README.txt`, text: "readme" },
+        ]),
+      );
+    });
+    const { data } = await fetchEntry(getDataset("openslr-slr129-transcripts"), { fetch });
+    expect(Object.keys(shape(data))).toEqual(["akuapem-twi.tgz", "asante-twi.tgz", "ewe.tgz", "hausa.tgz", "lingala.tgz", "yoruba.tgz"]);
+    expect(Object.values(shape(data))[0]).toEqual(["EZR_002_Verse_000", "GEN_001_Verse_001"]);
+    expect(nodesOf(data, 0)).toMatchObject([{ text: "Anatoti jẹ́ méjìdínlááàdóje (128)" }, { text: "Ní àtètèkọ́ṣe" }]);
+    validates("openslr-slr129-transcripts");
+  });
+});
