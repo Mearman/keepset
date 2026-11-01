@@ -1,3 +1,10 @@
+# [0.107.0](https://github.com/Mearman/keepset/compare/v0.106.0...v0.107.0) (2026-11-01)
+
+
+### Features
+
+* **catalogue:** read the BibleTTS transcripts from the streamed archives ([3b8c638](https://github.com/Mearman/keepset/commit/3b8c6385fa81400b41fb4dd4a77fccd27a82745d))
+
 # [0.106.0](https://github.com/Mearman/keepset/compare/v0.105.0...v0.106.0) (2026-11-01)
 
 
