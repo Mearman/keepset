@@ -286,3 +286,21 @@ describe("the SASPEECH transcripts recipes", () => {
     });
   });
 });
+
+describe("the TIBMD@MUC transcripts recipe", () => {
+  it("reads each speaker's text.txt as an instance named by its path, whatever its line endings, and leaves the audio beside it out", async () => {
+    const place = "Tibetan mutil-dialect data/Amdo Dialect/Pastoral areas dialect/Aba pastoral dialect";
+    const archive = tgz({
+      [`${place}/Speaker 65/Reading/wav/a1.wav`]: "RIFF",
+      [`${place}/Speaker 65/Reading/text.txt`]: "阿坝牧区_crzm_A1 མཉམ སྡེབ གང \r\n阿坝牧区_crzm_A2 སྲོག ཤིང \r\n",
+      [`${place}/Speaker 65/Spoken/text.txt`]: "阿坝牧区_crzm_B1 མི རབས དང པོའི\n",
+    });
+    const data = await fetchShipped("openslr-slr124-transcripts", { [`${OPENSLR}/124/Tibetan_speech_data.tgz`]: archive });
+    expect(data).toMatchObject({
+      instances: [
+        { id: `${place}/Speaker 65/Reading/text.txt`, nodes: [{ id: "阿坝牧区_crzm_A1", text: "མཉམ སྡེབ གང" }, { id: "阿坝牧区_crzm_A2", text: "སྲོག ཤིང" }] },
+        { id: `${place}/Speaker 65/Spoken/text.txt`, nodes: [{ id: "阿坝牧区_crzm_B1", text: "མི རབས དང པོའི" }] },
+      ],
+    });
+  });
+});
