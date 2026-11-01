@@ -194,3 +194,26 @@ describe("the openslr-slr59-transcripts recipe", () => {
     validates("openslr-slr59-transcripts");
   });
 });
+
+describe("the openslr-slr94-transcripts recipe", () => {
+  it("joins each language's training, development and test transcripts into one instance, leaving out the audio and the metainfo", async () => {
+    const fetch = serveEntry("openslr-slr94-transcripts", (url) => {
+      const root = stem(url);
+
+      return gzip(
+        tar([
+          { path: `${root}/metainfo.txt`, text: "speaker|gender" },
+          { path: `${root}/train/audio/10900/6473/10900_6473_000094.opus`, text: "audio" },
+          { path: `${root}/train/transcripts.txt`, text: "10900_6473_000094\tznowu się duch z ciałem\n" },
+          { path: `${root}/dev/transcripts.txt`, text: "11295_11059_000000\tjuż u źwierzyńca\n11295_11059_000001\tdalej tam były przestrogi" },
+          { path: `${root}/test/transcripts.txt`, text: "2_3_000000\tto jest test\n" },
+        ]),
+      );
+    });
+    const { data } = await fetchEntry(getDataset("openslr-slr94-transcripts"), { fetch });
+    expect(Object.keys(shape(data))).toEqual(["mls_dutch_opus.tar.gz", "mls_french_opus.tar.gz", "mls_german_opus.tar.gz", "mls_italian_opus.tar.gz", "mls_polish_opus.tar.gz", "mls_portuguese_opus.tar.gz", "mls_spanish_opus.tar.gz"]);
+    expect(Object.values(shape(data))[0]).toEqual(["11295_11059_000000", "11295_11059_000001", "2_3_000000", "10900_6473_000094"]);
+    expect(nodesOf(data, 0)).toMatchObject([{ id: "11295_11059_000000", text: "już u źwierzyńca" }, {}, {}, {}]);
+    validates("openslr-slr94-transcripts");
+  });
+});
