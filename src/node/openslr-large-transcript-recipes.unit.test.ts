@@ -121,6 +121,14 @@ describe("the LibriTTS recipes", () => {
     expect(nodesOf(data, 0)).toMatchObject([{ text: 'How quickly he disappeared!"', normalized_text: 'How quickly he disappeared!"' }, { text: '"So they tell me."' }, { text: "All that night we slept." }]);
     validates("openslr-slr60-transcripts");
   });
+
+  it("reads LibriTTS-R from its archives, whose members carry no leading ./", async () => {
+    const fetch = serveEntry("openslr-slr141-transcripts", (url) => gzip(tar(chapter("LibriTTS_R", stem(url).replaceAll("_", "-")))));
+    const { data } = await fetchEntry(getDataset("openslr-slr141-transcripts"), { fetch });
+    expect(Object.keys(shape(data))).toEqual(["dev_clean.tar.gz", "dev_other.tar.gz", "test_clean.tar.gz", "test_other.tar.gz", "train_clean_100.tar.gz", "train_clean_360.tar.gz", "train_other_500.tar.gz"]);
+    expect(Object.values(shape(data))[0]).toEqual(["3081_166546_000028_000002", "3081_166546_000070_000000", "7561_258992_000014_000005"]);
+    validates("openslr-slr141-transcripts");
+  });
 });
 
 describe("the IISc-MILE recipes", () => {
