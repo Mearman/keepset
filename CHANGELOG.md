@@ -1,3 +1,10 @@
+## [0.101.1](https://github.com/Mearman/keepset/compare/v0.101.0...v0.101.1) (2026-11-01)
+
+
+### Bug Fixes
+
+* **parsers:** read Multilingual TEDx segments lines that end in spaces ([3a1dd03](https://github.com/Mearman/keepset/commit/3a1dd03ae429e7064bd92f686b822fc4aa1d7cae))
+
 # [0.101.0](https://github.com/Mearman/keepset/compare/v0.100.0...v0.101.0) (2026-10-31)
 
 
