@@ -1,3 +1,10 @@
+## [0.108.4](https://github.com/Mearman/keepset/compare/v0.108.3...v0.108.4) (2026-11-02)
+
+
+### Bug Fixes
+
+* **ci:** pin the liveness workflow's download-artifact action to its real v4.3.0 commit ([0c6f088](https://github.com/Mearman/keepset/commit/0c6f0888df3d49b811de804599cd12ee782296d9))
+
 ## [0.108.3](https://github.com/Mearman/keepset/compare/v0.108.2...v0.108.3) (2026-11-02)
 
 
