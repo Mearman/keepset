@@ -1,3 +1,10 @@
+## [0.108.3](https://github.com/Mearman/keepset/compare/v0.108.2...v0.108.3) (2026-11-02)
+
+
+### Bug Fixes
+
+* **ci:** share the liveness check's hosts by request count and lift its job limit ([879e77c](https://github.com/Mearman/keepset/commit/879e77c4c20903e6ca0b090c9a1693db87a39c28))
+
 ## [0.108.2](https://github.com/Mearman/keepset/compare/v0.108.1...v0.108.2) (2026-11-02)
 
 
