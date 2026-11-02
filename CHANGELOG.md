@@ -1,3 +1,10 @@
+## [0.108.1](https://github.com/Mearman/keepset/compare/v0.108.0...v0.108.1) (2026-11-02)
+
+
+### Bug Fixes
+
+* **ci:** create the reports directory before the liveness check writes to it ([15fe81b](https://github.com/Mearman/keepset/commit/15fe81b0ee2ff0410db661caed6ef212d41f3252))
+
 # [0.108.0](https://github.com/Mearman/keepset/compare/v0.107.0...v0.108.0) (2026-11-01)
 
 
