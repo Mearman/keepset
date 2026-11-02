@@ -5,6 +5,7 @@
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
+import { balanceHosts } from "./sources/buckets";
 import { groupSources, loadEntryFiles } from "./sources/entries";
 
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -25,9 +26,10 @@ if (!Number.isInteger(buckets) || buckets < 1) {
   throw new Error("--buckets takes a whole number of at least 1");
 }
 
-const hosts = [...new Set(groupSources(loadEntryFiles(values["entries-dir"])).map((group) => new URL(group.url).host))].sort();
-const matrix = Array.from({ length: buckets }, (_, bucket) => ({
-  name: `bucket-${String(bucket + 1)}`,
-  hosts: hosts.filter((_host, at) => at % buckets === bucket),
-}));
+const requests = new Map<string, number>();
+for (const group of groupSources(loadEntryFiles(values["entries-dir"]))) {
+  const { host } = new URL(group.url);
+  requests.set(host, (requests.get(host) ?? 0) + 1);
+}
+const matrix = balanceHosts(requests, buckets).map((hosts, bucket) => ({ name: `bucket-${String(bucket + 1)}`, hosts }));
 console.log(JSON.stringify(matrix.filter((bucket) => bucket.hosts.length > 0)));
