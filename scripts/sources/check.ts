@@ -5,7 +5,7 @@ import { z } from "zod";
 import { canonicalJson } from "../../src/serialise";
 import type { SourceGroup } from "./entries";
 import { HTTP_STATUS, isClientError, isRefusal, isSuccess } from "./http-status";
-import type { PoliteClient } from "./polite-client";
+import { type PoliteClient, RequestFailure } from "./polite-client";
 import { isDefinitiveFailure, type Probe, probe, redirectsToMissingPage, statusEvidence } from "./probe";
 
 /** What a probe of a source means for the catalogue: `ok` it answers; `gone` the host says it does not exist (404, 410, another client error, or a name that no longer resolves); `blocked` the host refuses this client (401, 403), which says nothing about whether a visitor can reach it; `unreachable` the host failed to answer properly on every attempt (a busy or failing host, a timeout). */
@@ -86,14 +86,31 @@ export function interleaveByHost(urls: readonly string[]): string[] {
 }
 
 /**
+ * The answer to a request for the first bytes of a source.
+ * @param client - The polite client.
+ * @param url - The URL that answered the probe.
+ * @returns The answer, or undefined when the connection failed on every attempt.
+ */
+async function requestPrefix(client: PoliteClient, url: string): Promise<Response | undefined> {
+  try {
+    return await client.request(url, { headers: { accept: "*/*", range: `bytes=0-${String(HASH_PREFIX_BYTES - 1)}` } });
+  } catch (error) {
+    if (error instanceof RequestFailure) {
+      return undefined;
+    }
+    throw error;
+  }
+}
+
+/**
  * Reads the first bytes a source serves and hashes them, so a mirror can be compared with the copy it stands in for and an earlier reading with today's. A host that ignores the range request has its answer cut off after the prefix rather than read whole.
  * @param client - The polite client, which paces per host.
  * @param url - The URL that answered.
- * @returns The SHA-256 of the bytes read, hex, or undefined when the answer could not be read.
+ * @returns The SHA-256 of the bytes read, hex, or undefined when the host failed to answer this request or the answer broke off before the prefix was read: a source that answered the probe and then dropped the connection is a source without a hash, not a failed check.
  */
 export async function contentHashOf(client: PoliteClient, url: string): Promise<string | undefined> {
-  const response = await client.request(url, { headers: { accept: "*/*", range: `bytes=0-${String(HASH_PREFIX_BYTES - 1)}` } });
-  if (!response.ok || response.body === null) {
+  const response = await requestPrefix(client, url);
+  if (response === undefined || !response.ok || response.body === null) {
     return undefined;
   }
   const reader: ReadableStreamDefaultReader<Uint8Array> = response.body.getReader();
@@ -102,22 +119,29 @@ export async function contentHashOf(client: PoliteClient, url: string): Promise<
 
   /**
    * Takes the next chunk of the answer, recursing rather than looping so the bytes are read one await at a time.
-   * @returns The prefix once it is long enough or the answer ends.
+   * @returns False when the answer broke off with an error before the prefix was read; true once the prefix is long enough or the answer ends.
    */
-  const take = async (): Promise<void> => {
+  const take = async (): Promise<boolean> => {
     if (length >= HASH_PREFIX_BYTES) {
-      return;
+      return true;
     }
-    const { done, value } = await reader.read();
-    if (done) {
-      return;
+    const chunk = await reader.read().catch(() => undefined);
+    if (chunk === undefined) {
+      return false;
     }
-    prefix.push(value);
-    length += value.length;
-    await take();
+    if (chunk.done) {
+      return true;
+    }
+    prefix.push(chunk.value);
+    length += chunk.value.length;
+
+    return take();
   };
-  await take();
+  const readable = await take();
   await reader.cancel().catch(() => undefined);
+  if (!readable) {
+    return undefined;
+  }
   const digest = createHash("sha256");
   for (const chunk of prefix) {
     digest.update(chunk);
