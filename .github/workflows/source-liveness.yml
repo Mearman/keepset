@@ -96,7 +96,7 @@ jobs:
           path: reports/source-check.json
           key: source-liveness-${{ github.run_id }}
           restore-keys: source-liveness-
-      - uses: actions/download-artifact@d3f86a106a0bac45b974aa633d5cb8c5b83ffe5b # v4.3.0
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           path: reports/partials
       - run: pnpm install --frozen-lockfile
