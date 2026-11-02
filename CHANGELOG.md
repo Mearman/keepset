@@ -1,3 +1,10 @@
+## [0.108.2](https://github.com/Mearman/keepset/compare/v0.108.1...v0.108.2) (2026-11-02)
+
+
+### Bug Fixes
+
+* **sources:** leave a source without a hash when its host fails after the probe answered ([6e698a8](https://github.com/Mearman/keepset/commit/6e698a8f9774eff1500f34cc246726e74549aef2))
+
 ## [0.108.1](https://github.com/Mearman/keepset/compare/v0.108.0...v0.108.1) (2026-11-02)
 
 
