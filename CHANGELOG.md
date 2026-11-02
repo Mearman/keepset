@@ -1,3 +1,10 @@
+## [0.108.5](https://github.com/Mearman/keepset/compare/v0.108.4...v0.108.5) (2026-11-02)
+
+
+### Bug Fixes
+
+* **ci:** pass the liveness merge step one flag for each downloaded report ([61f5c07](https://github.com/Mearman/keepset/commit/61f5c0742ef9b2765e3cf7cded4fb84f60788b7e))
+
 ## [0.108.4](https://github.com/Mearman/keepset/compare/v0.108.3...v0.108.4) (2026-11-02)
 
 
