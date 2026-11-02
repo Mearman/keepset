@@ -63,7 +63,9 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - name: Own this bucket's hosts
-        run: printf '%s\n' ${{ join(matrix.bucket.hosts, ' ') }} | tr ' ' '\n' > reports/hosts.txt
+        run: |
+          mkdir -p reports
+          printf '%s\n' ${{ join(matrix.bucket.hosts, ' ') }} | tr ' ' '\n' > reports/hosts.txt
       - name: Request the bucket's sources
         run: pnpm run sources:check --hosts reports/hosts.txt --report reports/partial.json --issue-body reports/none.md
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
