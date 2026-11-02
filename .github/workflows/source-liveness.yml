@@ -45,7 +45,8 @@ jobs:
     name: Check recorded sources
     needs: buckets
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    # The busiest host sets a bucket's duration (a probe and a hash read per URL at the per-host pacing interval) and grows with the catalogue, so the limit is the platform's maximum for a hosted job, a backstop for a hung run and not an estimate of a healthy one.
+    timeout-minutes: 360
     permissions:
       contents: read
     strategy:
