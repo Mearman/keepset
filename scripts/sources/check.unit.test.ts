@@ -99,6 +99,29 @@ describe("checkSources", () => {
     const ranged = network.seen.find((request) => request.method === "GET");
     expect(ranged?.headers.get("range")).toBe(`bytes=0-${String(HASH_PREFIX_BYTES - 1)}`);
   });
+
+  it("leaves a source without a hash, and does not fail the check, when its host drops the connection after the probe answered", async () => {
+    const network = scriptedNetwork((request) => {
+      if (request.method === "HEAD") {
+        return new Response(null, { status: 200, headers: { "content-length": "10" } });
+      }
+
+      return connectionError("ECONNREFUSED");
+    });
+    const results = await checkSources(new PoliteClient(network.fetch, new FakeClock(), { ...TEST_POLITENESS, attempts: 1 }), groupSources([{ path: "a", entry: entryWith("a", [liveSource(U)]) }]), 2);
+    expect(results.map((entry) => [entry.state, entry.contentHash])).toEqual([["ok", undefined]]);
+  });
+
+  it("leaves a source without a hash when the answer breaks off before the prefix was read", async () => {
+    const broken = new ReadableStream<Uint8Array>({
+      pull: (controller) => {
+        controller.error(new TypeError("terminated"));
+      },
+    });
+    const network = scriptedNetwork((request) => (request.method === "HEAD" ? new Response(null, { status: 200, headers: { "content-length": "10" } }) : new Response(broken, { status: 206 })));
+    const results = await checkSources(new PoliteClient(network.fetch, new FakeClock(), { ...TEST_POLITENESS, attempts: 1 }), groupSources([{ path: "a", entry: entryWith("a", [liveSource(U)]) }]), 2);
+    expect(results.map((entry) => [entry.state, entry.contentHash])).toEqual([["ok", undefined]]);
+  });
 });
 
 describe("findingsOf", () => {
