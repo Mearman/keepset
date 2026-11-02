@@ -101,7 +101,13 @@ jobs:
           path: reports/partials
       - run: pnpm install --frozen-lockfile
       - name: Merge the partial reports
-        run: pnpm run sources:check --from-reports reports/partials/*/partial.json --baseline reports/source-check.json
+        # --from-reports takes one file and is repeated for each, so the downloaded partials become one flag apiece.
+        run: |
+          reports=()
+          for partial in reports/partials/*/partial.json; do
+            reports+=(--from-reports "$partial")
+          done
+          pnpm run sources:check "${reports[@]}" --baseline reports/source-check.json
       - name: Update the tracking issue
         env:
           GH_TOKEN: ${{ github.token }}
