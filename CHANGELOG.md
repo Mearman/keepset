@@ -1,3 +1,10 @@
+## [0.108.6](https://github.com/Mearman/keepset/compare/v0.108.5...v0.108.6) (2026-11-03)
+
+
+### Bug Fixes
+
+* **sources:** fit the liveness issue body within GitHub's limit and keep the full report ([ef1be2e](https://github.com/Mearman/keepset/commit/ef1be2e47989325028b7a5ab4d0b3e4e6ad98b45))
+
 ## [0.108.5](https://github.com/Mearman/keepset/compare/v0.108.4...v0.108.5) (2026-11-02)
 
 
