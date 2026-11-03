@@ -28,8 +28,8 @@ const ACCEPT = "*/*";
 /** How long a connection may send nothing, at any point of a download, before it is given up as dead. A healthy server of the open data portals recipes read sends something every few seconds even while it prepares a large page, and a socket that has gone silent otherwise holds the download for ever, as one did in the middle of a table of millions of rows. */
 export const STALL_MILLISECONDS = 120_000;
 
-/** How many times a download is tried when its connection fails, and how long each retry waits for the one before it (the delay times the attempt number), so a network that drops for a few seconds is waited out and not hammered. A connection that fails in the middle of a body is one of the tries, and the try after it resumes where the body broke off. */
-export const DOWNLOAD_ATTEMPTS = 3;
+/** How many times in a row a download is tried when its connection fails, and how long the first retry waits, each later one waiting twice as long as the one before, so a network that drops for a minute or so (six tries wait 3, 6, 12, 24 and 48 seconds) is waited out and not hammered. The count starts again whenever bytes arrive, so a download that breaks many times but keeps progressing is never abandoned for its total number of breaks, only for a break it cannot get past; the try after a break in the middle of a body resumes where the body broke off. */
+export const DOWNLOAD_ATTEMPTS = 6;
 export const RETRY_DELAY_MILLISECONDS = 3000;
 
 /** Options for one download: the signal that aborts it, the range of the file to ask for (the whole file when absent), how long a silent connection is waited on (`STALL_MILLISECONDS`), and how long a retry waits (`RETRY_DELAY_MILLISECONDS`), the last two only shortened by a test. */
@@ -43,13 +43,16 @@ export interface DownloadInit {
 /** The failure of a connection that sent nothing for the stall time. */
 class StalledError extends KeepsetError {}
 
+/** The code of a name lookup that failed for now and may succeed again, which the `E` pattern below does not match because of its underscore. */
+const TRANSIENT_RESOLVER_FAILURE = "EAI_AGAIN";
+
 /**
- * Whether a failure is the connection's and may pass: a stall, or a socket error such as a reset, a broken pipe or a timeout, which carries an `E` code. A bad URL, a redirect that leads nowhere and an abort are not.
+ * Whether a failure is the connection's and may pass: a stall, or a socket error such as a reset, a broken pipe, a timeout or a name lookup that failed for now, which carries an `E` code. A bad URL, a redirect that leads nowhere and an abort are not.
  * @param error - The failure.
  * @returns True when asking again may succeed.
  */
 function isConnectionFailure(error: unknown): boolean {
-  return error instanceof StalledError || (typeof error === "object" && error !== null && "code" in error && typeof error.code === "string" && /^E[A-Z]+$/.test(error.code) && error.code !== "ERR_INVALID_URL");
+  return error instanceof StalledError || (typeof error === "object" && error !== null && "code" in error && typeof error.code === "string" && (/^E[A-Z]+$/.test(error.code) || error.code === TRANSIENT_RESOLVER_FAILURE));
 }
 
 /**
@@ -124,9 +127,9 @@ async function follow(url: URL, headers: Readonly<Record<string, string>>, init:
   return follow(new URL(location, url), headers, init, redirects + 1);
 }
 
-/** The tries one download has made, shared by its first request and every resumption of its body. */
+/** The tries one download has made since it last made progress, shared by its first request and every resumption of its body. */
 class Tries {
-  /** How many tries have been made, the first among them. */
+  /** How many tries have been made in the current run of failures, the first among them. */
   private made = 1;
 
   /**
@@ -140,9 +143,14 @@ class Tries {
       throw error;
     }
     await new Promise((resolve) => {
-      setTimeout(resolve, (init.retryDelayMilliseconds ?? RETRY_DELAY_MILLISECONDS) * this.made);
+      setTimeout(resolve, (init.retryDelayMilliseconds ?? RETRY_DELAY_MILLISECONDS) * 2 ** (this.made - 1));
     });
     this.made += 1;
+  }
+
+  /** Records that bytes arrived, so the next failure is the first of a new run and gets the whole budget again. */
+  public progressed(): void {
+    this.made = 1;
   }
 }
 
@@ -279,6 +287,7 @@ function bodyOf(url: string, init: DownloadInit, first: Answer, tries: Tries): R
       return nextBytes();
     }
     delivered += value.length - dropped;
+    tries.progressed();
 
     return new Uint8Array(value.buffer, value.byteOffset + dropped, value.length - dropped);
   };
