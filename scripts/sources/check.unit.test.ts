@@ -162,6 +162,10 @@ const SHA_256_HEX = "0123456789abcdef".repeat(SHA_256_HEX_REPEATS);
 const HASH_SHOWN = 12;
 
 describe("needsIssue and issueBody", () => {
+  const MANY = 200;
+  const FEW = 3;
+  const BODY_LIMIT = 4000;
+  const HALF = 2;
   const empty: Findings = { lost: [], revived: [], changed: [], content: [], diverged: [], blocked: [] };
   const lost = result({ url: "https://x.example/c", entries: ["one", "two"], state: "gone", evidence: "HTTP 404" });
 
@@ -188,6 +192,25 @@ describe("needsIssue and issueBody", () => {
     expect(body).toContain(`${SHA_256_HEX.slice(0, HASH_SHOWN)}, now 9${SHA_256_HEX.slice(0, HASH_SHOWN - 1)}`);
     expect(body).toContain("- https://mirror.example/c (one) differs from https://x.example/c in hash");
     expect(body).not.toContain("answering again");
+  });
+
+  it("keeps a fair share of every kind of finding within the limit and says how many it left out", () => {
+    const many = (count: number, host: string) => Array.from({ length: count }, (_, index) => result({ url: `https://${host}.example/${String(index)}`, entries: ["e"], state: "gone", evidence: "HTTP 404" }));
+    const body = issueBody({ ...empty, lost: many(MANY, "lost"), blocked: many(MANY, "blocked"), revived: many(FEW, "revived") }, BODY_LIMIT);
+    expect(body.length).toBeLessThanOrEqual(BODY_LIMIT);
+    expect(body.match(/revived\.example/g)?.length).toBe(FEW);
+    expect(body).toContain(`Recorded live, no longer resolving (${String(MANY)}, `);
+    expect(body).toMatch(/- and \d+ more, listed in the check's report/);
+    const lostShown = body.match(/lost\.example/g)?.length ?? 0;
+    const blockedShown = body.match(/blocked\.example/g)?.length ?? 0;
+    expect(lostShown).toBeGreaterThan(0);
+    expect(Math.min(lostShown, blockedShown) * HALF).toBeGreaterThanOrEqual(Math.max(lostShown, blockedShown));
+  });
+
+  it("lists every finding, with no omission line, when they fit", () => {
+    const body = issueBody({ ...empty, lost: [lost] }, BODY_LIMIT);
+    expect(body).not.toContain("more, listed in the check's report");
+    expect(body).toContain("Recorded live, no longer resolving:");
   });
 
   it("is free of spaced double hyphens and em-dashes", () => {
