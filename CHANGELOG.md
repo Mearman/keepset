@@ -1,3 +1,10 @@
+## [0.108.7](https://github.com/Mearman/keepset/compare/v0.108.6...v0.108.7) (2026-11-03)
+
+
+### Bug Fixes
+
+* **node:** count a download's failed tries per run of failures and wait longer between them ([c3bbc04](https://github.com/Mearman/keepset/commit/c3bbc04003600d819cbc657255d25a9bafc7648b))
+
 ## [0.108.6](https://github.com/Mearman/keepset/compare/v0.108.5...v0.108.6) (2026-11-03)
 
 
