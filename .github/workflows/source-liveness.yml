@@ -108,6 +108,11 @@ jobs:
             reports+=(--from-reports "$partial")
           done
           pnpm run sources:check "${reports[@]}" --baseline reports/source-check.json
+      - name: Keep the merged report for the findings the issue does not list
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: source-check-report
+          path: reports/source-check.json
       - name: Update the tracking issue
         env:
           GH_TOKEN: ${{ github.token }}

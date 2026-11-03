@@ -315,31 +315,77 @@ export function needsIssue(findings: Findings): boolean {
 
 const list = (results: readonly SourceResult[], describe: (result: SourceResult) => string): string[] => results.map((result) => `- ${result.url} (${result.entries.join(", ")}): ${describe(result)}`);
 
+/** The blank line that separates the sections of the tracking issue's body. */
+const SECTION_BREAK = "\n\n";
+
+/** The most characters GitHub accepts in an issue body. */
+export const ISSUE_BODY_LIMIT = 65_536;
+
+/** One kind of finding in the tracking issue: its heading and one line for each source. */
+interface FindingSection {
+  readonly heading: string;
+  readonly lines: readonly string[];
+}
+
 /**
- * The tracking issue's body. Entries are not edited by the check: a source recorded `live` that is gone is marked `dead` with its pinned snapshot in a reviewed change.
+ * How many lines of each section fit in a character budget when the sections share it fairly: a section that needs less than an equal share keeps all its lines and the rest is shared between the larger ones, so one large kind of finding cannot crowd another out.
+ * @param sections - The sections, each with its heading and lines.
+ * @param budget - The characters available for every heading and line, a newline after each counted.
+ * @returns How many lines of each section are kept, in the sections' order.
+ */
+function linesKept(sections: readonly FindingSection[], budget: number): number[] {
+  const kept = sections.map(() => 0);
+  const order = sections.map((_section, index) => index).sort((left, right) => (sections[left]?.lines.length ?? 0) - (sections[right]?.lines.length ?? 0));
+  let remaining = budget - sections.reduce((sum, section) => sum + section.heading.length + 1, 0);
+  order.forEach((index, position) => {
+    const section = sections[index];
+    if (section === undefined) {
+      return;
+    }
+    const share = remaining / (order.length - position);
+    let used = 0;
+    for (const line of section.lines) {
+      if (used + line.length + 1 > share) {
+        break;
+      }
+      used += line.length + 1;
+      kept[index] = (kept[index] ?? 0) + 1;
+    }
+    remaining -= used;
+  });
+
+  return kept;
+}
+
+/**
+ * The tracking issue's body. Entries are not edited by the check: a source recorded `live` that is gone is marked `dead` with its pinned snapshot in a reviewed change. A body that would pass GitHub's limit keeps a fair share of each kind of finding and says how many were left out.
  * @param findings - The findings.
+ * @param limit - The most characters the body may have.
  * @returns Markdown.
  */
-export function issueBody(findings: Findings): string {
-  const sections: string[] = ["The scheduled source check found sources whose live state no longer matches what the catalogue records. It edits no entry. Mark a gone source `dead` and pin its snapshot (`scripts/archive-sources.ts` finds or requests one) in a reviewed change."];
-  if (findings.lost.length > 0) {
-    sections.push(["Recorded live, no longer resolving:", ...list(findings.lost, (result) => `${result.state}, ${result.evidence}`)].join("\n"));
-  }
-  if (findings.revived.length > 0) {
-    sections.push(["Recorded dead, answering again:", ...list(findings.revived, (result) => result.evidence)].join("\n"));
-  }
-  if (findings.changed.length > 0) {
-    sections.push(["Stated length changed since the last check:", ...findings.changed.map(({ result, was, now }) => `- ${result.url} (${result.entries.join(", ")}): ${String(was)} bytes, now ${String(now)}`)].join("\n"));
-  }
-  if (findings.content.length > 0) {
-    sections.push(["Bytes changed since the last check at the same stated length or with none stated:", ...findings.content.map(({ result, was, now }) => `- ${result.url} (${result.entries.join(", ")}): ${was.slice(0, HASH_DISPLAY_LENGTH)}, now ${now.slice(0, HASH_DISPLAY_LENGTH)}`)].join("\n"));
-  }
-  if (findings.diverged.length > 0) {
-    sections.push(["A mirror no longer serves the copy its canonical source does:", ...findings.diverged.map(({ result, entry, canonical, differs }) => `- ${result.url} (${entry}) differs from ${canonical.url} in ${differs}`)].join("\n"));
-  }
-  if (findings.blocked.length > 0) {
-    sections.push(["Refusing this client, which does not show they are gone:", ...list(findings.blocked, (result) => result.evidence)].join("\n"));
-  }
+export function issueBody(findings: Findings, limit: number = ISSUE_BODY_LIMIT): string {
+  const intro = "The scheduled source check found sources whose live state no longer matches what the catalogue records. It edits no entry. Mark a gone source `dead` and pin its snapshot (`scripts/archive-sources.ts` finds or requests one) in a reviewed change.";
+  const sections: FindingSection[] = [
+    { heading: "Recorded live, no longer resolving:", lines: list(findings.lost, (result) => `${result.state}, ${result.evidence}`) },
+    { heading: "Recorded dead, answering again:", lines: list(findings.revived, (result) => result.evidence) },
+    { heading: "Stated length changed since the last check:", lines: findings.changed.map(({ result, was, now }) => `- ${result.url} (${result.entries.join(", ")}): ${String(was)} bytes, now ${String(now)}`) },
+    { heading: "Bytes changed since the last check at the same stated length or with none stated:", lines: findings.content.map(({ result, was, now }) => `- ${result.url} (${result.entries.join(", ")}): ${was.slice(0, HASH_DISPLAY_LENGTH)}, now ${now.slice(0, HASH_DISPLAY_LENGTH)}`) },
+    { heading: "A mirror no longer serves the copy its canonical source does:", lines: findings.diverged.map(({ result, entry, canonical, differs }) => `- ${result.url} (${entry}) differs from ${canonical.url} in ${differs}`) },
+    { heading: "Refusing this client, which does not show they are gone:", lines: list(findings.blocked, (result) => result.evidence) },
+  ].filter((section) => section.lines.length > 0);
+  const omission = (count: number): string => `- and ${String(count)} more, listed in the check's report`;
+  const countedHeading = (heading: string, total: number, shown: number): string => `${heading.slice(0, -1)} (${String(total)}, ${String(shown)} shown):`;
+  /** What a truncated section adds beyond its kept lines, at the widest numbers a count can have: the counts in its heading, the omission line, and the line breaks that separate it from the next section. */
+  const widest = Number.MAX_SAFE_INTEGER;
+  const truncationOverhead = countedHeading("", widest, widest).length + omission(widest).length + SECTION_BREAK.length + 1;
+  const kept = linesKept(sections, limit - intro.length - SECTION_BREAK.length - sections.length * truncationOverhead);
+  const rendered = sections.map((section, index) => {
+    const shown = kept[index] ?? 0;
+    const left = section.lines.length - shown;
+    const heading = left === 0 ? section.heading : countedHeading(section.heading, section.lines.length, shown);
 
-  return `${sections.join("\n\n")}\n`;
+    return [heading, ...section.lines.slice(0, shown), ...(left === 0 ? [] : [omission(left)])].join("\n");
+  });
+
+  return `${[intro, ...rendered].join(SECTION_BREAK)}\n`;
 }
