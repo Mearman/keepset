@@ -14,6 +14,8 @@ const STATUS = { ok: 200, partialContent: 206, movedPermanently: 301, found: 302
 const DIGITS_REPEATED = 10;
 const BROKEN_BODY = new TextEncoder().encode("0123456789".repeat(DIGITS_REPEATED));
 const BREAK_AT = 40;
+/** How much of the body one answer of the host that breaks often sends before it drops the connection: few enough that the download breaks more times than a run of failures may last. */
+const BYTES_PER_ANSWER = 5;
 const ETAG = '"v1"';
 
 /** A local server standing in for the hosts recipes download from: no test touches the network. */
@@ -82,6 +84,24 @@ beforeAll(async () => {
         response.writeHead(STATUS.ok, ranges);
         response.end(BROKEN_BODY);
       }
+    } else if (path === "/breaks-often") {
+      // A host that reads ranges and drops the connection after a few bytes of every answer, so the download progresses but breaks more often than a run of failures may last.
+      const match = /^bytes=(\d+)-/.exec(request.headers.range ?? "");
+      const from = match?.[1] === undefined ? 0 : Number(match[1]);
+      const to = Math.min(from + BYTES_PER_ANSWER, BROKEN_BODY.length);
+      response.writeHead(match === null ? STATUS.ok : STATUS.partialContent, {
+        "accept-ranges": "bytes",
+        etag: ETAG,
+        "content-length": String(BROKEN_BODY.length - from),
+        ...(match === null ? {} : { "content-range": `bytes ${String(from)}-${String(BROKEN_BODY.length - 1)}/${String(BROKEN_BODY.length)}` }),
+      });
+      response.write(BROKEN_BODY.subarray(from, to), () => {
+        if (to < BROKEN_BODY.length) {
+          request.socket.destroy();
+        } else {
+          response.end();
+        }
+      });
     } else if (path === "/ranged") {
       const match = /^bytes=(\d+)-(\d+)$/.exec(request.headers.range ?? "");
       if (match === null) {
@@ -154,11 +174,17 @@ describe("downloadRaw", () => {
 
   it("tries again when the connection drops, waits between tries, and gives up after the tries", async () => {
     const retryDelayMilliseconds = 1;
-    const recovered = await downloadRaw(`${base}/drops/flaky/2`, { retryDelayMilliseconds });
+    const recovered = await downloadRaw(`${base}/drops/flaky/${String(DOWNLOAD_ATTEMPTS - 1)}`, { retryDelayMilliseconds });
     expect(await recovered.text()).toBe("recovered");
     expect(drops.get("flaky")).toBe(DOWNLOAD_ATTEMPTS);
     await expect(downloadRaw(`${base}/drops/hopeless/9`, { retryDelayMilliseconds })).rejects.toThrow();
     expect(drops.get("hopeless")).toBe(DOWNLOAD_ATTEMPTS);
+  });
+
+  it("gives a download that breaks more often than its tries a fresh budget each time it makes progress", async () => {
+    const response = await downloadRaw(`${base}/breaks-often`, { retryDelayMilliseconds: 1 });
+    expect(new Uint8Array(await response.arrayBuffer())).toEqual(BROKEN_BODY);
+    expect(BROKEN_BODY.length / BYTES_PER_ANSWER).toBeGreaterThan(DOWNLOAD_ATTEMPTS);
   });
 
   it("resumes a body whose connection breaks from the byte it broke at, asking only for the rest when the host reads ranges", async () => {
