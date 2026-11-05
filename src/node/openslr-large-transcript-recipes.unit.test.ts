@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { getDataset } from "../bundled";
-import { gzip, tar, type ArchiveFile } from "../test-support/archives";
+import { bzip2, gzip, tar, type ArchiveFile } from "../test-support/archives";
 import { validateDataset } from "../validate";
 import { fetchEntry, type FetchPort } from "./fetch-dataset";
 
@@ -273,5 +273,30 @@ describe("the openslr-slr100-transcripts recipe", () => {
       { text: null },
     ]);
     validates("openslr-slr100-transcripts");
+  });
+});
+
+/** The split tables (`dev.csv` and `train.csv`) each CML-TTS language archive holds in the fixture. */
+const SPLITS_IN_FIXTURE = 2;
+
+describe("the openslr-slr146-transcripts recipe", () => {
+  it("reads each split's pipe-separated table of each language archive as an instance, its text and speaker on the audio file's name", async () => {
+    const fetch = serveEntry("openslr-slr146-transcripts", (url) => {
+      const root = stem(url);
+
+      return bzip2(
+        tar([
+          { path: `${root}/dev/audio/11295/11059/11295_11059_000051.wav`, text: "audio" },
+          { path: `${root}/dev.csv`, text: "wav_filename|wav_filesize|transcript|transcript_wav2vec|levenshtein|duration|num_words|client_id\ndev/audio/11295/11059/11295_11059_000051.wav|601964|Proszę pana, tu pano|prosze pana tu pano|0.96|13.6|4|11295\n" },
+          { path: `${root}/train.csv`, text: "wav_filename|wav_filesize|transcript|transcript_wav2vec|levenshtein|duration|num_words|client_id\ntrain/audio/6892/8912/6892_8912_000729.wav|601964|Dzień dobry|dzien dobry|0.99|2.1|2|6892\n" },
+        ]),
+      );
+    });
+    const { data } = await fetchEntry(getDataset("openslr-slr146-transcripts"), { fetch });
+    expect(Object.keys(shape(data)).slice(0, 2)).toEqual(["cml_tts_dataset_dutch_v0.1.tar.bz/cml_tts_dataset_dutch_v0.1/dev.csv", "cml_tts_dataset_dutch_v0.1.tar.bz/cml_tts_dataset_dutch_v0.1/train.csv"]);
+    expect(Object.keys(shape(data))).toHaveLength(getDataset("openslr-slr146-transcripts").entry.sources.length * SPLITS_IN_FIXTURE);
+    expect(nodesOf(data, 0)).toMatchObject([{ id: "dev/audio/11295/11059/11295_11059_000051.wav", text: "Proszę pana, tu pano", speaker: "11295" }]);
+    expect(nodesOf(data, 1)).toMatchObject([{ id: "train/audio/6892/8912/6892_8912_000729.wav", text: "Dzień dobry", speaker: "6892" }]);
+    validates("openslr-slr146-transcripts");
   });
 });
