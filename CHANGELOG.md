@@ -1,3 +1,10 @@
+# [0.109.0](https://github.com/Mearman/keepset/compare/v0.108.7...v0.109.0) (2026-11-05)
+
+
+### Features
+
+* **catalogue:** read CML-TTS transcripts from streamed archives ([b58c941](https://github.com/Mearman/keepset/commit/b58c941818a3e49e6a66b80283b0a03b590f719e))
+
 ## [0.108.7](https://github.com/Mearman/keepset/compare/v0.108.6...v0.108.7) (2026-11-03)
 
 
