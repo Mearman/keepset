@@ -1,3 +1,10 @@
+## [0.125.1](https://github.com/Mearman/keepset/compare/v0.125.0...v0.125.1) (2026-11-06)
+
+
+### Bug Fixes
+
+* verify selected zip member checksums ([2985548](https://github.com/Mearman/keepset/commit/29855484b3b8aeddc3eccc9cae622ea53ebbaed0))
+
 # [0.125.0](https://github.com/Mearman/keepset/compare/v0.124.0...v0.125.0) (2026-11-06)
 
 
