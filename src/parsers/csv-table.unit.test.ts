@@ -52,6 +52,13 @@ describe("the csv-table parser", () => {
     });
   });
 
+  it("extracts named fields from an id without changing it", () => {
+    const options = table({ idColumn: "id", idPattern: "(?<speaker>[A-Z]+)-(?<clip>[0-9]+)" });
+    expect(parseCsvTable("id,value\nSP-12,ok\n", options).nodes).toEqual([{ id: "SP-12", value: "ok", speaker: "SP", clip: "12" }]);
+    expect(() => parseCsvTable("id,value\nbad,ok\n", options)).toThrow("does not match the named capture pattern");
+    expect(() => parseCsvTable("id,speaker\nSP-12,other\n", options)).toThrow("conflicts with a column");
+  });
+
   it("takes the id from the recipe's id column, which is then not also a column", () => {
     expect(parseNative(utf8("case,status\nx-1,open\n"), table({ idColumn: "case" })).nodes).toEqual([{ id: "x-1", status: "open" }]);
   });

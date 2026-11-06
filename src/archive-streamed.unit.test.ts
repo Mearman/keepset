@@ -3,9 +3,10 @@ import { gunzipSync } from "node:zlib";
 import { execFileSync } from "node:child_process";
 import { unzipSync, zipSync } from "fflate";
 import { describe, expect, it } from "vitest";
-import { streamFiles, unpack, unpackFiles, unpackMembers, unpackParts } from "./archive";
+import { streamFiles, streamTarMember, unpack, unpackFiles, unpackMembers, unpackParts } from "./archive";
 import type { FilesArchive } from "./entry";
 import { ArchiveError } from "./errors";
+import { inTurn } from "./in-turn";
 import { INFLATE_FEED_BYTES } from "./node/zip";
 import { BLOCK, scanTar } from "./node/tar";
 import { allowance } from "./test-support/allowance";
@@ -191,5 +192,39 @@ describe("the streamed files reader against unpackFiles", () => {
     const [only] = await collect(streamFiles(gzipped, { kind: "zip", files: { path: "a.txt.gz" }, inner: { kind: "gzip" } }));
     expect(only === undefined ? undefined : [only.path, text(only.bytes)]).toEqual(["a.txt.gz", "alpha"]);
     await expect(collect(streamFiles(gzipped, { kind: "zip", files: { path: "b.txt.gz" }, inner: { kind: "gzip" } }))).rejects.toThrow(/member b\.txt\.gz: not valid gzip data/);
+  });
+});
+
+
+describe("a streamed tar member", () => {
+  it.each(kinds)("gives the $kind member as chunks across irregular source boundaries", async ({ kind, bytes }) => {
+    for await (const pieces of inTurn(CHUNK_SIZES, async (size) => collect(streamTarMember(chunkedSource(bytes, size), { kind, member: { path: "suite/large.txt" } })))) {
+      expect(new Set(pieces.map((piece) => piece.path))).toEqual(new Set(["suite/large.txt"]));
+      expect(pieces.map((piece) => text(piece.bytes)).join("")).toBe(files[2]?.text);
+      expect(pieces.length).toBeGreaterThan(1);
+    }
+  }, FORM_TIMEOUT_MILLISECONDS);
+  it("yields the selected data before the archive has been read to its end", async () => {
+    const base = chunkedSource(archive, BLOCK + 1);
+    let consumed = 0;
+    const source = { ...base, async *chunks() { for await (const chunk of base.chunks()) { consumed += chunk.length; yield chunk; } } };
+    const stream = streamTarMember(source, { kind: "tar", member: { path: "suite/large.txt" } });
+    expect((await stream.next()).value?.path).toBe("suite/large.txt");
+    const piece = await stream.next();
+    expect(piece.value?.bytes.length).toBeGreaterThan(0);
+    expect(consumed).toBeLessThan(archive.length);
+    await stream.return();
+  });
+  it("identifies empty files and files with long names", async () => {
+    const long = `suite/${"deep/".repeat(LONG_PATH_DEPTH)}empty.csv`;
+    const bytes = tar([{ path: long, text: "" }]);
+    const pieces = await collect(streamTarMember(bytes, { kind: "tar", member: { path: long } }));
+    expect(pieces).toEqual([{ path: long, bytes: new Uint8Array() }]);
+  });
+  it("rejects a missing or ambiguous member and a truncated archive", async () => {
+    await expect(collect(streamTarMember(archive, { kind: "tar", member: { path: "missing.txt" } }))).rejects.toThrow(/found 0/);
+    await expect(collect(streamTarMember(archive, { kind: "tar", member: { extensions: [".txt"] } }))).rejects.toThrow(/more than one/);
+    const cut = archive.subarray(0, BLOCK + 1);
+    await expect(collect(streamTarMember(cut, { kind: "tar", member: { path: "suite/readme.md" } }))).rejects.toThrow(/runs past/);
   });
 });

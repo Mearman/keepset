@@ -486,6 +486,39 @@ export async function listFilePaths(input: Uint8Array | Readonly<SourceBytes>, a
   return pickAll(paths, archive.files);
 }
 
+/** A tar archive whose one selected member is read as chunks. */
+export interface TarMemberArchive {
+  readonly kind: "tar" | "tar.gz" | "tar.bz2" | "tar.xz";
+  readonly member: ArchiveMember;
+}
+
+/**
+ * Reads one selected tar member as chunks while scanning and validating the entire archive. A zero-length first chunk identifies even an empty member; a second matching path fails the stream.
+ * @param input - The downloaded archive.
+ * @param archive - Its kind and one-member selector.
+ * @param options - The xz decoder when needed.
+ * @returns The selected path with each chunk in source order.
+ * @throws ArchiveError when the archive is malformed or the selector does not match exactly one file.
+ */
+export async function* streamTarMember(input: Uint8Array | Readonly<SourceBytes>, archive: TarMemberArchive, options?: Readonly<UnpackOptions>): AsyncGenerator<{ readonly path: string; readonly bytes: Uint8Array }, void, undefined> {
+  let chosen: string | undefined;
+  const pending: { readonly path: string; readonly bytes: Uint8Array }[] = [];
+  const scanner = new TarScanner((path) => {
+    if (!selects(path, archive.member)) return false;
+    if (chosen !== undefined) throw new ArchiveError(`expected ${describeSelector(archive.member, "one member")}, found more than one`);
+    chosen = path;
+    pending.push({ path, bytes: new Uint8Array() });
+
+    return true;
+  }, (path, bytes) => { pending.push({ path, bytes: bytes.slice() }); });
+  for await (const chunk of tarChunks(asSource(input).chunks(), archive.kind, options)) {
+    scanner.push(chunk);
+    yield* pending.splice(0);
+  }
+  scanner.end();
+  pick(scanner.paths, archive.member);
+}
+
 /**
  * Unpacks a source into every file a multi-file format's selector matches, gunzipping each when the layout's `inner` is `gzip` and, when it is an archive kind with its own selector, unpacking each matched member into the files that selector matches. The paths stay the archive's own, so a gunzipped `edge.csv.gz` keeps its name, and a file of an inner archive is filed under its member's path and its own joined by `/`.
  * @param input - The downloaded bytes, held in memory or kept anywhere.

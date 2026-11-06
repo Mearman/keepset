@@ -351,9 +351,12 @@ export class TableReader {
 
   private readonly missing: ReadonlySet<string>;
 
+  private readonly idPattern: RegExp | undefined;
+
   public constructor(private readonly options: CsvTableParser) {
     this.records = new RecordReader(options);
     this.missing = new Set(options.nullValues ?? []);
+    this.idPattern = options.idPattern === undefined ? undefined : new RegExp(`^(?:${options.idPattern})$`, "u");
     if (options.headerNames !== undefined) {
       this.layout = layoutOf({ fields: [...options.headerNames], line: options.skipLines + 1 }, options);
     }
@@ -430,7 +433,18 @@ export class TableReader {
     });
     const derived = layout.derived.map((column): [string, string | null] => [column.name, derive(column, cellAt)]);
 
-    return { ...Object.fromEntries(cells), ...Object.fromEntries(derived), id };
+    const row: NativeRow = { ...Object.fromEntries(cells), ...Object.fromEntries(derived), id };
+    if (this.idPattern === undefined) return row;
+    const match = this.idPattern.exec(id);
+    const groups: Readonly<Record<string, string | undefined>> | undefined = match?.groups;
+    if (groups === undefined || Object.keys(groups).length === 0) throw new NativeParseError("csv-table", record.line, `the id ${id} does not match the named capture pattern`);
+    const extra: Record<string, string | null> = {};
+    for (const [name, value] of Object.entries(groups)) {
+      if (Object.hasOwn(row, name)) throw new NativeParseError("csv-table", record.line, `the id capture ${name} conflicts with a column`);
+      extra[name] = value ?? null;
+    }
+
+    return { ...row, ...extra };
   }
 }
 
