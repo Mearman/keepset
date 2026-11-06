@@ -3,45 +3,108 @@
   "aliases": [
     "slr98-transcripts"
   ],
-  "category": "speech/v1",
+  "category": "audio/v1",
   "citations": [],
   "crosswalk": {
-    "file": "crosswalks/speech-v1/id-text.json"
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].environment",
+      "nodes[].clip",
+      "nodes[].subjectID",
+      "nodes[].age",
+      "nodes[].sex",
+      "nodes[].noise",
+      "nodes[].location",
+      "nodes[].distance",
+      "nodes[].device",
+      "nodes[].rms"
+    ],
+    "rules": [
+      {
+        "from": "nodes[].label",
+        "op": "move",
+        "to": "nodes[].labelCode"
+      },
+      {
+        "from": "nodes[].speaker",
+        "op": "move",
+        "to": "nodes[].speakerCode"
+      },
+      {
+        "from": "nodes[].length",
+        "op": "move",
+        "to": "nodes[].duration"
+      }
+    ],
+    "source": "json-table",
+    "target": "audio/v1"
   },
-  "description": "The transcripts of Deeply parent-child vocal interaction dataset. No recipe reads them. The corpus publishes no transcripts: the only data per recording is a category label (singing, reading, crying and so on) and speaker, age, sex and recording codes in a nested JSON file.",
+  "description": "The recording annotations of the Deeply parent-child vocal interaction dataset: one record per clip with the environment, subject group, speaker code, age, sex, vocalisation label, noise, location, distance, device and signal measurements. Codes are those of the source; a clip may contain both parent and child, with their codes combined. It carries no audio, which openslr-slr98 lists.",
   "domain": "Speech",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "nodes": 3634
+  },
   "id": "openslr-slr98-transcripts",
   "licence": {
     "kind": "custom",
     "name": "Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)",
     "url": "https://www.openslr.org/98/"
   },
-  "name": "Deeply parent-child vocal interaction dataset transcripts",
+  "name": "Deeply parent-child vocal interaction annotations",
   "namespace": [
     "openslr",
     "speech"
   ],
   "properties": {},
   "recipe": {
-    "reason": "The corpus publishes no transcripts: the only data per recording is a category label (singing, reading, crying and so on) and speaker, age, sex and recording codes in a nested JSON file.",
-    "status": "not-fetchable"
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "fields": [
+        "label",
+        "subjectID",
+        "speaker",
+        "age",
+        "sex",
+        "noise",
+        "location",
+        "distance",
+        "device",
+        "rms",
+        "length"
+      ],
+      "format": "json-table",
+      "layout": "nested",
+      "levels": [
+        "environment",
+        "clip"
+      ]
+    },
+    "source": 0,
+    "status": "fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 7093,
-        "sha256": "d35db21219d40cbfad88ace54f710b6e7163c927928347a5742ac94b82df81ef",
-        "timestamp": "20260418040605",
-        "url": "https://web.archive.org/web/20260418040605/https://www.openslr.org/98/"
-      },
+      "retrieved": "2026-11-06",
       "status": "live",
-      "url": "https://www.openslr.org/98/"
+      "url": "https://raw.githubusercontent.com/deeplyinc/Parent-Child-Vocal-Interaction-Dataset/eb617f12492e692e1f1ab6d015025643b57f0a4b/dataset/Parent_Child_Vocal_Interaction.json"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "duration",
+    "label-code",
+    "speaker-code",
+    "age",
+    "sex",
+    "noise",
+    "location",
+    "distance",
+    "device"
+  ]
 }
