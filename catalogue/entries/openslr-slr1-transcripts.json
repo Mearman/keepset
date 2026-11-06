@@ -6,11 +6,32 @@
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "file": "crosswalks/speech-v1/id-text.json"
+    "keep": [
+      "meta"
+    ],
+    "rules": [
+      {
+        "from": "nodes[].id",
+        "op": "copy",
+        "to": [
+          "nodes[].id",
+          "nodes[].sequence"
+        ]
+      },
+      {
+        "from": "nodes[].path",
+        "op": "move",
+        "to": "nodes[].audio"
+      }
+    ],
+    "source": "member-path",
+    "target": "speech/v1"
   },
-  "description": "The transcripts of Yesno. No recipe reads them. The corpus publishes no transcripts: the archive holds 60 recordings and their text is encoded in the file names as a sequence of eight yes or no answers.",
+  "description": "The Yesno recordings as the filenames describe them: each identifier and sequence is eight source codes separated by underscores, where 1 means yes and 0 means no. The OpenSLR page describes the language as Hebrew, but the README in the archive says English; neither supplies written transcripts. The audio remains in the distribution listed by openslr-slr1.",
   "domain": "Speech",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "nodes": 60
+  },
   "id": "openslr-slr1-transcripts",
   "licence": {
     "kind": "custom",
@@ -24,24 +45,32 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "The corpus publishes no transcripts: the archive holds 60 recordings and their text is encoded in the file names as a sequence of eight yes or no answers.",
-    "status": "not-fetchable"
+    "archive": {
+      "files": {
+        "pattern": "waves_yesno/[01](?:_[01]){7}\\.wav"
+      },
+      "kind": "tar.gz"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "member-path",
+      "idPattern": "waves_yesno/([01](?:_[01]){7})\\.wav"
+    },
+    "source": 0,
+    "status": "fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 3523,
-        "sha256": "6088bf3971cfdb012f25b0e33c70bf8ac24641a3fb9b08aea0384abcea2cdf5f",
-        "timestamp": "20260105075229",
-        "url": "https://web.archive.org/web/20260105075229/https://www.openslr.org/1/"
-      },
+      "retrieved": "2026-11-06",
       "status": "live",
-      "url": "https://www.openslr.org/1/"
+      "url": "https://www.openslr.org/resources/1/waves_yesno.tar.gz"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "audio",
+    "sequence"
+  ]
 }

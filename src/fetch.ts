@@ -5,8 +5,9 @@ import type { Dataset } from "./catalogue";
 import { ArchiveError, KeepsetError, RecipeError } from "./errors";
 import type { NativeDocument } from "./parsers/native";
 import { parseNative, parseNativeFiles, parseNativeParts } from "./parsers/parse-native";
+import { parseMemberPaths } from "./parsers/member-path";
 import type { JsonScalar } from "./targets/json-scalar";
-import { concatenateFiles, type Member, readsByRanges, type SevenZipPort, unpack, unpackFiles, unpackMembers, unpackParts, type Unpacked, type UnpackOptions, type XzPort } from "./archive";
+import { concatenateFiles, listFilePaths, type Member, readsByRanges, type SevenZipPort, unpack, unpackFiles, unpackMembers, unpackParts, type Unpacked, type UnpackOptions, type XzPort } from "./archive";
 import { downloadPaged } from "./paged";
 import { countWarnings, downloadOf, metaOf, sourceUrl, step, unpackOptionsOf } from "./recipe-run";
 import { resolveSource } from "./resolve";
@@ -189,6 +190,11 @@ async function instancesOf(stored: StoredSource, archive: Archive, parser: Parse
     throw new ArchiveError(`an instance is read from one file, from matching members or from the files a multi-file format reads together, not from the named parts ${archive.parts.map((part) => part.name).join(", ")}`);
   }
   if ("files" in archive) {
+    if (parser.format === "member-path") {
+      const paths = await listFilePaths(stored, archive, unpacking);
+
+      return [parseInstance(named(undefined), () => parseMemberPaths(paths, parser))];
+    }
     const files = await unpackFiles(stored, archive, unpacking);
 
     return [parseInstance(named(undefined), () => parseFiles(files, archive, parser))];
@@ -310,6 +316,13 @@ async function runToNative(dataset: Dataset, options: FetchOptions): Promise<Nat
       return { collection: false, documents: [{ id: undefined, native: { ...parsed, meta: metaOf(entry) } }], provenance: await provenanceOf({ members: parts.map((part) => part.path) }) };
     }
     if ("files" in archive) {
+      if (recipe.parser.format === "member-path") {
+        const parser = recipe.parser;
+        const paths = await step(entry.id, "extract", async () => listFilePaths(stored, archive, unpackOptionsOf(options)));
+        const parsed = await step(entry.id, "parse", () => parseMemberPaths(paths, parser));
+
+        return { collection: false, documents: [{ id: undefined, native: { ...parsed, meta: metaOf(entry) } }], provenance: await provenanceOf({ members: paths }) };
+      }
       const files = await step(entry.id, "extract", async () => unpackFiles(stored, archive, unpackOptionsOf(options)));
       const parsed = await step(entry.id, "parse", () => parseFiles(files, archive, recipe.parser));
 
