@@ -1,3 +1,10 @@
+# [0.114.0](https://github.com/Mearman/keepset/compare/v0.113.0...v0.114.0) (2026-11-06)
+
+
+### Features
+
+* catalogue simulated room impulse responses ([8bdd3cf](https://github.com/Mearman/keepset/commit/8bdd3cf114fbc5c1a938fc3200d13059f1b3bdde))
+
 # [0.113.0](https://github.com/Mearman/keepset/compare/v0.112.0...v0.113.0) (2026-11-06)
 
 
