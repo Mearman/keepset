@@ -3,45 +3,80 @@
   "aliases": [
     "slr162-transcripts"
   ],
-  "category": "speech/v1",
+  "category": "audio/v1",
   "citations": [],
   "crosswalk": {
-    "file": "crosswalks/speech-v1/id-text.json"
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].channels",
+      "nodes[].sampleRate",
+      "nodes[].byteRate",
+      "nodes[].blockAlign",
+      "nodes[].bitsPerSample",
+      "nodes[].dataBytes",
+      "nodes[].duration",
+      "nodes[].issue"
+    ],
+    "rules": [
+      {
+        "from": "nodes[].path",
+        "op": "move",
+        "to": "nodes[].audio"
+      }
+    ],
+    "source": "wav-metadata",
+    "target": "audio/v1"
   },
-  "description": "The transcripts of Rasheed Mudasiru. No recipe reads them. The archive is one conversation split into audio files with no transcripts or per-recording metadata.",
+  "description": "The audio files as their PCM WAV headers describe them: channel count, sample rate, sample width, data size and duration. The publisher file audio_189.wav has zero audio and invalid PCM format fields; its row retains those fields and identifies the defect. The audio remains in the distribution listed by openslr-slr162.",
   "domain": "Speech / Audio Forensics / Signal Processing",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "nodes": 190
+  },
   "id": "openslr-slr162-transcripts",
   "licence": {
     "kind": "custom",
     "name": "MIT License",
     "url": "https://www.openslr.org/162/"
   },
-  "name": "Rasheed Mudasiru transcripts",
+  "name": "Rasheed Mudasiru recording metadata",
   "namespace": [
     "openslr",
     "speech"
   ],
   "properties": {},
   "recipe": {
-    "reason": "The archive is one conversation split into audio files with no transcripts or per-recording metadata.",
-    "status": "not-fetchable"
+    "archive": {
+      "files": {
+        "pattern": "audio-for-forensic-and-multi-speaker-separation/audio_[0-9]+\\.wav"
+      },
+      "kind": "zip"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "wav-metadata",
+      "idPattern": "audio-for-forensic-and-multi-speaker-separation/(audio_[0-9]+)\\.wav"
+    },
+    "source": 0,
+    "status": "fetchable",
+    "stream": true
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 3933,
-        "sha256": "fa8eea42457a17e69f7adc5bce9058b9a34ddb0d32e5db284a429cfe73eb8f12",
-        "timestamp": "20260418043246",
-        "url": "https://web.archive.org/web/20260418043246/https://www.openslr.org/162/"
-      },
+      "retrieved": "2026-11-06",
       "status": "live",
-      "url": "https://www.openslr.org/162/"
+      "url": "https://www.openslr.org/resources/162/audio-for-forensic-and-multi-speaker-separation.zip"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "audio",
+    "duration",
+    "channels",
+    "sampleRate",
+    "bitsPerSample",
+    "issue"
+  ]
 }

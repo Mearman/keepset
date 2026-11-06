@@ -1,3 +1,4 @@
+import { parseWavMetadata } from "./wav-metadata";
 import type { Parser } from "../entry";
 import { NativeParseError } from "../errors";
 import { parseEdgeList } from "./edge-list";
@@ -300,8 +301,8 @@ export function parseNativeParts(parts: readonly NamedBytes[], parser: Parser): 
  * @returns The native graph or table.
  * @throws NativeParseError when a file is not valid in the stated encoding or the files are not in the stated format, or when the parser reads one file and not several.
  */
-export function parseNativeFiles(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Readonly<Extract<Parser, { format: "member-text" | "nxt-words" | "eaf" | "textgrid" | "option-list" | "chat" | "mtedx" | "stm" | "musan-annotations" | "nicolingua" | "nicolingua-radio" | "simulated-rir" | "air-mat" | "member-path" | "word-text" }>>): NativeTable;
-export function parseNativeFiles(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Exclude<Parser, { format: "member-text" | "nxt-words" | "eaf" | "textgrid" | "option-list" | "chat" | "mtedx" | "stm" | "musan-annotations" | "nicolingua" | "nicolingua-radio" | "simulated-rir" | "air-mat" | "member-path" | "word-text" }>): NativeGraph;
+export function parseNativeFiles(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Readonly<Extract<Parser, { format: "member-text" | "nxt-words" | "eaf" | "textgrid" | "option-list" | "chat" | "mtedx" | "stm" | "musan-annotations" | "nicolingua" | "nicolingua-radio" | "simulated-rir" | "air-mat" | "member-path" | "word-text" | "wav-metadata" }>>): NativeTable;
+export function parseNativeFiles(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Exclude<Parser, { format: "member-text" | "nxt-words" | "eaf" | "textgrid" | "option-list" | "chat" | "mtedx" | "stm" | "musan-annotations" | "nicolingua" | "nicolingua-radio" | "simulated-rir" | "air-mat" | "member-path" | "word-text" | "wav-metadata" }>): NativeGraph;
 export function parseNativeFiles(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Parser): NativeGraph | NativeTable;
 export function parseNativeFiles(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Parser): NativeGraph | NativeTable {
   if (parser.format === "similarity-ratings") {
@@ -309,6 +310,9 @@ export function parseNativeFiles(files: readonly { readonly path: string; readon
   }
   if (parser.format === "member-path") {
     return parseMemberPaths(files.map((file) => file.path), parser);
+  }
+  if (parser.format === "wav-metadata") {
+    return parseWavMetadata(files, parser);
   }
   if (parser.format === "member-text") {
     return parseMemberText(files, parser);
