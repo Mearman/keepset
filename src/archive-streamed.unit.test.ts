@@ -27,9 +27,11 @@ const ODD_CHUNK_BYTES = ODD_CHUNK_KIBIBYTES * KIBIBYTE + ODD_CHUNK_PAST;
 const LARGE_CHUNK_KIBIBYTES = 64;
 const LARGE_CHUNK_BYTES = LARGE_CHUNK_KIBIBYTES * KIBIBYTE + 1;
 const CHUNK_SIZES = [BLOCK - 1, BLOCK + 1, ODD_CHUNK_BYTES, LARGE_CHUNK_BYTES];
-/** The time the slowest of the archive forms (a tar.bz2, whose decoder is written in JavaScript) takes for one of the tests below alone on a quiet host, rounded up. */
-const QUIET_FORM_MILLISECONDS = 500;
-const FORM_TIMEOUT_MILLISECONDS = allowance(QUIET_FORM_MILLISECONDS);
+/** An upper bound for one archive pass: the whole standalone tar.bz2 test takes less than this, so a single pass does too. */
+const QUIET_PASS_MILLISECONDS = 500;
+/** Each comparison reads one reference as well as one stream per chunk size. */
+const REFERENCE_PASSES = 1;
+const FORM_TIMEOUT_MILLISECONDS = allowance(QUIET_PASS_MILLISECONDS * (CHUNK_SIZES.length + REFERENCE_PASSES));
 /** How deep a path must be to need a GNU long-name record, past the ustar name field's hundred bytes. */
 const LONG_PATH_DEPTH = 30;
 
