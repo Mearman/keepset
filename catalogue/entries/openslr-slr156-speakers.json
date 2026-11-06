@@ -1,0 +1,75 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "aliases": [
+    "slr156-speakers"
+  ],
+  "category": "speakers/v1",
+  "citations": [],
+  "crosswalk": {
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].gender",
+      "nodes[].region",
+      "nodes[].age"
+    ],
+    "source": "csv-table",
+    "target": "speakers/v1"
+  },
+  "description": "The SMIIP-TV speaker list with gender, region and age as stated in the source metadata. It carries no recordings.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "nodes": 373
+  },
+  "id": "openslr-slr156-speakers",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0 US)",
+    "url": "https://www.openslr.org/156/"
+  },
+  "name": "SMIIP-TV speakers",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "kind": "tar.gz",
+      "member": {
+        "path": "release_v1/meta_info/spk2info"
+      }
+    },
+    "parser": {
+      "delimiter": "comma-space",
+      "encoding": "utf-8",
+      "format": "csv-table",
+      "idColumn": "spk_id",
+      "numericColumns": [
+        {
+          "column": "age",
+          "factor": 1
+        }
+      ],
+      "skipLines": 0,
+      "unquoted": true
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-06",
+      "status": "live",
+      "url": "https://openslr.elda.org/resources/156/SMIIP-TV_v2.0.tar.gz"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "gender",
+    "region",
+    "age"
+  ]
+}

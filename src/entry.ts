@@ -442,7 +442,7 @@ export const ParserSchema = z.discriminatedUnion("format", [
     .object({
       format: z.literal("csv-table"),
       encoding: EncodingSchema,
-      delimiter: z.enum(["comma", "tab", "semicolon", "pipe", "space"]),
+      delimiter: z.enum(["comma", "comma-space", "tab", "semicolon", "pipe", "space"]),
       skipLines: z.int().min(0),
       idColumn: ColumnNameSchema.nullable(),
       /** A pattern matching the whole id; its named captures become additional fields. */

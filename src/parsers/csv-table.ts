@@ -6,8 +6,8 @@ import type { NativeRow, NativeTable } from "./native";
 type CsvTableParser = Extract<Parser, { format: "csv-table" }>;
 type DerivedColumn = NonNullable<CsvTableParser["derivedColumns"]>[number];
 
-/** The character each delimiter option splits fields on. */
-const DELIMITERS: Readonly<Record<CsvTableParser["delimiter"], string>> = { comma: ",", tab: "\t", semicolon: ";", pipe: "|", space: " " };
+/** The text each delimiter option splits fields on. */
+const DELIMITERS: Readonly<Record<CsvTableParser["delimiter"], string>> = { comma: ",", "comma-space": ", ", tab: "\t", semicolon: ";", pipe: "|", space: " " };
 
 /** A number as a decimal literal, with an optional sign and exponent. `Number` alone would also accept hex, binary, `Infinity` and the empty string. */
 const DECIMAL = /^[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?$/;
@@ -80,7 +80,7 @@ class RecordScanner {
   private line: number;
 
   public constructor(
-    private readonly delimiterCode: number,
+    private readonly delimiter: string,
     firstLine: number,
     private readonly quoting: boolean,
     private readonly cellsPerRecord: number | undefined,
@@ -131,10 +131,12 @@ class RecordScanner {
         }
         this.quoted = true;
         index += 1;
-      } else if (code === this.delimiterCode) {
+      } else if (code === this.delimiter.charCodeAt(0) && !final && text.length - index < this.delimiter.length && this.delimiter.startsWith(text.slice(index))) {
+        return { completed, carry: text.slice(index) };
+      } else if (text.startsWith(this.delimiter, index)) {
         this.fields.push(this.field);
         this.field = "";
-        index += 1;
+        index += this.delimiter.length;
       } else if (code === LINE_FEED || code === CARRIAGE_RETURN) {
         if (code === CARRIAGE_RETURN && index + 1 >= text.length && !final) {
           return { completed, carry: text.slice(index) };
@@ -150,7 +152,7 @@ class RecordScanner {
         let next = index + 1;
         while (next < text.length) {
           const following = text.charCodeAt(next);
-          if ((following === QUOTE && this.quoting) || following === this.delimiterCode || following === LINE_FEED || following === CARRIAGE_RETURN) {
+          if ((following === QUOTE && this.quoting) || following === this.delimiter.charCodeAt(0) || following === LINE_FEED || following === CARRIAGE_RETURN) {
             break;
           }
           next += 1;
@@ -203,7 +205,7 @@ class RecordReader {
   private toSkip: number;
 
   public constructor(private readonly options: RecordOptions) {
-    this.scanner = new RecordScanner(DELIMITERS[options.delimiter].charCodeAt(0), options.skipLines + 1, options.unquoted !== true, options.lineBreaksInCells === true ? options.headerNames?.length : undefined);
+    this.scanner = new RecordScanner(DELIMITERS[options.delimiter], options.skipLines + 1, options.unquoted !== true, options.lineBreaksInCells === true ? options.headerNames?.length : undefined);
     this.toSkip = options.skipLines;
   }
 
@@ -257,7 +259,7 @@ class RecordReader {
  * @throws NativeParseError when a quoted field is never closed or a quote opens inside an unquoted field.
  */
 export function csvGrid(text: string): (readonly string[])[] {
-  const scanner = new RecordScanner(DELIMITERS.comma.charCodeAt(0), 1, true, undefined);
+  const scanner = new RecordScanner(DELIMITERS.comma, 1, true, undefined);
   const { completed } = scanner.scan(text, true);
   const last = scanner.finish();
 
