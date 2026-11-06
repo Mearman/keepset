@@ -1,3 +1,10 @@
+# [0.121.0](https://github.com/Mearman/keepset/compare/v0.120.0...v0.121.0) (2026-11-06)
+
+
+### Features
+
+* catalogue pragmatic similarity metadata ([a82a7d1](https://github.com/Mearman/keepset/commit/a82a7d175f8686d932068af1a8fb2f5b501081b7))
+
 # [0.120.0](https://github.com/Mearman/keepset/compare/v0.119.0...v0.120.0) (2026-11-06)
 
 
