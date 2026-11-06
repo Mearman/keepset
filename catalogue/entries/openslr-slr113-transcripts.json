@@ -10,6 +10,7 @@
       "meta",
       "nodes[].id",
       "nodes[].text",
+      "nodes[].tier",
       "nodes[].start",
       "nodes[].end"
     ],
@@ -71,6 +72,7 @@
   ],
   "tags": [
     "text",
+    "tier",
     "start",
     "end"
   ]
