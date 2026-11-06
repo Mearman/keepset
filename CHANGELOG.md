@@ -1,3 +1,10 @@
+# [0.120.0](https://github.com/Mearman/keepset/compare/v0.119.0...v0.120.0) (2026-11-06)
+
+
+### Features
+
+* catalogue HI-MIA verification trials ([5fff363](https://github.com/Mearman/keepset/commit/5fff363658a362179a0b57af65b9a5bec368a498))
+
 # [0.119.0](https://github.com/Mearman/keepset/compare/v0.118.0...v0.119.0) (2026-11-06)
 
 
