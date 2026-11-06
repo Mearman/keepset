@@ -108,6 +108,21 @@ describe("the openslr-slr155-transcripts recipe", () => {
   });
 });
 
+describe("the openslr-slr26-clips recipe", () => {
+  it("joins the room and response lists from both sample rates", async () => {
+    const source = (rate: string): Uint8Array => zip([
+      { path: `simulated_rirs_${rate}/smallroom/rir_list`, text: `--rir-id small-1 --room-id small-room simulated_rirs_${rate}/smallroom/a.wav\n` },
+      { path: `simulated_rirs_${rate}/smallroom/room_info`, text: "small-room 1.1 2.2 3.3 4.4 5.5 6.6 0.7\n" },
+      { path: `simulated_rirs_${rate}/smallroom/a.wav`, text: "RIFF" },
+    ]);
+    const { data } = await fetchEntry(getDataset("openslr-slr26-clips"), { fetch: serving({ [download("26", "sim_rir_8k.zip")]: source("8k"), [download("26", "sim_rir_16k.zip")]: source("16k") }) });
+    expect(data).toMatchObject({ instances: [
+      { id: "8k", nodes: [{ id: "simulated_rirs_8k/smallroom/a.wav", rir_id: "small-1", room_id: "small-room", room_info: "1.1 2.2 3.3 4.4 5.5 6.6 0.7", room_length: 1.1, receiver_x: 4.4, absorption_coefficient: 0.7 }] },
+      { id: "16k", nodes: [{ id: "simulated_rirs_16k/smallroom/a.wav", rir_id: "small-1", room_id: "small-room", room_info: "1.1 2.2 3.3 4.4 5.5 6.6 0.7", room_length: 1.1, receiver_x: 4.4, absorption_coefficient: 0.7 }] },
+    ] });
+  });
+});
+
 describe("the openslr-slr28-clips recipe", () => {
   it("reads the room and noise lists of the zip as the recordings they describe, from the options each line carries", async () => {
     const archive = zip([
