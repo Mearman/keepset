@@ -26,7 +26,13 @@ export function mozillaDataCollectiveFetch(apiKey: string, fallback: FetchPort, 
       const reason = answer.status === UNAUTHORISED || answer.status === FORBIDDEN ? "; check the API key and dataset terms" : "";
       throw new KeepsetError(`Mozilla Data Collective refused the download (HTTP ${String(answer.status)})${reason}`);
     }
-    const body: unknown = await answer.json();
+    let body: unknown;
+    try {
+      body = await answer.json();
+    } catch {
+      if (init.signal?.aborted === true) throw init.signal.reason;
+      throw new KeepsetError("Mozilla Data Collective returned invalid JSON");
+    }
     if (typeof body !== "object" || body === null || !("downloadUrl" in body) || typeof body.downloadUrl !== "string") throw new KeepsetError("Mozilla Data Collective returned no download URL");
     let address: URL;
     try {
