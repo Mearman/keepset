@@ -1,0 +1,73 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "category": "audio/v1",
+  "citations": [],
+  "crosswalk": {
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].recording",
+      "nodes[].track",
+      "nodes[].corpus_name",
+      "nodes[].URL",
+      "nodes[].publication"
+    ],
+    "source": "csv-table",
+    "target": "audio/v1"
+  },
+  "description": "The source conversation tracks from which stimulus clips were extracted, by language and source clip code. Empty cells remain empty as in the publisher workbook.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "instances": 2
+  },
+  "id": "openslr-slr152-sources",
+  "licence": {
+    "kind": "custom",
+    "name": "public domain (CC0 1.0 Universal)",
+    "url": "https://www.openslr.org/152/"
+  },
+  "name": "Pragmatic Similarity Judgments source recordings",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "inner": {
+        "kind": "xlsx"
+      },
+      "kind": "tar.gz",
+      "members": {
+        "pattern": "metadata/(?:EN|ES)-source-conversations\\.xlsx"
+      }
+    },
+    "parser": {
+      "delimiter": "comma",
+      "encoding": "utf-8",
+      "format": "csv-table",
+      "idColumn": "clip_source_code",
+      "numericColumns": [],
+      "skipLines": 1
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-06",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/152/metadata.tgz"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "recording",
+    "track",
+    "corpus_name",
+    "URL",
+    "publication"
+  ]
+}

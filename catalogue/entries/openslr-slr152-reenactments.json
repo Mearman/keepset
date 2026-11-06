@@ -1,0 +1,75 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "category": "audio/v1",
+  "citations": [],
+  "crosswalk": {
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].re_enactor_code",
+      "nodes[].gender",
+      "nodes[].age",
+      "nodes[].name",
+      "nodes[].notes",
+      "nodes[].URL"
+    ],
+    "source": "csv-table",
+    "target": "audio/v1"
+  },
+  "description": "The re-enactment conversation recordings by language, identified by their source filenames. Each row includes the performer details where given; the source includes synthetic voices and repeated performer codes.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "instances": 2
+  },
+  "id": "openslr-slr152-reenactments",
+  "licence": {
+    "kind": "custom",
+    "name": "public domain (CC0 1.0 Universal)",
+    "url": "https://www.openslr.org/152/"
+  },
+  "name": "Pragmatic Similarity Judgments re-enactment recordings",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "inner": {
+        "kind": "xlsx"
+      },
+      "kind": "tar.gz",
+      "members": {
+        "pattern": "metadata/(?:EN|ES)-reenactment-conversations\\.xlsx"
+      }
+    },
+    "parser": {
+      "delimiter": "comma",
+      "encoding": "utf-8",
+      "format": "csv-table",
+      "idColumn": "recording",
+      "numericColumns": [],
+      "skipLines": 1
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-06",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/152/metadata.tgz"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "re_enactor_code",
+    "gender",
+    "age",
+    "name",
+    "notes",
+    "URL"
+  ]
+}
