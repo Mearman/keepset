@@ -8,7 +8,7 @@
   "crosswalk": {
     "file": "crosswalks/speech-v1/id-text.json"
   },
-  "description": "The transcripts of Tepetzintla Zacatlan Nahuatl Endangered Language. No recipe reads them. The files have been withdrawn from OpenSLR: every download returns HTTP 404, and the page says the corpus moved to the Mozilla Data Collective.",
+  "description": "The transcriptions of Tepetzintla Zacatlan Nahuatl. No recipe reads them. OpenSLR no longer links to the corpus files; the publisher moved the revised transcriptions to Mozilla Data Collective, whose download API requires an account and prior acceptance of the dataset terms.",
   "domain": "Speech",
   "expectedCounts": {},
   "id": "openslr-slr148-transcripts",
@@ -24,7 +24,7 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "The files have been withdrawn from OpenSLR: every download returns HTTP 404, and the page says the corpus moved to the Mozilla Data Collective.",
+    "reason": "OpenSLR no longer links to the corpus files; the publisher moved the revised transcriptions to Mozilla Data Collective, whose download API requires an account and prior acceptance of the dataset terms.",
     "status": "not-fetchable"
   },
   "sources": [
