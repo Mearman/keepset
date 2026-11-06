@@ -1,0 +1,67 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "category": "speakers/v1",
+  "citations": [],
+  "crosswalk": {
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].gender",
+      "nodes[].age"
+    ],
+    "source": "csv-table",
+    "target": "speakers/v1"
+  },
+  "description": "The judges in the pragmatic similarity study. Age is the source age band.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "instances": 1
+  },
+  "id": "openslr-slr152-judges",
+  "licence": {
+    "kind": "custom",
+    "name": "public domain (CC0 1.0 Universal)",
+    "url": "https://www.openslr.org/152/"
+  },
+  "name": "Pragmatic Similarity Judgments judges",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "inner": {
+        "kind": "xlsx"
+      },
+      "kind": "tar.gz",
+      "members": {
+        "pattern": "metadata/judge-data\\.xlsx"
+      }
+    },
+    "parser": {
+      "delimiter": "comma",
+      "encoding": "utf-8",
+      "format": "csv-table",
+      "idColumn": "ID",
+      "numericColumns": [],
+      "skipLines": 1
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-06",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/152/metadata.tgz"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "gender",
+    "age"
+  ]
+}
