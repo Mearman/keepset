@@ -35,4 +35,9 @@ describe("Mozilla Data Collective fetch", () => {
     };
     await expect(mozillaDataCollectiveFetch("key", broken, broken)(endpoint, {})).rejects.toThrow("file download failed");
   });
+
+  it("does not expose a malformed broker response in its error", async () => {
+    const malformed: typeof fetch = async () => Promise.resolve(new Response(`{ "downloadUrl": "${signed}"`));
+    await expect(mozillaDataCollectiveFetch("key", malformed, malformed)(endpoint, {})).rejects.toMatchObject({ message: "Mozilla Data Collective returned invalid JSON" });
+  });
 });
