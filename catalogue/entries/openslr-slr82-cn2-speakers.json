@@ -1,0 +1,84 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "aliases": [
+    "slr82-cn2-speakers"
+  ],
+  "category": "speakers/v1",
+  "citations": [],
+  "crosswalk": {
+    "keep": [
+      "meta",
+      "nodes[].id"
+    ],
+    "source": "csv-table",
+    "target": "speakers/v1"
+  },
+  "description": "The speaker identifiers in the CN-Celeb2 speaker list. Each identifier names a person in the CN-Celeb2 recordings; the entry carries no audio.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "instances": 1
+  },
+  "id": "openslr-slr82-cn2-speakers",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 4.0 International",
+    "url": "https://www.openslr.org/82/"
+  },
+  "name": "CN-Celeb2 speakers",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "files": [
+      {
+        "archive": {
+          "kind": "tar.gz",
+          "member": {
+            "path": "CN-Celeb2_flac/spk.lst"
+          }
+        },
+        "path": "cn-celeb2",
+        "source": [
+          0,
+          1,
+          2
+        ]
+      }
+    ],
+    "parser": {
+      "delimiter": "tab",
+      "encoding": "utf-8",
+      "format": "csv-table",
+      "headerNames": [
+        "speaker_id"
+      ],
+      "idColumn": "speaker_id",
+      "numericColumns": [],
+      "skipLines": 0
+    },
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-06",
+      "status": "live",
+      "url": "https://openslr.elda.org/resources/82/cn-celeb2_v2.tar.gzaa"
+    },
+    {
+      "retrieved": "2026-11-06",
+      "status": "live",
+      "url": "https://openslr.elda.org/resources/82/cn-celeb2_v2.tar.gzab"
+    },
+    {
+      "retrieved": "2026-11-06",
+      "status": "live",
+      "url": "https://openslr.elda.org/resources/82/cn-celeb2_v2.tar.gzac"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": []
+}
