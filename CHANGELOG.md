@@ -1,3 +1,10 @@
+# [0.118.0](https://github.com/Mearman/keepset/compare/v0.117.0...v0.118.0) (2026-11-06)
+
+
+### Features
+
+* catalogue pragmatic similarity ratings ([f7196d7](https://github.com/Mearman/keepset/commit/f7196d7f4b6aa757001ccb9a6b163af357e4ab63))
+
 # [0.117.0](https://github.com/Mearman/keepset/compare/v0.116.0...v0.117.0) (2026-11-06)
 
 
