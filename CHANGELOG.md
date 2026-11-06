@@ -1,3 +1,10 @@
+# [0.122.0](https://github.com/Mearman/keepset/compare/v0.121.0...v0.122.0) (2026-11-06)
+
+
+### Features
+
+* catalogue WAV recording metadata ([fad7899](https://github.com/Mearman/keepset/commit/fad789961549c714088c551d0971af8c8665a731))
+
 # [0.121.0](https://github.com/Mearman/keepset/compare/v0.120.0...v0.121.0) (2026-11-06)
 
 
