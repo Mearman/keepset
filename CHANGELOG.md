@@ -1,3 +1,10 @@
+# [0.111.0](https://github.com/Mearman/keepset/compare/v0.110.0...v0.111.0) (2026-11-06)
+
+
+### Features
+
+* **catalogue:** read parent-child audio annotations ([01838d6](https://github.com/Mearman/keepset/commit/01838d6475e74e6d7802b4f22bd79741262c6803))
+
 # [0.110.0](https://github.com/Mearman/keepset/compare/v0.109.0...v0.110.0) (2026-11-06)
 
 
