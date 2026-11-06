@@ -1,3 +1,10 @@
+# [0.113.0](https://github.com/Mearman/keepset/compare/v0.112.0...v0.113.0) (2026-11-06)
+
+
+### Features
+
+* **catalogue:** read Nicolingua radio annotations ([4192572](https://github.com/Mearman/keepset/commit/419257236d9db04ab8de2973249caf5d1d8c66bc))
+
 # [0.112.0](https://github.com/Mearman/keepset/compare/v0.111.0...v0.112.0) (2026-11-06)
 
 
