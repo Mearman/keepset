@@ -3,45 +3,80 @@
   "aliases": [
     "slr152-transcripts"
   ],
-  "category": "speech/v1",
+  "category": "graph/v1",
   "citations": [],
   "crosswalk": {
-    "file": "crosswalks/speech-v1/id-text.json"
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "edges[].source",
+      "edges[].target",
+      "edges[].stimulus",
+      "edges[].workbook",
+      "edges[].question",
+      "edges[].judge"
+    ],
+    "rules": [
+      {
+        "from": "edges[].score",
+        "op": "move",
+        "to": "edges[].weight"
+      }
+    ],
+    "source": "similarity-ratings",
+    "target": "graph/v1"
   },
-  "description": "The transcripts of Pragmatic Similarity Judgments. No recipe reads them. The corpus is of similarity judgments rated by listeners, in spreadsheets, and publishes no transcripts.",
+  "description": "The pragmatic-similarity judgements as a graph: utterances are nodes and each participant rating is an edge from the source utterance to its reenactment, with the original score, judge, question, stimulus filename and workbook. Edge direction preserves the source pair order and does not imply that similarity is directional.",
   "domain": "Speech",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "edges": 5262,
+    "nodes": 822
+  },
   "id": "openslr-slr152-transcripts",
   "licence": {
     "kind": "custom",
     "name": "public domain (CC0 1.0 Universal)",
     "url": "https://www.openslr.org/152/"
   },
-  "name": "Pragmatic Similarity Judgments transcripts",
+  "name": "Pragmatic Similarity Judgments graph",
   "namespace": [
     "openslr",
     "speech"
   ],
-  "properties": {},
+  "properties": {
+    "directed": true
+  },
   "recipe": {
-    "reason": "The corpus is of similarity judgments rated by listeners, in spreadsheets, and publishes no transcripts.",
-    "status": "not-fetchable"
+    "archive": {
+      "files": {
+        "extensions": [
+          ".xlsx"
+        ]
+      },
+      "kind": "tar.gz"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "similarity-ratings"
+    },
+    "source": 0,
+    "status": "fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 12396,
-        "sha256": "4140318891c6e433b5af25d6d137b4eca6ac7b393eae20943bbe3f9eb833ef1c",
-        "timestamp": "20260418031744",
-        "url": "https://web.archive.org/web/20260418031744/https://www.openslr.org/152/"
-      },
+      "retrieved": "2026-11-06",
       "status": "live",
-      "url": "https://www.openslr.org/152/"
+      "url": "https://www.openslr.org/resources/152/judgment-data.tgz"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "weight",
+    "judge",
+    "stimulus",
+    "question",
+    "workbook"
+  ]
 }

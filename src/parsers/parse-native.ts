@@ -28,6 +28,7 @@ import { parseNicolingua } from "./nicolingua";
 import { parseNicolinguaRadio } from "./nicolingua-radio";
 import { parseSimulatedRir } from "./simulated-rir";
 import { parseAirMat } from "./air-mat";
+import { parseSimilarityRatings } from "./similarity-ratings";
 import { parseWordText } from "./word-text";
 import { parseStm } from "./stm";
 import { parseTextGrid } from "./textgrid";
@@ -303,6 +304,9 @@ export function parseNativeFiles(files: readonly { readonly path: string; readon
 export function parseNativeFiles(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Exclude<Parser, { format: "member-text" | "nxt-words" | "eaf" | "textgrid" | "option-list" | "chat" | "mtedx" | "stm" | "musan-annotations" | "nicolingua" | "nicolingua-radio" | "simulated-rir" | "air-mat" | "member-path" | "word-text" }>): NativeGraph;
 export function parseNativeFiles(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Parser): NativeGraph | NativeTable;
 export function parseNativeFiles(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Parser): NativeGraph | NativeTable {
+  if (parser.format === "similarity-ratings") {
+    return parseSimilarityRatings(files);
+  }
   if (parser.format === "member-path") {
     return parseMemberPaths(files.map((file) => file.path), parser);
   }
