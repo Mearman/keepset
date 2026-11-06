@@ -216,7 +216,7 @@ export function entryPage(context: PageContext, dataset: Dataset, sameData: read
   const { nodes, edges, instances } = dimensions;
   const figures: readonly (readonly [string, string])[] = [["Nodes", formatCount(nodes)], ["Edges", formatCount(edges)], ["Instances", formatCount(instances)], ["Size", sizeText(dimensions)]].filter((figure): figure is [string, string] => figure[1] !== "");
   // The entries of the recipe's sources that it reads, so the sources table can say which of the mirrors the fetch uses.
-  const readSources = new Set<number>(recipe.status !== "fetchable" ? [] : "files" in recipe ? recipe.files.map((file) => file.source) : [recipe.source]);
+  const readSources = new Set<number>(recipe.status !== "fetchable" ? [] : "files" in recipe ? recipe.files.flatMap((file) => typeof file.source === "number" ? [file.source] : file.source) : [recipe.source]);
 
   const sections: ReactNode[] = [
     <nav className="breadcrumb" aria-label="Breadcrumb" key="breadcrumb"><ol><li><a href={context.root}>All datasets</a></li><li><a href={`../../kinds/${slug(dataset.kind)}/`}>{dataset.kind}</a></li>{entry.domain === undefined ? null : <li><a href={`../../domains/${slug(entry.domain)}/`}>{entry.domain}</a></li>}</ol></nav>,
@@ -258,8 +258,8 @@ export function entryPage(context: PageContext, dataset: Dataset, sameData: read
       <Facts key="recipe-facts" rows={[["Status", `not fetchable: ${recipe.reason}`]]} />
     ) : "files" in recipe ? (
       <Fragment key="recipe-facts">
-        <Facts rows={[["Files", `${recipe.files.length.toLocaleString("en-GB")}, each downloaded from its own source`], ...parserRows(recipe.parser)]} />
-        <div className="table-wrap"><table className="sources"><thead><tr><th scope="col">File</th><th scope="col">Source</th><th scope="col">Archive</th></tr></thead><tbody>{recipe.files.map((file) => <tr key={file.path}><td><code>{file.path}</code></td><td>#{String(file.source)}</td><td>{file.archive.kind}</td></tr>)}</tbody></table></div>
+        <Facts rows={[["Files", `${recipe.files.length.toLocaleString("en-GB")}, each downloaded from its own source or source parts`], ...parserRows(recipe.parser)]} />
+        <div className="table-wrap"><table className="sources"><thead><tr><th scope="col">File</th><th scope="col">Source</th><th scope="col">Archive</th></tr></thead><tbody>{recipe.files.map((file) => <tr key={file.path}><td><code>{file.path}</code></td><td>{(typeof file.source === "number" ? [file.source] : file.source).map((source) => `#${String(source)}`).join(", ")}</td><td>{file.archive.kind}</td></tr>)}</tbody></table></div>
       </Fragment>
     ) : (
       <Facts key="recipe-facts" rows={[

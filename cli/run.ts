@@ -275,7 +275,7 @@ export function formatShow(dataset: Dataset): string {
   } else {
     const { format, ...options } = recipe.parser;
     if ("files" in recipe) {
-      lines.push(`  files: ${String(recipe.files.length)}, each downloaded from its own source`, ...recipe.files.map((file) => `    ${file.path}: source [${String(file.source)}], archive ${archiveText(file.archive)}`));
+      lines.push(`  files: ${String(recipe.files.length)}, each downloaded from its own source or source parts`, ...recipe.files.map((file) => `    ${file.path}: source [${String(file.source)}], archive ${archiveText(file.archive)}`));
     } else {
       lines.push(`  source: [${String(recipe.source)}]${recipe.stream === true ? ", streamed" : ""}`, `  archive: ${archiveText(recipe.archive)}`);
     }

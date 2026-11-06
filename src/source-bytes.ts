@@ -131,6 +131,45 @@ export function bytesSource(bytes: Uint8Array): SourceBytes {
 }
 
 /**
+ * Presents consecutive source parts as one source, without copying them while reading in order.
+ * @param parts - The parts in the order in which their bytes form the source.
+ * @returns A source whose ranges and chunks span the parts.
+ * @throws KeepsetError when the combined size cannot be represented exactly.
+ */
+export function concatenateSources(parts: readonly Readonly<SourceBytes>[]): SourceBytes {
+  const size = parts.reduce((sum, part) => sum + part.size, 0);
+  if (!Number.isSafeInteger(size)) throw new KeepsetError("the combined source size is not a safe integer");
+
+  const read = async (range: Readonly<ByteRange>): Promise<Uint8Array> => {
+    assertWithin(range, size);
+    const result = new Uint8Array(range.length);
+    const readPart = async (index: number, start: number, written: number): Promise<void> => {
+      const part = parts[index];
+      if (part === undefined) return;
+      const from = Math.max(range.offset, start);
+      const to = Math.min(range.offset + range.length, start + part.size);
+      const bytes = to > from ? await part.read({ offset: from - start, length: to - from }) : new Uint8Array();
+      result.set(bytes, written);
+      await readPart(index + 1, start + part.size, written + bytes.length);
+    };
+    await readPart(0, 0, 0);
+
+    return result;
+  };
+
+  return {
+    size,
+    async *chunks() {
+      for (const part of parts) yield* part.chunks();
+    },
+    read,
+    async bytes() {
+      return read({ offset: 0, length: size });
+    },
+  };
+}
+
+/**
  * Reads bytes as a source, or a source as it is.
  * @param input - Bytes held in memory, or a source kept anywhere.
  * @returns The source.

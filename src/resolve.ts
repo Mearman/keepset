@@ -256,7 +256,7 @@ export function captureRequestFor(download: Pick<Download, "source" | "fetchedUr
  * @returns The capture requests' URLs, none when every download came from a snapshot.
  */
 export function captureRequestsFor(provenance: Provenance): readonly string[] {
-  const downloads = "files" in provenance ? provenance.files : [provenance];
+  const downloads = "files" in provenance ? provenance.files.flatMap((file) => "parts" in file ? file.parts : [file]) : [provenance];
 
   return [...new Set(downloads.flatMap((download) => captureRequestFor(download) ?? []))];
 }

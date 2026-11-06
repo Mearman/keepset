@@ -65,7 +65,7 @@ export async function countedSize(body: ReadableStream<Uint8Array> | null): Prom
 export function downloadedUrls(entry: Entry): readonly string[] {
   const { recipe } = entry;
   const indexes =
-    "files" in recipe ? recipe.files.map((file) => file.source)
+    "files" in recipe ? recipe.files.flatMap((file) => typeof file.source === "number" ? [file.source] : file.source)
     : "source" in recipe ? (recipe.paging === undefined ? [recipe.source] : [])
     : entry.category === "graph/v1" ? [0]
     : [];
