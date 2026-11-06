@@ -217,11 +217,11 @@ export interface Zip64Options {
 export function zip64(name: string, data: Uint8Array, options: Readonly<Zip64Options> = { method: 0, flags: 0 }): Uint8Array {
   const nameBytes = new TextEncoder().encode(name);
   const { method, flags } = options;
-  const local = [...u32(ZIP_SIGNATURES.localHeader), ...u16(ZIP64_VERSION), ...u16(flags), ...u16(method), ...u16(0), ...u16(0), ...u32(0), ...u32(data.length), ...u32(data.length), ...u16(nameBytes.length), ...u16(0), ...nameBytes, ...data];
+  const local = [...u32(ZIP_SIGNATURES.localHeader), ...u16(ZIP64_VERSION), ...u16(flags), ...u16(method), ...u16(0), ...u16(0), ...u32(crc32(data)), ...u32(data.length), ...u32(data.length), ...u16(nameBytes.length), ...u16(0), ...nameBytes, ...data];
   const values = [...u64(data.length), ...u64(data.length), ...u64(0)];
   const extra = [...u16(ZIP64_EXTRA_ID), ...u16(U64 * ZIP64_EXTRA_VALUES), ...values];
   const central = [
-    ...u32(ZIP_SIGNATURES.centralEntry), ...u16(ZIP64_VERSION), ...u16(ZIP64_VERSION), ...u16(flags), ...u16(method), ...u16(0), ...u16(0), ...u32(0),
+    ...u32(ZIP_SIGNATURES.centralEntry), ...u16(ZIP64_VERSION), ...u16(ZIP64_VERSION), ...u16(flags), ...u16(method), ...u16(0), ...u16(0), ...u32(crc32(data)),
     ...u32(SATURATED_32), ...u32(SATURATED_32), ...u16(nameBytes.length), ...u16(extra.length), ...u16(0), ...u16(0), ...u16(0), ...u32(0), ...u32(SATURATED_32),
     ...nameBytes, ...extra,
   ];
