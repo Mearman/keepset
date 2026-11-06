@@ -37,6 +37,19 @@ const keeping = { store: memoryStore(async (bytes) => Promise.resolve(createHash
 const closestAnswer = (timestamp: string): Response => Response.json({ archived_snapshots: { closest: { available: true, status: "200", timestamp } } });
 
 describe("resolveSource", () => {
+  it("requests a brokered source directly without querying or capturing it in Wayback", async () => {
+    const source = { url: URL_LIVE, retrieved: "2026-10-01", status: "live", access: "brokered" } as const;
+    const { port, requested } = served({ [URL_LIVE]: "brokered bytes" });
+    const resolved = await resolveSource(source, { port, ...keeping });
+    expect(new TextDecoder().decode(await resolved.source.bytes())).toBe("brokered bytes");
+    expect(requested).toEqual([URL_LIVE]);
+    expect(captureRequestFor({ source, fetchedUrl: resolved.url })).toBeUndefined();
+  });
+
+  it("preserves an unreachable broker as an unreachable source", async () => {
+    const port: FetchPort = async () => Promise.reject(new TypeError("network down"));
+    await expect(resolveSource(live({ access: "brokered" }), { port, ...keeping })).rejects.toBeInstanceOf(UnreachableSourceError);
+  });
   it("reads a pinned snapshot first, and asks nothing else", async () => {
     const { port, requested } = served({ [raw(PIN)]: "pinned" });
     const resolved = await resolveSource(live({ snapshot: snapshotOf(PIN, URL_LIVE) }), { port, ...keeping });

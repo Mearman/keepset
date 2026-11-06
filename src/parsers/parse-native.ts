@@ -21,6 +21,7 @@ import { parseJsonWordCounts } from "./json-word-counts";
 import { parseLexiconLines } from "./lexicon-lines";
 import { parseEaf } from "./eaf";
 import { parseMemberText } from "./member-text";
+import { parseTranscriber } from "./transcriber";
 import { parseMemberPaths } from "./member-path";
 import { parseNxtWords } from "./nxt-words";
 import { parseChat } from "./chat";
@@ -306,8 +307,8 @@ export function parseNativeParts(parts: readonly NamedBytes[], parser: Parser): 
  * @returns The native graph or table.
  * @throws NativeParseError when a file is not valid in the stated encoding or the files are not in the stated format, or when the parser reads one file and not several.
  */
-export function parseNativeFiles(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Readonly<Extract<Parser, { format: "member-text" | "nxt-words" | "eaf" | "textgrid" | "option-list" | "chat" | "mtedx" | "stm" | "musan-annotations" | "nicolingua" | "nicolingua-radio" | "simulated-rir" | "air-mat" | "member-path" | "grouped-member-path" | "word-text" | "wav-metadata" }>>): NativeTable;
-export function parseNativeFiles(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Exclude<Parser, { format: "member-text" | "nxt-words" | "eaf" | "textgrid" | "option-list" | "chat" | "mtedx" | "stm" | "musan-annotations" | "nicolingua" | "nicolingua-radio" | "simulated-rir" | "air-mat" | "member-path" | "grouped-member-path" | "word-text" | "wav-metadata" }>): NativeGraph;
+export function parseNativeFiles(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Readonly<Extract<Parser, { format: "member-text" | "nxt-words" | "eaf" | "transcriber" | "textgrid" | "option-list" | "chat" | "mtedx" | "stm" | "musan-annotations" | "nicolingua" | "nicolingua-radio" | "simulated-rir" | "air-mat" | "member-path" | "grouped-member-path" | "word-text" | "wav-metadata" }>>): NativeTable;
+export function parseNativeFiles(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Exclude<Parser, { format: "member-text" | "nxt-words" | "eaf" | "transcriber" | "textgrid" | "option-list" | "chat" | "mtedx" | "stm" | "musan-annotations" | "nicolingua" | "nicolingua-radio" | "simulated-rir" | "air-mat" | "member-path" | "grouped-member-path" | "word-text" | "wav-metadata" }>): NativeGraph;
 export function parseNativeFiles(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Parser): NativeGraph | NativeTable;
 export function parseNativeFiles(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Parser): NativeGraph | NativeTable {
   if (parser.format === "similarity-ratings") {
@@ -330,6 +331,9 @@ export function parseNativeFiles(files: readonly { readonly path: string; readon
   }
   if (parser.format === "eaf") {
     return parseEaf(files, parser);
+  }
+  if (parser.format === "transcriber") {
+    return parseTranscriber(files, parser);
   }
   if (parser.format === "textgrid") {
     return parseTextGrid(files, parser);

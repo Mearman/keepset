@@ -17,6 +17,7 @@ import { unxz } from "./xz";
 export type { Download, DownloadProvenance, FetchedDataset, FetchOptions, FetchPort, FilesProvenance, Provenance, RoundTripReport } from "../fetch";
 export type { ByteRange, DigestPort, KeepRequest, Received, SourceBytes, StoredSource, StorePort } from "../source-bytes";
 export { downloadUrl } from "../fetch";
+export { mozillaDataCollectiveFetch } from "../mozilla-data-collective";
 export { captureRequestsFor } from "../resolve";
 export { memoryStore } from "../source-bytes";
 export type { NodeSink, StreamedDataset, StreamedNode } from "./stream-dataset";

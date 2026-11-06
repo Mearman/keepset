@@ -26,10 +26,10 @@ export function sourceUrl(source: Source): string {
 /**
  * The source record a provenance carries: the entry's source as recorded.
  * @param source - The source.
- * @returns Its URL, status and any snapshot.
+ * @returns Its URL, status, access method and any snapshot.
  */
 export function sourceRecord(source: Source): Download["source"] {
-  return { url: source.url, status: source.status, ...(source.snapshot === undefined ? {} : { snapshot: source.snapshot }) };
+  return { url: source.url, status: source.status, ...(source.access === undefined ? {} : { access: source.access }), ...(source.snapshot === undefined ? {} : { snapshot: source.snapshot }) };
 }
 
 /**

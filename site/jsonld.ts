@@ -3,7 +3,9 @@ import { rawSnapshotUrl, type Dataset } from "keepset";
 /** A schema.org DataDownload: one place the dataset's bytes can be fetched from. */
 export interface DataDownload {
   readonly "@type": "DataDownload";
-  readonly contentUrl: string;
+  readonly contentUrl?: string;
+  /** A broker endpoint, which must be contacted for an authenticated download rather than read as the file itself. */
+  readonly url?: string;
   readonly archivedAt?: string;
   /** The SHA-256 of the bytes at `contentUrl`, where the entry records one for the snapshot it points at. */
   readonly sha256?: string;
@@ -69,7 +71,9 @@ export function datasetJsonLd(dataset: Dataset, pageUrl: string, catalogueUrl: s
     ...(citation.length === 0 ? {} : { citation }),
     isPartOf: { "@type": "DataCatalog", name: dataset.catalogue.id, url: catalogueUrl },
     distribution: entry.sources.map((source) =>
-      source.status === "dead" && source.snapshot !== undefined
+      source.access === "brokered"
+        ? { "@type": "DataDownload", url: source.url }
+        : source.status === "dead" && source.snapshot !== undefined
         ? { "@type": "DataDownload", contentUrl: rawSnapshotUrl(source.snapshot.timestamp, source.url), archivedAt: source.snapshot.url, ...(source.snapshot.sha256 === undefined ? {} : { sha256: source.snapshot.sha256 }) }
         : { "@type": "DataDownload", contentUrl: source.url, ...(source.snapshot === undefined ? {} : { archivedAt: source.snapshot.url }) },
     ),
