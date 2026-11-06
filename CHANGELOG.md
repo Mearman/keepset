@@ -1,3 +1,10 @@
+# [0.117.0](https://github.com/Mearman/keepset/compare/v0.116.0...v0.117.0) (2026-11-06)
+
+
+### Features
+
+* catalogue Aachen impulse response metadata ([5d336f4](https://github.com/Mearman/keepset/commit/5d336f43fe52d38deb3ad5e6e29b181967eed677))
+
 # [0.116.0](https://github.com/Mearman/keepset/compare/v0.115.0...v0.116.0) (2026-11-06)
 
 
