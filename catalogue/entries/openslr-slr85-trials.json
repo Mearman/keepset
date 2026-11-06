@@ -1,0 +1,72 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "category": "graph/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/graph-v1/relations.json"
+  },
+  "description": "The HI-MIA test verification trials published by AISHELL as two graphs, one for one-metre trials and one for microphone trials. Each edge links two recording identifiers and is labelled target or nontarget. This publisher edition uses remapped recording IDs, not the original filenames in the OpenSLR audio archive; the audio remains in the distributions listed by openslr-slr85.",
+  "domain": "Speech",
+  "expectedCounts": {
+    "instances": 2
+  },
+  "id": "openslr-slr85-trials",
+  "licence": {
+    "kind": "custom",
+    "name": "Apache License v.2.0",
+    "url": "https://www.openslr.org/85/"
+  },
+  "name": "HI-MIA test verification trials",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {
+    "directed": true
+  },
+  "recipe": {
+    "files": [
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "trials_1m",
+        "source": 0
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "trials_mic",
+        "source": 1
+      }
+    ],
+    "parser": {
+      "delimiter": "space",
+      "encoding": "utf-8",
+      "format": "kg-triples",
+      "header": "none",
+      "order": "head-tail-relation",
+      "quoted": false
+    },
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-06",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/AISHELL/HI-MIA/resolve/e33fd9b7f71cff21b725ecb924d155b33c1d122c/test/trials_1m"
+    },
+    {
+      "retrieved": "2026-11-06",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/AISHELL/HI-MIA/resolve/e33fd9b7f71cff21b725ecb924d155b33c1d122c/test/trials_mic"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "type"
+  ]
+}
