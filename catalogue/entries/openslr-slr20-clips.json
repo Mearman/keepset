@@ -5,14 +5,47 @@
   "crosswalk": {
     "keep": [
       "meta",
-      "nodes[].id"
+      "nodes[].id",
+      "nodes[].HHP_xyz",
+      "nodes[].angle",
+      "nodes[].azimuth_angle",
+      "nodes[].cal_plate",
+      "nodes[].channel",
+      "nodes[].contact",
+      "nodes[].contact_pressure",
+      "nodes[].copyright",
+      "nodes[].d_height",
+      "nodes[].d_mic_mic",
+      "nodes[].d_speaker_mic",
+      "nodes[].description",
+      "nodes[].distance",
+      "nodes[].erp_dist",
+      "nodes[].excitation",
+      "nodes[].filename",
+      "nodes[].fs",
+      "nodes[].head",
+      "nodes[].mic_height",
+      "nodes[].microphone",
+      "nodes[].misc",
+      "nodes[].mock_up_type",
+      "nodes[].mrp_height",
+      "nodes[].phone_pos",
+      "nodes[].pinna",
+      "nodes[].precision",
+      "nodes[].rir_method",
+      "nodes[].rir_type",
+      "nodes[].room",
+      "nodes[].torso",
+      "nodes[].version"
     ],
-    "source": "none",
+    "source": "air-mat",
     "target": "audio/v1"
   },
-  "description": "Aachen Impulse Response Database (annotations). No recipe reads it. The archive holds impulse responses as MATLAB files and no annotation table; each response is identified by its file name only.",
+  "description": "The Aachen Impulse Response Database as the air_info structure in each MATLAB recording describes it. Source field names and values are retained; absent fields are null and the three-coordinate HHP_xyz vector is JSON text. The impulse-response arrays remain in the distribution listed by openslr-slr20.",
   "domain": "Audio",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "nodes": 214
+  },
   "id": "openslr-slr20-clips",
   "licence": {
     "kind": "unrecorded"
@@ -24,24 +57,95 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "The archive holds impulse responses as MATLAB files and no annotation table; each response is identified by its file name only.",
-    "status": "not-fetchable"
+    "archive": {
+      "files": {
+        "extensions": [
+          ".mat"
+        ]
+      },
+      "kind": "zip"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "fields": [
+        "HHP_xyz",
+        "angle",
+        "azimuth_angle",
+        "cal_plate",
+        "channel",
+        "contact",
+        "contact_pressure",
+        "copyright",
+        "d_height",
+        "d_mic_mic",
+        "d_speaker_mic",
+        "description",
+        "distance",
+        "erp_dist",
+        "excitation",
+        "filename",
+        "fs",
+        "head",
+        "mic_height",
+        "microphone",
+        "misc",
+        "mock_up_type",
+        "mrp_height",
+        "phone_pos",
+        "pinna",
+        "precision",
+        "rir_method",
+        "rir_type",
+        "room",
+        "torso",
+        "version"
+      ],
+      "format": "air-mat"
+    },
+    "source": 0,
+    "status": "fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 3284,
-        "sha256": "d9234314c957b6f71aa8c22d10da0c5f12f5093e6fba342b0be4f76d60663e2e",
-        "timestamp": "20260617201357",
-        "url": "https://web.archive.org/web/20260617201357/https://www.openslr.org/20/"
-      },
+      "retrieved": "2026-11-06",
       "status": "live",
-      "url": "https://www.openslr.org/20/"
+      "url": "https://www.openslr.org/resources/20/air_database_release_1_4.zip"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "HHP_xyz",
+    "angle",
+    "azimuth_angle",
+    "cal_plate",
+    "channel",
+    "contact",
+    "contact_pressure",
+    "copyright",
+    "d_height",
+    "d_mic_mic",
+    "d_speaker_mic",
+    "description",
+    "distance",
+    "erp_dist",
+    "excitation",
+    "filename",
+    "fs",
+    "head",
+    "mic_height",
+    "microphone",
+    "misc",
+    "mock_up_type",
+    "mrp_height",
+    "phone_pos",
+    "pinna",
+    "precision",
+    "rir_method",
+    "rir_type",
+    "room",
+    "torso",
+    "version"
+  ]
 }
