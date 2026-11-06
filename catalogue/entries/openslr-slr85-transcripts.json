@@ -6,42 +6,92 @@
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "file": "crosswalks/speech-v1/id-text.json"
+    "keep": [
+      "meta",
+      "nodes[].corrected",
+      "nodes[].speaker",
+      "nodes[].point",
+      "nodes[].microphone",
+      "nodes[].speed",
+      "nodes[].utterance"
+    ],
+    "rules": [
+      {
+        "from": "nodes[].id",
+        "op": "copy",
+        "to": [
+          "nodes[].id",
+          "nodes[].audio"
+        ]
+      }
+    ],
+    "source": "csv-table",
+    "target": "speech/v1"
   },
-  "description": "The transcripts of HI-MIA. No recipe reads them. The corpus is for speaker verification and publishes no transcripts: its only labels are trial lists.",
+  "description": "The HI-MIA training filenames as the publisher mapping describes them: original and corrected recording names, with speaker, recording point, microphone, speaking speed (S slow, N normal, F fast) and utterance code decoded from the original name. The source describes the wake word; the mapping supplies no verified transcripts. The audio remains in the distribution listed by openslr-slr85.",
   "domain": "Speech",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "nodes": 993083
+  },
   "id": "openslr-slr85-transcripts",
   "licence": {
     "kind": "custom",
     "name": "Apache License v.2.0",
     "url": "https://www.openslr.org/85/"
   },
-  "name": "HI-MIA transcripts",
+  "name": "HI-MIA training recording metadata",
   "namespace": [
     "openslr",
     "speech"
   ],
-  "properties": {},
+  "properties": {
+    "split": "train"
+  },
   "recipe": {
-    "reason": "The corpus is for speaker verification and publishes no transcripts: its only labels are trial lists.",
-    "status": "not-fetchable"
+    "archive": {
+      "kind": "tar.gz",
+      "member": {
+        "path": "train_filename_mapping.txt"
+      }
+    },
+    "parser": {
+      "columns": [
+        "corrected"
+      ],
+      "delimiter": "space",
+      "encoding": "utf-8",
+      "format": "csv-table",
+      "headerNames": [
+        "original",
+        "corrected"
+      ],
+      "idColumn": "original",
+      "idPattern": "(?<speaker>SV\\d+)_(?<point>\\d+)_(?<microphone>\\d+)_(?<speed>[SNF])(?<utterance>\\d+)\\.wav",
+      "numericColumns": [],
+      "skipLines": 0,
+      "unquoted": true
+    },
+    "source": 0,
+    "status": "fetchable",
+    "stream": true
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 5433,
-        "sha256": "4156e2ce486c894b6d6a930380af896e6bf37827f60f49f48574effc133bd198",
-        "timestamp": "20260521090148",
-        "url": "https://web.archive.org/web/20260521090148/https://www.openslr.org/85/"
-      },
+      "retrieved": "2026-11-06",
       "status": "live",
-      "url": "https://www.openslr.org/85/"
+      "url": "https://www.openslr.org/resources/85/filename_mapping.tar.gz"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "audio",
+    "corrected",
+    "speaker",
+    "point",
+    "microphone",
+    "speed",
+    "utterance"
+  ]
 }

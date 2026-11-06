@@ -12,7 +12,7 @@ import type { JsonScalar } from "../targets/json-scalar";
 import { IdSet } from "./id-set";
 import { csvPages, type CsvPaging } from "../paged";
 import type { Download, DownloadProvenance, FetchOptions, RoundTripReport } from "../fetch";
-import { streamFiles, type Member } from "../archive";
+import { streamFiles, streamTarMember, type Member, type TarMemberArchive } from "../archive";
 import { resolveSource } from "../resolve";
 import type { StreamedNodes, StreamableId } from "../categories";
 import { countWarnings, downloadOf, metaOf, sourceRecord, sourceUrl, step, unpackOptionsOf } from "../recipe-run";
@@ -35,10 +35,11 @@ export interface StreamedDataset {
 /** A node a streamed result hands on: a node of a streamable category's target. */
 export type StreamedNode = StreamedNodes[StreamableId];
 
-/** A streamed recipe, narrowed to the parts streaming reads: a CSV paged source read a page at a time by the csv-table parser, or an archive whose files are read one at a time, each file one row. */
+/** A streamed recipe, narrowed to the parts streaming reads: a CSV paged source, a CSV table in one tar member, or an archive whose files are read one at a time, each file one row. */
 type StreamedRecipe =
-  | { readonly source: number; readonly paging: CsvPaging; readonly parser: Extract<Parser, { readonly format: "csv-table" }> }
-  | { readonly source: number; readonly archive: FilesArchive; readonly parser: Extract<Parser, { readonly format: StreamedFileFormat }> };
+  | { readonly mode: "paged"; readonly source: number; readonly paging: CsvPaging; readonly parser: Extract<Parser, { readonly format: "csv-table" }> }
+  | { readonly mode: "files"; readonly source: number; readonly archive: FilesArchive; readonly parser: Extract<Parser, { readonly format: StreamedFileFormat }> }
+  | { readonly mode: "tar-table"; readonly source: number; readonly archive: TarMemberArchive; readonly parser: Extract<Parser, { readonly format: "csv-table" }> };
 
 /**
  * Whether a parser reads each file of a files archive into one row on its own, and so can be given the files one at a time.
@@ -50,7 +51,7 @@ function readsFileByFile(parser: Parser): parser is Extract<Parser, { readonly f
 }
 
 /**
- * The parts of a recipe a stream reads, checked to be a streamed recipe: the entry schema refuses a `stream` recipe that is neither a CSV paged source read by the csv-table parser with no archive nor a files archive read file by file with no paging, so this only fails for an entry whose recipe does not stream.
+ * The parts of a recipe a stream reads, checked to be a streamed recipe: the entry schema permits a paged CSV source, a CSV table in one tar member, or a files archive read file by file, so this only fails for an entry whose recipe does not stream.
  * @param entry - The entry.
  * @returns The recipe's source, how it is read and its parser, and the category.
  * @throws RecipeError when the recipe is not fetchable, does not stream, or its category has no streamed form.
@@ -68,13 +69,16 @@ function streamedRecipe(entry: Entry): StreamedRecipe & { readonly category: Str
     throw new RecipeError(entry.id, "recipe", `${category} has no streamed form`);
   }
   if (paging !== undefined && paging.kind !== "arcgis-query" && parser.format === "csv-table" && archive.kind === "none") {
-    return { source, paging, parser, category };
+    return { mode: "paged", source, paging, parser, category };
+  }
+  if (paging === undefined && parser.format === "csv-table" && "member" in archive && (archive.kind === "tar" || archive.kind === "tar.gz" || archive.kind === "tar.bz2" || archive.kind === "tar.xz") && archive.inner === undefined) {
+    return { mode: "tar-table", source, archive: { kind: archive.kind, member: archive.member }, parser, category };
   }
   if (paging === undefined && "files" in archive && readsFileByFile(parser)) {
-    return { source, archive, parser, category };
+    return { mode: "files", source, archive, parser, category };
   }
 
-  throw new RecipeError(entry.id, "recipe", "a streamed recipe reads a CSV paged source through the csv-table parser, or a files archive file by file");
+  throw new RecipeError(entry.id, "recipe", "a streamed recipe reads a CSV paged source or tar member through the csv-table parser, or a files archive file by file");
 }
 
 /**
@@ -161,7 +165,10 @@ function openNative(dataset: Dataset, recipe: StreamedRecipe, options: FetchOpti
     throw new RecipeError(entry.id, "recipe", `the recipe names source ${String(recipe.source)}, which the entry does not have`);
   }
 
-  return "paging" in recipe ? openTable(dataset, source, recipe, options) : openFiles(dataset, source, recipe, options);
+  if (recipe.mode === "paged") return openTable(dataset, source, recipe, options);
+  if (recipe.mode === "tar-table") return openTarTable(dataset, source, recipe, options);
+
+  return openFiles(dataset, source, recipe, options);
 }
 
 /**
@@ -206,6 +213,40 @@ function openFiles(dataset: Dataset, source: Source, recipe: Extract<StreamedRec
       return Promise.resolve({ entryId: entry.id, catalogue: dataset.catalogue, category: entry.category, retrievedAt, ...download, members: [...members] });
     },
   };
+}
+
+/** Runs a CSV table stored in one tar member without holding that member or its rows whole. */
+function openTarTable(dataset: Dataset, source: Source, recipe: Extract<StreamedRecipe, { readonly archive: TarMemberArchive }>, options: FetchOptions): NativeStream {
+  const { entry } = dataset;
+  const { fetch: port, store, signal, now = () => new Date() } = options;
+  const retrievedAt = now().toISOString();
+  let download: Download | undefined;
+  let member: string | undefined;
+
+  async function* pages(): AsyncGenerator<readonly NativeRow[], void, undefined> {
+    const resolved = await step(entry.id, "download", async () => resolveSource(source, { port, store, randomAccess: false, ...(signal === undefined ? {} : { signal }) }));
+    const { source: stored, url: fetchedUrl } = resolved;
+    const decoder = new PieceDecoder(recipe.parser);
+    const reader = new TableReader(recipe.parser);
+    try {
+      for await (const piece of inStep(entry.id, "extract", streamTarMember(stored, recipe.archive, unpackOptionsOf(options)))) {
+        member = piece.path;
+        const rows = await step(entry.id, "parse", () => reader.push(decoder.decode(piece.bytes)));
+        if (rows.length > 0) yield rows;
+      }
+      const rows = await step(entry.id, "parse", () => [...reader.push(decoder.end()), ...reader.end()]);
+      if (rows.length > 0) yield rows;
+      download = await downloadOf(source, fetchedUrl, stored);
+    } finally {
+      await stored.close();
+    }
+  }
+
+  return { meta: metaOf(entry), pages: pages(), provenance: async () => {
+    if (download === undefined || member === undefined) throw new KeepsetError("the provenance of a streamed archive is known once its member has been read");
+
+    return Promise.resolve({ entryId: entry.id, catalogue: dataset.catalogue, category: entry.category, retrievedAt, ...download, member });
+  } };
 }
 
 /**
@@ -353,7 +394,7 @@ async function resolvePage(table: StreamedTable, rows: readonly NativeRow[], ids
 }
 
 /**
- * Streams a dataset a page at a time, as `streamEntry` describes: a paged table a page of rows at a time, or an archive of files a file at a time, each file its own page.
+ * Streams a dataset a page at a time, as `streamEntry` describes: a paged table or tar member a page of rows at a time, or an archive of files a file at a time, each file its own page.
  * @param dataset - A dataset whose recipe streams.
  * @param sink - Where the meta and the nodes go.
  * @param options - The network port, store, abort signal and clock.

@@ -29,6 +29,8 @@ A fetch resolves each source through a chain: its pinned Wayback snapshot first 
 
 A source larger than memory is read without holding it. In Node a fetch writes each download to a temporary file as it arrives and hashes it on the way (the provenance's `sha256` is of exactly those bytes), then reads it back a chunk at a time: a tar archive, compressed or not, is decompressed and scanned in one pass that keeps only the members the recipe selects, and a zip is read by the ranges its central directory names, so only the directory and the selected members are held. A connection that breaks in the middle of a download is resumed from the byte it broke at. A zip of 4 GiB or more (the size past which a zip must be zip64) on a server that reads ranges is not downloaded at all: its directory and selected members are fetched by ranged requests, and the provenance records the `ranges` and the file's `size` beside the hash of the bytes that arrived. The store is a port (`fileStore` by default, or `{ store }` of the caller's own, or `{ digest }`, which keeps every source in memory as the browser entry point does, since a page has nowhere else to keep one). A plain or compressed file and a workbook are read whole, as their parsers read them.
 
+Entries whose recipes set `stream` are read with `streamDataset` from `keepset/node`: it calls a sink with the metadata and then batches of nodes, so the full result need not fit in memory. This includes large CSV tables inside tar archives, which are decoded as the selected member streams past. A CSV recipe can extract named fields from its row id with `idPattern`, while retaining the original id.
+
 ## The CLI
 
 ```sh

@@ -5,6 +5,7 @@ import { createCatalogue, type Dataset } from "../catalogue";
 import { parseEntry } from "../entry";
 import { CatalogueSyntaxError, RecipeError } from "../errors";
 import { fixtureIndex, socrataEntry, streamedEntry } from "../test-support/entries";
+import { gzip, tar } from "../test-support/archives";
 import { fetchEntry, roundTripEntry, streamEntry, type FetchPort, type NodeSink, type StreamedNode } from "./fetch-dataset";
 import { inseparableRule } from "./stream-dataset";
 
@@ -275,5 +276,26 @@ describe("a Socrata recipe that selects fields", () => {
     const selecting = { ...streamedEntry, recipe: { ...streamedEntry.recipe, paging: { kind: "socrata-resource", pageSize: rows.length, select: ["case_id", "status", "borough"] } } };
     await streamEntry(datasetWith(selecting), ignoring, { fetch: resourceServing(rows, record), now });
     expect(events).toContainEqual({ request: `${resource}?%24select=case_id%2Cstatus%2Cborough&%24order=%3Aid&%24limit=${String(rows.length)}&%24offset=0` });
+  });
+});
+
+
+describe("a streamed table in a tar member", () => {
+  it("streams rows and checks their round trip with member provenance", async () => {
+    const archive = gzip(tar([{ path: "data/other.txt", text: "ignore" }, { path: "data/table.csv", text: header + rows.join("") }]));
+    const entry = { ...streamedEntry, recipe: { status: "fetchable", source: 0, archive: { kind: "tar.gz", member: { path: "data/table.csv" } }, parser: streamedEntry.recipe.parser, stream: true } };
+    const fetch: FetchPort = async () => Promise.resolve(new Response(archive));
+    const { events, record } = eventLog();
+    const result = await streamEntry(datasetWith(entry), loggingSink(record), { fetch, now });
+    expect(result.counts).toEqual(new Map([["nodes", rows.length]]));
+    expect(result.provenance).toMatchObject({ member: "data/table.csv", sha256: createHash("sha256").update(archive).digest("hex") });
+    expect(events.flatMap((event) => "nodes" in event ? event.nodes : [])).toHaveLength(rows.length);
+    expect(await roundTripEntry(datasetWith(entry), { fetch, now })).toMatchObject({ holds: true, provenance: { member: "data/table.csv" } });
+  });
+  it("fails the extraction if the archive is truncated", async () => {
+    const whole = gzip(tar([{ path: "table.csv", text: header + rows.join("") }]));
+    const entry = { ...streamedEntry, recipe: { status: "fetchable", source: 0, archive: { kind: "tar.gz", member: { path: "table.csv" } }, parser: streamedEntry.recipe.parser, stream: true } };
+    const fetch: FetchPort = async () => Promise.resolve(new Response(whole.subarray(0, whole.length - 1)));
+    expect((await failure(streamEntry(datasetWith(entry), ignoring, { fetch, now }))).step).toBe("extract");
   });
 });

@@ -442,6 +442,8 @@ export const ParserSchema = z.discriminatedUnion("format", [
       delimiter: z.enum(["comma", "tab", "semicolon", "pipe", "space"]),
       skipLines: z.int().min(0),
       idColumn: ColumnNameSchema.nullable(),
+      /** A pattern matching the whole id; its named captures become additional fields. */
+      idPattern: MemberPatternSchema.optional(),
       numericColumns: z.array(z.object({ column: ColumnNameSchema, factor: z.number().positive() }).strict()),
       columns: z.array(ColumnNameSchema).optional(),
       /** Set on a file with no header row: the names of its columns in order, as the parser would have spelled them from a header, so the first record after the skipped lines is a row. */
@@ -499,6 +501,8 @@ export const ParserSchema = z.discriminatedUnion("format", [
       format: z.literal("geojson"),
       encoding: z.literal("utf-8"),
       idColumn: ColumnNameSchema.nullable(),
+      /** A pattern matching the whole id; its named captures become additional fields. */
+      idPattern: MemberPatternSchema.optional(),
       numericColumns: z.array(z.object({ column: ColumnNameSchema, factor: z.number().positive() }).strict()),
       dateColumns: z.array(ColumnNameSchema),
       columns: z.array(ColumnNameSchema).min(1),
@@ -563,7 +567,7 @@ export const SourceRecipeSchema = z
     paging: PagingSchema.optional(),
     archive: ArchiveSchema,
     parser: ParserSchema,
-    /** Set on a dataset too large for a fetch to hold as one document: `fetchDataset` refuses it, and `streamDataset` reads it a page at a time, handing on each page's nodes as they are checked. A streamed recipe reads a CSV paged source with no archive through the `csv-table` parser, a page of rows at a time, or a `files` archive with no paging through a parser that reads each file into one row (`member-text`), a file at a time, for a category whose target is meta and nodes. */
+    /** Set on a dataset too large for a fetch to hold as one document: `fetchDataset` refuses it, and `streamDataset` reads it a page at a time, handing on each page's nodes as they are checked. A streamed recipe reads a CSV paged source with no archive through the `csv-table` parser, a page of rows at a time, a CSV table inside one tar member a chunk at a time, or a `files` archive with no paging through a parser that reads each file into one row (`member-text`), a file at a time, for a category whose target is meta and nodes. */
     stream: z.literal(true).optional(),
   })
   .strict()
@@ -620,7 +624,7 @@ export function readsCollection(recipe: Recipe): boolean {
 }
 
 /**
- * Reports the ways a fetchable recipe's parts disagree with each other: a streamed recipe that is neither a CSV paged source read by the `csv-table` parser with no archive nor a files archive with no paging read file by file, for a category that can be streamed, and a Socrata selection that leaves out the id column or a column the parser keeps.
+ * Reports the ways a fetchable recipe's parts disagree with each other: a streamed recipe that is neither a CSV paged source, a CSV table in one tar member, nor a files archive read file by file, for a category that can be streamed, and a Socrata selection that leaves out the id column or a column the parser keeps.
  * @param recipe - The fetchable recipe.
  * @param category - The entry's category.
  * @param ctx - The refinement context to report to.
@@ -630,8 +634,9 @@ function addRecipeIssues(recipe: SourceRecipe, category: CategoryId, ctx: z.core
   if (recipe.stream === true) {
     const pagedTable = paging !== undefined && paging.kind !== "arcgis-query" && recipe.archive.kind === "none" && parser.format === "csv-table";
     const fileByFile = paging === undefined && "files" in recipe.archive && STREAMED_FILE_FORMATS.has(parser.format);
-    if (!pagedTable && !fileByFile) {
-      ctx.addIssue({ code: "custom", path: ["recipe", "stream"], message: `a streamed recipe reads a CSV paged source (Socrata, CKAN or OpenFEMA) with no archive through the csv-table parser, or a files archive with no paging through a parser that reads each file into one row (${[...STREAMED_FILE_FORMATS].join(", ")})` });
+    const tarTable = paging === undefined && parser.format === "csv-table" && "member" in recipe.archive && (recipe.archive.kind === "tar" || recipe.archive.kind === "tar.gz" || recipe.archive.kind === "tar.bz2" || recipe.archive.kind === "tar.xz") && recipe.archive.inner === undefined;
+    if (!pagedTable && !fileByFile && !tarTable) {
+      ctx.addIssue({ code: "custom", path: ["recipe", "stream"], message: `a streamed recipe reads a CSV paged source (Socrata, CKAN or OpenFEMA) with no archive through the csv-table parser, a tar member through the csv-table parser, or a files archive with no paging through a parser that reads each file into one row (${[...STREAMED_FILE_FORMATS].join(", ")})` });
     }
     if (!isStreamable(category)) {
       ctx.addIssue({ code: "custom", path: ["recipe", "stream"], message: `${category} has no streamed form, as its target is not meta and nodes alone` });

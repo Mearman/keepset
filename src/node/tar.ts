@@ -165,7 +165,7 @@ interface Entry {
 }
 
 /**
- * Reads a tar archive as it arrives in chunks of any size, keeping only the data of the regular files a caller selects, so an archive far larger than a process can hold is read in the memory of its largest selected file. It reads ustar with GNU long names and pax path records, verifying each header's checksum.
+ * Reads a tar archive as it arrives in chunks of any size, keeping only the selected regular files or handing their chunks to a caller. It reads ustar with GNU long names and pax path records, verifying each header's checksum.
  */
 export class TarScanner {
   /** The path of every regular file seen, in archive order. */
@@ -188,8 +188,9 @@ export class TarScanner {
 
   /**
    * @param keep - Given a regular file's path, whether to keep its data.
+   * @param onData - When supplied, receive selected regular-file chunks instead of collecting them.
    */
-  public constructor(private readonly keep: (path: string) => boolean) {}
+  public constructor(private readonly keep: (path: string) => boolean, private readonly onData?: (path: string, bytes: Uint8Array) => void) {}
 
   /**
    * Takes the kept files read so far, so a reader that hands each on as it completes holds only the files not yet taken.
@@ -260,8 +261,12 @@ export class TarScanner {
         }
         const piece = this.queue.take(count);
         if (entry.collect) {
-          // A copy, so a kept file does not hold the whole chunk it arrived in.
-          entry.parts.push(piece.slice());
+          if (entry.special === undefined && entry.path !== undefined && this.onData !== undefined) {
+            this.onData(entry.path, piece);
+          } else {
+            // A copy, so a kept file does not hold the whole chunk it arrived in.
+            entry.parts.push(piece.slice());
+          }
         }
         entry.remaining -= count;
         this.position += count;
@@ -318,7 +323,7 @@ export class TarScanner {
       return;
     }
     this.paths.push(entry.path);
-    if (entry.collect) {
+    if (entry.collect && this.onData === undefined) {
       this.members.push({ path: entry.path, data: join(entry.parts, entry.size) });
     }
   }
