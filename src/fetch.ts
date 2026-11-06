@@ -12,7 +12,7 @@ import { concatenateFiles, listFilePaths, type Member, readsByRanges, type Seven
 import { downloadPaged } from "./paged";
 import { countWarnings, downloadOf, metaOf, sourceUrl, step, unpackOptionsOf } from "./recipe-run";
 import { resolveSource } from "./resolve";
-import type { ByteRange, StoredSource, StorePort } from "./source-bytes";
+import { concatenateSources, type ByteRange, type SourceBytes, type StoredSource, type StorePort } from "./source-bytes";
 import type { Archive, Entry, FilesArchive, FilesRecipe, Parser, Snapshot, Source } from "./entry";
 
 /** The network port a recipe downloads through: `downloadRaw` by default, which returns the bytes exactly as served, or a stand-in under test. A `range` asks for those bytes of the file only; a port may answer 206 with them or 200 with the whole file, and the reader tells which from the status. */
@@ -54,13 +54,21 @@ export interface DownloadProvenance extends ProvenanceOf, Download {
   readonly members?: readonly string[];
 }
 
-/** One file of a collection read file by file: its download, the file's path in the collection, and the instances it gave (the path itself, or the path joined to each archive member it unpacked into). */
-export interface FileDownload extends Download {
+/** One file of a collection read from a single download, with its path and the instances it gave. */
+export interface SingleFileDownload extends Download {
   readonly path: string;
   readonly instances: readonly string[];
 }
 
-/** The provenance of a collection read from files downloaded one by one: each file's download, in the order they were read. */
+/** A file made from consecutive downloads, with the provenance of each part in order. */
+export interface SplitFileDownload {
+  readonly path: string;
+  readonly instances: readonly string[];
+  readonly parts: readonly Download[];
+}
+export type FileDownload = SingleFileDownload | SplitFileDownload;
+
+/** The provenance of a collection read from files downloaded one by one, including the ordered downloads of a split file. */
 export interface FilesProvenance extends ProvenanceOf {
   readonly files: readonly FileDownload[];
 }
@@ -165,7 +173,7 @@ function parseInstance(id: string, parse: () => NativeDocument): { readonly id: 
  * @param filing - Where the instance ids are filed (`prefix`: the path joined to each member's path, or undefined to use the member's path alone) and what unpacking is given (`unpacking`: the platform's 7z reader and xz decoder and the abort signal).
  * @returns The instances, in member order.
  */
-async function instancesOf(stored: StoredSource, archive: Archive, parser: Parser, filing: Readonly<{ readonly prefix: string | undefined; readonly unpacking: UnpackOptions }>): Promise<{ readonly id: string; readonly native: NativeWithMeta }[]> {
+async function instancesOf(stored: SourceBytes, archive: Archive, parser: Parser, filing: Readonly<{ readonly prefix: string | undefined; readonly unpacking: UnpackOptions }>): Promise<{ readonly id: string; readonly native: NativeWithMeta }[]> {
   const { prefix, unpacking } = filing;
   const named = (member: string | undefined): string => {
     if (prefix === undefined) {
@@ -236,17 +244,28 @@ async function runFiles(dataset: Dataset, recipe: FilesRecipe, options: FetchOpt
     if (file === undefined) {
       return [];
     }
-    const source = entry.sources[file.source];
-    if (source === undefined) {
-      throw new RecipeError(entry.id, "recipe", `file ${file.path} names source ${String(file.source)}, which the entry does not have`);
-    }
-    const resolved = await step(entry.id, "download", async () => resolveSource(source, { port, store, randomAccess: readsByRanges(file.archive), ...(signal === undefined ? {} : { signal }) }));
-    const { source: stored, url: fetchedUrl } = resolved;
-    const one = await reading(stored, async () => {
-      const documents = await extractAndParse(entry.id, async () => instancesOf(stored, file.archive, recipe.parser, { prefix: file.path, unpacking: unpackOptionsOf(options) }));
+    const indices = typeof file.source === "number" ? [file.source] : file.source;
+    const openParts = async (part: number, opened: readonly { readonly source: Source; readonly stored: StoredSource; readonly url: string }[]): Promise<{ readonly documents: readonly { readonly id: string; readonly native: NativeWithMeta }[]; readonly download: FileDownload }> => {
+      const sourceIndex = indices[part];
+      if (sourceIndex === undefined) {
+        const first = opened[0];
+        if (first === undefined) throw new RecipeError(entry.id, "recipe", `file ${file.path} has no source`);
+        const joined = opened.length === 1 ? first.stored : concatenateSources(opened.map((item) => item.stored));
+        const documents = await extractAndParse(entry.id, async () => instancesOf(joined, file.archive, recipe.parser, { prefix: file.path, unpacking: unpackOptionsOf(options) }));
+        const downloads = await Promise.all(opened.map(async (item) => downloadOf(item.source, item.url, item.stored)));
+        const instances = documents.map((document) => document.id);
+        const only = downloads[0];
+        if (typeof file.source === "number" && only !== undefined) return { documents, download: { ...only, path: file.path, instances } };
 
-      return { documents, download: { ...(await downloadOf(source, fetchedUrl, stored)), path: file.path, instances: documents.map((document) => document.id) } };
-    });
+        return { documents, download: { parts: downloads, path: file.path, instances } };
+      }
+      const source = entry.sources[sourceIndex];
+      if (source === undefined) throw new RecipeError(entry.id, "recipe", `file ${file.path} names source ${String(sourceIndex)}, which the entry does not have`);
+      const resolved = await step(entry.id, "download", async () => resolveSource(source, { port, store, randomAccess: readsByRanges(file.archive), ...(signal === undefined ? {} : { signal }) }));
+
+      return reading(resolved.source, async () => openParts(part + 1, [...opened, { source, stored: resolved.source, url: resolved.url }]));
+    };
+    const one = await openParts(0, []);
 
     return [one, ...(await read(index + 1))];
   };

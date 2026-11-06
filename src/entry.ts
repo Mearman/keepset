@@ -588,8 +588,8 @@ export const SourceRecipeSchema = z
     addFilesArchiveIssues(recipe.archive, recipe.parser, ["archive"], ctx);
   });
 
-/** One file of a collection read file by file: the path it is filed under in the collection, the entry's source it is downloaded from (by index into `sources`, so a dead file is fetched from its own pinned snapshot), and the archive layout its bytes unpack by into the one file or, with `members`, the several files the parser reads. */
-export const CollectionFileSchema = z.object({ path: RelativePathSchema, source: z.int().min(0), archive: ArchiveSchema }).strict();
+/** One file of a collection: its path, the index of its source or the ordered indices of its consecutive source parts, and the archive layout its bytes unpack by. */
+export const CollectionFileSchema = z.object({ path: RelativePathSchema, source: z.union([z.int().min(0), z.array(z.int().min(0)).min(2).refine((sources) => new Set(sources).size === sources.length, { message: "source parts must be distinct" })]), archive: ArchiveSchema }).strict();
 export type CollectionFile = z.infer<typeof CollectionFileSchema>;
 
 /** A recipe for a collection whose files are separate downloads (a repository tree, a set of files served one at a time) rather than members of one archive: every file is downloaded in turn and each file, or each member it unpacks into, is an instance, read by the one parser. An instance's id is the file's path, joined by `/` to the member's path when the file is an archive. */
@@ -716,8 +716,9 @@ export const EntrySchema = define(
       }
       if (entry.recipe.status === "fetchable" && "files" in entry.recipe) {
         for (const [index, file] of entry.recipe.files.entries()) {
-          if (file.source >= entry.sources.length) {
-            ctx.addIssue({ code: "custom", path: ["recipe", "files", index, "source"], message: `names source ${String(file.source)} but the entry has ${String(entry.sources.length)}` });
+          const sources = typeof file.source === "number" ? [file.source] : file.source;
+          for (const source of sources) {
+            if (source >= entry.sources.length) ctx.addIssue({ code: "custom", path: ["recipe", "files", index, "source"], message: `names source ${String(source)} but the entry has ${String(entry.sources.length)}` });
           }
         }
       }
