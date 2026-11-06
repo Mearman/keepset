@@ -1,3 +1,10 @@
+# [0.110.0](https://github.com/Mearman/keepset/compare/v0.109.0...v0.110.0) (2026-11-06)
+
+
+### Features
+
+* **catalogue:** read Audiocite recording metadata ([61b9531](https://github.com/Mearman/keepset/commit/61b95311bc8033ed4fb39d74415613a2226040da))
+
 # [0.109.0](https://github.com/Mearman/keepset/compare/v0.108.7...v0.109.0) (2026-11-05)
 
 
