@@ -3,45 +3,74 @@
   "aliases": [
     "slr13-transcripts"
   ],
-  "category": "speech/v1",
+  "category": "audio/v1",
   "citations": [],
   "crosswalk": {
-    "file": "crosswalks/speech-v1/id-text.json"
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].sourceClass",
+      "nodes[].label",
+      "nodes[].sampleRateDirectory",
+      "nodes[].clip"
+    ],
+    "rules": [
+      {
+        "from": "nodes[].path",
+        "op": "move",
+        "to": "nodes[].audio"
+      }
+    ],
+    "source": "member-path",
+    "target": "audio/v1"
   },
-  "description": "The transcripts of RWCP Sound Scene Database. No recipe reads them. The corpus is sound scenes and impulse responses, not speech with transcripts: the archive holds recordings and documentation pages only.",
-  "domain": "Speech + Software",
-  "expectedCounts": {},
+  "description": "The 9,722 non-speech dry recordings at both 16 kHz and 48 kHz, named by source class, sound source, sample rate and clip number. Each is little-endian 16-bit raw audio. The 105 files under reconst/org and the 105 WAV replay files each duplicate the 48 kHz sample 005 of their sound source. The audio remains in openslr-slr13.",
+  "domain": "Audio",
+  "expectedCounts": {
+    "nodes": 19444
+  },
   "id": "openslr-slr13-transcripts",
   "licence": {
     "kind": "custom",
     "name": "Research and development use only",
     "url": "https://www.openslr.org/13/"
   },
-  "name": "RWCP Sound Scene Database transcripts",
+  "name": "RWCP dry sound recordings",
   "namespace": [
     "openslr",
-    "speech"
+    "audio"
   ],
   "properties": {},
   "recipe": {
-    "reason": "The corpus is sound scenes and impulse responses, not speech with transcripts: the archive holds recordings and documentation pages only.",
-    "status": "not-fetchable"
+    "archive": {
+      "files": {
+        "pattern": "RWCP/nospeech/drysrc/((?<sourceClass>[a-z][0-9]+)/(?<label>[^/]+)/(?<sampleRateDirectory>16khz|48khz)/(?<clip>[0-9]+)\\.raw)"
+      },
+      "kind": "tar.gz"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "member-path",
+      "idPattern": "RWCP/nospeech/drysrc/((?<sourceClass>[a-z][0-9]+)/(?<label>[^/]+)/(?<sampleRateDirectory>16khz|48khz)/(?<clip>[0-9]+)\\.raw)"
+    },
+    "source": 0,
+    "status": "fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 3457,
-        "sha256": "083e5ed242e121977f9946e622178c2b1901b88b7953f9f0db535a3f76c64752",
-        "timestamp": "20260516195552",
-        "url": "https://web.archive.org/web/20260516195552/https://www.openslr.org/13/"
-      },
+      "retrieved": "2026-11-06",
       "status": "live",
-      "url": "https://www.openslr.org/13/"
+      "url": "https://openslr.elda.org/resources/13/RWCP.tar.gz"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "audio",
+    "sourceClass",
+    "label",
+    "sampleRateDirectory",
+    "clip"
+  ]
 }

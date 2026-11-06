@@ -1,0 +1,77 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "category": "audio/v1",
+  "citations": [],
+  "crosswalk": {
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].kind",
+      "nodes[].array",
+      "nodes[].room",
+      "nodes[].position",
+      "nodes[].channel"
+    ],
+    "rules": [
+      {
+        "from": "nodes[].path",
+        "op": "move",
+        "to": "nodes[].audio"
+      }
+    ],
+    "source": "member-path",
+    "target": "audio/v1"
+  },
+  "description": "The microphone-array recordings by source group, array, room, source position and channel. Groups data1, data3 and data5 hold fixed, moving and diffuse impulse responses in little-endian 32-bit float; data6 holds ambient noise in little-endian 16-bit integer. All are sampled at 48 kHz. The documented data2 and data4 speech groups and data7 calibration group are absent from this archive.",
+  "domain": "Audio",
+  "expectedCounts": {
+    "nodes": 3330
+  },
+  "id": "openslr-slr13-microphone-array",
+  "licence": {
+    "kind": "custom",
+    "name": "Research and development use only",
+    "url": "https://www.openslr.org/13/"
+  },
+  "name": "RWCP microphone array recordings",
+  "namespace": [
+    "openslr",
+    "audio"
+  ],
+  "properties": {
+    "sampleRate": 48000
+  },
+  "recipe": {
+    "archive": {
+      "files": {
+        "pattern": "RWCP/micarray/MICARRAY/((?<kind>data[1356])/(?<array>circle|cirline)/(?<room>[A-Z0-9]+)/(?<position>[^/]+)/[^/]+\\.(?<channel>[0-9]+))"
+      },
+      "kind": "tar.gz"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "member-path",
+      "idPattern": "RWCP/micarray/MICARRAY/((?<kind>data[1356])/(?<array>circle|cirline)/(?<room>[A-Z0-9]+)/(?<position>[^/]+)/[^/]+\\.(?<channel>[0-9]+))"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-06",
+      "status": "live",
+      "url": "https://openslr.elda.org/resources/13/RWCP.tar.gz"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "audio",
+    "kind",
+    "array",
+    "room",
+    "position",
+    "channel"
+  ]
+}
