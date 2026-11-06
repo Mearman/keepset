@@ -1,3 +1,10 @@
+# [0.123.0](https://github.com/Mearman/keepset/compare/v0.122.1...v0.123.0) (2026-11-06)
+
+
+### Features
+
+* catalogue RWCP sound scene recordings ([08e5368](https://github.com/Mearman/keepset/commit/08e53680acfcc10d5285e5c7b9bf0f40b6023709))
+
 ## [0.122.1](https://github.com/Mearman/keepset/compare/v0.122.0...v0.122.1) (2026-11-06)
 
 
