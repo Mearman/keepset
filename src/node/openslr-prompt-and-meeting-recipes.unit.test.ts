@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { getDataset } from "../bundled";
-import { gzip, tar } from "../test-support/archives";
-import { fetchEntry, type FetchPort } from "./fetch-dataset";
+import { gzip, tar, zip } from "../test-support/archives";
+import { fetchEntry, roundTripEntry, type FetchPort } from "./fetch-dataset";
 
 const serving = (body: Uint8Array | string): FetchPort => async () => Promise.resolve(new Response(body));
 
@@ -76,6 +76,20 @@ describe("the openslr-slr115-transcripts recipe", () => {
   });
 });
 
+describe("the openslr-slr113-transcripts recipe", () => {
+  it("keeps the selected tier and round-trips nested TextGrid files", async () => {
+    const archive = gzip(tar([
+      { path: "labels.zip", bytes: zip([{ path: "speaker/recording.TextGrid", text: textGrid("utt.ortho.", [[FIRST_START, FIRST_END, "utterance"]]) }]) },
+    ]));
+    const dataset = getDataset("openslr-slr113-transcripts");
+    const fetch = serving(archive);
+    const { data } = await fetchEntry(dataset, { fetch });
+
+    expect(data).toMatchObject({ nodes: [{ id: "speaker/recording/1.1", text: "utterance", tier: "utt.ortho.", start: FIRST_START, end: FIRST_END }] });
+    expect(await roundTripEntry(dataset, { fetch })).toMatchObject({ holds: true });
+  });
+});
+
 describe("the openslr-slr119-transcripts recipe", () => {
   const base = "https://speech-lab-share-data.oss-cn-shanghai.aliyuncs.com/AliMeeting/openlr/";
   const nearFile = "R0003_M0046_N_SPK0093";
@@ -121,16 +135,17 @@ describe("the openslr-slr119-transcripts recipe", () => {
         {
           id: "Train_Ali_near",
           nodes: [
-            { id: `${nearFile}/1.1`, text: "first words", start: FIRST_START, end: FIRST_END },
-            { id: `${nearFile}/1.3`, text: "second words", start: SECOND_START, end: SECOND_END },
-            { id: "R0003_M0046_N_SPK0094/1.1", text: "another speaker", start: 1, end: 2 },
+            { id: `${nearFile}/1.1`, text: "first words", tier: "c1", start: FIRST_START, end: FIRST_END },
+            { id: `${nearFile}/1.3`, text: "second words", tier: "c1", start: SECOND_START, end: SECOND_END },
+            { id: "R0003_M0046_N_SPK0094/1.1", text: "another speaker", tier: "S1", start: 1, end: 2 },
           ],
         },
-        { id: "Eval_Ali", nodes: [{ id: "R8001_M8004_N_SPK8013/1.1", text: "evaluation words", start: EVAL_START, end: EVAL_END }] },
-        { id: "Test_Ali", nodes: [{ id: "R8010_M8030_N_SPK8100/1.1", text: "test words", start: TEST_START, end: 2 }] },
+        { id: "Eval_Ali", nodes: [{ id: "R8001_M8004_N_SPK8013/1.1", text: "evaluation words", tier: "c1", start: EVAL_START, end: EVAL_END }] },
+        { id: "Test_Ali", nodes: [{ id: "R8010_M8030_N_SPK8100/1.1", text: "test words", tier: "c1", start: TEST_START, end: 2 }] },
       ],
     });
     expect(warnings).toEqual([]);
+    expect(await roundTripEntry(getDataset("openslr-slr119-transcripts"), { fetch: routing(archives) })).toMatchObject({ holds: true });
   });
 
   it("leaves the far-field files out", async () => {

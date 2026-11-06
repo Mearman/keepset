@@ -10,6 +10,7 @@
       "meta",
       "nodes[].id",
       "nodes[].text",
+      "nodes[].tier",
       "nodes[].start",
       "nodes[].end"
     ],
@@ -94,6 +95,7 @@
     "speech-and-language-processing"
   ],
   "tags": [
-    "text"
+    "text",
+    "tier"
   ]
 }
