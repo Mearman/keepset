@@ -40,7 +40,7 @@
     "source": "grouped-member-path",
     "target": "audio/v1"
   },
-  "description": "The speaker-count mixtures as one example per source ID in each split, with original, shredded and shredded-reversed waveforms and their MFCC, LFCC, magnitude and mel-spectrogram feature paths. Waveform fields name WAV files; the twelve feature fields name NumPy arrays despite their .wav suffix. The speakerCount is decoded from the source filename, including zero. The test archive has 2,200 examples, 200 for each code from 0 to 10; this differs from the OpenSLR page, which states 8,810 test examples and one to ten speakers.",
+  "description": "The speaker-count mixtures as one example per source ID in each split, with original, shredded and shredded-reversed waveforms and their MFCC, LFCC, magnitude and mel-spectrogram feature paths. Waveform fields name WAV files; the twelve feature fields name NumPy arrays despite their .wav suffix. The speakerCount is decoded from the source filename, including zero. The archives contain 8,810 training examples and 2,200 test examples, with codes from 0 to 10; the OpenSLR page gives the split counts in the opposite order and says one to ten speakers.",
   "domain": "Speech",
   "expectedCounts": {
     "instances": 2
