@@ -108,6 +108,14 @@ describe("the openslr-slr155-transcripts recipe", () => {
   });
 });
 
+describe("the openslr-slr81-transcripts recipe", () => {
+  it("reads each clip's source label from its path", async () => {
+    const archive = gzip(tar([{ path: "samples/piano0.wav", text: "audio" }, { path: "samples/simons1.wav", text: "audio" }]));
+    const { data } = await fetchEntry(getDataset("openslr-slr81-transcripts"), { fetch: serving({ [download("81", "samples.tar.gz")]: archive }) });
+    expect(data).toMatchObject({ nodes: [{ id: "piano0", label: "piano", audio: "samples/piano0.wav" }, { id: "simons1", label: "simons", audio: "samples/simons1.wav" }] });
+  });
+});
+
 describe("the openslr-slr1-transcripts recipe", () => {
   it("reads the answer sequence from each selected path", async () => {
     const archive = gzip(tar([{ path: "waves_yesno/1_0_1_0_1_0_1_0.wav", text: "audio" }, { path: "waves_yesno/README", text: "notes" }]));
