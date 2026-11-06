@@ -1,3 +1,10 @@
+# [0.124.0](https://github.com/Mearman/keepset/compare/v0.123.0...v0.124.0) (2026-11-06)
+
+
+### Features
+
+* group mixed-speaker representations ([d354f5d](https://github.com/Mearman/keepset/commit/d354f5d19e2ebd41d82807eaae230343e1f89b79))
+
 # [0.123.0](https://github.com/Mearman/keepset/compare/v0.122.1...v0.123.0) (2026-11-06)
 
 
