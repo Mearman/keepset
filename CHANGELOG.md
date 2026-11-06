@@ -1,3 +1,10 @@
+## [0.122.1](https://github.com/Mearman/keepset/compare/v0.122.0...v0.122.1) (2026-11-06)
+
+
+### Bug Fixes
+
+* describe Nahuatl corpus access requirements ([c7afa9e](https://github.com/Mearman/keepset/commit/c7afa9e1ec75c9018195a5fc3a6c564d13b14d8c))
+
 # [0.122.0](https://github.com/Mearman/keepset/compare/v0.121.0...v0.122.0) (2026-11-06)
 
 
