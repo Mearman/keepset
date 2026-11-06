@@ -27,7 +27,9 @@
   },
   "description": "CN-Celeb1 recordings as their archive paths identify them, retaining the partition, speaker and source label, and the session and clip codes where present. The enrolment label names an enrolment recording rather than a genre. The entry describes the recordings and carries no audio.",
   "domain": "Speech",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "nodes": 144505
+  },
   "id": "openslr-slr82-cn1-audio",
   "licence": {
     "kind": "custom",
