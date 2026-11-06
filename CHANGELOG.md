@@ -1,3 +1,10 @@
+# [0.126.0](https://github.com/Mearman/keepset/compare/v0.125.1...v0.126.0) (2026-11-06)
+
+
+### Features
+
+* catalogue SMIIP-TV metadata ([8403dc2](https://github.com/Mearman/keepset/commit/8403dc2cd2f1833f9753d322257402bb7d3738e0))
+
 ## [0.125.1](https://github.com/Mearman/keepset/compare/v0.125.0...v0.125.1) (2026-11-06)
 
 
