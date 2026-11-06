@@ -261,7 +261,7 @@ async function runFiles(dataset: Dataset, recipe: FilesRecipe, options: FetchOpt
       }
       const source = entry.sources[sourceIndex];
       if (source === undefined) throw new RecipeError(entry.id, "recipe", `file ${file.path} names source ${String(sourceIndex)}, which the entry does not have`);
-      const resolved = await step(entry.id, "download", async () => resolveSource(source, { port, store, randomAccess: readsByRanges(file.archive), ...(signal === undefined ? {} : { signal }) }));
+      const resolved = await step(entry.id, "download", async () => resolveSource(source, { port, store, randomAccess: readsByRanges(file.archive), archiveKind: file.archive.kind, ...(signal === undefined ? {} : { signal }) }));
 
       return reading(resolved.source, async () => openParts(part + 1, [...opened, { source, stored: resolved.source, url: resolved.url }]));
     };
@@ -310,7 +310,7 @@ async function runToNative(dataset: Dataset, options: FetchOptions): Promise<Nat
   // A paged query is not a file anyone archives (a capture of the URL is not the data), so a paged source is read directly; every other source goes through the chain of pinned snapshot, closest capture and live URL.
   const resolved = await step(entry.id, "download", async () =>
     recipe.paging === undefined
-      ? resolveSource(source, { port: fetchPort, store, randomAccess: readsByRanges(archive), ...(signal === undefined ? {} : { signal }) })
+      ? resolveSource(source, { port: fetchPort, store, randomAccess: readsByRanges(archive), archiveKind: archive.kind, ...(signal === undefined ? {} : { signal }) })
       : { source: await store.hold(await downloadPaged(sourceUrl(source), recipe.paging, fetchPort, signal)), url: sourceUrl(source) },
   );
   const { source: stored, url: fetchedUrl } = resolved;

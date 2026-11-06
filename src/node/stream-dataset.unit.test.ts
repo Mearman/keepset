@@ -283,8 +283,8 @@ describe("a Socrata recipe that selects fields", () => {
 describe("a streamed table in a tar member", () => {
   it("streams rows and checks their round trip with member provenance", async () => {
     const archive = gzip(tar([{ path: "data/other.txt", text: "ignore" }, { path: "data/table.csv", text: header + rows.join("") }]));
-    const entry = { ...streamedEntry, recipe: { status: "fetchable", source: 0, archive: { kind: "tar.gz", member: { path: "data/table.csv" } }, parser: streamedEntry.recipe.parser, stream: true } };
-    const fetch: FetchPort = async () => Promise.resolve(new Response(archive));
+    const entry = { ...streamedEntry, sources: [{ url: "https://example.org/broker", status: "live", retrieved: "2026-10-01", access: "brokered" }], recipe: { status: "fetchable", source: 0, archive: { kind: "tar.gz", member: { path: "data/table.csv" } }, parser: streamedEntry.recipe.parser, stream: true } };
+    const fetch: FetchPort = async () => Promise.resolve(new Response(archive, { headers: { "content-encoding": "gzip" } }));
     const { events, record } = eventLog();
     const result = await streamEntry(datasetWith(entry), loggingSink(record), { fetch, now });
     expect(result.counts).toEqual(new Map([["nodes", rows.length]]));

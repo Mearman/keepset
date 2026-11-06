@@ -1,7 +1,7 @@
 /* The fetch-side resolution of a source: where its bytes come from when the live URL is not the only place they live. A pinned snapshot comes first, because the recipe was written against those bytes, then the closest capture the Wayback Machine's availability API names when the source has no pin or its pin is unusable, and the live URL last. When the live URL is what a fetch read, the provenance says so, and `captureRequestFor` names the Save Page Now request that would leave the next fetcher a snapshot; making that request is the entry point's to do after the fetch, so a capture never delays a result. Everything outside is a port, so the platform-neutral core runs this unchanged in Node and in a browser. */
 
 import { KeepsetError, UnreachableSourceError } from "./errors";
-import { rawSnapshotUrl, type Source } from "./entry";
+import { rawSnapshotUrl, type Archive, type Source } from "./entry";
 import type { Download, FetchPort, Provenance } from "./fetch";
 import { emptyBody, type StoredSource, type StorePort } from "./source-bytes";
 import { gunzipTransform } from "./gzip";
@@ -25,11 +25,12 @@ export interface Resolved {
   readonly tier: Tier;
 }
 
-/** What the chain needs from outside: the network port, the store that keeps what arrives, whether the reader reads the source by ranges, and an abort signal. */
+/** What the chain needs from outside: the network port, the store that keeps what arrives, whether the reader reads the source by ranges, its outer archive kind, and an abort signal. */
 export interface ResolveOptions {
   readonly port: FetchPort;
   readonly store: StorePort;
   readonly randomAccess: boolean;
+  readonly archiveKind: Archive["kind"];
   readonly signal?: AbortSignal;
 }
 
@@ -37,20 +38,15 @@ export interface ResolveOptions {
 const GZIP_FIRST_BYTE = 0x1f;
 const GZIP_SECOND_BYTE = 0x8b;
 
-/** The extensions of URLs that name a compressed file or archive, whose bytes are the file itself even when the server labels them `Content-Encoding: gzip`: a recipe unpacks them with its archive kind. */
-const COMPRESSED_FILE_EXTENSIONS: ReadonlySet<string> = new Set(["gz", "tgz", "bz2", "tbz2", "zip", "xz", "zst", "7z"]);
-
 /**
- * Whether a response's bytes are a gzip transport encoding of the page and not a compressed file: the server labels them `Content-Encoding: gzip`, they are gzip data, and the URL does not name a compressed file. A browser's platform `fetch` has undone the encoding by then, so its bytes are not gzip data and are left alone; the Node downloader hands the encoding over as served, and the Wayback Machine replays a capture gzip-encoded or plain as its cache stands, so the decoded page is the one form a pinned hash can name.
- * @param url - The URL requested.
+ * Identifies gzip transport encoding from its header and magic bytes, except when the recipe expects gzip itself. A gzip archive with an additional gzip transport layer is intrinsically ambiguous with a server labelling the archive itself as gzip, so it is kept as received.
  * @param response - The server's answer.
  * @param head - The body's first bytes, at least `GZIP_MAGIC_LENGTH` of them unless the body is shorter.
+ * @param archiveKind - The recipe's outer archive kind.
  * @returns True when the body is to be gunzipped.
  */
-function isTransportGzip(url: string, response: Response, head: Uint8Array): boolean {
-  const extension = new URL(url).pathname.split(".").at(-1)?.toLowerCase() ?? "";
-
-  return response.headers.get("content-encoding")?.toLowerCase() === "gzip" && head[0] === GZIP_FIRST_BYTE && head[1] === GZIP_SECOND_BYTE && !COMPRESSED_FILE_EXTENSIONS.has(extension);
+function isTransportGzip(response: Response, head: Uint8Array, archiveKind: Archive["kind"]): boolean {
+  return archiveKind !== "gzip" && archiveKind !== "tar.gz" && response.headers.get("content-encoding")?.toLowerCase() === "gzip" && head[0] === GZIP_FIRST_BYTE && head[1] === GZIP_SECOND_BYTE;
 }
 
 /** How many bytes of a body tell gzip data from anything else: its two magic bytes. */
@@ -117,7 +113,7 @@ const TRUNCATED_CAPTURE_WARNING = /\btruncated\b/i;
 /**
  * Requests one URL through the port and keeps what arrives in the store, with a gzip transport encoding undone on the way.
  * @param url - The URL.
- * @param options - The network port, the store, whether the reader reads by ranges, and the abort signal.
+ * @param options - The network port, the store, whether the reader reads by ranges, the outer archive kind, and the abort signal.
  * @returns The kept source.
  * @throws KeepsetError when the server does not answer successfully, or says the bytes are a truncated capture.
  * @throws ArchiveError when a gzip transport encoding is not valid gzip data, fails its checksum or its recorded length, or ends inside a member, as `GunzipStream` reports.
@@ -137,7 +133,7 @@ async function keep(url: string, options: Readonly<ResolveOptions>): Promise<Sto
     throw new KeepsetError(`${url} is a truncated capture`);
   }
   const { head, body } = await peek(response.body ?? emptyBody());
-  const transportGzip = isTransportGzip(url, response, head);
+  const transportGzip = isTransportGzip(response, head, options.archiveKind);
   const headers = new Headers(response.headers);
   if (transportGzip) {
     // The decoded body is not the bytes these described.
@@ -183,7 +179,7 @@ async function closestCapture(port: FetchPort, url: string, signal: AbortSignal 
 /**
  * Resolves a source's bytes through the chain: its pinned snapshot, the closest capture the Archive names, then (for a live source) the live URL.
  * @param source - The entry's source.
- * @param options - The network port, the store, whether the reader reads by ranges, and the abort signal.
+ * @param options - The network port, the store, whether the reader reads by ranges, the outer archive kind, and the abort signal.
  * @returns The kept source with the URL and tier it came from, which the caller closes once it is read.
  * @throws UnreachableSourceError when every tier that was tried failed without an HTTP answer, and KeepsetError otherwise, either naming every tier that was tried and why it gave nothing, when none gave the bytes; the abort's own reason when the signal aborts.
  */

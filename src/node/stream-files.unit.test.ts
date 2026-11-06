@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { createCatalogue, type Dataset } from "../catalogue";
 import { parseEntry } from "../entry";
 import { CatalogueSyntaxError, RecipeError } from "../errors";
-import { tar } from "../test-support/archives";
+import { gzip, tar } from "../test-support/archives";
 import { fixtureIndex, streamedCorpusEntry } from "../test-support/entries";
 import { fetchEntry, fileStore, roundTripEntry, streamEntry, type FetchPort, type NodeSink, type StreamedNode } from "./fetch-dataset";
 
@@ -94,6 +94,16 @@ describe("streamEntry on a files archive", () => {
       byteLength: bytes.length,
       members: chosen.map((file) => `texts.tar/${file.path}`),
     });
+  });
+
+  it("decodes gzip transport around a streamed zip archive", async () => {
+    const bytes = download(texts);
+    const { pages, sink } = collecting();
+    const fetch: FetchPort = async () => Promise.resolve(new Response(gzip(bytes), { headers: { "content-encoding": "gzip" } }));
+    const entry = { ...streamedCorpusEntry, sources: [{ url: "https://example.org/archive.zip", status: "live", retrieved: "2026-10-01", access: "brokered" }] };
+    const result = await streamEntry(datasetWith(entry), sink, { fetch, now });
+    expect(pages).toEqual(chosen.map((file) => [{ id: idOf(file.path), text: file.text }]));
+    expect(result.provenance.sha256).toBe(createHash("sha256").update(bytes).digest("hex"));
   });
 
   it("downloads the source once, whole, and never by ranges, even a zip the store would read by ranges", async () => {

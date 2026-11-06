@@ -127,6 +127,25 @@ describe("fetchEntry", () => {
     expect((await fetchEntry(datasetWith(entry), { ...storePort, fetch, now })).data).toMatchObject({ nodes: [{ id: "1" }, { id: "2" }, { id: "3" }] });
   });
 
+  it("preserves a labelled gzip archive from an extensionless broker", async () => {
+    const url = "https://example.org/broker";
+    const archive = gzip(tar([{ path: "karate.mtx", text: "%%MatrixMarket matrix coordinate pattern symmetric\n3 3 2\n2 1\n3 1\n" }]));
+    const entry = { ...liveEntry, sources: [{ url, status: "live", retrieved: "2026-10-01", access: "brokered" }], recipe: { status: "fetchable", source: 0, archive: { kind: "tar.gz", member: { path: "karate.mtx" } }, parser: { format: "matrix-market", encoding: "utf-8" } } };
+    const fetch: FetchPort = async () => Promise.resolve(new Response(archive, { headers: { "content-encoding": "gzip" } }));
+    const result = await fetchEntry(datasetWith(entry), { ...storePort, fetch, now });
+    expect(result.data).toMatchObject({ nodes: [{ id: "1" }, { id: "2" }, { id: "3" }] });
+    expect(single(result.provenance).sha256).toBe(createHash("sha256").update(archive).digest("hex"));
+  });
+
+  it("decodes gzip transport around a zip even when the URL ends in zip", async () => {
+    const archive = zip([{ path: "karate.mtx", text: "%%MatrixMarket matrix coordinate pattern symmetric\n3 3 2\n2 1\n3 1\n" }]);
+    const entry = { ...liveEntry, sources: [{ url: "https://example.org/data.zip", status: "live", retrieved: "2026-10-01", access: "brokered" }], recipe: { status: "fetchable", source: 0, archive: { kind: "zip", member: { path: "karate.mtx" } }, parser: { format: "matrix-market", encoding: "utf-8" } } };
+    const fetch: FetchPort = async () => Promise.resolve(new Response(gzip(archive), { headers: { "content-encoding": "gzip" } }));
+    const result = await fetchEntry(datasetWith(entry), { ...storePort, fetch, now });
+    expect(result.data).toMatchObject({ nodes: [{ id: "1" }, { id: "2" }, { id: "3" }] });
+    expect(single(result.provenance).sha256).toBe(createHash("sha256").update(archive).digest("hex"));
+  });
+
   it("passes the abort signal to the network port", async () => {
     const controller = new AbortController();
     let seen: AbortSignal | undefined;

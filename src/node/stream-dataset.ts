@@ -188,7 +188,7 @@ function openFiles(dataset: Dataset, source: Source, recipe: Extract<StreamedRec
 
   async function* pages(): AsyncGenerator<readonly NativeRow[], void, undefined> {
     // Every byte of the files a stream reads is read in order, so the source is downloaded whole in one request and hashed whole, never fetched range by range.
-    const resolved = await step(entry.id, "download", async () => resolveSource(source, { port, store, randomAccess: false, ...(signal === undefined ? {} : { signal }) }));
+    const resolved = await step(entry.id, "download", async () => resolveSource(source, { port, store, randomAccess: false, archiveKind: recipe.archive.kind, ...(signal === undefined ? {} : { signal }) }));
     const { source: stored, url: fetchedUrl } = resolved;
     try {
       for await (const file of inStep(entry.id, "extract", streamFiles(stored, recipe.archive, unpackOptionsOf(options)))) {
@@ -224,7 +224,7 @@ function openTarTable(dataset: Dataset, source: Source, recipe: Extract<Streamed
   let member: string | undefined;
 
   async function* pages(): AsyncGenerator<readonly NativeRow[], void, undefined> {
-    const resolved = await step(entry.id, "download", async () => resolveSource(source, { port, store, randomAccess: false, ...(signal === undefined ? {} : { signal }) }));
+    const resolved = await step(entry.id, "download", async () => resolveSource(source, { port, store, randomAccess: false, archiveKind: recipe.archive.kind, ...(signal === undefined ? {} : { signal }) }));
     const { source: stored, url: fetchedUrl } = resolved;
     const decoder = new PieceDecoder(recipe.parser);
     const reader = new TableReader(recipe.parser);
