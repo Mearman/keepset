@@ -5,14 +5,26 @@
   "crosswalk": {
     "keep": [
       "meta",
-      "nodes[].id"
+      "nodes[].id",
+      "nodes[].rir_id",
+      "nodes[].room_id",
+      "nodes[].room_info",
+      "nodes[].room_length",
+      "nodes[].room_width",
+      "nodes[].room_height",
+      "nodes[].receiver_x",
+      "nodes[].receiver_y",
+      "nodes[].receiver_z",
+      "nodes[].absorption_coefficient"
     ],
-    "source": "none",
+    "source": "simulated-rir",
     "target": "audio/v1"
   },
-  "description": "Simulated Room Impulse Response Database (annotations). No recipe reads it. The archives hold simulated impulse responses as audio files and no annotation table; each is identified by its file name only.",
+  "description": "The simulated room impulse responses as the source lists describe them, in separate 8 kHz and 16 kHz instances. Each response carries its source response and room identifiers, room dimensions, receiver coordinates and absorption coefficient, with the original room values retained as text. It carries none of the audio, which openslr-slr26 lists.",
   "domain": "Audio",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "instances": 2
+  },
   "id": "openslr-slr26-clips",
   "licence": {
     "kind": "custom",
@@ -26,24 +38,59 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "The archives hold simulated impulse responses as audio files and no annotation table; each is identified by its file name only.",
-    "status": "not-fetchable"
+    "files": [
+      {
+        "archive": {
+          "files": {
+            "pattern": "simulated_rirs_(?:8k|16k)/(?:smallroom|mediumroom|largeroom)/(?:rir_list|room_info)"
+          },
+          "kind": "zip"
+        },
+        "path": "8k",
+        "source": 0
+      },
+      {
+        "archive": {
+          "files": {
+            "pattern": "simulated_rirs_(?:8k|16k)/(?:smallroom|mediumroom|largeroom)/(?:rir_list|room_info)"
+          },
+          "kind": "zip"
+        },
+        "path": "16k",
+        "source": 1
+      }
+    ],
+    "parser": {
+      "encoding": "utf-8",
+      "format": "simulated-rir"
+    },
+    "status": "fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 3252,
-        "sha256": "c99ba35a429fd614c16fe82f1cc609538c00d9dcc8075dd26b1a04a73a678877",
-        "timestamp": "20260914194542",
-        "url": "https://web.archive.org/web/20260914194542/https://www.openslr.org/26/"
-      },
+      "retrieved": "2026-11-06",
       "status": "live",
-      "url": "https://www.openslr.org/26/"
+      "url": "https://www.openslr.org/resources/26/sim_rir_8k.zip"
+    },
+    {
+      "retrieved": "2026-11-06",
+      "status": "live",
+      "url": "https://www.openslr.org/resources/26/sim_rir_16k.zip"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "rir_id",
+    "room_id",
+    "room_info",
+    "room_length",
+    "room_width",
+    "room_height",
+    "receiver_x",
+    "receiver_y",
+    "receiver_z",
+    "absorption_coefficient"
+  ]
 }
