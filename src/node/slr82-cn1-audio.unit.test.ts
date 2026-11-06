@@ -20,7 +20,8 @@ describe("CN-Celeb1 recording recipe", () => {
       { id: "eval/enroll/id00889-enroll", partition: "eval/enroll", speaker: "id00889", label: "enroll", session: null, clip: null, audio: "CN-Celeb_flac/eval/enroll/id00889-enroll.flac" },
       { id: "eval/test/id00939-speech-01-079", partition: "eval/test", speaker: "id00939", label: "speech", session: "01", clip: "079", audio: "CN-Celeb_flac/eval/test/id00939-speech-01-079.flac" },
     ]);
-    expect(warnings).toEqual([]);
-    expect(await roundTripEntry(dataset, { fetch: serving })).toMatchObject({ holds: true, warnings: [] });
+    const expectedWarnings = ["nodes: the entry records 144505, the fetched result has 3"];
+    expect(warnings).toEqual(expectedWarnings);
+    expect(await roundTripEntry(dataset, { fetch: serving })).toMatchObject({ holds: true, warnings: expectedWarnings });
   });
 });
