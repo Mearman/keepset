@@ -1,3 +1,10 @@
+# [0.112.0](https://github.com/Mearman/keepset/compare/v0.111.0...v0.112.0) (2026-11-06)
+
+
+### Features
+
+* **catalogue:** resolve Nicolingua recording prompts ([2d03165](https://github.com/Mearman/keepset/commit/2d03165a7e71047e606c7d3d85364567f35bad7d))
+
 # [0.111.0](https://github.com/Mearman/keepset/compare/v0.110.0...v0.111.0) (2026-11-06)
 
 
