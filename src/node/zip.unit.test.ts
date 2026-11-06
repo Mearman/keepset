@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { ArchiveError } from "../errors";
 import { collect, zip, zip64 } from "../test-support/archives";
-import { listZip, readU64, readZipEntryChunks, unzipEntries, type ZipEntry } from "./zip";
+import { listZip, readU64, readZipEntry, readZipEntryChunks, unzipEntries, ZIP_SIGNATURES, type ZipEntry } from "./zip";
 
 const text = (bytes: Uint8Array): string => new TextDecoder().decode(bytes);
 const encode = (value: string): Uint8Array => new TextEncoder().encode(value);
@@ -110,7 +110,29 @@ describe("readZipEntryChunks", () => {
     const archive = zip([{ path: "books.tar", text: text(member) }]);
     const entry = await only(archive);
     await expect(collect(readZipEntryChunks(archive, { ...entry, originalSize: entry.originalSize + 1 }))).rejects.toThrow(/gives \d+ bytes, not the \d+ its directory entry states/);
+    await expect(readZipEntry(archive, { ...entry, originalSize: entry.originalSize - 1 })).rejects.toThrow(/gives \d+ bytes, not the \d+ its directory entry states/);
     const encrypted = zip64("books.tar", member.subarray(0, STORED_FEED), { method: 0, flags: 1 });
     await expect(collect(readZipEntryChunks(encrypted, await only(encrypted)))).rejects.toThrow(ArchiveError);
+  });
+
+  it("refuses a changed stored member and a wrong checksum for a deflated member, both whole and streamed", async () => {
+    const storedText = "a unique stored member";
+    const stored = zip64("book.txt", encode(storedText));
+    const position = Buffer.from(stored).indexOf(encode(storedText));
+    expect(position).toBeGreaterThanOrEqual(0);
+    stored[position] = (stored[position] ?? expect.unreachable("the member is present")) ^ 1;
+    const deflated = zip([{ path: "book.txt", text: text(member) }]);
+    const centralSignature = Buffer.alloc(Uint32Array.BYTES_PER_ELEMENT);
+    centralSignature.writeUInt32LE(ZIP_SIGNATURES.centralEntry);
+    const directory = Buffer.from(deflated).indexOf(centralSignature);
+    expect(directory).toBeGreaterThanOrEqual(0);
+    const crcOffset = 16;
+    const positionOfCrc = directory + crcOffset;
+    deflated[positionOfCrc] = (deflated[positionOfCrc] ?? expect.unreachable("the CRC is present")) ^ 1;
+    await Promise.all([stored, deflated].map(async (archive) => {
+      const entry = await only(archive);
+      await expect(readZipEntry(archive, entry)).rejects.toThrow(/CRC-32 checksum/);
+      await expect(collect(readZipEntryChunks(archive, entry, EVEN_FEED))).rejects.toThrow(/CRC-32 checksum/);
+    }));
   });
 });

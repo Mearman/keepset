@@ -1,4 +1,5 @@
 import { Inflate, inflateSync } from "fflate";
+import { updateCrc32 } from "../crc32";
 import { ArchiveError } from "../errors";
 import { inTurn, piecesOf } from "../in-turn";
 import { asSource, type SourceBytes } from "../source-bytes";
@@ -35,7 +36,7 @@ export const U64 = 8;
 const EOCD = { count: 10, directoryOffset: 16 } as const;
 const ZIP64_RECORD = { count: 32, directoryOffset: 48 } as const;
 const LOCATOR = { recordOffset: 8 } as const;
-const CENTRAL = { flags: 8, compression: 10, size: 20, originalSize: 24, nameLength: 28, extraLength: 30, commentLength: 32, offset: 42 } as const;
+const CENTRAL = { flags: 8, compression: 10, crc32: 16, size: 20, originalSize: 24, nameLength: 28, extraLength: 30, commentLength: 32, offset: 42 } as const;
 const LOCAL = { nameLength: 26, extraLength: 28 } as const;
 const EXTRA = { id: 0, size: 2, data: 4 } as const;
 
@@ -57,6 +58,7 @@ export interface ZipEntryInfo {
 export interface ZipEntry extends ZipEntryInfo {
   readonly flags: number;
   readonly offset: number;
+  readonly crc32: number;
 }
 
 /**
@@ -225,7 +227,7 @@ export async function listZip(input: Uint8Array | SourceBytes): Promise<ZipEntry
     }
     const name = nameOf(directory.subarray(at + CENTRAL_ENTRY_LENGTH, at + CENTRAL_ENTRY_LENGTH + nameLength), flags);
     const [original64, size64, offset64] = zip64Values(view, at + CENTRAL_ENTRY_LENGTH + nameLength, extraLength, [original32 === SATURATED_32, size32 === SATURATED_32, offset32 === SATURATED_32]);
-    entries.push({ name, flags, compression, size: size64 ?? size32, originalSize: original64 ?? original32, offset: offset64 ?? offset32 });
+    entries.push({ name, flags, compression, crc32: view.getUint32(at + CENTRAL.crc32, true), size: size64 ?? size32, originalSize: original64 ?? original32, offset: offset64 ?? offset32 });
     at += CENTRAL_ENTRY_LENGTH + nameLength + extraLength + commentLength;
   }
 
@@ -243,12 +245,17 @@ export async function readZipEntry(input: Uint8Array | SourceBytes, entry: ZipEn
   const source = asSource(input);
   const start = await dataStart(source, entry);
   const data = await readRange(source, start, entry.size, `the data of ${entry.name}`);
-  if (entry.compression === STORED) {
-    // A copy, so a member its reader keeps does not hold the larger range or file it was read from.
-    return data.slice();
-  }
+  // A stored member is copied so it does not retain a larger range or file.
+  const result = entry.compression === STORED ? data.slice() : inflateSync(data);
+  checkMember(entry, result.length, updateCrc32(0, result));
 
-  return inflateSync(data, { out: new Uint8Array(entry.originalSize) });
+  return result;
+}
+
+/** Checks a member's decoded size and CRC against the central directory. */
+function checkMember(entry: Readonly<ZipEntry>, length: number, crc32: number): void {
+  if (length !== entry.originalSize) throw new ArchiveError(`zip member ${entry.name} gives ${String(length)} bytes, not the ${String(entry.originalSize)} its directory entry states`);
+  if (crc32 !== entry.crc32) throw new ArchiveError(`zip member ${entry.name} fails its CRC-32 checksum`);
 }
 
 /**
@@ -293,11 +300,13 @@ export async function* readZipEntryChunks(input: Uint8Array | SourceBytes, entry
   }
   const produced: Uint8Array[] = [];
   let emitted = 0;
+  let crc32 = 0;
   const inflater =
     entry.compression === DEFLATE
       ? new Inflate((chunk) => {
           produced.push(chunk);
           emitted += chunk.length;
+          crc32 = updateCrc32(crc32, chunk);
         })
       : undefined;
   const feed = (piece: Uint8Array, final: boolean): void => {
@@ -312,6 +321,7 @@ export async function* readZipEntryChunks(input: Uint8Array | SourceBytes, entry
     read += bytes.length;
     if (inflater === undefined) {
       emitted += bytes.length;
+      crc32 = updateCrc32(crc32, bytes);
       yield bytes;
       continue;
     }
@@ -322,9 +332,7 @@ export async function* readZipEntryChunks(input: Uint8Array | SourceBytes, entry
     // An empty deflated entry is told so with an empty last piece, which the inflater refuses as a stream with no end.
     feed(new Uint8Array(0), true);
   }
-  if (emitted !== entry.originalSize) {
-    throw new ArchiveError(`zip member ${entry.name} gives ${String(emitted)} bytes, not the ${String(entry.originalSize)} its directory entry states`);
-  }
+  checkMember(entry, emitted, crc32);
 }
 
 /**
