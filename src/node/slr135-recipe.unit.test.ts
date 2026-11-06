@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { gzip, tar } from "../test-support/archives";
-import { fetchDataset, roundTripDataset, type FetchPort } from "./fetch-dataset";
+import { getDataset } from "../bundled";
+import { parseEntry } from "../entry";
+import { fetchDataset, fetchEntry, roundTripDataset, roundTripEntry, type FetchPort } from "./fetch-dataset";
 
 const FIELDS = ["lfcc", "mag_spectrogram", "mel_spectrogram", "mfcc", "shredded_lfcc", "shredded_mag_spectrogram", "shredded_mel_spectrogram", "shredded_mfcc", "shredded_reversed_lfcc", "shredded_reversed_mag_spectrogram", "shredded_reversed_mel_spectrogram", "shredded_reversed_mfcc", "shredded_reversed_waveform", "shredded_waveform", "waveform"];
 
@@ -16,6 +18,21 @@ const serving: FetchPort = async (url) => {
 };
 
 describe("SLR135 grouped representations", () => {
+  it("also groups paths when an entry reads a single archive", async () => {
+    const base = getDataset("openslr-slr135-transcripts");
+    const recipe = base.entry.recipe;
+    if (recipe.status !== "fetchable" || !("files" in recipe)) throw new Error("expected the collection recipe");
+    const file = recipe.files[0];
+    if (file === undefined) throw new Error("expected the test archive");
+    const entry = parseEntry({ ...base.entry, expectedCounts: { nodes: 2 }, recipe: { status: "fetchable", source: file.source, archive: file.archive, parser: recipe.parser } });
+    const dataset = { ...base, entry };
+    const { data, warnings } = await fetchEntry(dataset, { fetch: serving });
+    if (!("nodes" in data)) throw new Error("expected one document");
+    expect(data.nodes).toHaveLength(2);
+    expect(data.nodes[0]).toMatchObject({ id: "spks0_id1", speakerCount: 0, audio: "test/waveform/spks0_id1.wav" });
+    expect(warnings).toEqual([]);
+    expect(await roundTripEntry(dataset, { fetch: serving })).toMatchObject({ holds: true });
+  });
   it("rejects an unexpected file in a representation directory", async () => {
     const bad = gzip(tar([{ path: "test/new-format/unexpected.bin", text: "unexpected" }]));
     const fetch: FetchPort = async (url) => Promise.resolve(new Response(url.startsWith("https://archive.org/wayback/available") ? JSON.stringify({ archived_snapshots: {} }) : bad));
