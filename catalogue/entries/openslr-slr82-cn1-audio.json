@@ -1,0 +1,78 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "aliases": [
+    "slr82-cn1-audio"
+  ],
+  "category": "audio/v1",
+  "citations": [],
+  "crosswalk": {
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].partition",
+      "nodes[].speaker",
+      "nodes[].label",
+      "nodes[].session",
+      "nodes[].clip"
+    ],
+    "rules": [
+      {
+        "from": "nodes[].path",
+        "op": "move",
+        "to": "nodes[].audio"
+      }
+    ],
+    "source": "member-path",
+    "target": "audio/v1"
+  },
+  "description": "CN-Celeb1 recordings as their archive paths identify them, retaining the partition, speaker and source label, and the session and clip codes where present. The enrolment label names an enrolment recording rather than a genre. The entry describes the recordings and carries no audio.",
+  "domain": "Speech",
+  "expectedCounts": {},
+  "id": "openslr-slr82-cn1-audio",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 4.0 International",
+    "url": "https://www.openslr.org/82/"
+  },
+  "name": "CN-Celeb1 recording annotations",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "files": {
+        "extensions": [
+          ".flac"
+        ]
+      },
+      "kind": "tar.gz"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "member-path",
+      "idPattern": "CN-Celeb_flac/((?<partition>eval/(?:test|enroll)|data)/(?<speaker>id[0-9]+)[/-](?<label>[a-z_]+)(?:-(?<session>[0-9]+)-(?<clip>[0-9]+))?)\\.flac"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-06",
+      "status": "live",
+      "url": "https://openslr.elda.org/resources/82/cn-celeb_v2.tar.gz"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "partition",
+    "speaker",
+    "label",
+    "session",
+    "clip",
+    "audio"
+  ]
+}
