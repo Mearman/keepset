@@ -6,42 +6,81 @@
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "file": "crosswalks/speech-v1/id-text.json"
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].audio",
+      "nodes[].text",
+      "nodes[].language",
+      "nodes[].recording_session_id",
+      "nodes[].device_id",
+      "nodes[].utterance_id",
+      "nodes[].label",
+      "nodes[].speaker_age",
+      "nodes[].speaker_mothertongue"
+    ],
+    "rules": [
+      {
+        "from": "nodes[].speaker_id",
+        "op": "move",
+        "to": "nodes[].speaker"
+      },
+      {
+        "from": "nodes[].speaker_gender",
+        "op": "move",
+        "to": "nodes[].gender"
+      }
+    ],
+    "source": "nicolingua",
+    "target": "speech/v1"
   },
-  "description": "The transcripts of nicolingua-0004-west-african-va-asr-corpus. No recipe reads them. The corpus publishes no free-text transcripts: its metadata table gives each recording a prompt class label, which is spelled out only by joining it with separate vocabulary tables.",
+  "description": "The recordings of the Nicolingua West African virtual assistant corpus, with their language, speaker and metadata and the prompted words resolved from the accompanying vocabulary tables. The text is the prompt, not a checked transcription. It carries none of the audio, which openslr-slr106 lists.",
   "domain": "Speech",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "nodes": 10083
+  },
   "id": "openslr-slr106-transcripts",
   "licence": {
     "kind": "custom",
     "name": "Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)",
     "url": "https://www.openslr.org/106/"
   },
-  "name": "nicolingua-0004-west-african-va-asr-corpus transcripts",
+  "name": "Nicolingua West African virtual assistant prompts",
   "namespace": [
     "openslr",
     "speech"
   ],
   "properties": {},
   "recipe": {
-    "reason": "The corpus publishes no free-text transcripts: its metadata table gives each recording a prompt class label, which is spelled out only by joining it with separate vocabulary tables.",
-    "status": "not-fetchable"
+    "archive": {
+      "files": {
+        "pattern": "[^/]+/data/meta/(?:metadata|vocab_(?:contact_management|digits|names|wake_words|parents))\\.csv"
+      },
+      "kind": "tar.gz"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "nicolingua"
+    },
+    "source": 0,
+    "status": "fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 3744,
-        "sha256": "bcfd2f61d51db1cfe3784dfc2a79785b4fd8fe98cbe2d2af7f0a6ca4f41bf20a",
-        "timestamp": "20260516211153",
-        "url": "https://web.archive.org/web/20260516211153/https://www.openslr.org/106/"
-      },
+      "retrieved": "2026-11-06",
       "status": "live",
-      "url": "https://www.openslr.org/106/"
+      "url": "https://nicolingua.s3.eu-west-2.amazonaws.com/nicolingua-0004-west-african-va-asr-corpus.tgz"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "text",
+    "audio",
+    "language",
+    "speaker",
+    "gender",
+    "label"
+  ]
 }
