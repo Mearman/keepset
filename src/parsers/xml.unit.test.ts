@@ -15,6 +15,16 @@ function failure(text: string): NativeParseError {
 }
 
 describe("readXml", () => {
+  it("keeps text, child elements and CDATA in their original order", () => {
+    const root = readXml("<a>one<b/>two<![CDATA[three]]><c/>four</a>", "demo");
+    expect(root.content).toEqual(["one", root.children[0], "two", "three", root.children[1], "four"]);
+    expect(root.text).toBe("onetwothreefour");
+  });
+
+  it("keeps a greater-than sign inside an attribute", () => {
+    expect(readXml('<a note="before > after"/>', "demo").attributes).toEqual({ note: "before > after" });
+  });
+
   it("reads nested elements with attributes in either quote, text, and empty elements", () => {
     const root = readXml(`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<a x="1" y='two'>\n  <b>text</b><c/><d k = "v"></d>\n</a>\n`, "demo");
     expect(root.name).toBe("a");

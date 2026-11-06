@@ -209,6 +209,12 @@ export async function resolveSource(source: Source, options: Readonly<ResolveOpt
     }
   };
 
+  if (source.access === "brokered") {
+    const live = await tryUrl(source.url, "live source");
+    if (live !== undefined) return live;
+    const message = `${source.url} could not be read: ${failures.join("; ")}`;
+    throw outcome.answered ? new KeepsetError(message) : new UnreachableSourceError(message);
+  }
   if (source.snapshot !== undefined) {
     const pinned = await tryUrl(rawSnapshotUrl(source.snapshot.timestamp, source.url), "pinned snapshot");
     if (pinned !== undefined) {
@@ -247,7 +253,7 @@ export async function resolveSource(source: Source, options: Readonly<ResolveOpt
  * @returns The capture request's URL, or undefined when the bytes came from a snapshot or the source is dead.
  */
 export function captureRequestFor(download: Pick<Download, "source" | "fetchedUrl">): string | undefined {
-  return download.source.status === "live" && download.fetchedUrl === download.source.url ? `${SAVE_URL}${download.source.url}` : undefined;
+  return download.source.status === "live" && download.source.access !== "brokered" && download.fetchedUrl === download.source.url ? `${SAVE_URL}${download.source.url}` : undefined;
 }
 
 /**

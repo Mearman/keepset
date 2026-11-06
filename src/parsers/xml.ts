@@ -1,10 +1,11 @@
 import { NativeParseError } from "../errors";
 
-/** An element of an XML document: its name, attributes, child elements in order, and the text between its tags (with the text of its children left out). */
+/** An element of an XML document, with its direct text and children both separately and interleaved in document order. */
 export interface XmlElement {
   readonly name: string;
   readonly attributes: Readonly<Record<string, string>>;
   readonly children: readonly XmlElement[];
+  readonly content: readonly (string | XmlElement)[];
   readonly text: string;
 }
 
@@ -13,6 +14,7 @@ interface OpenElement {
   readonly name: string;
   readonly attributes: Readonly<Record<string, string>>;
   readonly children: XmlElement[];
+  readonly content: (string | XmlElement)[];
   text: string;
   readonly index: number;
 }
@@ -90,10 +92,11 @@ class XmlReader {
    * @param open - The element.
    */
   #finish(open: OpenElement): void {
-    const element: XmlElement = { name: open.name, attributes: open.attributes, children: open.children, text: open.text };
+    const element: XmlElement = { name: open.name, attributes: open.attributes, children: open.children, content: open.content, text: open.text };
     const parent = this.#stack[this.#stack.length - 1];
     if (parent !== undefined) {
       parent.children.push(element);
+      parent.content.push(element);
     } else if (this.#root === undefined) {
       this.#root = element;
     } else {
@@ -132,8 +135,19 @@ class XmlReader {
    */
   #tag(): number {
     const start = this.#position;
-    const stop = this.#text.indexOf(">", start);
-    if (stop === -1) {
+    let stop = start + 1;
+    let quote: string | undefined;
+    for (; stop < this.#text.length; stop += 1) {
+      const character = this.#text[stop];
+      if (quote === undefined && (character === '"' || character === "'")) {
+        quote = character;
+      } else if (quote === character) {
+        quote = undefined;
+      } else if (quote === undefined && character === ">") {
+        break;
+      }
+    }
+    if (stop === this.#text.length) {
       return this.#fail(start, "a tag is never closed");
     }
     const tag = this.#text.slice(start + 1, stop);
@@ -152,7 +166,7 @@ class XmlReader {
     if (!NAME.test(name)) {
       return this.#fail(start, `${JSON.stringify(name)} is not an element name`);
     }
-    const element: OpenElement = { name, attributes: this.#attributes(body.slice(name.length), start), children: [], text: "", index: start };
+    const element: OpenElement = { name, attributes: this.#attributes(body.slice(name.length), start), children: [], content: [], text: "", index: start };
     if (selfClosing) {
       this.#finish(element);
     } else {
@@ -194,6 +208,7 @@ class XmlReader {
         return this.#fail(this.#position, "a CDATA section outside the root element");
       }
       open.text += content;
+      open.content.push(content);
 
       return next;
     }
@@ -218,7 +233,11 @@ class XmlReader {
       const content = this.#text.slice(this.#position, end);
       const open = this.#stack[this.#stack.length - 1];
       if (open !== undefined) {
-        open.text += this.#unescape(content, this.#position);
+        const decoded = this.#unescape(content, this.#position);
+        open.text += decoded;
+        if (decoded !== "") {
+          open.content.push(decoded);
+        }
       } else if (content.trim() !== "") {
         this.#fail(this.#position, "text outside the root element");
       }

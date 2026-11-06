@@ -30,7 +30,7 @@ export interface FetchOptions {
 
 /** One download a result's bytes came from: the entry's source, the URL actually requested (the snapshot's for a dead source) and exactly which bytes arrived, hashed in the order they arrived. A source read by ranged requests rather than downloaded whole (a zip too large to download, whose directory and selected members are all a recipe reads) also records the ranges and the whole file's size, so its hash is told apart from a whole file's. */
 export interface Download {
-  readonly source: { readonly url: string; readonly status: Source["status"]; readonly snapshot?: Snapshot };
+  readonly source: { readonly url: string; readonly status: Source["status"]; readonly access?: Source["access"]; readonly snapshot?: Snapshot };
   readonly fetchedUrl: string;
   readonly sha256: string;
   readonly byteLength: number;

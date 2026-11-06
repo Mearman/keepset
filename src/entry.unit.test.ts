@@ -113,6 +113,14 @@ const SHA256_DIGITS = 64;
 describe("a source's snapshot", () => {
   const url = "http://example.edu/data/net.zip";
 
+  it("accepts a brokered live source without a snapshot and refuses a dead or snapshotted broker", () => {
+    const broker = { url, retrieved: "2026-04-19", status: "live", access: "brokered" };
+    const snapshot = { url: waybackUrl("20061110114126", url), timestamp: "20061110114126" };
+    expect(SourceSchema.safeParse(broker).success).toBe(true);
+    expect(SourceSchema.safeParse({ ...broker, status: "dead", snapshot }).success).toBe(false);
+    expect(SourceSchema.safeParse({ ...broker, snapshot }).success).toBe(false);
+  });
+
   it("is required when the source is dead", () => {
     expect(SourceSchema.safeParse({ url, retrieved: "2026-04-19", status: "dead" }).success).toBe(false);
   });

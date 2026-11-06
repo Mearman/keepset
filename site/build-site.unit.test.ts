@@ -23,7 +23,7 @@ const DatasetJsonLdSchema = z.looseObject({
   license: z.url().optional(),
   citation: z.array(z.string().min(1)).optional(),
   isPartOf: z.object({ "@type": z.literal("DataCatalog"), name: z.string(), url: z.url() }),
-  distribution: z.array(z.strictObject({ "@type": z.literal("DataDownload"), contentUrl: z.url(), archivedAt: z.url().optional(), sha256: z.string().regex(/^[0-9a-f]{64}$/).optional() })).min(1),
+  distribution: z.array(z.strictObject({ "@type": z.literal("DataDownload"), contentUrl: z.url().optional(), url: z.url().optional(), archivedAt: z.url().optional(), sha256: z.string().regex(/^[0-9a-f]{64}$/).optional() }).refine((download) => (download.contentUrl === undefined) !== (download.url === undefined))).min(1),
 });
 
 const directories: string[] = [];

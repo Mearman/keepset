@@ -1,9 +1,12 @@
 #!/usr/bin/env node
 import { createWriteStream, writeFileSync } from "node:fs";
 import { countTarget, getDataset, listDatasets, listNamespaces, validateDataset } from "keepset";
-import { captureRequestsFor, fetchDataset, requestCapture, roundTripDataset, streamDataset } from "keepset/node";
+import { captureRequestsFor, downloadRaw, fetchDataset, mozillaDataCollectiveFetch, requestCapture, roundTripDataset, streamDataset } from "keepset/node";
 import packageJson from "../package.json" with { type: "json" };
 import { run } from "./run";
+
+const key = process.env["MDC_API_KEY"];
+const options = key === undefined ? {} : { fetch: mozillaDataCollectiveFetch(key, downloadRaw) };
 
 // A reader that closes early (`| head`) makes the next write fail with EPIPE. The output was complete as far as the reader wanted it, so that error is dropped and the exit status the command settled on stands; any other stdout error is still thrown.
 process.stdout.on("error", (error: NodeJS.ErrnoException) => {
@@ -17,9 +20,9 @@ process.exitCode = await run(
     getDataset,
     listNamespaces,
     validateDataset,
-    fetchDataset: async (id) => fetchDataset(id),
-    streamDataset: async (id, sink) => streamDataset(id, sink),
-    roundTripDataset: async (id) => roundTripDataset(id),
+    fetchDataset: async (id) => fetchDataset(id, options),
+    streamDataset: async (id, sink) => streamDataset(id, sink, options),
+    roundTripDataset: async (id) => roundTripDataset(id, options),
     countTarget: (fetched) => countTarget(fetched.dataset.entry.category, fetched.data),
     captureRequests: captureRequestsFor,
     requestCapture: async (saveUrl) => requestCapture(saveUrl),

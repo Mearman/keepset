@@ -6,42 +6,66 @@
   "category": "speech/v1",
   "citations": [],
   "crosswalk": {
-    "file": "crosswalks/speech-v1/id-text.json"
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].text",
+      "nodes[].speaker",
+      "nodes[].speakerName",
+      "nodes[].audio",
+      "nodes[].start",
+      "nodes[].end",
+      "nodes[].annotations"
+    ],
+    "source": "transcriber",
+    "target": "speech/v1"
   },
-  "description": "The transcriptions of Tepetzintla Zacatlan Nahuatl. No recipe reads them. OpenSLR no longer links to the corpus files; the publisher moved the revised transcriptions to Mozilla Data Collective, whose download API requires an account and prior acceptance of the dataset terms.",
+  "description": "Zacatlán Tepetzintla Nahuatl transcriptions as time-aligned speaker segments. Simultaneous speakers share an interval; inline comments and events retain their positions in the text. The source requires a Mozilla Data Collective account, API key and acceptance of its terms.",
   "domain": "Speech",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "nodes": 9351
+  },
   "id": "openslr-slr148-transcripts",
   "licence": {
-    "kind": "custom",
-    "name": "Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)",
-    "url": "https://www.openslr.org/148/"
+    "id": "CC-BY-ND-4.0",
+    "kind": "spdx"
   },
-  "name": "Tepetzintla Zacatlan Nahuatl Endangered Language transcripts",
+  "name": "Zacatlán Tepetzintla Nahuatl transcriptions",
   "namespace": [
     "openslr",
     "speech"
   ],
   "properties": {},
   "recipe": {
-    "reason": "OpenSLR no longer links to the corpus files; the publisher moved the revised transcriptions to Mozilla Data Collective, whose download API requires an account and prior acceptance of the dataset terms.",
-    "status": "not-fetchable"
+    "archive": {
+      "files": {
+        "pattern": "Zacatlan-Tepetzintla-Nahuatl-Transcriptions/current/[^/]+\\.trs"
+      },
+      "kind": "tar.gz"
+    },
+    "parser": {
+      "encoding": "latin1",
+      "format": "transcriber",
+      "idPattern": "Zacatlan-Tepetzintla-Nahuatl-Transcriptions/current/([^/]+)\\.trs"
+    },
+    "source": 0,
+    "status": "fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 9422,
-        "sha256": "75fd566f15cc0df6a633e364042ea199192af6cde77ed4d957a2b6f214c2218f",
-        "timestamp": "20260516200203",
-        "url": "https://web.archive.org/web/20260516200203/https://www.openslr.org/148/"
-      },
+      "access": "brokered",
+      "retrieved": "2026-11-06",
       "status": "live",
-      "url": "https://www.openslr.org/148/"
+      "url": "https://mozilladatacollective.com/api/datasets/cmlct0jzu01s4nv07023lv3m3/download"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "transcript",
+    "speaker",
+    "timing",
+    "annotations"
+  ]
 }
