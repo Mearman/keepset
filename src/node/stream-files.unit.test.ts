@@ -181,7 +181,7 @@ describe("a streamed files recipe in the entry schema", () => {
   it("is a files archive with no paging, read by a parser that reads each file into one row", () => {
     expect(issues(streamedCorpusEntry)).toEqual([]);
     const textGrids = { ...streamedCorpusEntry, recipe: { ...streamedCorpusEntry.recipe, parser: { format: "textgrid", encoding: "utf-8", idPattern: "texts\\.tar/texts/([0-9]+)\\.txt" } } };
-    expect(issues(textGrids)).toEqual([expect.stringMatching(/^recipe\.stream: a streamed recipe reads .* or a files archive with no paging through a parser that reads each file into one row \(member-text\)/)]);
+    expect(issues(textGrids)).toEqual([expect.stringMatching(/^recipe\.stream: a streamed recipe reads .* or a files archive with no paging through a parser that reads each file into one row \(member-text, wav-metadata\)/)]);
     const paged = { ...streamedCorpusEntry, recipe: { ...streamedCorpusEntry.recipe, paging: { kind: "ckan-datastore", pageSize: 2 } } };
     expect(issues(paged)).toEqual([expect.stringMatching(/^recipe\.stream:/)]);
   });
