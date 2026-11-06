@@ -153,7 +153,7 @@ export const CollectionArchiveSchema = z
   })
   .strict();
 
-/** An archive whose dataset is spread over several of its files, which a parser of a multi-file format (`ogb`, `member-text`, `nxt-words`, `eaf`, `textgrid`, `option-list`, `chat`, `mtedx`, `stm`, `musan-annotations`, `nicolingua`, `nicolingua-radio`, `simulated-rir`, `similarity-ratings`, `air-mat`, `member-path`, `word-text`, `wav-metadata`) reads together into one document: every file the `files` selector matches, at least one, in path order, each gunzipped first when `inner` is `gzip` (an OGB dataset zip holds its tables as `.csv.gz` files). When `inner` is a file archive kind with its own `files` selector, each matched member is an archive in its turn and the files are those its selector matches, at least one in each, filed under the member's path and the file's path joined by `/` (a tarball that holds its annotations as one zip). With `concatenate`, the files are instead one file for a parser that reads one: their texts one after another in path order, a line break added after a file that does not end with one, so a transcript table split over a file for each chapter is read as the one table it is. */
+/** An archive whose dataset is spread over several of its files, which a parser of a multi-file format (`ogb`, `member-text`, `nxt-words`, `eaf`, `textgrid`, `option-list`, `chat`, `mtedx`, `stm`, `musan-annotations`, `nicolingua`, `nicolingua-radio`, `simulated-rir`, `similarity-ratings`, `air-mat`, `member-path`, `grouped-member-path`, `word-text`, `wav-metadata`) reads together into one document: every file the `files` selector matches, at least one, in path order, each gunzipped first when `inner` is `gzip` (an OGB dataset zip holds its tables as `.csv.gz` files). When `inner` is a file archive kind with its own `files` selector, each matched member is an archive in its turn and the files are those its selector matches, at least one in each, filed under the member's path and the file's path joined by `/` (a tarball that holds its annotations as one zip). With `concatenate`, the files are instead one file for a parser that reads one: their texts one after another in path order, a line break added after a file that does not end with one, so a transcript table split over a file for each chapter is read as the one table it is. */
 export const FilesArchiveSchema = z
   .object({
     kind: FileArchiveKindSchema,
@@ -381,6 +381,8 @@ export const ParserSchema = z.discriminatedUnion("format", [
   z.object({ format: z.literal("air-mat"), encoding: z.literal("utf-8"), fields: z.array(ColumnNameSchema).min(1) }).strict().refine((parser) => new Set([...parser.fields, "id"]).size === parser.fields.length + 1, { message: "fields must be unique and must not be id", path: ["fields"] }),
   /** Nicolingua recording metadata and its vocabulary tables, read together to resolve each recording's prompt. */
   z.object({ format: z.literal("nicolingua"), encoding: z.literal("utf-8") }).strict(),
+  /** Related archive paths: named id and field captures group each path, other named captures are shared metadata, and every id must have exactly the listed fields. */
+  z.object({ format: z.literal("grouped-member-path"), encoding: z.literal("utf-8"), idPattern: MemberPatternSchema, fields: z.array(ColumnNameSchema).min(1) }).strict().refine((parser) => new Set([...parser.fields, "id"]).size === parser.fields.length + 1, { message: "fields must be unique and must not be id", path: ["fields"] }),
   /** Archive member paths: the first capture is the identifier and named captures are extra columns. */
   z.object({ format: z.literal("member-path"), encoding: z.literal("utf-8"), idPattern: MemberPatternSchema }).strict(),
   /** Word documents, `.docx` packages (whose XML is UTF-8) and legacy `.doc` files (Word 97 to 2003, which state their own character encoding), one document per file: each file's main text as plain text, read from the files a `files` archive selects. */
@@ -534,7 +536,7 @@ export const PagingSchema = z.discriminatedUnion("kind", [
 export type Paging = z.infer<typeof PagingSchema>;
 
 /** The parser formats that read a dataset spread over several files of one archive, and so the only ones a `files` archive is given to. */
-export const MULTI_FILE_FORMATS: ReadonlySet<Parser["format"]> = new Set(["ogb", "member-text", "nxt-words", "eaf", "textgrid", "option-list", "chat", "mtedx", "stm", "musan-annotations", "nicolingua", "nicolingua-radio", "simulated-rir", "similarity-ratings", "air-mat", "member-path", "word-text", "wav-metadata"]);
+export const MULTI_FILE_FORMATS: ReadonlySet<Parser["format"]> = new Set(["ogb", "member-text", "nxt-words", "eaf", "textgrid", "option-list", "chat", "mtedx", "stm", "musan-annotations", "nicolingua", "nicolingua-radio", "simulated-rir", "similarity-ratings", "air-mat", "member-path", "grouped-member-path", "word-text", "wav-metadata"]);
 /** The multi-file formats that read each file of a files archive into one row of its own, so a streamed recipe can hand the files to them one at a time. */
 export type StreamedFileFormat = Extract<Parser["format"], "member-text" | "wav-metadata">;
 export const STREAMED_FILE_FORMATS: ReadonlySet<Parser["format"]> = new Set<StreamedFileFormat>(["member-text", "wav-metadata"]);

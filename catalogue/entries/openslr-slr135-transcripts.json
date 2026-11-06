@@ -3,45 +3,139 @@
   "aliases": [
     "slr135-transcripts"
   ],
-  "category": "speech/v1",
+  "category": "audio/v1",
   "citations": [],
   "crosswalk": {
-    "file": "crosswalks/speech-v1/id-text.json"
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].lfcc",
+      "nodes[].mag_spectrogram",
+      "nodes[].mel_spectrogram",
+      "nodes[].mfcc",
+      "nodes[].shredded_lfcc",
+      "nodes[].shredded_mag_spectrogram",
+      "nodes[].shredded_mel_spectrogram",
+      "nodes[].shredded_mfcc",
+      "nodes[].shredded_reversed_lfcc",
+      "nodes[].shredded_reversed_mag_spectrogram",
+      "nodes[].shredded_reversed_mel_spectrogram",
+      "nodes[].shredded_reversed_mfcc",
+      "nodes[].shredded_reversed_waveform",
+      "nodes[].shredded_waveform"
+    ],
+    "rules": [
+      {
+        "from": "nodes[].waveform",
+        "op": "move",
+        "to": "nodes[].audio"
+      },
+      {
+        "from": "nodes[].speakerCountCode",
+        "kind": "numberText",
+        "op": "format",
+        "to": "nodes[].speakerCount"
+      }
+    ],
+    "source": "grouped-member-path",
+    "target": "audio/v1"
   },
-  "description": "The transcripts of Libri-Mixed-Speakers. No recipe reads them. The corpus is for counting speakers in mixed audio and publishes no transcripts: its only label is the speaker count in each file name.",
+  "description": "The speaker-count mixtures as one example per source ID in each split, with original, shredded and shredded-reversed waveforms and their MFCC, LFCC, magnitude and mel-spectrogram feature paths. Waveform fields name WAV files; the twelve feature fields name NumPy arrays despite their .wav suffix. The speakerCount is decoded from the source filename, including zero. The test archive has 2,200 examples, 200 for each code from 0 to 10; this differs from the OpenSLR page, which states 8,810 test examples and one to ten speakers.",
   "domain": "Speech",
-  "expectedCounts": {},
+  "expectedCounts": {
+    "instances": 2
+  },
   "id": "openslr-slr135-transcripts",
   "licence": {
     "kind": "custom",
     "name": "Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0 US)",
     "url": "https://www.openslr.org/135/"
   },
-  "name": "Libri-Mixed-Speakers transcripts",
+  "name": "Libri-Mixed-Speakers examples",
   "namespace": [
     "openslr",
     "speech"
   ],
   "properties": {},
   "recipe": {
-    "reason": "The corpus is for counting speakers in mixed audio and publishes no transcripts: its only label is the speaker count in each file name.",
-    "status": "not-fetchable"
+    "files": [
+      {
+        "archive": {
+          "files": {
+            "pattern": "(?:test|train)/[^/]+/[^/]+"
+          },
+          "kind": "tar.gz"
+        },
+        "path": "test",
+        "source": 0
+      },
+      {
+        "archive": {
+          "files": {
+            "pattern": "(?:test|train)/[^/]+/[^/]+"
+          },
+          "kind": "tar.gz"
+        },
+        "path": "train",
+        "source": 1
+      }
+    ],
+    "parser": {
+      "encoding": "utf-8",
+      "fields": [
+        "lfcc",
+        "mag_spectrogram",
+        "mel_spectrogram",
+        "mfcc",
+        "shredded_lfcc",
+        "shredded_mag_spectrogram",
+        "shredded_mel_spectrogram",
+        "shredded_mfcc",
+        "shredded_reversed_lfcc",
+        "shredded_reversed_mag_spectrogram",
+        "shredded_reversed_mel_spectrogram",
+        "shredded_reversed_mfcc",
+        "shredded_reversed_waveform",
+        "shredded_waveform",
+        "waveform"
+      ],
+      "format": "grouped-member-path",
+      "idPattern": "(?:test|train)/(?<field>[a-z_]+)/(?<id>spks(?<speakerCountCode>[0-9]+)_id[0-9]+)\\.wav"
+    },
+    "status": "fetchable"
   },
   "sources": [
     {
-      "retrieved": "2026-10-30",
-      "snapshot": {
-        "byteLength": 4600,
-        "sha256": "c1da89d7ed9ef7d2efa92dcd3625974491a2464c16fd41734369b192273dc901",
-        "timestamp": "20260516203636",
-        "url": "https://web.archive.org/web/20260516203636/https://www.openslr.org/135/"
-      },
+      "retrieved": "2026-11-06",
       "status": "live",
-      "url": "https://www.openslr.org/135/"
+      "url": "https://openslr.elda.org/resources/135/test.tar.gz"
+    },
+    {
+      "retrieved": "2026-11-06",
+      "status": "live",
+      "url": "https://openslr.elda.org/resources/135/train.tar.gz"
     }
   ],
   "subjects": [
     "speech-and-language-processing"
   ],
-  "tags": []
+  "tags": [
+    "audio",
+    "speakerCount",
+    "lfcc",
+    "mag_spectrogram",
+    "mel_spectrogram",
+    "mfcc",
+    "shredded_lfcc",
+    "shredded_mag_spectrogram",
+    "shredded_mel_spectrogram",
+    "shredded_mfcc",
+    "shredded_reversed_lfcc",
+    "shredded_reversed_mag_spectrogram",
+    "shredded_reversed_mel_spectrogram",
+    "shredded_reversed_mfcc",
+    "shredded_reversed_waveform",
+    "shredded_waveform",
+    "waveform"
+  ]
 }
