@@ -11,7 +11,13 @@ const METADATA = "metadata.csv";
 const VOCABULARIES = ["vocab_contact_management.csv", "vocab_digits.csv", "vocab_names.csv", "vocab_wake_words.csv", "vocab_parents.csv"] as const;
 const LANGUAGES = new Map([["francais", "French"], ["maninka", "Maninka"], ["susu", "Susu"], ["pular", "Pular"], ["_language_independent", "Name"]]);
 
-/** Reads Nicolingua recording metadata and its vocabulary tables, resolving each recording's prompt by its utterance ID and language. The result preserves the metadata fields and adds the prompt as text and the filename as audio. */
+/**
+ * Reads Nicolingua recording metadata and vocabulary tables, resolving each recording's prompt by its utterance ID and language. The result preserves the metadata fields and adds the prompt as text and the filename as audio.
+ * @param files - The recording and vocabulary CSV files selected from the archive.
+ * @param parser - The recipe's encoding and format.
+ * @returns One row per recording, in metadata file order.
+ * @throws NativeParseError when a file is missing, repeated or invalid, a recording or vocabulary ID is duplicated, or a prompt cannot be resolved.
+ */
 export function parseNicolingua(files: readonly { readonly path: string; readonly bytes: Uint8Array }[], parser: Readonly<NicolinguaParser>): NativeTable {
   const byName = new Map<string, Uint8Array>();
   for (const file of files) {
