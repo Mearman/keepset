@@ -1,0 +1,56 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "aliases": [
+    "slr82-cn1-trials"
+  ],
+  "category": "graph/v1",
+  "citations": [],
+  "crosswalk": {
+    "file": "crosswalks/graph-v1/relations.json"
+  },
+  "description": "CN-Celeb1 speaker verification trials, each an edge from the enrolment ID to the test path with its binary target label as the edge type. The source's WAV paths and repeated trials are retained as written; the FLAC archive contains corresponding recordings.",
+  "domain": "Speech",
+  "expectedCounts": {},
+  "id": "openslr-slr82-cn1-trials",
+  "licence": {
+    "kind": "custom",
+    "name": "Attribution-ShareAlike 4.0 International",
+    "url": "https://www.openslr.org/82/"
+  },
+  "name": "CN-Celeb1 verification trials",
+  "namespace": [
+    "openslr",
+    "speech"
+  ],
+  "properties": {
+    "directed": true
+  },
+  "recipe": {
+    "archive": {
+      "kind": "tar.gz",
+      "member": {
+        "path": "CN-Celeb_flac/eval/lists/trials.lst"
+      }
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "speaker-trials"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-06",
+      "status": "live",
+      "url": "https://openslr.elda.org/resources/82/cn-celeb_v2.tar.gz"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "speaker-verification",
+    "trials"
+  ]
+}

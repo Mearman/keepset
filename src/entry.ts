@@ -285,6 +285,7 @@ export const ParserSchema = z.discriminatedUnion("format", [
     .strict()
     .refine((parser) => parser.sourceColumn !== parser.targetColumn, { message: "sourceColumn and targetColumn must differ", path: ["targetColumn"] })
     .refine((parser) => [parser.keep?.column, parser.multiplicityColumn, ...(parser.where ?? []).map((condition) => condition.column)].every((column) => column === undefined || (column !== parser.sourceColumn && column !== parser.targetColumn)), { message: "the keep, multiplicity and where columns must not be an endpoint column", path: ["keep"] }),
+  z.object({ format: z.literal("speaker-trials"), encoding: z.literal("utf-8") }).strict(),
   z.object({ format: z.literal("matrix-market"), encoding: EncodingSchema }).strict(),
   z
     .object({
