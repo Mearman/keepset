@@ -23,7 +23,6 @@ export type { Download, DownloadProvenance, FetchedDataset, FetchOptions, FetchP
 export type { ByteRange, DigestPort, KeepRequest, Received, SourceBytes, StoredSource, StorePort } from "../source-bytes";
 export type { ExtractedMembers, SevenZipPort } from "../archive";
 export { downloadUrl } from "../fetch";
-export { mozillaDataCollectiveFetch } from "../mozilla-data-collective";
 export { captureRequestsFor } from "../resolve";
 export { RecipeError, UnreachableSourceError } from "../errors";
 export { downloadRaw, type DownloadInit, STALL_MILLISECONDS } from "./download";
