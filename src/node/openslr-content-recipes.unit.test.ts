@@ -110,6 +110,7 @@ describe("the openslr-slr150-transcripts recipe", () => {
     expect(dataset.entry.sources[0]?.url).toBe(url);
     expect(dataset.entry.description).toContain("omits one malformed S21 record");
     const { data, provenance } = await fetchEntry(dataset, { fetch: serving({ [url]: archive }) });
+    if ("files" in provenance) throw new Error("expected single-source provenance");
     expect(provenance.fetchedUrl).toBe(url);
     const instances = instancesOf(data);
     const expectedPaths = [`${prefix}/dev/S02.json`, `${prefix}/eval/S21.json`, `${prefix}/train/S01.json`];
