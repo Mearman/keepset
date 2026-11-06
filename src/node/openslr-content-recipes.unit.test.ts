@@ -94,6 +94,31 @@ function instancesOf(data: unknown): { readonly id: unknown; readonly nodes: rea
   });
 }
 
+describe("the openslr-slr150-transcripts recipe", () => {
+  it("fetches the ELDA variant and selects its session transcripts", async () => {
+    const url = "https://openslr.elda.org/resources/150/CHiME6_transcriptions.tar.gz";
+    const prefix = "CHiME6_transcriptions/transcriptions/transcriptions";
+    const transcript = JSON.stringify([{ session_id: "S21", speaker: "P01", start_time: "00:00:01", end_time: "00:00:02", words: "hello" }]);
+    const archive = gzip(tar([
+      { path: `${prefix}/eval/S21.json`, text: transcript },
+      { path: `${prefix}/train/S01.json`, text: transcript },
+      { path: `${prefix}/dev/S02.json`, text: transcript },
+      { path: "transcriptions/transcriptions/eval/S22.json", text: "not JSON" },
+      { path: `${prefix}/eval/notes.json`, text: "not JSON" },
+    ]));
+    const dataset = getDataset("openslr-slr150-transcripts");
+    expect(dataset.entry.sources[0]?.url).toBe(url);
+    expect(dataset.entry.description).toContain("omits one malformed S21 record");
+    const { data, provenance } = await fetchEntry(dataset, { fetch: serving({ [url]: archive }) });
+    expect(provenance.fetchedUrl).toBe(url);
+    const instances = instancesOf(data);
+    const expectedPaths = [`${prefix}/dev/S02.json`, `${prefix}/eval/S21.json`, `${prefix}/train/S01.json`];
+    expect(instances).toHaveLength(expectedPaths.length);
+    expect(instances.map((instance) => instance.id)).toEqual(expect.arrayContaining(expectedPaths));
+    expect(instances.find((instance) => instance.id === `${prefix}/eval/S21.json`)?.nodes).toMatchObject([{ text: "hello", speaker: "P01", end_time: "00:00:02" }]);
+  });
+});
+
 describe("the openslr-slr155-transcripts recipe", () => {
   it("reads each CHAT file of the archive as the turns of a conversation, leaving the audio and other members", async () => {
     const cha = ["@UTF8", "@Begin", "@Participants:\tLENO LENORE Speaker, LYNN LYNNE Speaker", "*LENO:\t(..) so ⌈ you know ⌉ \u0015100_900\u0015", "\t\u0015900_1500\u0015", "*LYNN:\tyeah", "@End", ""].join("\n");
