@@ -22,7 +22,7 @@
     "source": "json-table",
     "target": "speech/v1"
   },
-  "description": "The transcripts of CHiME-6: each record is an utterance with its session, speaker and start time, words and end time. It carries none of the audio, which the download list of openslr-slr150 gives.",
+  "description": "The transcripts of CHiME-6: each record is an utterance with its session, speaker and start time, words and end time. This entry uses the ELDA mirror variant, which omits one malformed S21 record present in the primary archive and adds a CHiME6_transcriptions/ path prefix. The primary archive at https://www.openslr.org/resources/150/CHiME6_transcriptions.tar.gz contains trailing non-padding bytes after its gzip stream. It carries none of the audio, which the download list of openslr-slr150 gives.",
   "domain": "Speech",
   "expectedCounts": {
     "instances": 20
@@ -43,7 +43,7 @@
     "archive": {
       "kind": "tar.gz",
       "members": {
-        "pattern": "transcriptions/transcriptions/(?:train|dev|eval)/S\\d+\\.json"
+        "pattern": "CHiME6_transcriptions/transcriptions/transcriptions/(?:train|dev|eval)/S\\d+\\.json"
       }
     },
     "parser": {
@@ -66,9 +66,9 @@
   },
   "sources": [
     {
-      "retrieved": "2026-10-31",
+      "retrieved": "2026-11-06",
       "status": "live",
-      "url": "https://www.openslr.org/resources/150/CHiME6_transcriptions.tar.gz"
+      "url": "https://openslr.elda.org/resources/150/CHiME6_transcriptions.tar.gz"
     }
   ],
   "subjects": [
