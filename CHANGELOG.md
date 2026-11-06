@@ -1,3 +1,10 @@
+# [0.119.0](https://github.com/Mearman/keepset/compare/v0.118.0...v0.119.0) (2026-11-06)
+
+
+### Features
+
+* stream HI-MIA recording mappings ([72693a3](https://github.com/Mearman/keepset/commit/72693a38d25c072fa5e687c16ae48cb2509c584a))
+
 # [0.118.0](https://github.com/Mearman/keepset/compare/v0.117.0...v0.118.0) (2026-11-06)
 
 
