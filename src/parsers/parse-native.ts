@@ -3,6 +3,7 @@ import { parseWavMetadata } from "./wav-metadata";
 import type { Parser } from "../entry";
 import { NativeParseError } from "../errors";
 import { parseEdgeList } from "./edge-list";
+import { parseSpeakerTrials } from "./speaker-trials";
 import { parseGdContest } from "./gd-contest";
 import { parseGml } from "./gml";
 import { parseHgb } from "./hgb";
@@ -187,6 +188,9 @@ export function parseNative(bytes: Uint8Array, parser: Parser): NativeDocument {
   }
   if (parser.format === "edge-list") {
     return parseEdgeList(decodePieces(bytes, parser), parser);
+  }
+  if (parser.format === "speaker-trials") {
+    return parseSpeakerTrials(decodePieces(bytes, parser));
   }
   const text = decode(bytes, parser);
   if (parser.format === "geojson") {
