@@ -71,6 +71,8 @@ A category names a normalisation target: the shape every entry in that category 
 
 The Nicolingua speech parser reads the corpus's recording metadata and vocabulary tables together, joining each recording's prompt ID and language to its prompt text. Its `text` is the prompt supplied to the speaker, rather than a verified transcription; the recording's source metadata is retained alongside it.
 
+The Nicolingua radio parser reads the model's train and validation manifests alongside the separate tagged validation table. It records every clip, the model split and sample count for the training-audio collection, and the source's tags for the separate tagged-validation collection.
+
 ## Licensing
 
 The catalogue's metadata and recipes are repository content under the MIT licence. The datasets they fetch belong to their sources: each entry records its licence as the source states it (an SPDX identifier, a named licence with a URL, or unrecorded where the source states none), and fetching a dataset is subject to that licence, not this repository's. A dead source is fetched from its pinned Wayback snapshot, which serves the bytes as captured.
