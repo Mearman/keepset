@@ -15,7 +15,7 @@ const serving: FetchPort = async (url) => {
   const index = urls.indexOf(url);
   if (index < 0) throw new Error(`unexpected URL ${url}`);
 
-  return Promise.resolve(new Response(parts[index]));
+  return Promise.resolve(new Response(parts[index], { headers: { "content-encoding": "gzip" } }));
 };
 
 describe("a collection file split across downloads", () => {

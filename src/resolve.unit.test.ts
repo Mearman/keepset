@@ -32,7 +32,7 @@ function served(table: Readonly<Record<string, string | Response>>): { readonly 
 }
 
 /** Where the chain keeps what a tier gives: in memory, hashed whole, as a reader that reads from the first byte to the last asks. */
-const keeping = { store: memoryStore(async (bytes) => Promise.resolve(createHash("sha256").update(bytes).digest("hex"))), randomAccess: false } as const;
+const keeping = { store: memoryStore(async (bytes) => Promise.resolve(createHash("sha256").update(bytes).digest("hex"))), randomAccess: false, archiveKind: "none" } as const;
 
 const closestAnswer = (timestamp: string): Response => Response.json({ archived_snapshots: { closest: { available: true, status: "200", timestamp } } });
 
@@ -145,7 +145,7 @@ describe("resolveSource's transport encodings", () => {
     const file = "https://x.example/data.csv.gz";
     const bytes = await gzipped(page);
     const port: FetchPort = async () => Promise.resolve(new Response(bytes, { status: OK, headers: { "content-encoding": "gzip" } }));
-    expect(await (await resolveSource({ url: file, retrieved: "2026-10-01", status: "live" }, { port, ...keeping })).source.bytes()).toEqual(bytes);
+    expect(await (await resolveSource({ url: file, retrieved: "2026-10-01", status: "live" }, { port, ...keeping, archiveKind: "gzip" })).source.bytes()).toEqual(bytes);
   });
 
   it("leaves bytes that are not gzip data alone when the label says gzip, as after a browser's platform fetch has decoded them", async () => {
