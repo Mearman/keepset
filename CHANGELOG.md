@@ -1,3 +1,10 @@
+# [0.125.0](https://github.com/Mearman/keepset/compare/v0.124.0...v0.125.0) (2026-11-06)
+
+
+### Features
+
+* read archives split across downloads ([e573ee2](https://github.com/Mearman/keepset/commit/e573ee27e6fa251a698f74b81a87211fc412c9ec))
+
 # [0.124.0](https://github.com/Mearman/keepset/compare/v0.123.0...v0.124.0) (2026-11-06)
 
 
