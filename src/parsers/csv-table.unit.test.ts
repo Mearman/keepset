@@ -274,6 +274,17 @@ describe("the csv-table parser", () => {
     }
   });
 
+  it("splits on comma-space without splitting commas inside fields, even across chunks", () => {
+    const text = "id, environment, state\na1, 室内(宿舍,卧室), 正常\na2, 公园, 安静\n";
+    const parser = table({ delimiter: "comma-space", idColumn: "id", unquoted: true });
+    const expected = [{ id: "a1", environment: "室内(宿舍,卧室)", state: "正常" }, { id: "a2", environment: "公园", state: "安静" }];
+    expect(parseCsvTable(text, parser).nodes).toEqual(expected);
+    for (let size = 1; size <= text.length; size += 1) {
+      const pieces = Array.from({ length: Math.ceil(text.length / size) }, (_, index) => text.slice(index * size, (index + 1) * size));
+      expect(parseCsvTable(pieces, parser).nodes).toEqual(expected);
+    }
+  });
+
   it("reports the same error on the same line however the text is cut", () => {
     const text = 'a,b\n1,2\n"x\ny",3\n4\n';
     const wholeError = parseError(() => parseCsvTable(text, table()));
