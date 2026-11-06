@@ -1,3 +1,10 @@
+# [0.116.0](https://github.com/Mearman/keepset/compare/v0.115.0...v0.116.0) (2026-11-06)
+
+
+### Features
+
+* catalogue labelled audio samples ([3b089b4](https://github.com/Mearman/keepset/commit/3b089b4abfda7d8277393605cde5c8f4590c0055))
+
 # [0.115.0](https://github.com/Mearman/keepset/compare/v0.114.0...v0.115.0) (2026-11-06)
 
 
