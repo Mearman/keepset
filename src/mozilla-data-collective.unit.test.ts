@@ -13,7 +13,12 @@ describe("Mozilla Data Collective fetch", () => {
 
       return Promise.resolve(requests.length === 1 ? Response.json({ downloadUrl: signed }) : new Response("file"));
     };
-    const fallback = async () => Promise.resolve(new Response("other"));
+    const fallback = async (url: string, init: { readonly range?: { readonly offset: number; readonly length: number } }): Promise<Response> => {
+      if (url !== signed) return Promise.resolve(new Response("other"));
+      requests.push({ url, method: undefined, auth: null, range: init.range === undefined ? null : `bytes=${String(init.range.offset)}-${String(init.range.offset + init.range.length - 1)}` });
+
+      return await Promise.resolve(new Response("file"));
+    };
     const port = mozillaDataCollectiveFetch("key", fallback, request);
     expect(await (await port(endpoint, {range: {offset: 3, length: 4}})).text()).toBe("file");
     expect(requests).toEqual([
@@ -27,13 +32,17 @@ describe("Mozilla Data Collective fetch", () => {
     const refused: typeof fetch = async () => Promise.resolve(new Response(null, {status: 429}));
     await expect(mozillaDataCollectiveFetch("key", refused, refused)(endpoint, {})).rejects.toThrow("HTTP 429");
     let calls = 0;
-    const broken: typeof fetch = async () => {
+    const broker: typeof fetch = async () => {
       calls += 1;
-      if (calls === 1) return Promise.resolve(Response.json({downloadUrl: signed}));
 
-      return Promise.reject(new Error(signed));
+      return Promise.resolve(Response.json({downloadUrl: signed}));
     };
-    await expect(mozillaDataCollectiveFetch("key", broken, broken)(endpoint, {})).rejects.toThrow("file download failed");
+    const broken = async () => Promise.reject(new Error(signed));
+    await expect(mozillaDataCollectiveFetch("key", broken, broker)(endpoint, {})).rejects.toThrow("file download failed");
+    expect(calls).toBe(1);
+    const brokenStream = async () => await Promise.resolve(new Response(new ReadableStream<Uint8Array>({ pull(controller) { controller.error(new Error(signed)); } })));
+    const response = await mozillaDataCollectiveFetch("key", brokenStream, broker)(endpoint, {});
+    await expect(response.text()).rejects.toThrow("file download failed");
   });
 
   it("does not expose a malformed broker response in its error", async () => {
