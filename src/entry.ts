@@ -378,7 +378,7 @@ export const ParserSchema = z.discriminatedUnion("format", [
   z.object({ format: z.literal("simulated-rir"), encoding: z.literal("utf-8") }).strict(),
   /** Nicolingua recording metadata and its vocabulary tables, read together to resolve each recording's prompt. */
   z.object({ format: z.literal("nicolingua"), encoding: z.literal("utf-8") }).strict(),
-  /** Archive member paths, with one captured recording identifier. */
+  /** Archive member paths: the first capture is the identifier and named captures are extra columns. */
   z.object({ format: z.literal("member-path"), encoding: z.literal("utf-8"), idPattern: MemberPatternSchema }).strict(),
   /** Word documents, `.docx` packages (whose XML is UTF-8) and legacy `.doc` files (Word 97 to 2003, which state their own character encoding), one document per file: each file's main text as plain text, read from the files a `files` archive selects. */
   z.object({ format: z.literal("word-text"), encoding: z.literal("utf-8"), idPattern: MemberPatternSchema }).strict(),
