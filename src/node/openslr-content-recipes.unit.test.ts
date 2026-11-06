@@ -108,6 +108,14 @@ describe("the openslr-slr155-transcripts recipe", () => {
   });
 });
 
+describe("the openslr-slr1-transcripts recipe", () => {
+  it("reads the answer sequence from each selected path", async () => {
+    const archive = gzip(tar([{ path: "waves_yesno/1_0_1_0_1_0_1_0.wav", text: "audio" }, { path: "waves_yesno/README", text: "notes" }]));
+    const { data } = await fetchEntry(getDataset("openslr-slr1-transcripts"), { fetch: serving({ [download("1", "waves_yesno.tar.gz")]: archive }) });
+    expect(data).toMatchObject({ nodes: [{ id: "1_0_1_0_1_0_1_0", sequence: "1_0_1_0_1_0_1_0", audio: "waves_yesno/1_0_1_0_1_0_1_0.wav" }] });
+  });
+});
+
 describe("the openslr-slr26-clips recipe", () => {
   it("joins the room and response lists from both sample rates", async () => {
     const source = (rate: string): Uint8Array => zip([

@@ -7,7 +7,7 @@ import { zipSync } from "fflate";
 import { describe, expect, it } from "vitest";
 import { ArchiveError } from "./errors";
 import { bzip2, collect, gzip, tar, zip } from "./test-support/archives";
-import { concatenateFiles, unpack, unpackFiles, unpackMembers } from "./archive";
+import { concatenateFiles, listFilePaths, unpack, unpackFiles, unpackMembers } from "./archive";
 import { BLOCK, scanTar } from "./node/tar";
 
 const text = (bytes: Uint8Array): string => new TextDecoder().decode(bytes);
@@ -477,5 +477,29 @@ describe("concatenateFiles", () => {
 
   it("is empty for no files", () => {
     expect(concatenateFiles([])).toEqual(new Uint8Array());
+  });
+});
+
+
+describe("listFilePaths", () => {
+  it("selects tar and zip paths in order without reading member content", async () => {
+    const items = [{ path: "data/z.wav", text: "audio" }, { path: "data/a.wav", text: "audio" }, { path: "readme", text: "readme" }];
+    const files = { extensions: [".wav"] };
+    expect(await listFilePaths(gzip(tar(items)), { kind: "tar.gz", files })).toEqual(["data/a.wav", "data/z.wav"]);
+    expect(await listFilePaths(zip(items), { kind: "zip", files })).toEqual(["data/a.wav", "data/z.wav"]);
+    await expect(listFilePaths(zip(items), { kind: "zip", files: { extensions: [".txt"] } })).rejects.toThrow(ArchiveError);
+  });
+  it("uses a 7z listing without extracting the audio", async () => {
+    const sevenZip = { list: async () => Promise.resolve(["b.wav", "a.wav"]), extract: async () => Promise.reject(new Error("must not extract")) };
+    expect(await listFilePaths(new Uint8Array(), { kind: "7z", files: { extensions: [".wav"] } }, { sevenZip })).toEqual(["a.wav", "b.wav"]);
+  });
+  it("names paths inside nested archives", async () => {
+    const inner = zip([{ path: "audio/a.wav", text: "audio" }]);
+    const outer = zipSync({ "inner.zip": inner });
+    expect(await listFilePaths(outer, { kind: "zip", files: { extensions: [".zip"] }, inner: { kind: "zip", files: { extensions: [".wav"] } } })).toEqual(["inner.zip/audio/a.wav"]);
+  });
+  it("rejects a truncated compressed tar", async () => {
+    const bytes = gzip(tar([{ path: "a.wav", text: "audio" }]));
+    await expect(listFilePaths(bytes.subarray(0, bytes.length - 1), { kind: "tar.gz", files: { extensions: [".wav"] } })).rejects.toThrow(ArchiveError);
   });
 });

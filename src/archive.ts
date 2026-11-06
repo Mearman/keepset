@@ -445,6 +445,48 @@ export function sheetToCsv(bytes: Uint8Array, archive: Readonly<SheetArchive>): 
 }
 
 /**
+ * Lists the selected files without decoding their contents. For an inner layout, read outer members one at a time, validating a compressed file or listing each inner archive.
+ * @param input - The downloaded archive.
+ * @param archive - The file selector and optional inner layout.
+ * @param options - Platform archive readers and abort signal.
+ * @returns Selected member paths in path order.
+ * @throws ArchiveError when the archive or selector is invalid.
+ */
+export async function listFilePaths(input: Uint8Array | Readonly<SourceBytes>, archive: FilesArchive, options?: Readonly<UnpackOptions>): Promise<string[]> {
+  const { inner } = archive;
+  if (inner !== undefined) {
+    const paths: string[] = [];
+    for await (const file of unpackMembers(input, { kind: archive.kind, members: archive.files }, options)) {
+      try {
+        if (inner.kind === "gzip") {
+          gunzip(file.bytes);
+          paths.push(file.path);
+        } else {
+          const inside = await listFilePaths(file.bytes, { kind: inner.kind, files: inner.files }, options);
+          paths.push(...inside.map((path) => `${file.path}/${path}`));
+        }
+      } catch (error) {
+        throw new ArchiveError(`member ${file.path}: ${error instanceof Error ? error.message : String(error)}`, { cause: error });
+      }
+    }
+
+    return paths;
+  }
+  const source = asSource(input);
+  if (archive.kind === "zip") {
+    return pickAll((await zipEntries(source)).map((entry) => entry.name), archive.files);
+  }
+  if (archive.kind === "7z") {
+    if (options?.sevenZip === undefined) throw new ArchiveError("a 7z archive needs a platform 7z reader");
+
+    return pickAll(await options.sevenZip.list(source, options.signal), archive.files);
+  }
+  const { paths } = await scanTar(tarChunks(source.chunks(), archive.kind, options), () => false);
+
+  return pickAll(paths, archive.files);
+}
+
+/**
  * Unpacks a source into every file a multi-file format's selector matches, gunzipping each when the layout's `inner` is `gzip` and, when it is an archive kind with its own selector, unpacking each matched member into the files that selector matches. The paths stay the archive's own, so a gunzipped `edge.csv.gz` keeps its name, and a file of an inner archive is filed under its member's path and its own joined by `/`.
  * @param input - The downloaded bytes, held in memory or kept anywhere.
  * @param archive - The recipe's archive layout, which selects files with `files`.
