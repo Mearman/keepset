@@ -1,0 +1,73 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "category": "audio/v1",
+  "citations": [],
+  "crosswalk": {
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].microphone",
+      "nodes[].angleCode",
+      "nodes[].ear"
+    ],
+    "rules": [
+      {
+        "from": "nodes[].path",
+        "op": "move",
+        "to": "nodes[].audio"
+      }
+    ],
+    "source": "member-path",
+    "target": "audio/v1"
+  },
+  "description": "The robot head impulse responses by microphone type, source angle and ear. The angle and ear retain the publisher filename codes; the data is little-endian 32-bit float sampled at 48 kHz.",
+  "domain": "Audio",
+  "expectedCounts": {
+    "nodes": 76
+  },
+  "id": "openslr-slr13-robot-hrtf",
+  "licence": {
+    "kind": "custom",
+    "name": "Research and development use only",
+    "url": "https://www.openslr.org/13/"
+  },
+  "name": "RWCP robot head transfer functions",
+  "namespace": [
+    "openslr",
+    "audio"
+  ],
+  "properties": {
+    "sampleRate": 48000
+  },
+  "recipe": {
+    "archive": {
+      "files": {
+        "pattern": "RWCP/robot/data/((?<microphone>dir|non)/(?<angleCode>[mp0-9]+)(?<ear>[lr])\\.dat)"
+      },
+      "kind": "tar.gz"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "member-path",
+      "idPattern": "RWCP/robot/data/((?<microphone>dir|non)/(?<angleCode>[mp0-9]+)(?<ear>[lr])\\.dat)"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-06",
+      "status": "live",
+      "url": "https://openslr.elda.org/resources/13/RWCP.tar.gz"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "audio",
+    "microphone",
+    "angleCode",
+    "ear"
+  ]
+}

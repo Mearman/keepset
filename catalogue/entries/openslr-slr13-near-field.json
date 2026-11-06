@@ -1,0 +1,75 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "category": "audio/v1",
+  "citations": [],
+  "crosswalk": {
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].array",
+      "nodes[].position",
+      "nodes[].channel",
+      "nodes[].directionCode",
+      "nodes[].rangeCode"
+    ],
+    "rules": [
+      {
+        "from": "nodes[].path",
+        "op": "move",
+        "to": "nodes[].audio"
+      }
+    ],
+    "source": "member-path",
+    "target": "audio/v1"
+  },
+  "description": "The near-field impulse responses by array placement, source position, direction code, range code and microphone channel. The source uses range code 999 for the rsp2 arrangement; codes are retained as written rather than assumed to be numeric measurements. The files are headerless little-endian floating-point data.",
+  "domain": "Audio",
+  "expectedCounts": {
+    "nodes": 3488
+  },
+  "id": "openslr-slr13-near-field",
+  "licence": {
+    "kind": "custom",
+    "name": "Research and development use only",
+    "url": "https://www.openslr.org/13/"
+  },
+  "name": "RWCP near-field impulse responses",
+  "namespace": [
+    "openslr",
+    "audio"
+  ],
+  "properties": {},
+  "recipe": {
+    "archive": {
+      "files": {
+        "pattern": "RWCP/near/data/((?<array>rsp[12])/(?<position>D(?<directionCode>[0-9]+)R(?<rangeCode>[0-9]+))\\.(?<channel>[1-8]))"
+      },
+      "kind": "tar.gz"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "member-path",
+      "idPattern": "RWCP/near/data/((?<array>rsp[12])/(?<position>D(?<directionCode>[0-9]+)R(?<rangeCode>[0-9]+))\\.(?<channel>[1-8]))"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-06",
+      "status": "live",
+      "url": "https://openslr.elda.org/resources/13/RWCP.tar.gz"
+    }
+  ],
+  "subjects": [
+    "speech-and-language-processing"
+  ],
+  "tags": [
+    "audio",
+    "array",
+    "position",
+    "channel",
+    "directionCode",
+    "rangeCode"
+  ]
+}
