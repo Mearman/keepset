@@ -1,3 +1,20 @@
+# [0.128.0](https://github.com/Mearman/keepset/compare/v0.127.2...v0.128.0) (2026-11-07)
+
+
+### Bug Fixes
+
+* cite and state the consent terms of the Nahuatl transcription entries ([38f0ca3](https://github.com/Mearman/keepset/commit/38f0ca3c4a9c600d1c7d25e3224dd74d80628a65))
+* conceal malformed broker responses ([403d70e](https://github.com/Mearman/keepset/commit/403d70ecb66271004c6ad176cfc8e8b275a9333e))
+* harden and explain brokered downloads ([a355fc2](https://github.com/Mearman/keepset/commit/a355fc2a372d50502b01b18a8ecd0c74574f4615))
+* preserve raw brokered downloads ([9ced292](https://github.com/Mearman/keepset/commit/9ced292377ba7c1696109a02ad1355d91ee997ad))
+* resolve gzip transport using archive recipe ([f76c924](https://github.com/Mearman/keepset/commit/f76c924f70bb6237d16bce0f1381034f365ea85f))
+* trim Transcriber segment text and check the declared encoding ([f28ebf2](https://github.com/Mearman/keepset/commit/f28ebf245db2333911b63d86258921c766173301))
+
+
+### Features
+
+* fetch and parse Nahuatl transcriptions ([3e81972](https://github.com/Mearman/keepset/commit/3e81972499184718493f9b2cfad7cf88c3442087))
+
 ## [0.127.2](https://github.com/Mearman/keepset/compare/v0.127.1...v0.127.2) (2026-11-07)
 
 
