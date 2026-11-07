@@ -39,7 +39,7 @@ const GZIP_FIRST_BYTE = 0x1f;
 const GZIP_SECOND_BYTE = 0x8b;
 
 /**
- * Identifies gzip transport encoding from its header and magic bytes, except when the recipe expects gzip itself. A gzip archive with an additional gzip transport layer is intrinsically ambiguous with a server labelling the archive itself as gzip, so it is kept as received.
+ * Identifies gzip transport encoding from its header and magic bytes, except when the recipe expects gzip itself. Telling a transport layer around a gzip archive from a server that labels the archive itself as gzip would take decoding the first layer, which no source needs, so a gzip archive is kept as received.
  * @param response - The server's answer.
  * @param head - The body's first bytes, at least `GZIP_MAGIC_LENGTH` of them unless the body is shorter.
  * @param archiveKind - The recipe's outer archive kind.
