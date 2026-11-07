@@ -1,3 +1,11 @@
+## [0.127.2](https://github.com/Mearman/keepset/compare/v0.127.1...v0.127.2) (2026-11-07)
+
+
+### Bug Fixes
+
+* narrow single-source provenance in test ([25970b0](https://github.com/Mearman/keepset/commit/25970b08eb6a7f6b8b16d5b8982e9d99faae19a5))
+* use valid SLR150 ELDA source variant ([5ca2c6c](https://github.com/Mearman/keepset/commit/5ca2c6cca0e02582a593c044dab3ad152d9d4a7a))
+
 ## [0.127.1](https://github.com/Mearman/keepset/compare/v0.127.0...v0.127.1) (2026-11-07)
 
 
