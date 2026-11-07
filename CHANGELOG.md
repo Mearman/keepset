@@ -1,3 +1,10 @@
+## [0.127.1](https://github.com/Mearman/keepset/compare/v0.127.0...v0.127.1) (2026-11-07)
+
+
+### Bug Fixes
+
+* preserve TextGrid tiers in speech crosswalks ([c3a04ec](https://github.com/Mearman/keepset/commit/c3a04ece1b64d8c52150864db9274ebc2df3740c))
+
 # [0.127.0](https://github.com/Mearman/keepset/compare/v0.126.0...v0.127.0) (2026-11-07)
 
 
