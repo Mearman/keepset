@@ -49,4 +49,31 @@ describe("Mozilla Data Collective fetch", () => {
     const malformed: typeof fetch = async () => Promise.resolve(new Response(`{ "downloadUrl": "${signed}"`));
     await expect(mozillaDataCollectiveFetch("key", malformed, malformed)(endpoint, {})).rejects.toMatchObject({ message: "Mozilla Data Collective returned invalid JSON" });
   });
+  it("refuses a broker source before any request when there is no key, and still delegates other sources", async () => {
+    let requests = 0;
+    const request: typeof fetch = async () => {
+      requests += 1;
+
+      return Promise.resolve(new Response("unexpected"));
+    };
+    const fallback = async (): Promise<Response> => Promise.resolve(new Response("other"));
+    const port = mozillaDataCollectiveFetch(undefined, fallback, request);
+    await expect(port(endpoint, {})).rejects.toThrow("MDC_API_KEY");
+    expect(requests).toBe(0);
+    expect(await (await port("https://example.org/other", {})).text()).toBe("other");
+  });
+
+  it("never follows a redirect from the broker, and releases the body of a refusal", async () => {
+    let redirect: RequestInit["redirect"];
+    let cancelled = false;
+    const body = new ReadableStream<Uint8Array>({ cancel() { cancelled = true; } });
+    const request: typeof fetch = async (_url, init) => {
+      redirect = init?.redirect;
+
+      return Promise.resolve(new Response(body, { status: 403 }));
+    };
+    await expect(mozillaDataCollectiveFetch("key", request, request)(endpoint, {})).rejects.toThrow("HTTP 403");
+    expect(redirect).toBe("error");
+    expect(cancelled).toBe(true);
+  });
 });

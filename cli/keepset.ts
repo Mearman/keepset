@@ -5,8 +5,7 @@ import { captureRequestsFor, downloadRaw, fetchDataset, mozillaDataCollectiveFet
 import packageJson from "../package.json" with { type: "json" };
 import { run } from "./run";
 
-const key = process.env["MDC_API_KEY"];
-const options = key === undefined ? {} : { fetch: mozillaDataCollectiveFetch(key, downloadRaw) };
+const options = { fetch: mozillaDataCollectiveFetch(process.env["MDC_API_KEY"], downloadRaw) };
 
 // A reader that closes early (`| head`) makes the next write fail with EPIPE. The output was complete as far as the reader wanted it, so that error is dropped and the exit status the command settled on stands; any other stdout error is still thrown.
 process.stdout.on("error", (error: NodeJS.ErrnoException) => {
