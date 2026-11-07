@@ -4,7 +4,12 @@
     "slr147-transcripts"
   ],
   "category": "speech/v1",
-  "citations": [],
+  "citations": [
+    {
+      "text": "Amith, Jonathan D., Bernarda Panzo Tezoco, Gabriela Citlahua Zepahua, Amelia Domínguez Alcántara, and Ceferino Salgado Castañeda. 2026. Corpus of spoken Nahuatl from the municipalities of Atlahuilco, Rafael Delgado, Tequela, and Zongolica, state of Veracruz, with transcriptions, translations, and annotations. Mozilla Data Collective.",
+      "url": "https://mozilladatacollective.com/datasets/cmqs1irj8075snr07i69uvzo3"
+    }
+  ],
   "crosswalk": {
     "keep": [
       "meta",
@@ -20,7 +25,7 @@
     "source": "transcriber",
     "target": "speech/v1"
   },
-  "description": "Tequila Zongolica Nahuatl transcriptions as time-aligned speaker segments. Simultaneous speakers share an interval; inline comments and events retain their positions in the text. The source requires a Mozilla Data Collective account, API key and acceptance of its terms.",
+  "description": "Tequila Zongolica Nahuatl transcriptions as time-aligned speaker segments. Simultaneous speakers share an interval; inline comments and events retain their positions in the text. The publisher asks that the speakers and other custodians of local knowledge be credited as co-authors, and its licence permits derivative works only with the express consent of the dataset owner, so the normalised output is not to be shared without that consent. The source requires a Mozilla Data Collective account, API key and acceptance of its terms.",
   "domain": "Speech",
   "expectedCounts": {
     "nodes": 9906

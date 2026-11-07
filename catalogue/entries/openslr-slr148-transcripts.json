@@ -4,7 +4,12 @@
     "slr148-transcripts"
   ],
   "category": "speech/v1",
-  "citations": [],
+  "citations": [
+    {
+      "text": "Amith, Jonathan D., Amelia Domínguez Alcántara, Ceferino Salgado Castañeda, and Ángeles Márquez Hernández. 2026. Corpus of spoken Nahuatl from the municipalities of Zacatlán and Tepetzintla, state of Puebla, with transcriptions, translations, and annotations. Mozilla Data Collective.",
+      "url": "https://mozilladatacollective.com/datasets/cmlct0jzu01s4nv07023lv3m3"
+    }
+  ],
   "crosswalk": {
     "keep": [
       "meta",
@@ -20,7 +25,7 @@
     "source": "transcriber",
     "target": "speech/v1"
   },
-  "description": "Zacatlán Tepetzintla Nahuatl transcriptions as time-aligned speaker segments. Simultaneous speakers share an interval; inline comments and events retain their positions in the text. The source requires a Mozilla Data Collective account, API key and acceptance of its terms.",
+  "description": "Zacatlán Tepetzintla Nahuatl transcriptions as time-aligned speaker segments. Simultaneous speakers share an interval; inline comments and events retain their positions in the text. The publisher asks that the speakers and other custodians of local knowledge be credited as co-authors, and its licence permits derivative works only with the express consent of the dataset owner, so the normalised output is not to be shared without that consent. The source requires a Mozilla Data Collective account, API key and acceptance of its terms.",
   "domain": "Speech",
   "expectedCounts": {
     "nodes": 9351
