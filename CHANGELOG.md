@@ -1,3 +1,18 @@
+# [0.127.0](https://github.com/Mearman/keepset/compare/v0.126.0...v0.127.0) (2026-11-07)
+
+
+### Bug Fixes
+
+* exclude speaker trials from seed formats ([3723af5](https://github.com/Mearman/keepset/commit/3723af5ea4967db11fb73f945e13807f400d0549))
+* record CN-Celeb1 recording count ([1c867b4](https://github.com/Mearman/keepset/commit/1c867b420431f411b4acf275a3b99065b5f07d98))
+
+
+### Features
+
+* catalogue CN-Celeb1 recordings ([c7e753f](https://github.com/Mearman/keepset/commit/c7e753f36f91b0f1224e69d5c45b3db069101f7b))
+* catalogue CN-Celeb1 verification trials ([917e262](https://github.com/Mearman/keepset/commit/917e262b1ff4f41c61b2f4c98cd683cb978624e6))
+* catalogue CN-Celeb2 annotations ([513ce06](https://github.com/Mearman/keepset/commit/513ce06c4e5d5cdfdd58ff3f89a0fb9704db60ae))
+
 # [0.126.0](https://github.com/Mearman/keepset/compare/v0.125.1...v0.126.0) (2026-11-06)
 
 
