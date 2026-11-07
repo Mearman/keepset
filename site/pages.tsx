@@ -224,11 +224,15 @@ export function entryPage(context: PageContext, dataset: Dataset, sameData: read
     entry.description === undefined ? null : <p className="description" key="description">{entry.description}</p>,
     <p className="command" key="command"><code>{command}</code> <span data-copy-text={command} /></p>,
     figures.length === 0 ? null : <dl className="stats" key="stats">{figures.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>,
-    recipe.status === "fetchable" ? (
+    recipe.status !== "fetchable" ? null : entry.sources.some((source) => source.access === "brokered") ? (
+      <div className="preview" key="preview">
+        <p className="preview-note">This dataset needs an account with the publisher, so it cannot be fetched from this page. Accept its terms, then fetch it with the command line after setting MDC_API_KEY to your API key.</p>
+      </div>
+    ) : (
       <div className="preview" key="preview" data-preview-id={entry.id}>
         <p className="preview-note">Fetch and preview this dataset on this page, or download the result as JSON. The command line fetches it without a browser.</p>
       </div>
-    ) : null,
+    ),
     recipe.status === "fetchable" ? null : <p className="warning" key="warning">This entry has no fetchable recipe yet: {recipe.reason}</p>,
     <h2 key="overview">Overview</h2>,
     <Facts key="overview" rows={[
