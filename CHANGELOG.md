@@ -1,3 +1,10 @@
+## [0.131.1](https://github.com/Mearman/keepset/compare/v0.131.0...v0.131.1) (2026-11-10)
+
+
+### Bug Fixes
+
+* name the deferred issue in each not-fetchable reason ([3f1fde9](https://github.com/Mearman/keepset/commit/3f1fde9cc7edbce3f6fbade4291a8746c578b59d))
+
 # [0.131.0](https://github.com/Mearman/keepset/compare/v0.130.0...v0.131.0) (2026-11-10)
 
 
