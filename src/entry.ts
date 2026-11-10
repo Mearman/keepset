@@ -501,6 +501,16 @@ export const ParserSchema = z.discriminatedUnion("format", [
   z.object({ format: z.literal("verolog-2017"), encoding: EncodingSchema }).strict(),
   z.object({ format: z.literal("tdc"), encoding: EncodingSchema }).strict(),
   CflpParserSchema,
+  /** A multicommodity capacitated fixed-charge network design instance in Gendron's `.dow` layout (the CommaLAB C, C+ and R sets): network nodes, arcs with variable cost, capacity and fixed cost, and commodities as nodes joined to their origin and destination. */
+  z.object({ format: z.literal("canad-dow"), encoding: EncodingSchema }).strict(),
+  /** An OR-Library uncapacitated p-median file (`pmed1` to `pmed40`): the vertices, one edge per vertex pair with its cost, and p in `meta`. */
+  z.object({ format: z.literal("orlib-pmed"), encoding: EncodingSchema }).strict(),
+  /** The OR-Library capacitated p-median file (`pmedcap1`): every problem's customers as tasks, each with its problem's median count, median capacity and best value. */
+  z.object({ format: z.literal("orlib-pmedcap"), encoding: EncodingSchema }).strict(),
+  /** A capacitated location-routing instance in Prodhon's `.dat` layout: depots and customers as tasks, the vehicle and route data in `meta`. */
+  z.object({ format: z.literal("lrp"), encoding: EncodingSchema }).strict(),
+  /** A DIMACS minimum-cost flow problem (`.min`): nodes with their supply, arcs with their lower bound, capacity and cost. */
+  z.object({ format: z.literal("dimacs-min"), encoding: EncodingSchema }).strict(),
   /** A resource page of OpenSLR (openslr.org): the resource's title, identifier, summary, category, licence, description and external address as the instance's meta, and its download links as nodes. */
   z.object({ format: z.literal("openslr-resource"), encoding: z.literal("utf-8") }).strict(),
   z.object({ format: z.literal("utterance-lines"), encoding: EncodingSchema, layout: z.enum(["id-first", "id-last", "festival", "sphinx"]).optional() }).strict(),
