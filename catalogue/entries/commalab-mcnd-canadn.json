@@ -29,7 +29,7 @@
     "downloadBytes": 42169731
   },
   "recipe": {
-    "reason": "The instances are in the Canad format of the Bipart and Mulgen generators' Format file, which gives each arc a fixed cost, a mutual capacity and a cost and capacity for every commodity, and each commodity a supply at every node; keepset has no parser for it, and the canad-dow parser reads only the C, C+ and R layout.",
+    "reason": "The instances are in the Canad format of the Bipart and Mulgen generators' Format file, which gives each arc a fixed cost, a mutual capacity and a cost and capacity for every commodity, and each commodity a supply at every node; keepset has no parser for it, and the canad-dow parser reads only the C, C+ and R layout. Tracked in https://github.com/Mearman/keepset/issues/296.",
     "status": "not-fetchable"
   },
   "sources": [

@@ -26,7 +26,7 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "The publisher's site answers a plain HTTP client, such as keepset's fetch, with a bot challenge (403) for both the supplement page and its files, and no Wayback capture of the files exists. The publisher states no licence, only its copyright, so the files are not captured or pinned here until reuse is cleared.",
+    "reason": "The publisher's site answers a plain HTTP client, such as keepset's fetch, with a bot challenge (403) for both the supplement page and its files, and no Wayback capture of the files exists. The publisher states no licence, only its copyright, so the files are not captured or pinned here until reuse is cleared. Tracked in https://github.com/Mearman/keepset/issues/312.",
     "status": "not-fetchable"
   },
   "sources": [

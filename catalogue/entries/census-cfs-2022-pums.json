@@ -32,7 +32,7 @@
     "probedRows": 37576546
   },
   "recipe": {
-    "reason": "The shipments are one CSV member of a zip that unpacks to almost three gigabytes: streaming reads a CSV table inside a tar member a chunk at a time but not one inside a zip, and a fetch holds the whole member as one text, which is past what a JavaScript string can hold.",
+    "reason": "The shipments are one CSV member of a zip that unpacks to almost three gigabytes: streaming reads a CSV table inside a tar member a chunk at a time but not one inside a zip, and a fetch holds the whole member as one text, which is past what a JavaScript string can hold. Tracked in https://github.com/Mearman/keepset/issues/306.",
     "status": "not-fetchable"
   },
   "sources": [

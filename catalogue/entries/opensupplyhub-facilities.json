@@ -28,7 +28,7 @@
   ],
   "properties": {},
   "recipe": {
-    "reason": "The bulk download and the API need a user account and its API token (an unauthenticated API request answers 401). keepset models such a source as brokered, but the one brokered fetch it has is the Mozilla Data Collective's adapter, and there is no adapter that authenticates to Open Supply Hub.",
+    "reason": "The bulk download and the API need a user account and its API token (an unauthenticated API request answers 401). keepset models such a source as brokered, but the one brokered fetch it has is the Mozilla Data Collective's adapter, and there is no adapter that authenticates to Open Supply Hub. Tracked in https://github.com/Mearman/keepset/issues/313.",
     "status": "not-fetchable"
   },
   "sources": [

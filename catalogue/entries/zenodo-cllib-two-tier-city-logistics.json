@@ -30,7 +30,7 @@
     "instanceCount": 1782
   },
   "recipe": {
-    "reason": "An instance is one JSON object whose locations sit beneath `locations`, then their kind (`dc`, `sat`, `cust`), then their number, beside top-level arrays (the travel time matrix, demands, tours, services) and a parameter object, and each location's coordinates are a two-element array; the json-table parser's nested layout reads records beneath uniform keys with scalar fields, so it can neither descend into `locations` alone nor read the coordinates, and keepset has no CLLIB instance parser.",
+    "reason": "An instance is one JSON object whose locations sit beneath `locations`, then their kind (`dc`, `sat`, `cust`), then their number, beside top-level arrays (the travel time matrix, demands, tours, services) and a parameter object, and each location's coordinates are a two-element array; the json-table parser's nested layout reads records beneath uniform keys with scalar fields, so it can neither descend into `locations` alone nor read the coordinates, and keepset has no CLLIB instance parser. Tracked in https://github.com/Mearman/keepset/issues/308.",
     "status": "not-fetchable"
   },
   "sources": [
