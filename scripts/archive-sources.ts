@@ -8,7 +8,7 @@
 
    --verify requests the raw snapshot of every pin already recorded that the report does not list as verified, lists the ones that serve their bytes in the report, and removes the ones that do not from the live sources that hold them, so the next run captures them again; a failing pin on a dead source stays (the entry schema requires it, and the source cannot be captured again) and makes the run exit non-zero. --reverify requests the pins the report lists as verified again.
 
-   --checksum reads the raw form of every pinned snapshot that records no checksum, exactly as a fetch reads it, and records the SHA-256 and byte length of what it serves on every source that pins that snapshot, so the entry names the bytes the pin stands for; a snapshot the archive does not serve is listed and left for --verify, and a run cut short keeps what it read.
+   --checksum reads the raw form of every pinned snapshot that records no checksum (of the --entry entries, when named), exactly as a fetch reads it, and records the SHA-256 and byte length of what it serves on every source that pins that snapshot, so the entry names the bytes the pin stands for; a snapshot the archive does not serve is listed and left for --verify, and a run cut short keeps what it read.
 
    --check changes nothing and exits non-zero when a source has no snapshot and the report does not account for it, when a pin is not listed as verified in the report, or when the report lists a source or a verification the catalogue no longer supports. --entry limits the run to the named entries, --limit to a number of URLs (or, with --verify, pins) requested over the network, --retry-exceptions looks again at URLs the report already excepts. --entries-dir, --report and --state point the run somewhere else, for a trial on a copy. */
 
@@ -124,7 +124,7 @@ if (values.check === true) {
           console.log(line);
         },
       },
-      { targets: unchecksummed(files), limit },
+      { targets: unchecksummed(files, entryIds), limit },
     );
     console.log(`Checksum pass finished; ${String(result.recorded)} recorded, ${String(result.failed.length)} not served, ${String(result.unresolved.length)} could not be read${result.stopped === undefined ? "" : `; stopped early: ${result.stopped}`}.`);
   } else if (values.verify === true) {
