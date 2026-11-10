@@ -12,6 +12,8 @@ import { TSPLIB_COLUMNS, TSPLIB_META, TSPLIB_TEXT_COLUMNS } from "./tsplib";
 import { VEROLOG_2019_COLUMNS, VEROLOG_2019_META, VEROLOG_2019_TEXT_COLUMNS } from "./verolog-2019";
 import { VRP_REP_COLUMNS, VRP_REP_META, VRP_REP_TEXT_COLUMNS } from "./vrp-rep";
 import { TOPTW_COLUMNS, TOPTW_META, TOPTW_TEXT_COLUMNS } from "./toptw";
+import { ORLIB_PMEDCAP_COLUMNS, ORLIB_PMEDCAP_META, ORLIB_PMEDCAP_TEXT_COLUMNS } from "./orlib-pmedcap";
+import { LRP_COLUMNS, LRP_META, LRP_TEXT_COLUMNS } from "./lrp";
 
 /** What each instance file parser emits, by its format name: the columns of a node (besides its `id`), which of them hold text and not numbers, and the keys of the instance's own `meta`. A recipe's crosswalk maps these, and the seed import checks a curation against them. */
 export const INSTANCE_SHAPES = {
@@ -29,6 +31,8 @@ export const INSTANCE_SHAPES = {
   tdc: { columns: TDC_COLUMNS, text: TDC_TEXT_COLUMNS, meta: TDC_META },
   "openslr-resource": { columns: OPENSLR_RESOURCE_COLUMNS, text: OPENSLR_RESOURCE_TEXT_COLUMNS, meta: OPENSLR_RESOURCE_META },
   "utterance-lines": { columns: UTTERANCE_LINES_COLUMNS, text: UTTERANCE_LINES_TEXT_COLUMNS, meta: UTTERANCE_LINES_META },
+  "orlib-pmedcap": { columns: ORLIB_PMEDCAP_COLUMNS, text: ORLIB_PMEDCAP_TEXT_COLUMNS, meta: ORLIB_PMEDCAP_META },
+  lrp: { columns: LRP_COLUMNS, text: LRP_TEXT_COLUMNS, meta: LRP_META },
 } as const;
 
 /** The format names of the instance file parsers. */

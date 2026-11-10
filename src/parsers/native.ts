@@ -59,8 +59,18 @@ export interface NativeInstance {
   readonly nodes: readonly NativeRow[];
 }
 
+/** An edge that carries fields of its own beside its ends, as an instance file of a network gives them (a cost, a capacity). Every edge of a graph carries every field, null where the edge has no value, because a crossmap rule fails on a path absent from any element. */
+export type NativeAttributedEdge = NativeEdge & Readonly<Record<string, string | number | null>>;
+
+/** The native shape the network instance parsers emit: nodes and edges that carry the fields the file gives them, every element of a kind carrying the same fields, and a `meta` of the instance's own header values that the fetch flow merges beneath the entry's own metadata, as it does an instance file's. */
+export interface NativeAttributedGraph {
+  readonly meta: Readonly<Record<string, string | number | boolean | null>>;
+  readonly nodes: readonly NativeRow[];
+  readonly edges: readonly NativeAttributedEdge[];
+}
+
 /** What a parser emits: the native shape of its category family, to which the fetch flow adds `meta`. */
-export type NativeDocument = NativeGraph | NativeTable | NativeInstance;
+export type NativeDocument = NativeGraph | NativeTable | NativeInstance | NativeAttributedGraph;
 
 /**
  * Collects node ids in order of first appearance, so a parser that learns its nodes from its edges emits them deterministically.

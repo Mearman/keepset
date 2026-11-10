@@ -39,7 +39,12 @@ import { parseTextGrid } from "./textgrid";
 import { parseMankowska } from "./mankowska";
 import { parseTdc } from "./tdc";
 import { parseVerolog2017 } from "./verolog-2017";
-import type { NativeDocument, NativeGraph, NativeInstance, NativeTable } from "./native";
+import { parseCanadDow } from "./canad-dow";
+import { parseOrlibPmed } from "./orlib-pmed";
+import { parseOrlibPmedcap } from "./orlib-pmedcap";
+import { parseLrp } from "./lrp";
+import { parseDimacsMin } from "./dimacs-min";
+import type { NativeAttributedGraph, NativeDocument, NativeGraph, NativeInstance, NativeTable } from "./native";
 import { parsePajek } from "./pajek";
 import { parseCustomerPoints } from "./customer-points";
 import { parseSolomon } from "./solomon";
@@ -156,6 +161,9 @@ export function* decodePieces(bytes: Uint8Array, parser: Parser, pieceBytes: num
 
 type TableParser = Extract<Parser, { format: "csv-table" | "geojson" | "json-table" | "json-word-counts" | "lexicon-lines" }>;
 
+/** The parsers of network instance formats, whose nodes and edges carry the fields the file gives them. */
+type AttributedGraphParser = Extract<Parser, { format: "canad-dow" | "orlib-pmed" | "dimacs-min" }>;
+
 /**
  * Reads a file into the native shape of the recipe's parser: a graph for the graph formats, a table of rows for the table formats.
  * @param bytes - The unpacked file.
@@ -165,7 +173,8 @@ type TableParser = Extract<Parser, { format: "csv-table" | "geojson" | "json-tab
  */
 export function parseNative(bytes: Uint8Array, parser: TableParser): NativeTable;
 export function parseNative(bytes: Uint8Array, parser: Readonly<InstanceParser>): NativeInstance;
-export function parseNative(bytes: Uint8Array, parser: Exclude<Parser, TableParser | InstanceParser>): NativeGraph;
+export function parseNative(bytes: Uint8Array, parser: AttributedGraphParser): NativeAttributedGraph;
+export function parseNative(bytes: Uint8Array, parser: Exclude<Parser, TableParser | InstanceParser | AttributedGraphParser>): NativeGraph;
 export function parseNative(bytes: Uint8Array, parser: Parser): NativeDocument;
 export function parseNative(bytes: Uint8Array, parser: Parser): NativeDocument {
   if (parser.format === "csv-table") {
@@ -267,6 +276,21 @@ export function parseNative(bytes: Uint8Array, parser: Parser): NativeDocument {
   }
   if (parser.format === "verolog-2017") {
     return parseVerolog2017(text);
+  }
+  if (parser.format === "canad-dow") {
+    return parseCanadDow(text);
+  }
+  if (parser.format === "orlib-pmed") {
+    return parseOrlibPmed(text);
+  }
+  if (parser.format === "orlib-pmedcap") {
+    return parseOrlibPmedcap(text);
+  }
+  if (parser.format === "lrp") {
+    return parseLrp(text);
+  }
+  if (parser.format === "dimacs-min") {
+    return parseDimacsMin(text);
   }
 
   return parsePajek(text);
