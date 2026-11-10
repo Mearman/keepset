@@ -40,6 +40,10 @@
   "sources": [
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20260527024426",
+        "url": "https://web.archive.org/web/20260527024426/https://huggingface.co/datasets/CO-Bench/FrontierCO"
+      },
       "status": "live",
       "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO"
     },
