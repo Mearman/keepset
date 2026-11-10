@@ -38,6 +38,8 @@
     {
       "retrieved": "2026-11-10",
       "snapshot": {
+        "byteLength": 98299,
+        "sha256": "c892c83c708b17a73e7839b4cac212b55fc250dd8ac15fe54da88b58aedd8328",
         "timestamp": "20250209185141",
         "url": "https://web.archive.org/web/20250209185141/https://data.mendeley.com/datasets/hshn2rtcb5/2"
       },

@@ -156,6 +156,8 @@
     {
       "retrieved": "2026-11-10",
       "snapshot": {
+        "byteLength": 41568,
+        "sha256": "dac67adb61517c4a51b15f1dd7a4be8e6ec0d47502d977af482971e4e5a44560",
         "timestamp": "20261013082623",
         "url": "https://web.archive.org/web/20261013082623/https://data.mendeley.com/datasets/8gx2fvg2k6/5"
       },

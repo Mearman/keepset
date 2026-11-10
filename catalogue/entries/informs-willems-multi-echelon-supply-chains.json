@@ -33,6 +33,8 @@
     {
       "retrieved": "2026-11-10",
       "snapshot": {
+        "byteLength": 22664,
+        "sha256": "712654a3e7a3a66f7cf62df0719aa730465072b2e543cb4e4b7a87409dc091c2",
         "timestamp": "20240615025543",
         "url": "https://web.archive.org/web/20240615025543/https://pubsonline.informs.org/doi/suppl/10.1287/msom.1070.0176"
       },

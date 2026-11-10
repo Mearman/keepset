@@ -57,6 +57,8 @@
     {
       "retrieved": "2026-11-10",
       "snapshot": {
+        "byteLength": 1160,
+        "sha256": "1639ce7df6fe3e681d2d50d3e517a9c22d87eb86b39b898647b603cbb6f4922e",
         "timestamp": "20240709075835",
         "url": "https://web.archive.org/web/20240709075835/https://atamturk.ieor.berkeley.edu/data/fixed.charge.network.flow/"
       },
@@ -66,6 +68,8 @@
     {
       "retrieved": "2026-11-10",
       "snapshot": {
+        "byteLength": 141282,
+        "sha256": "2b68496afac658c917c59a6d0eea31fa970dbf2f5d64688a83efc8d362d1bfe4",
         "timestamp": "20261110083611",
         "url": "https://web.archive.org/web/20261110083611/https://atamturk.ieor.berkeley.edu/data/fixed.charge.network.flow/fc.data.tar.gz"
       },
@@ -75,6 +79,8 @@
     {
       "retrieved": "2026-11-10",
       "snapshot": {
+        "byteLength": 1440,
+        "sha256": "0e22f707c92f46afda0fed093bd518c6c2e9ba22dd6bfc3c869e54af72b09851",
         "timestamp": "20240708073156",
         "url": "https://web.archive.org/web/20240708073156/https://atamturk.ieor.berkeley.edu/data/readme.txt"
       },

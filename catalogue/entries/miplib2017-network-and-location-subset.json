@@ -60,6 +60,8 @@
     {
       "retrieved": "2026-11-10",
       "snapshot": {
+        "byteLength": 71687,
+        "sha256": "5810222dcc9a144325809a5c3ad7bbaf13d129e7fda46f87bc2c78176ca10480",
         "timestamp": "20261110084103",
         "url": "https://web.archive.org/web/20261110084103/https://miplib.zib.de/tag_collection.html"
       },
@@ -69,6 +71,8 @@
     {
       "retrieved": "2026-11-10",
       "snapshot": {
+        "byteLength": 65931,
+        "sha256": "04250ce7597bdc14f6341b323c8b4be42416102e370f93102fab1ff1f85aa977",
         "timestamp": "20261110084035",
         "url": "https://web.archive.org/web/20261110084035/https://miplib.zib.de/downloads/miplib2017-v37.solu"
       },

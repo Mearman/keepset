@@ -124,6 +124,8 @@
     {
       "retrieved": "2026-11-10",
       "snapshot": {
+        "byteLength": 32657,
+        "sha256": "b5963fcaf28de11722d95081128b81f087b38b48ae27bab3f5637200628f6600",
         "timestamp": "20261013045429",
         "url": "https://web.archive.org/web/20261013045429/https://brunel.figshare.com/articles/dataset/Supply_Chain_Logistics_Problem_Dataset/7558679"
       },
@@ -133,6 +135,8 @@
     {
       "retrieved": "2026-11-10",
       "snapshot": {
+        "byteLength": 2559,
+        "sha256": "4ed65cb86022bbf730b53456061c0e1ae5216dabfec7a5552d6ab98c9a3ffa03",
         "timestamp": "20260929135824",
         "url": "https://web.archive.org/web/20260929135824/https://api.figshare.com/v2/articles/7558679"
       },

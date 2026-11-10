@@ -66,6 +66,8 @@
     {
       "retrieved": "2026-11-10",
       "snapshot": {
+        "byteLength": 51017,
+        "sha256": "4d60194edab9b447adf363ffb2defc346d77d3d9bad01f5365774c451c44f267",
         "timestamp": "20250425205803",
         "url": "https://web.archive.org/web/20250425205803/https://github.com/ciol-researchlab/SupplyGraph"
       },
@@ -75,6 +77,8 @@
     {
       "retrieved": "2026-11-10",
       "snapshot": {
+        "byteLength": 5028,
+        "sha256": "777dbde67b0d69fa93606cc96691b09dc1dd6da37c55c99bb58a82532bd8cc7a",
         "timestamp": "20261110084325",
         "url": "https://web.archive.org/web/20261110084325/https://raw.githubusercontent.com/ciol-researchlab/SupplyGraph/0e6d010e256ee08e34ab6bef5a111ef1c758b32d/Raw%20Dataset/Homogenoeus/Edges/Edges%20%28Plant%29.csv"
       },
@@ -84,6 +88,8 @@
     {
       "retrieved": "2026-11-10",
       "snapshot": {
+        "byteLength": 9835,
+        "sha256": "60791d655fba8598a0a6ca0a9a26ab6ad566c7924cd4fe296590e2a8a2b82e4c",
         "timestamp": "20261110084437",
         "url": "https://web.archive.org/web/20261110084437/https://raw.githubusercontent.com/ciol-researchlab/SupplyGraph/0e6d010e256ee08e34ab6bef5a111ef1c758b32d/Raw%20Dataset/Homogenoeus/Edges/Edges%20%28Storage%20Location%29.csv"
       },

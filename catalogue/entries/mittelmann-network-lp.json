@@ -58,6 +58,8 @@
     {
       "retrieved": "2026-11-10",
       "snapshot": {
+        "byteLength": 1558,
+        "sha256": "fe92c5f8666f4e01282879ab7b69eabec9479e9d1ffba407ab03a66512a7594d",
         "timestamp": "20250819054736",
         "url": "https://web.archive.org/web/20250819054736/https://plato.asu.edu/ftp/network.html"
       },
@@ -67,6 +69,8 @@
     {
       "retrieved": "2026-11-10",
       "snapshot": {
+        "byteLength": 598,
+        "sha256": "d7efbc7d04ccba674a749d7a9d24deb8e55c66e18adcf9a60d9c512e477be940",
         "timestamp": "20250327064042",
         "url": "https://web.archive.org/web/20250327064042/https://plato.asu.edu/ftp/lptestset/network/"
       },
