@@ -1,0 +1,63 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "aliases": [
+    "cllib"
+  ],
+  "category": "tasks/v1",
+  "citations": [
+    {
+      "doi": "10.5281/zenodo.17303876",
+      "text": "J. Lange, J. Gückel, P. Fontaine, T. Gschwind (2025). CLLIB: a benchmark library for two-tier city logistics. Zenodo."
+    }
+  ],
+  "crosswalk": {
+    "file": "crosswalks/tasks-v1/nodes.json"
+  },
+  "description": "CLLIB, a benchmark library of two-tier city logistics planning instances for Karlsruhe Oststadt, Ingolstadt and Munich, with distribution centres, road and rail satellites, customers, demands with time windows, a travel time matrix, candidate tours and services, and the parameters each instance was generated with; distributed as sub-libraries (Small, Medium, Large, by city and by demand type) of one JSON file per instance. tasks/v1 would hold the distribution centres, satellites and customers as nodes; the tours, services and travel times have no place in it.",
+  "domain": "Two-echelon city logistics",
+  "expectedCounts": {},
+  "id": "zenodo-cllib-two-tier-city-logistics",
+  "licence": {
+    "id": "CC-BY-4.0",
+    "kind": "spdx"
+  },
+  "name": "CLLIB: two-tier city logistics benchmark library",
+  "namespace": [
+    "zenodo"
+  ],
+  "properties": {
+    "downloadBytes": 10679851,
+    "downloadSha256": "042984a51eb8a17dce3e1d724effb03fd3ed47de52dcb21f94c8d32e60354999",
+    "instanceCount": 1782
+  },
+  "recipe": {
+    "reason": "An instance is one JSON object whose locations sit beneath `locations`, then their kind (`dc`, `sat`, `cust`), then their number, beside top-level arrays (the travel time matrix, demands, tours, services) and a parameter object, and each location's coordinates are a two-element array; the json-table parser's nested layout reads records beneath uniform keys with scalar fields, so it can neither descend into `locations` alone nor read the coordinates, and keepset has no CLLIB instance parser.",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20261110085033",
+        "url": "https://web.archive.org/web/20261110085033/https://zenodo.org/records/17303876"
+      },
+      "status": "live",
+      "url": "https://zenodo.org/records/17303876"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20261110084514",
+        "url": "https://web.archive.org/web/20261110084514/https://zenodo.org/api/records/17303876/files/CLLIB-Small.zip/content"
+      },
+      "status": "live",
+      "url": "https://zenodo.org/api/records/17303876/files/CLLIB-Small.zip/content"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": [
+    "location"
+  ]
+}

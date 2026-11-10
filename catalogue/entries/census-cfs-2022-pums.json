@@ -1,0 +1,58 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "aliases": [
+    "cfs-2022-pums"
+  ],
+  "category": "tasks/v1",
+  "citations": [
+    {
+      "text": "U.S. Department of Transportation, Bureau of Transportation Statistics; U.S. Department of Commerce, U.S. Census Bureau (2026). 2022 Commodity Flow Survey Datasets: 2022 CFS Public Use Microdata (PUMS).",
+      "url": "https://www.census.gov/data/datasets/2022/econ/cfs/historical-datasets.html"
+    }
+  ],
+  "crosswalk": {
+    "file": "crosswalks/tasks-v1/nodes.json"
+  },
+  "description": "Shipment-level public use microdata of the 2022 US Commodity Flow Survey. Each row is one sampled shipment with its origin and destination CFS areas, commodity (SCTG), industry, mode, value, weight, distance and hazardous material, export and temperature control flags, with its tabulation weighting factor. tasks/v1 is the nearest target, each shipment a node, but it is a compromise: a shipment is a record, not a place or case to visit or serve, and keepset has no records category yet.",
+  "domain": "Freight shipments",
+  "expectedCounts": {},
+  "id": "census-cfs-2022-pums",
+  "licence": {
+    "kind": "unrecorded"
+  },
+  "name": "Commodity Flow Survey 2022 public use microdata",
+  "namespace": [
+    "census",
+    "cfs"
+  ],
+  "properties": {
+    "downloadBytes": 677530696,
+    "downloadSha256": "5da8715bab067f50005725808cf24648e8392c0dbc4caa6c0c02e80762c69d21",
+    "memberBytes": 2824487751,
+    "probedRows": 37576546
+  },
+  "recipe": {
+    "reason": "The shipments are one CSV member of a zip that unpacks to almost three gigabytes: streaming reads a CSV table inside a tar member a chunk at a time but not one inside a zip, and a fetch holds the whole member as one text, which is past what a JavaScript string can hold.",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20260820020013",
+        "url": "https://web.archive.org/web/20260820020013/https://www.census.gov/data/datasets/2022/econ/cfs/historical-datasets.html"
+      },
+      "status": "live",
+      "url": "https://www.census.gov/data/datasets/2022/econ/cfs/historical-datasets.html"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://www2.census.gov/programs-surveys/cfs/datasets/2022/cfs_2022_pums.zip"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": []
+}

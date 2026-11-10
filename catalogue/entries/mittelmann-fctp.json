@@ -58,11 +58,19 @@
   "sources": [
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20260712153942",
+        "url": "https://web.archive.org/web/20260712153942/https://plato.asu.edu/sub/testcases.html"
+      },
       "status": "live",
       "url": "https://plato.asu.edu/sub/testcases.html"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20260921130127",
+        "url": "https://web.archive.org/web/20260921130127/https://plato.asu.edu/ftp/lptestset/fctp/"
+      },
       "status": "live",
       "url": "https://plato.asu.edu/ftp/lptestset/fctp/"
     }

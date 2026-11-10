@@ -1,0 +1,60 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "aliases": [
+    "open-supply-hub-facilities"
+  ],
+  "category": "tasks/v1",
+  "citations": [
+    {
+      "text": "Open Supply Hub. Open Supply Hub facility data.",
+      "url": "https://opensupplyhub.org/"
+    }
+  ],
+  "crosswalk": {
+    "file": "crosswalks/tasks-v1/nodes.json"
+  },
+  "description": "Open Supply Hub's open register of production facilities in global supply chains, with each facility's name, address, coordinates, sector and contributors: real facility geography for location models. tasks/v1 is the target, each facility a node with its position. The terms of service grant the facility information under the Creative Commons Attribution-ShareAlike 4.0 licence.",
+  "domain": "Facility register",
+  "expectedCounts": {},
+  "id": "opensupplyhub-facilities",
+  "licence": {
+    "kind": "custom",
+    "name": "Creative Commons Attribution-ShareAlike 4.0 (Open Supply Hub terms of service, section 2.2)",
+    "url": "https://info.opensupplyhub.org/terms-of-service"
+  },
+  "name": "Open Supply Hub facilities",
+  "namespace": [
+    "opensupplyhub"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "The bulk download and the API need a user account and its API token (an unauthenticated API request answers 401). keepset models such a source as brokered, but the one brokered fetch it has is the Mozilla Data Collective's adapter, and there is no adapter that authenticates to Open Supply Hub.",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20261110084231",
+        "url": "https://web.archive.org/web/20261110084231/https://opensupplyhub.org/"
+      },
+      "status": "live",
+      "url": "https://opensupplyhub.org/"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20260503222637",
+        "url": "https://web.archive.org/web/20260503222637/https://opensupplyhub.org/api/docs/"
+      },
+      "status": "live",
+      "url": "https://opensupplyhub.org/api/docs/"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": [
+    "location"
+  ]
+}
