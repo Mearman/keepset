@@ -1,3 +1,10 @@
+# [0.132.0](https://github.com/Mearman/keepset/compare/v0.131.1...v0.132.0) (2026-11-10)
+
+
+### Features
+
+* **catalogue:** tag the supply chain network design instance sets ([19ead43](https://github.com/Mearman/keepset/commit/19ead4342f06daecfa11e282bd55156cc64da825))
+
 ## [0.131.1](https://github.com/Mearman/keepset/compare/v0.131.0...v0.131.1) (2026-11-10)
 
 
