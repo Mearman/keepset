@@ -35,8 +35,8 @@ describe("the DIMACS minimum-cost flow parser", () => {
     const graph = parseNative(bytes(...T1_HEAD), min);
     // The problem line names the node count, and only the supply and demand nodes have descriptors.
     expect(graph.nodes.map((node) => node.id)).toEqual(Array.from({ length: Number(T1_HEAD[3]?.split(" ")[2]) }, (_, index) => String(index + 1)));
-    expect(graph.nodes.filter((node) => node.supply !== 0)).toHaveLength(T1_HEAD.filter((line) => line.startsWith("n ")).length);
-    expect(graph.nodes.reduce((sum, node) => sum + Number(node.supply), 0)).toBe(0);
+    expect(graph.nodes.filter((node) => node["supply"] !== 0)).toHaveLength(T1_HEAD.filter((line) => line.startsWith("n ")).length);
+    expect(graph.nodes.reduce((sum, node) => sum + Number(node["supply"]), 0)).toBe(0);
     expect(graph.edges[1]).toEqual({ source: "1", target: "258", low: 0, capacity: 400000, cost: 8577 });
   });
 

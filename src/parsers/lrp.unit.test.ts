@@ -31,7 +31,7 @@ describe("the location-routing parser", () => {
 
   it("reads a coordinate line whose further fields are all zero, as Barreto's Or117 depot lines are, and refuses one whose further fields are not", () => {
     const or117 = PRODHON.map((line) => (line === "6\t7" ? "  1180       962     0        0.000" : line === "19\t44" ? "   1182       970    .0        0.000" : line));
-    expect(parseNative(crlf(...or117), lrp).nodes.slice(0, 2).map((node) => ({ x: node.x, y: node.y }))).toEqual([
+    expect(parseNative(crlf(...or117), lrp).nodes.slice(0, 2).map((node) => ({ x: node["x"], y: node["y"] }))).toEqual([
       { x: 1180, y: 962 },
       { x: 1182, y: 970 },
     ]);
