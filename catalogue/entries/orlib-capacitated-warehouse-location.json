@@ -726,6 +726,7 @@
     "capacity",
     "demand",
     "fixedCost",
-    "cost"
+    "cost",
+    "supply-chain-network-design"
   ]
 }

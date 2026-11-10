@@ -181,6 +181,7 @@
     "unit_price",
     "weight_kilograms",
     "freight_cost_usd",
-    "line_item_insurance_usd"
+    "line_item_insurance_usd",
+    "supply-chain-network-design"
   ]
 }

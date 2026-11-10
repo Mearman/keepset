@@ -195,6 +195,7 @@
     "Order_City",
     "Order_Country",
     "Latitude",
-    "Longitude"
+    "Longitude",
+    "supply-chain-network-design"
   ]
 }
