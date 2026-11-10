@@ -277,7 +277,7 @@ const CflpParserSchema = z
     costBasis: z.enum(["per-assignment", "per-unit"]).optional(),
     /** Set for a `pairs` or `demands-first` set whose files do not all write the facility count first: the counts are read in whichever order the number of values in the file fits, and the two orders need different numbers of values unless the counts are equal. */
     countOrder: z.literal("either").optional(),
-    /** Set for a `pairs` or `demands-first` set whose files have text after the instance (a mail it was sent in): everything from the first token that is not a number is not read, and the instance before it must still be whole. */
+    /** Set for a `pairs` or `demands-first` set whose files have text after the instance (a mail it was sent in): everything from the first token that is not a number, or from anything after a run of NUL padding, is not read, and the instance before it must still be whole. */
     trailingText: z.literal("ignore").optional(),
     /** Set to read an `orlib-cap` file as an uncapacitated instance, which OR-Library's uncapacitated set and UflLib's packages in that layout are: the capacities (or the word `capacity` in their place) and the demands are read and checked but not carried. */
     uncapacitated: z.literal(true).optional(),
