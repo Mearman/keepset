@@ -1,0 +1,98 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "aliases": [
+    "supplygraph-product-groups"
+  ],
+  "category": "graph/v1",
+  "citations": [
+    {
+      "doi": "10.48550/arXiv.2401.15299",
+      "text": "A. T. Wasi, M. S. Islam, A. R. Akib (2024). SupplyGraph: a benchmark dataset for supply chain planning using graph neural networks. arXiv:2401.15299."
+    }
+  ],
+  "crosswalk": {
+    "file": "crosswalks/graph-v1/topology.json"
+  },
+  "description": "SupplyGraph links the products of a fast-moving consumer goods company that share a production or storage attribute. Each file is one instance: the products as nodes and one edge for each line of the file, so a pair of products that share several codes has an edge for each. The code an edge stands for (the plant, storage location, group or subgroup) is in the file but not carried, since the edge-list parser reads topology only, and the node files and the daily production, sales order, delivery and factory issue series are not read; graph/v1 holds no time series. The files list some pairs in one direction and some in both, so direction carries no meaning. The repository's licence is LGPL-2.1. This entry reads the relations of shared product group and shared product subgroup.",
+  "domain": "Supply chain planning",
+  "expectedCounts": {
+    "instances": 2
+  },
+  "id": "github-supplygraph-product-groups",
+  "licence": {
+    "id": "LGPL-2.1",
+    "kind": "spdx"
+  },
+  "name": "SupplyGraph product group and subgroup graphs",
+  "namespace": [
+    "github",
+    "supplygraph"
+  ],
+  "properties": {
+    "directed": false,
+    "multigraph": true,
+    "selfLoops": false,
+    "weighted": false
+  },
+  "recipe": {
+    "files": [
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "Edges (Product Group).csv",
+        "source": 1
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "Edges (Product Sub-Group).csv",
+        "source": 2
+      }
+    ],
+    "parser": {
+      "commentPrefixes": [],
+      "delimiter": "comma",
+      "encoding": "utf-8",
+      "format": "edge-list",
+      "skipLines": 1,
+      "sourceColumn": 0,
+      "targetColumn": 1
+    },
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250425205803",
+        "url": "https://web.archive.org/web/20250425205803/https://github.com/ciol-researchlab/SupplyGraph"
+      },
+      "status": "live",
+      "url": "https://github.com/ciol-researchlab/SupplyGraph"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20261110084417",
+        "url": "https://web.archive.org/web/20261110084417/https://raw.githubusercontent.com/ciol-researchlab/SupplyGraph/0e6d010e256ee08e34ab6bef5a111ef1c758b32d/Raw%20Dataset/Homogenoeus/Edges/Edges%20%28Product%20Group%29.csv"
+      },
+      "status": "live",
+      "url": "https://raw.githubusercontent.com/ciol-researchlab/SupplyGraph/0e6d010e256ee08e34ab6bef5a111ef1c758b32d/Raw%20Dataset/Homogenoeus/Edges/Edges%20%28Product%20Group%29.csv"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20261110084405",
+        "url": "https://web.archive.org/web/20261110084405/https://raw.githubusercontent.com/ciol-researchlab/SupplyGraph/0e6d010e256ee08e34ab6bef5a111ef1c758b32d/Raw%20Dataset/Homogenoeus/Edges/Edges%20%28Product%20Sub-Group%29.csv"
+      },
+      "status": "live",
+      "url": "https://raw.githubusercontent.com/ciol-researchlab/SupplyGraph/0e6d010e256ee08e34ab6bef5a111ef1c758b32d/Raw%20Dataset/Homogenoeus/Edges/Edges%20%28Product%20Sub-Group%29.csv"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": []
+}
