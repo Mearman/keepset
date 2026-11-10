@@ -1,0 +1,32 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/crossmap/schemas/crossmap.schema.json",
+  "keep": [
+    "meta",
+    "nodes[].id",
+    "nodes[].type",
+    "edges[].source",
+    "edges[].target",
+    "edges[].cost"
+  ],
+  "rules": [
+    {
+      "from": "nodes[].fixedCost",
+      "op": "move",
+      "to": "nodes[].fixedCost",
+      "when": {
+        "kind": "textCompare",
+        "left": {
+          "key": "nodes[].type",
+          "kind": "reference"
+        },
+        "op": "equals",
+        "right": {
+          "kind": "textLiteral",
+          "value": "facility"
+        }
+      }
+    }
+  ],
+  "source": "keepset/facility-location-uncapacitated",
+  "target": "graph/v1"
+}

@@ -261,6 +261,64 @@ function addDerivedColumnIssues(derived: readonly z.infer<typeof DerivedColumnSc
   }
 }
 
+/** The layouts of a facility location instance file, whose whitespace-separated numbers the `cflp` parser reads: `orlib-cap` (OR-Library's capacitated warehouse location files: the counts, each facility's capacity and fixed cost, then each customer's demand followed by its cost from every facility), `pairs` (the counts, each facility's capacity and fixed cost, the demands, then one row of costs per facility), `demands-first` (the counts, the demands, the capacities, the fixed costs, then one row of costs per facility) and `simple` (UflLib's simple format: a `FILE:` line, the facility and city counts and a 0, then one row per facility of its number, opening cost and connection costs). */
+const CFLP_LAYOUTS = ["orlib-cap", "pairs", "demands-first", "simple"] as const;
+
+/** The layouts whose files do not say what a cost is for, so the recipe states it. OR-Library's and UflLib's format pages define a cost as that of serving a customer's whole demand. */
+const STATED_COST_BASIS: ReadonlySet<(typeof CFLP_LAYOUTS)[number]> = new Set(["pairs", "demands-first"]);
+
+/** A facility location instance file read into a bipartite graph of facilities and customers, one edge per pair carrying its cost. */
+const CflpParserSchema = z
+  .object({
+    format: z.literal("cflp"),
+    encoding: EncodingSchema,
+    layout: z.enum(CFLP_LAYOUTS),
+    /** What a cost in a `pairs` or `demands-first` file is for: serving the customer's whole demand from the facility (`per-assignment`) or one unit of it (`per-unit`). It is recorded in each instance's meta, and the costs are carried as the file writes them. */
+    costBasis: z.enum(["per-assignment", "per-unit"]).optional(),
+    /** Set for a `pairs` or `demands-first` set whose files do not all write the facility count first: the counts are read in whichever order the number of values in the file fits, and the two orders need different numbers of values unless the counts are equal. */
+    countOrder: z.literal("either").optional(),
+    /** Set for a `pairs` or `demands-first` set whose files have text after the instance (a mail it was sent in): everything from the first token that is not a number is not read, and the instance before it must still be whole. */
+    trailingText: z.literal("ignore").optional(),
+    /** Set to read an `orlib-cap` file as an uncapacitated instance, which OR-Library's uncapacitated set and UflLib's packages in that layout are: the capacities (or the word `capacity` in their place) and the demands are read and checked but not carried. */
+    uncapacitated: z.literal(true).optional(),
+    /** The values the word `capacity` stands for in the `orlib-cap` files that write it in place of every facility's capacity (OR-Library's capa, capb and capc), by the instance id a collection gives the file: such a file is read once for each value, an instance named by the file's id and the value joined by `/`. */
+    capacityValues: z
+      .array(
+        z
+          .object({
+            instance: z.string().min(1),
+            values: z
+              .array(z.number().positive())
+              .min(1)
+              .refine((values) => new Set(values).size === values.length, { message: "each value may be given once" }),
+          })
+          .strict(),
+      )
+      .min(1)
+      .refine((files) => new Set(files.map((file) => file.instance)).size === files.length, { message: "each instance may be given values once" })
+      .optional(),
+  })
+  .strict()
+  .superRefine((parser, ctx) => {
+    const stated = STATED_COST_BASIS.has(parser.layout);
+    if (stated !== (parser.costBasis !== undefined)) {
+      ctx.addIssue({ code: "custom", path: ["costBasis"], message: stated ? `a ${parser.layout} file does not say what a cost is for, so the recipe states its costBasis` : `the ${parser.layout} format defines a cost as serving the whole demand, so the recipe states no costBasis` });
+    }
+    for (const option of ["countOrder", "trailingText"] as const) {
+      if (!stated && parser[option] !== undefined) {
+        ctx.addIssue({ code: "custom", path: [option], message: `${option} applies to the pairs and demands-first layouts only` });
+      }
+    }
+    for (const option of ["uncapacitated", "capacityValues"] as const) {
+      if (parser.layout !== "orlib-cap" && parser[option] !== undefined) {
+        ctx.addIssue({ code: "custom", path: [option], message: `${option} applies to the orlib-cap layout only` });
+      }
+    }
+    if (parser.uncapacitated === true && parser.capacityValues !== undefined) {
+      ctx.addIssue({ code: "custom", path: ["capacityValues"], message: "an uncapacitated instance carries no capacity, so the recipe names no values for it" });
+    }
+  });
+
 /** The parser that reads the unpacked file into the dataset's native JSON shape, with the options that format needs. Every option is stated in the entry, so a recipe reads the same way wherever it runs. */
 export const ParserSchema = z.discriminatedUnion("format", [
   z
@@ -442,6 +500,7 @@ export const ParserSchema = z.discriminatedUnion("format", [
   z.object({ format: z.literal("mankowska"), encoding: EncodingSchema }).strict(),
   z.object({ format: z.literal("verolog-2017"), encoding: EncodingSchema }).strict(),
   z.object({ format: z.literal("tdc"), encoding: EncodingSchema }).strict(),
+  CflpParserSchema,
   /** A resource page of OpenSLR (openslr.org): the resource's title, identifier, summary, category, licence, description and external address as the instance's meta, and its download links as nodes. */
   z.object({ format: z.literal("openslr-resource"), encoding: z.literal("utf-8") }).strict(),
   z.object({ format: z.literal("utterance-lines"), encoding: EncodingSchema, layout: z.enum(["id-first", "id-last", "festival", "sphinx"]).optional() }).strict(),

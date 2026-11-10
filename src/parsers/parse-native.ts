@@ -53,6 +53,7 @@ import { parseUserItemRatings } from "./user-item-ratings";
 import { parseVrpRep } from "./vrp-rep";
 import { parseWitvlietSynapses } from "./witvliet-synapses";
 import type { InstanceParser } from "./instance-shapes";
+import { parseCflp, parseCflpInstances } from "./cflp";
 
 /** Bytes converted per String.fromCharCode call: spreading a whole file would exceed the engine's argument-count limit, and this many stays well inside every engine's. */
 const LATIN1_CHUNK = 0x8000;
@@ -193,6 +194,9 @@ export function parseNative(bytes: Uint8Array, parser: Parser): NativeDocument {
   if (parser.format === "speaker-trials") {
     return parseSpeakerTrials(decodePieces(bytes, parser));
   }
+  if (parser.format === "cflp") {
+    return parseCflp(decodePieces(bytes, parser), parser);
+  }
   const text = decode(bytes, parser);
   if (parser.format === "geojson") {
     return parseGeojson(text, parser);
@@ -266,6 +270,22 @@ export function parseNative(bytes: Uint8Array, parser: Parser): NativeDocument {
   }
 
   return parsePajek(text);
+}
+
+/**
+ * Reads one file of a collection into the instances it gives, each with the id it is filed under: one at the file's own id for every format but `cflp`, whose OR-Library files that write the word `capacity` give one instance for each value the recipe names for the file.
+ * @param id - The id the collection files the file under: the member's path, or the downloaded file's.
+ * @param bytes - The unpacked file.
+ * @param parser - The recipe's parser.
+ * @returns The instances, each with its id and native document.
+ * @throws NativeParseError as `parseNative` does.
+ */
+export function parseNativeInstances(id: string, bytes: Uint8Array, parser: Parser): readonly { readonly id: string; readonly native: NativeDocument }[] {
+  if (parser.format === "cflp") {
+    return parseCflpInstances(id, decodePieces(bytes, parser), parser);
+  }
+
+  return [{ id, native: parseNative(bytes, parser) }];
 }
 
 /** A file of a document read from several, as the archive step gives it: the part's name and its bytes. */
