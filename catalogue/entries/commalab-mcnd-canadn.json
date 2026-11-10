@@ -1,0 +1,74 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "aliases": [
+    "canadn"
+  ],
+  "category": "graph/v1",
+  "citations": [
+    {
+      "doi": "10.1016/S0166-218X(00)00310-3",
+      "text": "T. G. Crainic, A. Frangioni, B. Gendron (2001). Bundle-based relaxation methods for multicommodity capacitated fixed charge network design. Discrete Applied Mathematics 112(1-3), 73-99."
+    }
+  ],
+  "crosswalk": {
+    "file": "crosswalks/graph-v1/topology.json"
+  },
+  "description": "The large Mulgen instances of the fixed-charge multicommodity min-cost flow problem generated with Gendron's Mulgen generator to test decomposition approaches, as distributed by the CommaLAB group of the University of Pisa, with the generator parameter files that reproduce them.",
+  "domain": "Multicommodity capacitated fixed-charge network design",
+  "expectedCounts": {},
+  "id": "commalab-mcnd-canadn",
+  "licence": {
+    "kind": "unrecorded"
+  },
+  "name": "Canad large Mulgen multicommodity network design instances",
+  "namespace": [
+    "commalab"
+  ],
+  "properties": {
+    "directed": true,
+    "downloadBytes": 42169731
+  },
+  "recipe": {
+    "reason": "The instances are in the Canad format of the Bipart and Mulgen generators' Format file, which gives each arc a fixed cost, a mutual capacity and a cost and capacity for every commodity, and each commodity a supply at every node; keepset has no parser for it, and the canad-dow parser reads only the C, C+ and R layout.",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "byteLength": 21684,
+        "sha256": "e7ce21438393d87a440177e8fb0312f1d12ace9d234cd851fd2a18c5d463941b",
+        "timestamp": "20261011035221",
+        "url": "https://web.archive.org/web/20261011035221/https://commalab.di.unipi.it/datasets/mmcf/"
+      },
+      "status": "live",
+      "url": "https://commalab.di.unipi.it/datasets/mmcf/"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "byteLength": 42168223,
+        "sha256": "56a8fffc510c90f833a28291ed7113a26e84b830ad1759985ac3dbb7f040e50b",
+        "timestamp": "20261110081724",
+        "url": "https://web.archive.org/web/20261110081724/https://commalab.di.unipi.it/files/Data/MMCF/CanadN.tgz"
+      },
+      "status": "live",
+      "url": "https://commalab.di.unipi.it/files/Data/MMCF/CanadN.tgz"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "byteLength": 1508,
+        "sha256": "9edcc09da1c40dd4b2423f7b3723a72b2f3f2a2347b6ddf679b7509e29d830a0",
+        "timestamp": "20261110081709",
+        "url": "https://web.archive.org/web/20261110081709/https://commalab.di.unipi.it/files/Data/MMCF/CanadN-p.tgz"
+      },
+      "status": "live",
+      "url": "https://commalab.di.unipi.it/files/Data/MMCF/CanadN-p.tgz"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": []
+}
