@@ -1,3 +1,20 @@
+# [0.131.0](https://github.com/Mearman/keepset/compare/v0.130.0...v0.131.0) (2026-11-10)
+
+
+### Bug Fixes
+
+* read a repeated Content-Type as the last media type it names ([3bc945a](https://github.com/Mearman/keepset/commit/3bc945a4713fe2de50367153576dfcb8b14aaa56))
+
+
+### Features
+
+* catalogue multi-echelon inventory and waste collection instances ([5adc0a7](https://github.com/Mearman/keepset/commit/5adc0a76f391173c0fd9fa7677471cf77f8a1b90))
+* catalogue shipment and order record tables ([6d06a39](https://github.com/Mearman/keepset/commit/6d06a39341f77460ce1f9311c5dc040d6367c4b3))
+* catalogue the SupplyGraph product relation graphs ([d6442a4](https://github.com/Mearman/keepset/commit/d6442a4f0c815a63dda992bfd659e9b00deca830))
+* list network LP and network design model files as resources ([f4d5597](https://github.com/Mearman/keepset/commit/f4d5597638cf760e8ba2addd3723560cad8daf3d))
+* read a text as the records a pattern matches in it ([a9efce7](https://github.com/Mearman/keepset/commit/a9efce7a822e16596cf0a95395b144df9da3c2a7))
+* record supply chain and freight sources keepset cannot fetch yet ([b8310f8](https://github.com/Mearman/keepset/commit/b8310f86d55eca0635ec3e0ebde35f55a67ddd88))
+
 # [0.130.0](https://github.com/Mearman/keepset/compare/v0.129.0...v0.130.0) (2026-11-10)
 
 
