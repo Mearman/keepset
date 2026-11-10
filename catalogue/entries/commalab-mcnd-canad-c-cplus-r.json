@@ -1,0 +1,147 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "aliases": [
+    "canad-c-cplus-r"
+  ],
+  "category": "graph/v1",
+  "citations": [
+    {
+      "doi": "10.1016/S0166-218X(00)00310-3",
+      "text": "T. G. Crainic, A. Frangioni, B. Gendron (2001). Bundle-based relaxation methods for multicommodity capacitated fixed charge network design. Discrete Applied Mathematics 112(1-3), 73-99."
+    }
+  ],
+  "crosswalk": {
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].type",
+      "nodes[].demand",
+      "edges[].source",
+      "edges[].target",
+      "edges[].type",
+      "edges[].cost",
+      "edges[].capacity",
+      "edges[].fixedCost"
+    ],
+    "source": "canad-dow",
+    "target": "graph/v1"
+  },
+  "description": "Gendron's C, C+ and R instances of the multicommodity capacitated fixed-charge network design problem, as distributed by the CommaLAB group of the University of Pisa. Each instance is a directed network whose arcs carry a variable cost per unit of flow, a capacity and a fixed cost of opening the arc, and a set of commodities, each a demand to route from an origin node to a destination node. In each instance the network nodes are nodes of type node, each commodity is a node of type commodity carrying its demand with an origin edge and a destination edge to the nodes it joins, and the arcs are edges of type arc. The instances carry no reference values; published optima and bounds are in the papers that use the set.",
+  "domain": "Multicommodity capacitated fixed-charge network design",
+  "expectedCounts": {
+    "instances": 205
+  },
+  "id": "commalab-mcnd-canad-c-cplus-r",
+  "licence": {
+    "kind": "unrecorded"
+  },
+  "name": "Canad C, C+ and R multicommodity network design instances",
+  "namespace": [
+    "commalab"
+  ],
+  "properties": {
+    "directed": true,
+    "downloadBytes": 357248
+  },
+  "recipe": {
+    "files": [
+      {
+        "archive": {
+          "kind": "tar.gz",
+          "members": {
+            "extensions": [
+              ".dow"
+            ]
+          }
+        },
+        "path": "C.tgz",
+        "source": 1
+      },
+      {
+        "archive": {
+          "kind": "tar.gz",
+          "members": {
+            "extensions": [
+              ".dow"
+            ]
+          }
+        },
+        "path": "CPlus.tgz",
+        "source": 2
+      },
+      {
+        "archive": {
+          "kind": "tar.gz",
+          "members": {
+            "extensions": [
+              ".dow"
+            ]
+          }
+        },
+        "path": "R.tgz",
+        "source": 3
+      }
+    ],
+    "parser": {
+      "encoding": "utf-8",
+      "format": "canad-dow"
+    },
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "byteLength": 21684,
+        "sha256": "e7ce21438393d87a440177e8fb0312f1d12ace9d234cd851fd2a18c5d463941b",
+        "timestamp": "20261011035221",
+        "url": "https://web.archive.org/web/20261011035221/https://commalab.di.unipi.it/datasets/mmcf/"
+      },
+      "status": "live",
+      "url": "https://commalab.di.unipi.it/datasets/mmcf/"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "byteLength": 170933,
+        "sha256": "71c4bc1a27aa2b66680e0891503610ceb52a0e95e3ca40235f94e1d384bb15fe",
+        "timestamp": "20261110081627",
+        "url": "https://web.archive.org/web/20261110081627/https://commalab.di.unipi.it/files/Data/MMCF/C.tgz"
+      },
+      "status": "live",
+      "url": "https://commalab.di.unipi.it/files/Data/MMCF/C.tgz"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "byteLength": 30554,
+        "sha256": "684b0a4858896ace3aba4429b0b956166805ce7c229c6029914a0eb4fe247cee",
+        "timestamp": "20261110081645",
+        "url": "https://web.archive.org/web/20261110081645/https://commalab.di.unipi.it/files/Data/MMCF/CPlus.tgz"
+      },
+      "status": "live",
+      "url": "https://commalab.di.unipi.it/files/Data/MMCF/CPlus.tgz"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "byteLength": 155761,
+        "sha256": "40a3262a93229621937af2b51b74c0891ece7c38bf47261491b54dc77277041a",
+        "timestamp": "20261110081838",
+        "url": "https://web.archive.org/web/20261110081838/https://commalab.di.unipi.it/files/Data/MMCF/R.tgz"
+      },
+      "status": "live",
+      "url": "https://commalab.di.unipi.it/files/Data/MMCF/R.tgz"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": [
+    "cost",
+    "capacity",
+    "fixedCost",
+    "demand",
+    "typed"
+  ]
+}

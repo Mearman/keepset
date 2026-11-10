@@ -1,0 +1,100 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "aliases": [
+    "lrp-prins-prodhon"
+  ],
+  "category": "tasks/v1",
+  "citations": [
+    {
+      "doi": "10.1007/s10288-006-0001-9",
+      "text": "C. Prins, C. Prodhon, R. Wolfler Calvo (2006). Solving the capacitated location-routing problem by a GRASP complemented by a learning process and a path relinking. 4OR 4(3), 221-238."
+    }
+  ],
+  "crosswalk": {
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].x",
+      "nodes[].y",
+      "nodes[].role",
+      "nodes[].demand",
+      "nodes[].capacity",
+      "nodes[].openingCost"
+    ],
+    "source": "lrp",
+    "target": "tasks/v1"
+  },
+  "description": "Prins, Prodhon and Wolfler Calvo's capacitated location-routing instances, with capacitated depots and vehicles, as collected by C. Prodhon. Each instance's nodes are its depots, with their capacity and opening cost, then its customers, with their demand, all with planar coordinates; the vehicle capacity, the cost of opening a route and whether costs are real distances or distances times 100 truncated to whole numbers are its meta. Costs are Euclidean distances between the coordinates. Best known results are tabulated on the source page and are not carried.",
+  "domain": "Capacitated location-routing",
+  "expectedCounts": {
+    "instances": 30
+  },
+  "id": "prodhon-lrp-prins-prodhon",
+  "licence": {
+    "kind": "unrecorded"
+  },
+  "name": "Prins and Prodhon capacitated location-routing instances",
+  "namespace": [
+    "prodhon"
+  ],
+  "properties": {
+    "downloadBytes": 15948
+  },
+  "recipe": {
+    "archive": {
+      "kind": "zip",
+      "members": {
+        "extensions": [
+          ".dat"
+        ]
+      }
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "lrp"
+    },
+    "source": 2,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "byteLength": 26014,
+        "sha256": "d172fa81329edeca9b8301ded306216938f5f69d486973f929e798da19a4120b",
+        "timestamp": "20260909073614",
+        "url": "https://web.archive.org/web/20260909073614/http://prodhonc.free.fr/Instances/instances_us.htm"
+      },
+      "status": "live",
+      "url": "http://prodhonc.free.fr/Instances/instances_us.htm"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "byteLength": 436,
+        "sha256": "974046913de78cf58161f8161123cce58b57d32e509dbc8efa9d563367920e2a",
+        "timestamp": "20261008214237",
+        "url": "https://web.archive.org/web/20261008214237/http://prodhonc.free.fr/Instances/Format.txt"
+      },
+      "status": "live",
+      "url": "http://prodhonc.free.fr/Instances/Format.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "byteLength": 15948,
+        "sha256": "2fc6433a2e00593372ba8db4bd35d2f828c845ec44de15c5408135e686665dd5",
+        "timestamp": "20250207160410",
+        "url": "https://web.archive.org/web/20250207160410/http://prodhonc.free.fr/Instances/Instances_Prodhon_LRP.zip"
+      },
+      "status": "live",
+      "url": "http://prodhonc.free.fr/Instances/Instances_Prodhon_LRP.zip"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": [
+    "location"
+  ]
+}
