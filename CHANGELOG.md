@@ -1,3 +1,16 @@
+# [0.129.0](https://github.com/Mearman/keepset/compare/v0.128.0...v0.129.0) (2026-11-10)
+
+
+### Bug Fixes
+
+* write a held fetch result a piece at a time ([8e894d6](https://github.com/Mearman/keepset/commit/8e894d6f0e26e50d67a6963ab15cfd186899879b))
+
+
+### Features
+
+* catalogue facility location instance sets ([9a79128](https://github.com/Mearman/keepset/commit/9a791289f764a15c5ad74c1be8980eea041c0d0b))
+* read facility location instance files into graph/v1 ([fbcf32d](https://github.com/Mearman/keepset/commit/fbcf32d37ea281f38fc10937173132fc5d0ba9af))
+
 # [0.128.0](https://github.com/Mearman/keepset/compare/v0.127.2...v0.128.0) (2026-11-07)
 
 
