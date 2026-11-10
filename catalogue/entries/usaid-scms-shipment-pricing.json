@@ -1,0 +1,186 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "aliases": [
+    "scms-shipment-pricing"
+  ],
+  "category": "tasks/v1",
+  "citations": [
+    {
+      "text": "USAID (2017). Supply Chain Shipment Pricing Data. USAID Development Data Library.",
+      "url": "https://data.usaid.gov/d/a3rc-nmf6"
+    }
+  ],
+  "crosswalk": {
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].project_code",
+      "nodes[].managed_by",
+      "nodes[].fulfill_via",
+      "nodes[].vendor_inco_term",
+      "nodes[].product_group",
+      "nodes[].sub_classification",
+      "nodes[].vendor",
+      "nodes[].item_description",
+      "nodes[].line_item_quantity",
+      "nodes[].line_item_value",
+      "nodes[].pack_price",
+      "nodes[].unit_price",
+      "nodes[].weight_kilograms",
+      "nodes[].freight_cost_usd",
+      "nodes[].line_item_insurance_usd"
+    ],
+    "rules": [
+      {
+        "from": "nodes[].country",
+        "op": "move",
+        "to": "nodes[].territory"
+      },
+      {
+        "from": "nodes[].shipment_mode",
+        "op": "move",
+        "to": "nodes[].skill"
+      },
+      {
+        "from": "nodes[].scheduled_delivery_date",
+        "op": "move",
+        "to": "nodes[].deadline"
+      },
+      {
+        "from": "nodes[].delivered_to_client_date",
+        "op": "move",
+        "to": "nodes[].closed"
+      },
+      {
+        "from": "nodes[].po_sent_to_vendor_date",
+        "op": "move",
+        "to": "nodes[].opened"
+      }
+    ],
+    "source": "csv-table",
+    "target": "tasks/v1"
+  },
+  "description": "Line items of shipments of antiretroviral and HIV laboratory commodities made through USAID's Supply Chain Management System, with the destination country, vendor, product, quantities, prices, weight, freight and insurance costs, shipment mode and the dates each stage was reached. Each line item is a node: its destination country fills `territory`, its shipment mode `skill`, its scheduled delivery date `deadline`, the date it was delivered `closed` and the date the purchase order went to the vendor `opened`, which is null where the source says the date was not captured or the order was filled from a regional distribution centre (as the incoterm is for those orders); the project, management, fulfilment, incoterm, product, vendor, quantity, price, weight, freight and insurance columns pass through under their own names. Weight and freight cost stay text, since some rows refer to another shipment (`See DN-...`) or say the cost is included in the commodity cost. tasks/v1 is a compromise here: the rows are shipment records, not places or cases to visit or serve, and keepset has no records category yet. The publisher's host no longer resolves, so the recipe reads the pinned Wayback capture of its CSV export. The licence is stated two ways: the catalogue record's licence field names CC BY-ND 4.0, while its rights statement says USAID posts the data with a CC BY licence giving attribution to the partner that owns it. Under the no-derivatives reading a normalised copy may be made for one's own use but not shared.",
+  "domain": "Health commodity shipments",
+  "expectedCounts": {
+    "nodes": 10324
+  },
+  "id": "usaid-scms-shipment-pricing",
+  "licence": {
+    "kind": "custom",
+    "name": "CC BY-ND 4.0 per the record's licence field; the record's rights statement says the data is posted under CC BY with attribution to the partner",
+    "url": "http://creativecommons.org/licenses/by-nd/4.0/legalcode"
+  },
+  "name": "USAID Supply Chain Shipment Pricing Data",
+  "namespace": [
+    "usaid"
+  ],
+  "properties": {
+    "downloadBytes": 3820996
+  },
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "columns": [
+        "country",
+        "shipment_mode",
+        "scheduled_delivery_date",
+        "delivered_to_client_date",
+        "po_sent_to_vendor_date",
+        "project_code",
+        "managed_by",
+        "fulfill_via",
+        "vendor_inco_term",
+        "product_group",
+        "sub_classification",
+        "vendor",
+        "item_description",
+        "line_item_quantity",
+        "line_item_value",
+        "pack_price",
+        "unit_price",
+        "weight_kilograms",
+        "freight_cost_usd",
+        "line_item_insurance_usd"
+      ],
+      "delimiter": "comma",
+      "encoding": "utf-8",
+      "format": "csv-table",
+      "idColumn": "id",
+      "nullValues": [
+        "Date Not Captured",
+        "N/A - From RDC"
+      ],
+      "numericColumns": [
+        {
+          "column": "line_item_quantity",
+          "factor": 1
+        },
+        {
+          "column": "line_item_value",
+          "factor": 1
+        },
+        {
+          "column": "pack_price",
+          "factor": 1
+        },
+        {
+          "column": "unit_price",
+          "factor": 1
+        },
+        {
+          "column": "line_item_insurance_usd",
+          "factor": 1
+        }
+      ],
+      "skipLines": 0
+    },
+    "source": 1,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://data.amerigeoss.org/dataset/supply-chain-shipment-pricing-data"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "byteLength": 3820996,
+        "sha256": "c9ca9530539e7dbf37b377f3fcd383e1faa81c8e41c707e280b20a485508a537",
+        "timestamp": "20231117163905",
+        "url": "https://web.archive.org/web/20231117163905/https://data.usaid.gov/api/views/a3rc-nmf6/rows.csv"
+      },
+      "status": "dead",
+      "url": "https://data.usaid.gov/api/views/a3rc-nmf6/rows.csv"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": [
+    "territory",
+    "skill",
+    "deadline",
+    "closed",
+    "opened",
+    "project_code",
+    "managed_by",
+    "fulfill_via",
+    "vendor_inco_term",
+    "product_group",
+    "sub_classification",
+    "vendor",
+    "item_description",
+    "line_item_quantity",
+    "line_item_value",
+    "pack_price",
+    "unit_price",
+    "weight_kilograms",
+    "freight_cost_usd",
+    "line_item_insurance_usd"
+  ]
+}
