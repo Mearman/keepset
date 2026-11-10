@@ -86,7 +86,7 @@ test("a minimum entity count filters the listing and the count says how many rem
 
 test("every filter has an accessible name and a column sorts from the keyboard", async ({ page }) => {
   await page.goto("/");
-  const names = ["Search the catalogue", "Kind", "Domain", "Minimum entities", "Maximum entities"];
+  const names = ["Search the catalogue", "Kind", "Domain", "Subject", "Tag", "Namespace", "Minimum entities", "Maximum entities"];
   await Promise.all(names.map(async (name) => expect(page.getByLabel(name, { exact: true }).first()).toBeVisible()));
   const entities = page.locator("#island-root thead th", { hasText: "Entities" });
   await expect(entities).toHaveAttribute("aria-sort", "none");
@@ -96,6 +96,40 @@ test("every filter has an accessible name and a column sorts from the keyboard",
   await expect(entities).toHaveAttribute("aria-sort", "descending");
   await page.keyboard.press("Enter");
   await expect(entities).toHaveAttribute("aria-sort", "ascending");
+});
+
+/** The listing's count badge, as "<shown> of <total>". */
+async function shownOf(page: Page): Promise<{ shown: number; total: number }> {
+  const [shown, total] = ((await page.locator("#island-root .mantine-Badge-root").textContent()) ?? "").split(" of ").map(Number);
+
+  return { shown: shown ?? Number.NaN, total: total ?? Number.NaN };
+}
+
+test("the filters are read from the URL, and every change is written back to it in place", async ({ page }) => {
+  await page.goto("/?kind=graph&utm_source=elsewhere");
+  await expect(page.locator("#island-root .mantine-Pill-root", { hasText: "graph" })).toBeVisible();
+  const byKind = await shownOf(page);
+  expect(byKind.shown).toBeLessThan(byKind.total);
+  const entries = await page.evaluate(() => window.history.length);
+  await page.getByLabel("Search the catalogue").pressSequentially("karate");
+  await expect(page).toHaveURL(/\/\?kind=graph&q=karate$/);
+  expect(await page.evaluate(() => window.history.length)).toBe(entries);
+  const searched = await shownOf(page);
+  expect(searched.shown).toBeLessThan(byKind.shown);
+
+  await page.reload();
+  await expect(page.getByLabel("Search the catalogue")).toHaveValue("karate");
+  expect(await shownOf(page)).toEqual(searched);
+});
+
+test("a tag page links into the listing filtered by its tag, which shows the same datasets", async ({ page }) => {
+  await page.goto("/tags/");
+  await page.locator("ul.groups a").first().click();
+  const rows = await page.locator(".table-wrap.listing tbody tr").count();
+  await page.getByRole("link", { name: "Filter these datasets further in the full listing" }).click();
+  await expect(page).toHaveURL(/\/\?tag=/);
+  await expect(page.locator("#island-root.island-live")).toBeVisible();
+  expect((await shownOf(page)).shown).toBe(rows);
 });
 
 test("the listing loads neither the preview nor the map, and an entry page loads the preview but not the map", async ({ page }) => {

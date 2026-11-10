@@ -1,8 +1,8 @@
 /* The client island, now a React application: the whole script the site runs. On a page with a dataset listing it mounts a Mantine-controlled, TanStack-table view over the generated search index (the static table and form stay in the HTML as the no-JS baseline and are hidden once the island is live); on every page it turns each copy mount (a fetch command, a snapshot link) into a Mantine copy control; everywhere it registers the service worker. Every page still works without it: listings are static, commands are plain text. */
 
-import { useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { createRoot } from "react-dom/client";
-import { ActionIcon, Badge, Button, CopyButton, MantineProvider, NumberInput, Select, Table as MantineTable, TextInput, Tooltip } from "@mantine/core";
+import { ActionIcon, Badge, Button, CopyButton, MantineProvider, MultiSelect, NumberInput, Table as MantineTable, TextInput, Tooltip } from "@mantine/core";
 import "@mantine/core/styles.css";
 // Imported here and not by the map, because the stylesheet of a lazily loaded chunk is never linked to the page.
 import "leaflet/dist/leaflet.css";
@@ -10,6 +10,7 @@ import { useWindowVirtualizer } from "@tanstack/react-virtual";
 import { type ColumnDef, createSortedRowModel, rowSortingFeature, tableFeatures, useTable } from "@tanstack/react-table";
 import { entitiesText, entityTotal, sizeText, type Dimensions } from "../dimensions";
 import { listingColumnWidths } from "../listing-columns";
+import { FACETS, mapFacets, matchesFacets, parseListingQuery, serialiseListingQuery, type Facet, type FacetValues, type ListingQuery } from "../listing-query";
 import { siteRoot } from "./site-root";
 import "../styles.css";
 
@@ -24,6 +25,7 @@ interface SearchRecord extends Dimensions {
   readonly kind: string;
   readonly subjects?: readonly string[];
   readonly tags: readonly string[];
+  readonly namespaces?: readonly string[];
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -38,12 +40,6 @@ function isSearchRecord(value: unknown): value is SearchRecord {
 const features = tableFeatures({ rowSortingFeature, sortedRowModel: createSortedRowModel() });
 
 type ListingFeatures = typeof features;
-
-/** The bounds the entities filter sets on an entry's entity total (the sum its Entities column sorts by), each unset until the visitor types one. */
-interface EntityBounds {
-  readonly min: number | undefined;
-  readonly max: number | undefined;
-}
 
 /**
  * Whether a recorded count lies inside the bounds set on it. A count the entry does not record is inside no bound, so setting one hides the entries that cannot answer it.
@@ -66,27 +62,69 @@ const ESTIMATED_ROW_HEIGHT = 41;
 /** How many rows beyond the viewport are rendered on each side, so a fast scroll does not show blank space. */
 const ROW_OVERSCAN = 12;
 
-/** The interactive listing: filter inputs over the search index and a sortable table of what matches. */
-function Listing({ records }: { readonly records: readonly SearchRecord[] }): ReactNode {
-  const [text, setText] = useState("");
-  const [kind, setKind] = useState<string | null>(null);
-  const [domain, setDomain] = useState<string | null>(null);
-  const [bounds, setBounds] = useState<EntityBounds>({ min: undefined, max: undefined });
+/**
+ * The values a record holds for each attribute the listing filters by.
+ * @param record - The record.
+ * @returns Its kind, domain, subjects, tags and namespaces, each empty where it holds none.
+ */
+function heldBy(record: SearchRecord): FacetValues {
+  return { kind: [record.kind], domain: record.domain === undefined ? [] : [record.domain], subject: record.subjects ?? [], tag: record.tags, namespace: record.namespaces ?? [] };
+}
 
-  const kinds = useMemo(() => [...new Set(records.map((record) => record.kind))].sort(), [records]);
-  const domains = useMemo(() => [...new Set(records.flatMap((record) => (record.domain === undefined ? [] : [record.domain])))].sort(), [records]);
+/** Each attribute's filter as the controls show it: its accessible name, its placeholder, and whether its options list the most common first (tags, most of which name a field of one source only) or in label order. */
+const FACET_CONTROLS: Readonly<Record<Facet, { readonly label: string; readonly placeholder: string; readonly byCount: boolean }>> = {
+  kind: { label: "Kind", placeholder: "kind", byCount: false },
+  domain: { label: "Domain", placeholder: "domain", byCount: false },
+  subject: { label: "Subject", placeholder: "subject", byCount: false },
+  tag: { label: "Tag", placeholder: "tag", byCount: true },
+  namespace: { label: "Namespace", placeholder: "namespace", byCount: false },
+};
+
+/**
+ * One attribute's options: every value a record holds, labelled with how many records hold it, and every value the query already chose, so a value from a shared link that no record holds still shows as chosen and can be removed.
+ * @param records - Every record.
+ * @param facet - The attribute.
+ * @param chosen - The values already chosen.
+ * @returns The options in the attribute's order.
+ */
+function facetOptions(records: readonly SearchRecord[], facet: Facet, chosen: readonly string[]): { value: string; label: string }[] {
+  const counts = new Map<string, number>(chosen.map((value) => [value, 0]));
+  for (const record of records) {
+    for (const value of new Set(heldBy(record)[facet])) {
+      counts.set(value, (counts.get(value) ?? 0) + 1);
+    }
+  }
+  const byLabel = [...counts].sort(([left], [right]) => (left < right ? -1 : left > right ? 1 : 0));
+
+  return (FACET_CONTROLS[facet].byCount ? byLabel.sort(([, left], [, right]) => right - left) : byLabel).map(([value, count]) => ({ value, label: `${value} (${String(count)})` }));
+}
+
+/**
+ * Writes the query into the page's URL in place, without a reload or a new history entry, so the address bar always holds a link to the view on screen.
+ * @param query - The query.
+ */
+function writeQuery(query: ListingQuery): void {
+  const { pathname, hash } = window.location;
+  window.history.replaceState(window.history.state, "", `${pathname}${serialiseListingQuery(query)}${hash}`);
+}
+
+/** The interactive listing: filter inputs over the search index and a sortable table of what matches. The filters are read from the URL's query string when the listing mounts and written back to it on every change. */
+function Listing({ records }: { readonly records: readonly SearchRecord[] }): ReactNode {
+  const [query, setQuery] = useState(() => parseListingQuery(window.location.search));
+  useEffect(() => {
+    writeQuery(query);
+  }, [query]);
+
+  const options = useMemo(() => mapFacets((facet) => facetOptions(records, facet, query.facets[facet])), [records, query.facets]);
 
   const filtered = useMemo(() => {
-    const needle = text.trim().toLowerCase();
+    const needle = query.text.trim().toLowerCase();
 
     return records.filter((record) => {
-      if (kind !== null && record.kind !== kind) {
+      if (!matchesFacets(heldBy(record), query.facets)) {
         return false;
       }
-      if (domain !== null && record.domain !== domain) {
-        return false;
-      }
-      if (!within(entityTotal(record), bounds.min, bounds.max)) {
+      if (!within(entityTotal(record), query.minEntities, query.maxEntities)) {
         return false;
       }
       if (needle === "") {
@@ -96,7 +134,7 @@ function Listing({ records }: { readonly records: readonly SearchRecord[] }): Re
 
       return haystack.some((field) => field.toLowerCase().includes(needle));
     });
-  }, [records, text, kind, domain, bounds]);
+  }, [records, query]);
 
   // Column definitions are written as plain literals against the hook's own column type, not built through createColumnHelper: the helper infers each accessor over its own value type, which does not inter-type with the widened union under exactOptionalPropertyTypes. The order matches the static table's Name, Id, Kind, Domain so the two views of the listing read the same way.
   const columns: readonly ColumnDef<ListingFeatures, SearchRecord>[] = [
@@ -129,13 +167,17 @@ function Listing({ records }: { readonly records: readonly SearchRecord[] }): Re
   return (
     <>
       <div className="island-controls">
-        <TextInput className="island-search" aria-label="Search the catalogue" placeholder="search the catalogue" value={text} onChange={(event) => { setText(event.currentTarget.value); }} />
-        <Select className="island-filter" aria-label="Kind" placeholder="kind" data={kinds} value={kind} onChange={(value) => { setKind(value); }} clearable searchable />
-        <Select className="island-filter" aria-label="Domain" placeholder="domain" data={domains} value={domain} onChange={(value) => { setDomain(value); }} clearable searchable />
+        <TextInput className="island-search" aria-label="Search the catalogue" placeholder="search the catalogue" value={query.text} onChange={(event) => {
+          const text = event.currentTarget.value;
+          setQuery((current) => ({ ...current, text }));
+        }} />
+        {FACETS.map((facet) => (
+          <MultiSelect key={facet} className="island-filter" aria-label={FACET_CONTROLS[facet].label} placeholder={FACET_CONTROLS[facet].placeholder} data={options[facet]} value={[...query.facets[facet]]} onChange={(values) => { setQuery((current) => ({ ...current, facets: { ...current.facets, [facet]: values } })); }} clearable searchable hidePickedOptions />
+        ))}
         <div className="island-range" role="group" aria-label="Entities">
           <span className="island-range-label" aria-hidden="true">Entities</span>
-          {(["min", "max"] as const).map((key) => (
-            <NumberInput key={key} className="island-bound" aria-label={`${key === "min" ? "Minimum" : "Maximum"} entities`} placeholder={key} min={0} allowNegative={false} allowDecimal={false} value={bounds[key] ?? ""} onChange={(value) => { setBounds((current) => ({ ...current, [key]: typeof value === "number" ? value : undefined })); }} />
+          {([["min", "minEntities"], ["max", "maxEntities"]] as const).map(([key, field]) => (
+            <NumberInput key={key} className="island-bound" aria-label={`${key === "min" ? "Minimum" : "Maximum"} entities`} placeholder={key} min={0} allowNegative={false} allowDecimal={false} value={query[field] ?? ""} onChange={(value) => { setQuery((current) => ({ ...current, [field]: typeof value === "number" ? value : undefined })); }} />
           ))}
         </div>
         <Badge variant="light" size="lg">
