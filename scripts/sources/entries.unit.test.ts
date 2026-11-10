@@ -100,7 +100,17 @@ describe("checksums", () => {
       { path: "c.json", entry: entryWith("c", [liveSource("https://example.org/c")]) },
       { path: "d.json", entry: withChecksum(entryWith("d", [pinned("20260202000000")]), url, "20260202000000", checksum) },
     ];
-    expect(unchecksummed(files)).toEqual([{ url, timestamp: "20260101000000" }]);
+    expect(unchecksummed(files, undefined)).toEqual([{ url, timestamp: "20260101000000" }]);
+  });
+
+  it("lists only the snapshots the named entries pin, when entries are named", () => {
+    const other = "https://example.org/other";
+    const files = [
+      { path: "a.json", entry: entryWith("a", [pinned("20260101000000")]) },
+      { path: "b.json", entry: entryWith("b", [{ ...liveSource(other), snapshot: snapshotOf("20260303000000", other) }]) },
+    ];
+    expect(unchecksummed(files, new Set(["b"]))).toEqual([{ url: other, timestamp: "20260303000000" }]);
+    expect(unchecksummed(files, new Set(["missing"]))).toEqual([]);
   });
 
   it("records a checksum only on the sources that pin that snapshot, and never replaces one", () => {

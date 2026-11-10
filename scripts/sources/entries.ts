@@ -185,11 +185,15 @@ export interface Checksum {
 /**
  * Every distinct pinned snapshot, by source URL and timestamp, that records no checksum yet.
  * @param files - The entry files.
+ * @param entryIds - The entries whose snapshots to list, or undefined for every entry.
  * @returns The snapshots to read, sorted by URL then timestamp.
  */
-export function unchecksummed(files: readonly EntryFile[]): { url: string; timestamp: string }[] {
+export function unchecksummed(files: readonly EntryFile[], entryIds: ReadonlySet<string> | undefined): { url: string; timestamp: string }[] {
   const pending = new Map<string, { url: string; timestamp: string }>();
   for (const { entry } of files) {
+    if (entryIds !== undefined && !entryIds.has(entry.id)) {
+      continue;
+    }
     for (const source of entry.sources) {
       if (source.snapshot !== undefined && source.snapshot.sha256 === undefined) {
         pending.set(`${source.url}\n${source.snapshot.timestamp}`, { url: source.url, timestamp: source.snapshot.timestamp });
