@@ -356,11 +356,19 @@
   "sources": [
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20261018083755",
+        "url": "https://web.archive.org/web/20261018083755/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/capinfo.html"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/capinfo.html"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250619025454",
+        "url": "https://web.archive.org/web/20250619025454/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/capopt.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/capopt.txt"
     },
@@ -371,56 +379,100 @@
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250621072912",
+        "url": "https://web.archive.org/web/20250621072912/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap42.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap42.txt"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250616193343",
+        "url": "https://web.archive.org/web/20250616193343/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap43.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap43.txt"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250621074329",
+        "url": "https://web.archive.org/web/20250621074329/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap44.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap44.txt"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250620013943",
+        "url": "https://web.archive.org/web/20250620013943/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap51.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap51.txt"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250621085207",
+        "url": "https://web.archive.org/web/20250621085207/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap61.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap61.txt"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250621081343",
+        "url": "https://web.archive.org/web/20250621081343/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap62.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap62.txt"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250619045031",
+        "url": "https://web.archive.org/web/20250619045031/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap63.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap63.txt"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250615152121",
+        "url": "https://web.archive.org/web/20250615152121/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap64.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap64.txt"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250621071537",
+        "url": "https://web.archive.org/web/20250621071537/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap71.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap71.txt"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250621082518",
+        "url": "https://web.archive.org/web/20250621082518/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap72.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap72.txt"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250615142708",
+        "url": "https://web.archive.org/web/20250615142708/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap73.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap73.txt"
     },
@@ -431,71 +483,127 @@
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250621073803",
+        "url": "https://web.archive.org/web/20250621073803/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap81.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap81.txt"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250613012449",
+        "url": "https://web.archive.org/web/20250613012449/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap82.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap82.txt"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20260123043826",
+        "url": "https://web.archive.org/web/20260123043826/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap83.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap83.txt"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250621084829",
+        "url": "https://web.archive.org/web/20250621084829/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap84.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap84.txt"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250613003944",
+        "url": "https://web.archive.org/web/20250613003944/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap91.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap91.txt"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250619044356",
+        "url": "https://web.archive.org/web/20250619044356/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap92.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap92.txt"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250619033846",
+        "url": "https://web.archive.org/web/20250619033846/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap93.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap93.txt"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250615160747",
+        "url": "https://web.archive.org/web/20250615160747/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap94.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap94.txt"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250616190732",
+        "url": "https://web.archive.org/web/20250616190732/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap101.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap101.txt"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250616191606",
+        "url": "https://web.archive.org/web/20250616191606/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap102.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap102.txt"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250620012331",
+        "url": "https://web.archive.org/web/20250620012331/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap103.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap103.txt"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250613011923",
+        "url": "https://web.archive.org/web/20250613011923/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap104.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap104.txt"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250620020539",
+        "url": "https://web.archive.org/web/20250620020539/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap111.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap111.txt"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250616181647",
+        "url": "https://web.archive.org/web/20250616181647/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap112.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap112.txt"
     },
@@ -506,11 +614,19 @@
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250616183636",
+        "url": "https://web.archive.org/web/20250616183636/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap114.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap114.txt"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250615152240",
+        "url": "https://web.archive.org/web/20250615152240/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap121.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap121.txt"
     },
@@ -521,46 +637,82 @@
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250613012245",
+        "url": "https://web.archive.org/web/20250613012245/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap123.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap123.txt"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250621084216",
+        "url": "https://web.archive.org/web/20250621084216/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap124.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap124.txt"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250621072617",
+        "url": "https://web.archive.org/web/20250621072617/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap131.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap131.txt"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250613001851",
+        "url": "https://web.archive.org/web/20250613001851/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap132.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap132.txt"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250613003118",
+        "url": "https://web.archive.org/web/20250613003118/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap133.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap133.txt"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250613003805",
+        "url": "https://web.archive.org/web/20250613003805/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap134.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap134.txt"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250620014055",
+        "url": "https://web.archive.org/web/20250620014055/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/capa.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/capa.txt"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250619044539",
+        "url": "https://web.archive.org/web/20250619044539/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/capb.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/capb.txt"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250616181118",
+        "url": "https://web.archive.org/web/20250616181118/https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/capc.txt"
+      },
       "status": "live",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/capc.txt"
     }

@@ -64,6 +64,10 @@
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20261110105149",
+        "url": "https://web.archive.org/web/20261110105149/https://algo.rwth-aachen.de/ufllib/data/M.tgz"
+      },
       "status": "live",
       "url": "https://algo.rwth-aachen.de/ufllib/data/M.tgz"
     },
