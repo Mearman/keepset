@@ -15,6 +15,7 @@ import { parseCsvTable } from "./csv-table";
 import { parseGeojson } from "./geojson";
 import { parseHhcrsp } from "./hhcrsp";
 import { parseOpenslrResource } from "./openslr-resource";
+import { parseTextPattern } from "./text-pattern";
 import { parseUtteranceLines } from "./utterance-lines";
 import { parseJsonTable } from "./json-table";
 import { parseJsonWordCounts } from "./json-word-counts";
@@ -260,6 +261,9 @@ export function parseNative(bytes: Uint8Array, parser: Parser): NativeDocument {
   }
   if (parser.format === "hhcrsp") {
     return parseHhcrsp(text);
+  }
+  if (parser.format === "text-pattern") {
+    return parseTextPattern(text, parser);
   }
   if (parser.format === "openslr-resource") {
     return parseOpenslrResource(text);
