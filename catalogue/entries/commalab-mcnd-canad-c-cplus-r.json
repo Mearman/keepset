@@ -142,6 +142,7 @@
     "capacity",
     "fixedCost",
     "demand",
-    "typed"
+    "typed",
+    "supply-chain-network-design"
   ]
 }

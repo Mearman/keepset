@@ -89,6 +89,7 @@
     "uncapacitated",
     "bipartite",
     "fixedCost",
-    "cost"
+    "cost",
+    "supply-chain-network-design"
   ]
 }

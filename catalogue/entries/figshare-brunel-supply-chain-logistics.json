@@ -165,6 +165,7 @@
     "Customer",
     "Product_ID",
     "Unit_quantity",
-    "Weight"
+    "Weight",
+    "supply-chain-network-design"
   ]
 }

@@ -799,6 +799,7 @@
     "operations-research"
   ],
   "tags": [
-    "cost"
+    "cost",
+    "supply-chain-network-design"
   ]
 }

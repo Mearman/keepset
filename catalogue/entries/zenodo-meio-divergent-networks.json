@@ -117,6 +117,7 @@
     "Leaf_Node_Avg_Demand",
     "Leaf_Node_SD_Demand",
     "Service_Level",
-    "Lead_Time"
+    "Lead_Time",
+    "supply-chain-network-design"
   ]
 }
