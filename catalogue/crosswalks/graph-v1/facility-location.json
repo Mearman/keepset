@@ -1,0 +1,66 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/crossmap/schemas/crossmap.schema.json",
+  "keep": [
+    "meta",
+    "nodes[].id",
+    "nodes[].type",
+    "edges[].source",
+    "edges[].target",
+    "edges[].cost"
+  ],
+  "rules": [
+    {
+      "from": "nodes[].capacity",
+      "op": "move",
+      "to": "nodes[].capacity",
+      "when": {
+        "kind": "textCompare",
+        "left": {
+          "key": "nodes[].type",
+          "kind": "reference"
+        },
+        "op": "equals",
+        "right": {
+          "kind": "textLiteral",
+          "value": "facility"
+        }
+      }
+    },
+    {
+      "from": "nodes[].fixedCost",
+      "op": "move",
+      "to": "nodes[].fixedCost",
+      "when": {
+        "kind": "textCompare",
+        "left": {
+          "key": "nodes[].type",
+          "kind": "reference"
+        },
+        "op": "equals",
+        "right": {
+          "kind": "textLiteral",
+          "value": "facility"
+        }
+      }
+    },
+    {
+      "from": "nodes[].demand",
+      "op": "move",
+      "to": "nodes[].demand",
+      "when": {
+        "kind": "textCompare",
+        "left": {
+          "key": "nodes[].type",
+          "kind": "reference"
+        },
+        "op": "equals",
+        "right": {
+          "kind": "textLiteral",
+          "value": "customer"
+        }
+      }
+    }
+  ],
+  "source": "keepset/facility-location",
+  "target": "graph/v1"
+}

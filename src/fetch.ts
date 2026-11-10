@@ -4,7 +4,7 @@ import { countTarget, getCollectionTarget, getTarget, type CategoryTarget, type 
 import type { Dataset } from "./catalogue";
 import { ArchiveError, KeepsetError, RecipeError } from "./errors";
 import type { NativeDocument } from "./parsers/native";
-import { parseNative, parseNativeFiles, parseNativeParts } from "./parsers/parse-native";
+import { parseNative, parseNativeFiles, parseNativeInstances, parseNativeParts } from "./parsers/parse-native";
 import { parseMemberPaths } from "./parsers/member-path";
 import { parseGroupedMemberPaths } from "./parsers/grouped-member-path";
 import type { JsonScalar } from "./targets/json-scalar";
@@ -149,17 +149,15 @@ function parseFiles(files: readonly Member[], archive: FilesArchive, parser: Par
 }
 
 /**
- * Parses one instance of a collection into its native document, naming the instance when it fails.
- * @param id - The instance's id.
- * @param parse - Reads the instance: one file, or the several files of a files archive.
- * @returns The instance's native document, with only its own header values as `meta`.
- * @throws KeepsetError naming the instance when it does not parse.
+ * Parses one file of a collection into the instances it gives (one, or for a format that reads a file as several, each under its own id), naming the file when it fails.
+ * @param id - The file's id in the collection.
+ * @param parse - Reads the file into its instances.
+ * @returns Each instance's id and native document, with only its own header values as `meta`.
+ * @throws KeepsetError naming the file when it does not parse.
  */
-function parseInstance(id: string, parse: () => NativeDocument): { readonly id: string; readonly native: NativeWithMeta } {
+function parseInstances(id: string, parse: () => readonly { readonly id: string; readonly native: NativeDocument }[]): { readonly id: string; readonly native: NativeWithMeta }[] {
   try {
-    const parsed = parse();
-
-    return { id, native: { ...parsed, meta: "meta" in parsed ? parsed.meta : {} } };
+    return parse().map((instance) => ({ id: instance.id, native: { ...instance.native, meta: "meta" in instance.native ? instance.native.meta : {} } }));
   } catch (error) {
     throw new KeepsetError(`member ${id}: ${error instanceof Error ? error.message : String(error)}`, { cause: error });
   }
@@ -190,7 +188,8 @@ async function instancesOf(stored: SourceBytes, archive: Archive, parser: Parser
   if ("members" in archive) {
     const instances: { readonly id: string; readonly native: NativeWithMeta }[] = [];
     for await (const member of unpackMembers(stored, archive, unpacking)) {
-      instances.push(parseInstance(named(member.path), () => parseNative(member.bytes, parser)));
+      const id = named(member.path);
+      instances.push(...parseInstances(id, () => parseNativeInstances(id, member.bytes, parser)));
     }
 
     return instances;
@@ -202,15 +201,20 @@ async function instancesOf(stored: SourceBytes, archive: Archive, parser: Parser
     if (parser.format === "member-path" || parser.format === "grouped-member-path") {
       const paths = await listFilePaths(stored, archive, unpacking);
 
-      return [parseInstance(named(undefined), () => parser.format === "member-path" ? parseMemberPaths(paths, parser) : parseGroupedMemberPaths(paths, parser))];
+      const id = named(undefined);
+
+      return parseInstances(id, () => [{ id, native: parser.format === "member-path" ? parseMemberPaths(paths, parser) : parseGroupedMemberPaths(paths, parser) }]);
     }
     const files = await unpackFiles(stored, archive, unpacking);
 
-    return [parseInstance(named(undefined), () => parseFiles(files, archive, parser))];
+    const id = named(undefined);
+
+    return parseInstances(id, () => [{ id, native: parseFiles(files, archive, parser) }]);
   }
   const unpacked = await unpack(stored, archive, unpacking);
+  const id = named(unpacked.member);
 
-  return [parseInstance(named(unpacked.member), () => parseNative(unpacked.bytes, parser))];
+  return parseInstances(id, () => parseNativeInstances(id, unpacked.bytes, parser));
 }
 
 /**
