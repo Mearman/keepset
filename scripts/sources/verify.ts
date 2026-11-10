@@ -137,9 +137,16 @@ export function isWaybackPage(head: Pick<Head, "bytes" | "headers">): boolean {
 /** The media type of a page. */
 const HTML = "text/html";
 
-/** The media type of a `Content-Type`, without its parameters. */
+/** A media type, `type/subtype`, each an HTTP token (RFC 9110, section 8.3.1). */
+const MEDIA_TYPE = /^[!#$%&'*+.^_`|~0-9a-z-]+\/[!#$%&'*+.^_`|~0-9a-z-]+$/;
+
+/** The media type of a `Content-Type`, without its parameters. A header sent more than once reaches `Headers` as one value joined with commas (Zenodo's file downloads send it twice), and the Fetch standard's MIME type extraction takes the last type named, so this does too; a piece that is not a media type (the tail of a quoted parameter holding a comma) is passed over. */
 function mediaType(headers: Headers): string | undefined {
-  return headers.get("content-type")?.split(";")[0]?.trim().toLowerCase();
+  return headers
+    .get("content-type")
+    ?.split(",")
+    .map((value) => value.split(";")[0]?.trim().toLowerCase())
+    .findLast((type) => type !== undefined && MEDIA_TYPE.test(type));
 }
 
 /**

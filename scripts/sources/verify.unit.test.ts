@@ -65,6 +65,19 @@ describe("differences", () => {
     expect(both("<p>x</p>", "<p>y</p>", { replay: html, live: html })).toEqual(["the first bytes differ"]);
   });
 
+  it("reads a Content-Type sent more than once, which Headers joins with commas, as the last type it names", () => {
+    const repeated = new Headers({ "content-type": "application/octet-stream" });
+    repeated.append("content-type", "application/octet-stream");
+    const body = new TextEncoder().encode("PK");
+    const head = (headers: Headers, url: string) => ({ status: 206, url, headers, bytes: body });
+    expect(differences(head(new Headers({ "content-type": "application/octet-stream" }), RAW), head(repeated, U))).toEqual([]);
+    const changed = new Headers({ "content-type": "text/plain" });
+    changed.append("content-type", "application/zip; charset=binary");
+    expect(differences(head(new Headers({ "content-type": "application/zip" }), RAW), head(changed, U))).toEqual([]);
+    const quoted = new Headers({ "content-type": 'text/csv; header="a,b"' });
+    expect(differences(head(new Headers({ "content-type": "text/csv" }), RAW), head(quoted, U))).toEqual([]);
+  });
+
   it("names a different media type, a different stated length and different first bytes", () => {
     expect(both("a,b\n", "a,b\n", { replay: { "content-type": "text/html" } })).toEqual(["the capture is text/html and the source is text/csv"]);
     expect(both("a,b\n", "a,b\n", { replay: { "content-range": "bytes 0-1023/12" }, live: { "content-range": "bytes 0-1023/13" } })).toEqual(["the capture is 12 bytes and the source 13"]);
