@@ -1,9 +1,10 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
-import { NAME_SEPARATOR, type Dataset, type DatasetQuery, type Manifest, type NamespaceNode } from "keepset";
+import { groupsOf, NAME_SEPARATOR, type Dataset, type DatasetQuery, type Entry, type Manifest, type NamespaceNode } from "keepset";
 import { dimensionsOf, type Dimensions } from "./dimensions";
 import { slug } from "./html";
-import { entryPage, groupsPage, homePage, listingPage, namespacePage, type PageContext, type SameDataEntry } from "./pages";
+import { facetQuery, type Facet } from "./listing-query";
+import { entryPage, groupsPage, homePage, listingPage, namespacePage, type GroupOrder, type PageContext, type SameDataEntry } from "./pages";
 
 /** One row of the search index the client island loads: enough to filter and label a result without fetching its page. */
 export interface SearchRecord extends Dimensions {
@@ -16,6 +17,8 @@ export interface SearchRecord extends Dimensions {
   readonly kind: string;
   readonly subjects?: readonly string[];
   readonly tags: readonly string[];
+  /** Every namespace the entry is listed under, at any depth, as the namespace pages list it; absent for an entry in none. */
+  readonly namespaces?: readonly string[];
   readonly fetchable: boolean;
 }
 
@@ -37,30 +40,77 @@ export interface SiteOptions {
 /** The files a build wrote, by path relative to the output directory, so a caller (the service worker's precache list, a test) can see exactly what the site holds. */
 export type SiteFiles = ReadonlyMap<string, string>;
 
+/** The datasets that share a listing page: the page's slug, every label filed under it, in label order, and the datasets holding any of them. */
+interface Group {
+  readonly slug: string;
+  readonly labels: readonly string[];
+  readonly datasets: readonly Dataset[];
+}
+
 /**
- * Groups datasets by a label, refusing two labels that share a slug, since they would share a listing page.
+ * Groups datasets by a label, one group per slug, since a slug names a listing page.
  * @param datasets - The datasets.
  * @param labelsOf - Each dataset's labels, none for a dataset the grouping does not apply to.
- * @returns The groups in label order.
+ * @param shareSlugs - Whether labels that share a slug share one page, as tags do (a source's field names can differ only in letter case, as `Weight` and `weight` do); otherwise two such labels are refused, since one would hide the other.
+ * @returns The groups in the order of their first labels.
  */
-function groupBy(datasets: readonly Dataset[], labelsOf: (dataset: Dataset) => readonly string[]): { label: string; datasets: Dataset[] }[] {
-  const groups = new Map<string, Dataset[]>();
+function groupBy(datasets: readonly Dataset[], labelsOf: (dataset: Dataset) => readonly string[], shareSlugs: boolean): Group[] {
+  const groups = new Map<string, { labels: Set<string>; datasets: Set<Dataset> }>();
   for (const dataset of datasets) {
-    for (const label of new Set(labelsOf(dataset))) {
-      groups.set(label, [...(groups.get(label) ?? []), dataset]);
+    for (const label of labelsOf(dataset)) {
+      const key = slug(label);
+      if (key === "") {
+        throw new Error(`the label ${JSON.stringify(label)} has no listing page of its own: its slug is empty`);
+      }
+      const group = groups.get(key) ?? { labels: new Set<string>(), datasets: new Set<Dataset>() };
+      group.labels.add(label);
+      group.datasets.add(dataset);
+      groups.set(key, group);
     }
-  }
-  const slugs = new Map<string, string>();
-  for (const label of groups.keys()) {
-    const key = slug(label);
-    const clash = slugs.get(key);
-    if (key === "" || clash !== undefined) {
-      throw new Error(`the label ${JSON.stringify(label)} has no listing page of its own: its slug ${JSON.stringify(key)} is empty or shared with ${JSON.stringify(clash)}`);
-    }
-    slugs.set(key, label);
   }
 
-  return [...groups].sort(([left], [right]) => (left < right ? -1 : 1)).map(([label, members]) => ({ label, datasets: members }));
+  return [...groups]
+    .map(([key, group]) => {
+      const labels = [...group.labels].sort(byText);
+      if (!shareSlugs && labels.length > 1) {
+        throw new Error(`the labels ${labels.map((label) => JSON.stringify(label)).join(" and ")} share the slug ${JSON.stringify(key)}, so one would have no listing page of its own`);
+      }
+
+      return { slug: key, labels, datasets: datasets.filter((dataset) => group.datasets.has(dataset)) };
+    })
+    .sort((left, right) => byText(left.labels.join(), right.labels.join()));
+}
+
+/** Orders text by its UTF-16 code units, as the listing pages always have, so an index reads the same on every machine whatever its locale. */
+function byText(left: string, right: string): number {
+  return left < right ? -1 : left > right ? 1 : 0;
+}
+
+/** One attribute the site has listing pages for: the index's title, the directory its pages sit in, the listing filter that selects the same datasets, each dataset's labels, whether labels sharing a slug share a page, and the order the index lists its groups in. */
+interface Dimension {
+  readonly title: string;
+  readonly directory: string;
+  readonly facet: Facet;
+  readonly labelsOf: (dataset: Dataset) => readonly string[];
+  readonly shareSlugs: boolean;
+  readonly order: GroupOrder;
+}
+
+/** The attributes with listing pages. Tags are a source's field names, so labels that differ only in letter case share a page, and the index lists the most common first, since most tags name a field of one source only. */
+const DIMENSIONS: readonly Dimension[] = [
+  { title: "Domains", directory: "domains", facet: "domain", labelsOf: (dataset) => (dataset.entry.domain === undefined ? [] : [dataset.entry.domain]), shareSlugs: false, order: "label" },
+  { title: "Subjects", directory: "subjects", facet: "subject", labelsOf: (dataset) => dataset.entry.subjects ?? [], shareSlugs: false, order: "label" },
+  { title: "Kinds", directory: "kinds", facet: "kind", labelsOf: (dataset) => [dataset.kind], shareSlugs: false, order: "label" },
+  { title: "Tags", directory: "tags", facet: "tag", labelsOf: (dataset) => dataset.entry.tags, shareSlugs: true, order: "count" },
+];
+
+/**
+ * Every namespace a dataset is listed under at any depth: each group its namespace or a path alias files it in, and every namespace above one, which is where the namespace pages list it.
+ * @param entry - The entry.
+ * @returns The namespace paths, each once.
+ */
+function namespacesOf(entry: Entry): string[] {
+  return [...new Set(groupsOf(entry).flatMap((group) => group.map((_, index) => group.slice(0, index + 1).join(NAME_SEPARATOR))))];
 }
 
 /**
@@ -86,7 +136,7 @@ function allNamespaces(catalogue: SiteCatalogue): NamespaceNode[] {
 }
 
 /**
- * Generates the static site's pages and data: the home page, one page per entry, listing pages by domain, by subject and by kind and one for each namespace, at any depth, with their indexes, the search index, the web app manifest and the service worker's precache manifest. Static assets and the client bundle are added by the caller.
+ * Generates the static site's pages and data: the home page, one page per entry, listing pages by domain, by subject, by kind and by tag and one for each namespace, at any depth, with their indexes, the search index, the web app manifest and the service worker's precache manifest. Static assets and the client bundle are added by the caller.
  * @param options - The catalogue, versions, URL and output directory.
  * @returns Every file written, by relative path.
  */
@@ -112,14 +162,11 @@ export function buildSite(options: SiteOptions): SiteFiles {
   for (const dataset of datasets) {
     files.set(`datasets/${dataset.entry.id}/index.html`, entryPage(context("../../"), dataset, sameDataOf(dataset)));
   }
-  for (const [title, directory, groups] of [
-    ["Domains", "domains", groupBy(datasets, (dataset) => (dataset.entry.domain === undefined ? [] : [dataset.entry.domain]))],
-    ["Subjects", "subjects", groupBy(datasets, (dataset) => dataset.entry.subjects ?? [])],
-    ["Kinds", "kinds", groupBy(datasets, (dataset) => [dataset.kind])],
-  ] as const) {
-    files.set(`${directory}/index.html`, groupsPage(context("../"), title, groups.map((group) => ({ label: group.label, count: group.datasets.length }))));
+  for (const { title, directory, facet, labelsOf, shareSlugs, order } of DIMENSIONS) {
+    const groups = groupBy(datasets, labelsOf, shareSlugs);
+    files.set(`${directory}/index.html`, groupsPage(context("../"), title, groups.map((group) => ({ labels: group.labels, path: `${group.slug}/`, count: group.datasets.length })), order));
     for (const group of groups) {
-      files.set(`${directory}/${slug(group.label)}/index.html`, listingPage(context("../../"), `${title.slice(0, -1)}: ${group.label}`, group.datasets));
+      files.set(`${directory}/${group.slug}/index.html`, listingPage(context("../../"), `${title.slice(0, -1)}: ${group.labels.join(", ")}`, group.datasets, facetQuery(facet, group.labels)));
     }
   }
 
@@ -140,6 +187,7 @@ export function buildSite(options: SiteOptions): SiteFiles {
     ...(entry.subjects === undefined ? {} : { subjects: entry.subjects }),
     kind,
     tags: entry.tags,
+    ...(groupsOf(entry).length === 0 ? {} : { namespaces: namespacesOf(entry) }),
     fetchable: entry.recipe.status === "fetchable",
     ...dimensionsOf(entry),
   }));
@@ -149,7 +197,7 @@ export function buildSite(options: SiteOptions): SiteFiles {
     JSON.stringify({ name: "keepset", short_name: "keepset", description: manifest.description, start_url: "./", scope: "./", display: "standalone", background_color: "#ffffff", theme_color: "#1f4e79", icons: [{ src: "icon.svg", sizes: "any", type: "image/svg+xml" }] }, undefined, 2),
   );
   // The service worker precaches the shell and every listing page, and caches entry pages as they are visited: the entry pages together are most of the site, too much to download on a first visit.
-  const shell = ["./", "app.css", "app.js", "icon.svg", "manifest.webmanifest", "search-index.json", ...[...files.keys()].filter((path) => path.startsWith("domains/") || path.startsWith("subjects/") || path.startsWith("kinds/") || path.startsWith("namespaces/")).map((path) => path.replace(/index\.html$/, ""))];
+  const shell = ["./", "app.css", "app.js", "icon.svg", "manifest.webmanifest", "search-index.json", ...[...files.keys()].filter((path) => [...DIMENSIONS.map(({ directory }) => directory), "namespaces"].some((directory) => path.startsWith(`${directory}/`))).map((path) => path.replace(/index\.html$/, ""))];
   files.set("precache.json", JSON.stringify({ version: `${packageVersion}+${manifest.id}@${manifest.version}`, urls: shell }));
 
   for (const [path, text] of files) {
