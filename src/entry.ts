@@ -5,6 +5,7 @@ import { define } from "./define";
 import { namesOf } from "./names";
 import { CatalogueSyntaxError, type SyntaxIssue } from "./errors";
 import { readTemplate, templateColumns } from "./parsers/column-template";
+import { captureNames } from "./parsers/text-pattern";
 import { recordOf } from "./record";
 import { JsonScalarSchema } from "./targets/json-scalar";
 
@@ -513,6 +514,41 @@ export const ParserSchema = z.discriminatedUnion("format", [
   z.object({ format: z.literal("dimacs-min"), encoding: EncodingSchema }).strict(),
   /** A resource page of OpenSLR (openslr.org): the resource's title, identifier, summary, category, licence, description and external address as the instance's meta, and its download links as nodes. */
   z.object({ format: z.literal("openslr-resource"), encoding: z.literal("utf-8") }).strict(),
+  /** A text read as the records a regular expression matches in it (a host's directory listing, a reference-value file): every match, in text order, is a row of the pattern's named captures, the `id` capture being the row's id, and each derived column is built from the captures its template names. */
+  z
+    .object({
+      format: z.literal("text-pattern"),
+      encoding: EncodingSchema,
+      /** A regular expression in JavaScript syntax, read with the `g` and `u` flags, with a named capture `id` and any other named captures as columns. */
+      pattern: z.string().min(1),
+      derivedColumns: z.array(DerivedColumnSchema).min(1).optional(),
+    })
+    .strict()
+    .superRefine((parser, ctx) => {
+      let names: string[];
+      try {
+        names = captureNames(parser.pattern);
+      } catch {
+        ctx.addIssue({ code: "custom", path: ["pattern"], message: "must be a valid regular expression" });
+
+        return;
+      }
+      if (!names.includes("id")) {
+        ctx.addIssue({ code: "custom", path: ["pattern"], message: "must have a named capture id, which is each row's id" });
+      }
+      for (const name of names) {
+        if (!ColumnNameSchema.safeParse(name).success) {
+          ctx.addIssue({ code: "custom", path: ["pattern"], message: `has the capture ${name}, which is not a column name` });
+        }
+      }
+      const derived = parser.derivedColumns ?? [];
+      for (const [index, { name }] of derived.entries()) {
+        if (name !== "id" && names.includes(name)) {
+          ctx.addIssue({ code: "custom", path: ["derivedColumns", index, "name"], message: `the derived column ${name} has the name of a capture of the pattern` });
+        }
+      }
+      addDerivedColumnIssues(derived, names, ctx);
+    }),
   z.object({ format: z.literal("utterance-lines"), encoding: EncodingSchema, layout: z.enum(["id-first", "id-last", "festival", "sphinx"]).optional() }).strict(),
   z
     .object({
