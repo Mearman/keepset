@@ -122,14 +122,61 @@ test("the filters are read from the URL, and every change is written back to it 
   expect(await shownOf(page)).toEqual(searched);
 });
 
-test("a tag page links into the listing filtered by its tag, which shows the same datasets", async ({ page }) => {
+test("a tag page mounts the home page's listing with its tag chosen, and any change gives the view as a home listing link", async ({ page }) => {
   await page.goto("/tags/");
-  await page.locator("ul.groups a").first().click();
-  const rows = await page.locator(".table-wrap.listing tbody tr").count();
-  await page.getByRole("link", { name: "Filter these datasets further in the full listing" }).click();
-  await expect(page).toHaveURL(/\/\?tag=/);
+  await expect(page.locator("#groups-root.island-live")).toBeVisible();
+  await page.locator("#groups-root ul.groups a").first().click();
   await expect(page.locator("#island-root.island-live")).toBeVisible();
+  const rows = await page.locator(".table-wrap.listing.island-baseline tbody tr").count();
+  await expect(page.locator(".island-baseline", { hasText: "Filter these datasets further in the full listing" })).toBeHidden();
+  await expect(page.locator(".table-wrap.listing.island-baseline")).toBeHidden();
+  await expect(page.locator("#island-root .mantine-Pill-root").first()).toBeVisible();
   expect((await shownOf(page)).shown).toBe(rows);
+  await expect(page).toHaveURL(/\/tags\/[^/?]+\/$/);
+  await page.getByLabel("Search the catalogue").pressSequentially("zzz-no-such-dataset");
+  await expect(page).toHaveURL(new RegExp(`/\\?tag=[^&]+&q=zzz-no-such-dataset$`));
+  await expect(page.getByText("No datasets match these filters.")).toBeVisible();
+});
+
+test("a kind page starts from its kind, and its rows link to the entry pages from its own depth", async ({ page }) => {
+  await page.goto("/kinds/resources/");
+  await expect(page.locator("#island-root .mantine-Pill-root", { hasText: "resources" })).toBeVisible();
+  const { shown, total } = await shownOf(page);
+  expect(shown).toBeLessThan(total);
+  expect(shown).toBe(await page.locator(".table-wrap.listing.island-baseline tbody tr").count());
+  await page.locator("#island-root tbody tr[data-index] a").first().click();
+  await expect(page).toHaveURL(/\/datasets\/[^/]+\/$/);
+});
+
+test("an index of listing pages filters by text, orders by name or count, and keeps the text in the URL", async ({ page }) => {
+  await page.goto("/tags/");
+  const badge = page.locator("#groups-root .mantine-Badge-root");
+  await expect(badge).toBeVisible();
+  const counts = async (): Promise<number[]> => (await page.locator("#groups-root ul.groups li").allTextContents()).map((text) => Number(/\((\d+)\)$/.exec(text)?.[1]));
+  const byCount = await counts();
+  expect(byCount).toEqual([...byCount].sort((left, right) => right - left));
+  await page.getByText("By name").click();
+  const labels = (await page.locator("#groups-root ul.groups a").allTextContents());
+  expect(labels).toEqual([...labels].sort((left, right) => (left < right ? -1 : left > right ? 1 : 0)));
+  const [, total] = ((await badge.textContent()) ?? "").split(" of ");
+  await page.getByLabel("Filter the tags").pressSequentially("weight");
+  await expect(page).toHaveURL(/\/tags\/\?q=weight$/);
+  await expect(badge).not.toHaveText(new RegExp(`^${String(total)} of`));
+  for (const label of await page.locator("#groups-root ul.groups a").allTextContents()) {
+    expect(label.toLowerCase()).toContain("weight");
+  }
+});
+
+test.describe("without scripts", () => {
+  test.use({ javaScriptEnabled: false });
+
+  test("a tag page shows its static listing and links into the listing filtered by its tag", async ({ page }) => {
+    await page.goto("/tags/");
+    await page.locator("ul.groups a").first().click();
+    await expect(page.locator(".table-wrap.listing tbody tr").first()).toBeVisible();
+    await page.getByRole("link", { name: "Filter these datasets further in the full listing" }).click();
+    await expect(page).toHaveURL(/\/\?tag=/);
+  });
 });
 
 test("the listing loads neither the preview nor the map, and an entry page loads the preview but not the map", async ({ page }) => {

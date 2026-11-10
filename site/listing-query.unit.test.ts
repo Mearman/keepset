@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { EMPTY_LISTING_QUERY, facetQuery, matchesFacets, parseListingQuery, serialiseListingQuery, type ListingQuery } from "./listing-query";
+import { EMPTY_LISTING_QUERY, facetQuery, initialListingQuery, listingLocation, matchesFacets, parseListingQuery, serialiseListingQuery, type ListingQuery } from "./listing-query";
 
 const full: ListingQuery = {
   text: "lead time & cost",
@@ -59,5 +59,28 @@ describe("matching an entry's attributes", () => {
   it("matches everything when nothing is chosen, and nothing on an attribute the entry does not hold", () => {
     expect(matchesFacets(held, EMPTY_LISTING_QUERY.facets)).toBe(true);
     expect(matchesFacets({ ...held, domain: [] }, facetQuery("domain", ["Social network"]).facets)).toBe(false);
+  });
+});
+
+describe("where a listing starts and what link it writes", () => {
+  const own = serialiseListingQuery(facetQuery("tag", ["Weight", "weight"]));
+
+  it("starts the home listing from the query string, and a listing page from its own filter whatever its query string holds", () => {
+    expect(initialListingQuery(undefined, "?kind=graph&q=karate")).toEqual({ ...facetQuery("kind", ["graph"]), text: "karate" });
+    expect(initialListingQuery(own, "")).toEqual(facetQuery("tag", ["Weight", "weight"]));
+    expect(initialListingQuery(own, "?kind=graph")).toEqual(facetQuery("tag", ["Weight", "weight"]));
+  });
+
+  it("keeps the home listing on its own path with the view's query string", () => {
+    expect(listingLocation({ ...facetQuery("kind", ["graph"]), text: "karate" }, undefined, "/keepset/", "/keepset/")).toBe("/keepset/?kind=graph&q=karate");
+    expect(listingLocation(EMPTY_LISTING_QUERY, undefined, "/keepset/", "/keepset/")).toBe("/keepset/");
+  });
+
+  it("keeps a listing page on its own path while its filters are its own, and gives any other view as a home listing link", () => {
+    const start = initialListingQuery(own, "");
+    expect(listingLocation(start, own, "/keepset/tags/weight/", "/keepset/")).toBe("/keepset/tags/weight/");
+    expect(listingLocation({ ...start, text: "depot" }, own, "/keepset/tags/weight/", "/keepset/")).toBe("/keepset/?tag=Weight,weight&q=depot");
+    expect(listingLocation(facetQuery("tag", ["weight"]), own, "/keepset/tags/weight/", "/keepset/")).toBe("/keepset/?tag=weight");
+    expect(listingLocation(EMPTY_LISTING_QUERY, own, "/keepset/tags/weight/", "/keepset/")).toBe("/keepset/");
   });
 });

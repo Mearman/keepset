@@ -9,6 +9,7 @@ import { listingColumnWidths } from "./listing-columns";
 import { propertyLabel, propertyText } from "./properties";
 import { scriptJson, slug } from "./html";
 import { datasetJsonLd, describe } from "./jsonld";
+import { orderGroups, type GroupLink, type GroupOrder } from "./group-index";
 import { facetQuery, serialiseListingQuery, type ListingQuery } from "./listing-query";
 
 /** What every page needs to know about the site: where it is published, which catalogue and package built it, and how deep the page sits, so its links stay relative and the site works from any base path. */
@@ -42,14 +43,32 @@ function Row({ dataset, root }: { readonly dataset: Dataset; readonly root: stri
   );
 }
 
-/** A table listing datasets, inside the wrapper that scrolls it sideways on narrow screens; the class pairs with the stylesheet's sticky desktop header. */
+/** A table listing datasets, inside the wrapper that scrolls it sideways on narrow screens; the class pairs with the stylesheet's sticky desktop header, and marks it as the no-JS baseline the interactive listing replaces. */
 function Listing({ datasets, root }: { readonly datasets: readonly Dataset[]; readonly root: string }): ReactNode {
   const widths = listingColumnWidths(datasets.map((dataset) => ({ kind: dataset.kind, ...dimensionsOf(dataset.entry) })));
   const headers = ["Name", "Id", "Kind", "Domain", "Entities", "Size", "Recipe"];
 
   return (
-    <div className="table-wrap listing"><table className="listing"><thead><tr>{headers.map((header, index) => <th key={header} scope="col" style={{ width: widths[index] }}>{header}</th>)}</tr></thead><tbody>{datasets.map((dataset) => <Row key={dataset.entry.id} dataset={dataset} root={root} />)}</tbody></table></div>
+    <div className="table-wrap listing island-baseline"><table className="listing"><thead><tr>{headers.map((header, index) => <th key={header} scope="col" style={{ width: widths[index] }}>{header}</th>)}</tr></thead><tbody>{datasets.map((dataset) => <Row key={dataset.entry.id} dataset={dataset} root={root} />)}</tbody></table></div>
   );
+}
+
+/** Every page's dataset listing, the same on the home page and on each listing page: the mount the client island renders the interactive listing into, and the static table it replaces, which is what a visitor without scripts reads. A listing page also passes its own filter (absent on the home listing), which the mount carries so the island starts from it, and links to the home listing with that filter, which is how a visitor without scripts narrows it further; the island retires the link with the table. */
+function ListingSection({ datasets, root, own }: { readonly datasets: readonly Dataset[]; readonly root: string; readonly own?: ListingQuery }): ReactNode {
+  return (
+    <Fragment>
+      <div id="island-root" className="island" data-listing-query={own === undefined ? undefined : serialiseListingQuery(own)} />
+      {own === undefined ? null : <p className="island-baseline"><a href={`${root}${serialiseListingQuery(own)}`}>Filter these datasets further in the full listing</a></p>}
+      <Listing datasets={datasets} root={root} />
+    </Fragment>
+  );
+}
+
+/** An index of listing pages as a list, in the order given, each linking to its page with how many datasets it holds. On an index page (`island` given, naming what the list holds, such as "tags", and the order it is in) the list follows the mount of the client island that replaces it with the same list under a text filter and a choice of order, and is marked as that island's baseline. */
+function GroupList({ groups, island }: { readonly groups: readonly GroupLink[]; readonly island?: { readonly noun: string; readonly order: GroupOrder } }): ReactNode {
+  const list = <ul className={island === undefined ? "groups" : "groups island-baseline"}>{groups.map((group) => <li key={group.path} data-count={group.count}><a href={group.path}>{group.label}</a> ({group.count})</li>)}</ul>;
+
+  return island === undefined ? list : <Fragment><div id="groups-root" className="island" data-noun={island.noun} data-order={island.order} />{list}</Fragment>;
 }
 
 /**
@@ -157,14 +176,14 @@ ${renderToStaticMarkup(
 }
 
 /**
- * The home page: every dataset in a static table, with a search box and filters the client island wires to the search index.
+ * The home page: every dataset in the listing, which the client island makes searchable and filterable over the search index.
  * @param context - The page context.
  * @param datasets - Every dataset.
  * @returns The document.
  */
 export function homePage(context: PageContext, datasets: readonly Dataset[]): string {
   const body = (
-    <Fragment><h1>keepset</h1><p>{context.manifest.description} Each entry's page shows its sources, licence, recipe and crosswalk, and the command that fetches it.</p><div id="island-root" /><Listing datasets={datasets} root={context.root} /></Fragment>
+    <Fragment><h1>keepset</h1><p className="description">{context.manifest.description} Each entry's page shows its sources, licence, recipe and crosswalk, and the command that fetches it.</p><ListingSection datasets={datasets} root={context.root} /></Fragment>
   );
 
   return Layout(context, { title: "keepset: dataset catalogue", description: context.manifest.description, body });
@@ -220,7 +239,7 @@ export function entryPage(context: PageContext, dataset: Dataset, sameData: read
   const readSources = new Set<number>(recipe.status !== "fetchable" ? [] : "files" in recipe ? recipe.files.flatMap((file) => typeof file.source === "number" ? [file.source] : file.source) : [recipe.source]);
 
   const sections: ReactNode[] = [
-    <nav className="breadcrumb" aria-label="Breadcrumb" key="breadcrumb"><ol><li><a href={context.root}>All datasets</a></li><li><a href={`../../kinds/${slug(dataset.kind)}/`}>{dataset.kind}</a></li>{entry.domain === undefined ? null : <li><a href={`../../domains/${slug(entry.domain)}/`}>{entry.domain}</a></li>}</ol></nav>,
+    <nav className="breadcrumb" aria-label="Breadcrumb" key="breadcrumb"><ol><li><a href={context.root}>All datasets</a></li><li><a href={`${context.root}kinds/${slug(dataset.kind)}/`}>{dataset.kind}</a></li>{entry.domain === undefined ? null : <li><a href={`${context.root}domains/${slug(entry.domain)}/`}>{entry.domain}</a></li>}</ol></nav>,
     <h1 key="name">{entry.name}</h1>,
     entry.description === undefined ? null : <p className="description" key="description">{entry.description}</p>,
     <p className="command" key="command"><code>{command}</code> <span data-copy-text={command} /></p>,
@@ -243,10 +262,10 @@ export function entryPage(context: PageContext, dataset: Dataset, sameData: read
       ...(entry.aliases === undefined ? [] : [["Aliases", entry.aliases.map((alias) => <code key={alias}>{alias}</code>).flatMap((alias, index) => (index === 0 ? [alias] : [", ", alias]))] as const]),
       ...(sameData.length === 0 ? [] : [["Same data as", sameData.map((other) => <Fragment key={other.id}><a href={`../${other.id}/`}>{other.name}</a> <code>{other.id}</code></Fragment>).flatMap((link, index) => (index === 0 ? [link] : [", ", link]))] as const]),
       ["Category", <code key="category">{entry.category}</code>],
-      ["Kind", <a key="kind" href={`../../kinds/${slug(dataset.kind)}/`}>{dataset.kind}</a>],
-      ...(entry.domain === undefined ? [] : [["Domain", <a key="domain" href={`../../domains/${slug(entry.domain)}/`}>{entry.domain}</a>] as const]),
-      ...(entry.subjects === undefined ? [] : [["Subjects", entry.subjects.map((subject) => <a key={subject} href={`../../subjects/${slug(subject)}/`}>{subject}</a>).flatMap((link, index) => (index === 0 ? [link] : [", ", link]))] as const]),
-      ...(entry.tags.length === 0 ? [] : [["Tags", entry.tags.map((tag) => <a key={tag} href={`../../tags/${slug(tag)}/`}>{tag}</a>).flatMap((link, index) => (index === 0 ? [link] : [", ", link]))] as const]),
+      ["Kind", <a key="kind" href={`${context.root}kinds/${slug(dataset.kind)}/`}>{dataset.kind}</a>],
+      ...(entry.domain === undefined ? [] : [["Domain", <a key="domain" href={`${context.root}domains/${slug(entry.domain)}/`}>{entry.domain}</a>] as const]),
+      ...(entry.subjects === undefined ? [] : [["Subjects", entry.subjects.map((subject) => <a key={subject} href={`${context.root}subjects/${slug(subject)}/`}>{subject}</a>).flatMap((link, index) => (index === 0 ? [link] : [", ", link]))] as const]),
+      ...(entry.tags.length === 0 ? [] : [["Tags", entry.tags.map((tag) => <a key={tag} href={`${context.root}tags/${slug(tag)}/`}>{tag}</a>).flatMap((link, index) => (index === 0 ? [link] : [", ", link]))] as const]),
       ["Licence", licenceNode],
       ["Catalogue", <Fragment key="catalogue"><code>{dataset.catalogue.id}</code> {dataset.catalogue.version}</Fragment>],
     ]} />,
@@ -293,43 +312,41 @@ export function entryPage(context: PageContext, dataset: Dataset, sameData: read
   });
 }
 
+/** What a listing page says it lists: its title, such as "Domain: Social network", and a sentence saying which datasets those are. */
+export interface ListingHeading {
+  readonly title: string;
+  readonly description: string;
+}
+
 /**
- * A listing page: the datasets of one domain, subject, kind or tag, with a link to the same datasets in the filterable listing, where they can be narrowed further and the view shared.
+ * A listing page: the datasets of one domain, subject, kind or tag, in the same listing as the home page's with the page's own filter already applied.
  * @param context - The page context (`root` is two levels up).
- * @param title - What the datasets share, such as "Domain: Social network" or "Subject: operations-research".
+ * @param heading - The page's title and the sentence under it.
  * @param datasets - The datasets.
  * @param query - The listing filter that selects the same datasets.
  * @returns The document.
  */
-export function listingPage(context: PageContext, title: string, datasets: readonly Dataset[], query: ListingQuery): string {
-  return Layout(context, { title: `${title}: keepset`, description: `${title}: datasets in the keepset catalogue.`, body: <Fragment><h1>{title}</h1><p><a href={`${context.root}${serialiseListingQuery(query)}`}>Filter these datasets further in the full listing</a></p><Listing datasets={datasets} root={context.root} /></Fragment> });
-}
+export function listingPage(context: PageContext, heading: ListingHeading, datasets: readonly Dataset[], query: ListingQuery): string {
+  const { title, description } = heading;
 
-/** How an index of listing pages orders them: by label, or by how many datasets each holds, the most first and ties by label. */
-export type GroupOrder = "label" | "count";
-
-/** One listing page as its index links it: every label the page is for, its path relative to the index and how many datasets it holds. */
-export interface GroupLink {
-  readonly labels: readonly string[];
-  readonly path: string;
-  readonly count: number;
+  return Layout(context, { title: `${title}: keepset`, description: `${title}: datasets in the keepset catalogue.`, body: <Fragment><h1>{title}</h1><p className="description">{description}</p><ListingSection datasets={datasets} root={context.root} own={query} /></Fragment> });
 }
 
 /**
- * An index of listing pages: every domain, subject, kind or tag, with how many datasets each holds.
+ * An index of listing pages: every domain, subject, kind or tag, with how many datasets each holds, which the client island lets a visitor filter by text and order by label or count.
  * @param context - The page context (`root` is one level up).
  * @param title - "Domains", "Subjects", "Kinds" or "Tags".
- * @param groups - Each page's labels, path and count, in label order.
+ * @param groups - Each page's label, path and count.
  * @param order - The order to list them in.
  * @returns The document.
  */
 export function groupsPage(context: PageContext, title: string, groups: readonly GroupLink[], order: GroupOrder): string {
-  const listed = order === "label" ? groups : [...groups].sort((left, right) => right.count - left.count);
+  const noun = title.toLowerCase();
   const body = (
     <Fragment>
       <h1>{title}</h1>
-      {order === "count" ? <p>The most common first.</p> : null}
-      <ul className="groups">{listed.map((group) => <li key={group.path}><a href={group.path}>{group.labels.join(", ")}</a> ({group.count})</li>)}</ul>
+      <p className="description">Every {noun.slice(0, -1)} in the catalogue, with how many datasets have it{order === "count" ? ", the most common first" : ""}.</p>
+      <GroupList groups={orderGroups(groups, order)} island={{ noun, order }} />
     </Fragment>
   );
 
@@ -337,7 +354,7 @@ export function groupsPage(context: PageContext, title: string, groups: readonly
 }
 
 /**
- * A namespace page: the namespaces directly beneath it with how many entries each holds, and every entry at or beneath it. The index of all namespaces is the same page without a path and without entries.
+ * A namespace page: the namespaces directly beneath it with how many entries each holds, and every entry at or beneath it in the same listing as the home page's, with the namespace's filter already applied. The index of all namespaces is the same page without a path and without entries, and its list of namespaces is filterable and orderable as the other indexes are.
  * @param context - The page context (`root` is one level up for the index, and one more for each segment of the path).
  * @param path - The namespace's path, or undefined for the index of the outermost namespaces.
  * @param children - The namespaces directly beneath it.
@@ -346,12 +363,13 @@ export function groupsPage(context: PageContext, title: string, groups: readonly
  */
 export function namespacePage(context: PageContext, path: string | undefined, children: readonly NamespaceNode[], datasets: readonly Dataset[]): string {
   const title = path === undefined ? "Namespaces" : `Namespace: ${path}`;
+  const groups = orderGroups(children.map((child): GroupLink => ({ label: child.name, path: `${child.name}/`, count: child.count })), "label");
   const body = (
     <Fragment>
       <h1>{title}</h1>
-      {path === undefined ? null : <p>Entries in this namespace and in every namespace beneath it. <a href={`${context.root}${serialiseListingQuery(facetQuery("namespace", [path]))}`}>Filter them further in the full listing</a></p>}
-      {children.length === 0 ? null : <ul className="groups">{children.map((child) => <li key={child.path}><a href={`${child.name}/`}>{child.name}</a> ({child.count})</li>)}</ul>}
-      {path === undefined ? null : <Listing datasets={datasets} root={context.root} />}
+      <p className="description">{path === undefined ? "Every outermost namespace in the catalogue, with how many datasets are in it." : "The datasets in this namespace and in every namespace beneath it."}</p>
+      {groups.length === 0 ? null : <GroupList groups={groups} {...(path === undefined ? { island: { noun: "namespaces", order: "label" } } : {})} />}
+      {path === undefined ? null : <ListingSection datasets={datasets} root={context.root} own={facetQuery("namespace", [path])} />}
     </Fragment>
   );
 

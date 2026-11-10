@@ -174,8 +174,15 @@ describe("the tag pages", () => {
     expect(urls).toEqual(expect.arrayContaining(["tags/", "tags/cost/", "tags/weight/"]));
   });
 
-  it("lists the tags on the index with the most common first", () => {
-    expect(page(files, "tags/index.html")).toContain('<ul class="groups"><li><a href="cost/">cost</a> (3)</li><li><a href="weight/">Weight, weight</a> (2)</li><li><a href="rare/">rare</a> (1)</li></ul>');
+  it("lists the tags on the index with the most common first, after the mount of the island that filters and orders them", () => {
+    expect(page(files, "tags/index.html")).toContain('<div id="groups-root" class="island" data-noun="tags" data-order="count"></div><ul class="groups island-baseline"><li data-count="3"><a href="cost/">cost</a> (3)</li><li data-count="2"><a href="weight/">Weight, weight</a> (2)</li><li data-count="1"><a href="rare/">rare</a> (1)</li></ul>');
+  });
+
+  it("gives a tag page the home page's listing, starting from the page's own filter, with the static table and the link as its no-JS baseline", () => {
+    const text = page(files, "tags/weight/index.html");
+    expect(text).toContain('<p class="description">The datasets with the tag Weight or weight.</p><div id="island-root" class="island" data-listing-query="?tag=Weight,weight"></div><p class="island-baseline"><a href="../../?tag=Weight,weight">');
+    expect(text).toContain('<div class="table-wrap listing island-baseline">');
+    expect(page(files, "index.html")).toContain('<div id="island-root" class="island"></div><div class="table-wrap listing island-baseline">');
   });
 
   it("gives tags that differ only in letter case one page, holding every entry that carries either", () => {
@@ -273,13 +280,13 @@ describe("the namespace pages", () => {
 
   it("lists the outermost namespaces on the index, each with its count and a link to its page", () => {
     const text = page(files, "namespaces/index.html");
-    expect(text).toContain('<ul class="groups"><li><a href="foo/">foo</a> (2)</li><li><a href="home/">home</a> (1)</li><li><a href="one/">one</a> (1)</li></ul>');
+    expect(text).toContain('<div id="groups-root" class="island" data-noun="namespaces" data-order="label"></div><ul class="groups island-baseline"><li data-count="2"><a href="foo/">foo</a> (2)</li><li data-count="1"><a href="home/">home</a> (1)</li><li data-count="1"><a href="one/">one</a> (1)</li></ul>');
     expect(text).not.toContain("<table");
   });
 
   it("lists the child namespaces and every entry at or beneath a namespace, with links relative to its depth", () => {
     const text = page(files, "namespaces/foo/index.html");
-    expect(text).toContain('<ul class="groups"><li><a href="graphs/">graphs</a> (2)</li></ul>');
+    expect(text).toContain('<ul class="groups"><li data-count="2"><a href="graphs/">graphs</a> (2)</li></ul>');
     expect(text).toContain('<tr data-id="bar">');
     expect(text).toContain('<tr data-id="baz">');
     expect(text).toContain('href="../../datasets/bar/"');
@@ -294,8 +301,10 @@ describe("the namespace pages", () => {
     expect(index).toContainEqual(expect.objectContaining({ id: "bar", namespaces: ["home", "home/deep", "foo", "foo/graphs", "one"] }));
   });
 
-  it("links a namespace page into the listing filtered by its namespace", () => {
-    expect(page(files, "namespaces/foo/graphs/index.html")).toContain('<a href="../../../?namespace=foo/graphs">Filter them further in the full listing</a>');
+  it("gives a namespace page the home page's listing, starting from its namespace, and links it into the listing filtered by it", () => {
+    const text = page(files, "namespaces/foo/graphs/index.html");
+    expect(text).toContain('<div id="island-root" class="island" data-listing-query="?namespace=foo/graphs"></div>');
+    expect(text).toContain('<a href="../../../?namespace=foo/graphs">Filter these datasets further in the full listing</a>');
   });
 
   it("files an entry under each group a path alias names, and not under a group it is not in", () => {
@@ -324,7 +333,8 @@ describe("the namespace pages", () => {
   it("writes an index with no list for a catalogue with no namespaces", () => {
     const text = page(build(createCatalogue(fixtureIndex)), "namespaces/index.html");
     expect(text).toContain("<h1>Namespaces</h1>");
-    expect(text).not.toContain('<ul class="groups">');
+    expect(text).not.toContain('class="groups');
+    expect(text).not.toContain("groups-root");
   });
 
   it("refuses two namespaces that differ only in letter case, since their pages would share a file", () => {
