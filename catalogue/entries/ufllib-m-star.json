@@ -1,0 +1,90 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "category": "graph/v1",
+  "citations": [
+    {
+      "doi": "10.1007/3-540-44867-5_13",
+      "text": "M. Hoefer (2003). Experimental comparison of heuristic and approximation algorithms for uncapacitated facility location. Experimental and Efficient Algorithms (WEA 2003), LNCS 2647, 165-178."
+    },
+    {
+      "doi": "10.1051/ro:2001107",
+      "text": "J. Kratica, D. Tošić, V. Filipović, I. Ljubić (2001). Solving the simple plant location problem by genetic algorithm. RAIRO Operations Research 35(1), 127-142."
+    }
+  ],
+  "crosswalk": {
+    "file": "crosswalks/graph-v1/facility-location-uncapacitated.json"
+  },
+  "description": "UflLib's M* package: 22 instances of the M* classes of Kratica et al. (2001), designed to resemble real problems with many near-optimal solutions, 100 to 2,000 facilities and as many cities, in the ORLIB-cap format, with an optimal or best found solution for each.",
+  "domain": "Facility location",
+  "expectedCounts": {
+    "instances": 22
+  },
+  "id": "ufllib-m-star",
+  "licence": {
+    "kind": "unrecorded"
+  },
+  "name": "UflLib M*",
+  "namespace": [
+    "ufllib"
+  ],
+  "properties": {
+    "directed": true,
+    "downloadBytes": 23862943,
+    "heterogeneous": true,
+    "multigraph": false,
+    "nodeTypes": 2,
+    "referenceValues": "the .opt (optimal) or .bub (best found) file beside each instance in the package, whose last number is the solution's cost and whose others name each city's facility, numbered from 0",
+    "selfLoops": false
+  },
+  "recipe": {
+    "archive": {
+      "kind": "tar.gz",
+      "members": {
+        "pattern": "M/[O-T]/M[O-T][0-9]+"
+      }
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "cflp",
+      "layout": "orlib-cap",
+      "uncapacitated": true
+    },
+    "source": 1,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20261026091813",
+        "url": "https://web.archive.org/web/20261026091813/https://algo.rwth-aachen.de/ufllib"
+      },
+      "status": "live",
+      "url": "https://algo.rwth-aachen.de/ufllib"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://algo.rwth-aachen.de/ufllib/data/M.tgz"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20240920150500",
+        "url": "https://web.archive.org/web/20240920150500/https://resources.mpi-inf.mpg.de/departments/d1/projects/benchmarks/UflLib/"
+      },
+      "status": "dead",
+      "url": "https://resources.mpi-inf.mpg.de/departments/d1/projects/benchmarks/UflLib/"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": [
+    "facility-location",
+    "uncapacitated",
+    "bipartite",
+    "fixedCost",
+    "cost"
+  ]
+}

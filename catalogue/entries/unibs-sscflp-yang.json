@@ -1,0 +1,92 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "category": "graph/v1",
+  "citations": [
+    {
+      "doi": "10.1016/j.ejor.2014.04.007",
+      "text": "G. Guastaroba, M. G. Speranza (2014). A heuristic for BILP problems: the single source capacitated facility location problem. European Journal of Operational Research 238(2), 438-450."
+    },
+    {
+      "doi": "10.1016/j.ejor.2012.03.047",
+      "text": "Z. Yang, F. Chu, H. Chen (2012). A cut-and-solve based algorithm for the single-source capacitated facility location problem. European Journal of Operational Research 221(3), 521-532."
+    }
+  ],
+  "crosswalk": {
+    "file": "crosswalks/graph-v1/facility-location.json"
+  },
+  "description": "The 20 single-source capacitated facility location instances of Yang, Chu and Chen (2012), 30 to 80 facilities and 200 to 400 customers, with the proven optimum of each reported by Guastaroba and Speranza (2014), whose table writes 30_200_1 for the file 30-200/30-200-1.dat.",
+  "domain": "Facility location",
+  "expectedCounts": {
+    "instances": 20
+  },
+  "id": "unibs-sscflp-yang",
+  "licence": {
+    "kind": "unrecorded"
+  },
+  "name": "Yang, Chu and Chen single-source capacitated facility location instances",
+  "properties": {
+    "directed": true,
+    "downloadBytes": 611011,
+    "heterogeneous": true,
+    "multigraph": false,
+    "nodeTypes": 2,
+    "referenceValueKind": "optimal value of each instance",
+    "referenceValues": "Yang_Solution_Values.txt (https://drive.usercontent.google.com/download?id=0B6LVUFLjwlvdN3RDdW5qdzVSS28&export=download&confirm=t&resourcekey=0-4vFFt9RnC1h7idZ7QBHgSw)",
+    "selfLoops": false
+  },
+  "recipe": {
+    "archive": {
+      "kind": "zip",
+      "members": {
+        "extensions": [
+          ".dat"
+        ]
+      }
+    },
+    "parser": {
+      "costBasis": "per-assignment",
+      "encoding": "utf-8",
+      "format": "cflp",
+      "layout": "pairs"
+    },
+    "source": 1,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://or-brescia.unibs.it/instances/instances_sscflp"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20261110090922",
+        "url": "https://web.archive.org/web/20261110090922/https://drive.usercontent.google.com/download?id=0B6LVUFLjwlvdUUhxaGduX0pHSDg&export=download&confirm=t&resourcekey=0-5g0gLUl69bMr1rgVcOKM-A"
+      },
+      "status": "live",
+      "url": "https://drive.usercontent.google.com/download?id=0B6LVUFLjwlvdUUhxaGduX0pHSDg&export=download&confirm=t&resourcekey=0-5g0gLUl69bMr1rgVcOKM-A"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20261110090445",
+        "url": "https://web.archive.org/web/20261110090445/https://drive.usercontent.google.com/download?id=0B6LVUFLjwlvdN3RDdW5qdzVSS28&export=download&confirm=t&resourcekey=0-4vFFt9RnC1h7idZ7QBHgSw"
+      },
+      "status": "live",
+      "url": "https://drive.usercontent.google.com/download?id=0B6LVUFLjwlvdN3RDdW5qdzVSS28&export=download&confirm=t&resourcekey=0-4vFFt9RnC1h7idZ7QBHgSw"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": [
+    "facility-location",
+    "single-source",
+    "bipartite",
+    "capacity",
+    "demand",
+    "fixedCost",
+    "cost"
+  ]
+}

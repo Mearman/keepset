@@ -1,0 +1,72 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "category": "graph/v1",
+  "citations": [
+    {
+      "doi": "10.1007/s13675-017-0084-4",
+      "text": "S. L. Gadegaard, A. Klose, L. R. Nielsen (2018). An improved cut-and-solve algorithm for the single-source capacitated facility location problem. EURO Journal on Computational Optimization 6(1), 1-27."
+    }
+  ],
+  "crosswalk": {
+    "file": "crosswalks/graph-v1/facility-location.json"
+  },
+  "description": "Test bed TB4 of Gadegaard, Klose and Nielsen (2018), 45 single-source capacitated facility location instances of 50 facilities and 100 or 200 customers and 60 facilities and 300 customers at three capacity ratios, from the authors' solver repository, whose archive also holds copies of the Holmberg and Yang sets that this entry does not read.",
+  "domain": "Facility location",
+  "expectedCounts": {
+    "instances": 45
+  },
+  "id": "github-sunegadegaard-sscflp-tb4",
+  "licence": {
+    "id": "MIT",
+    "kind": "spdx"
+  },
+  "name": "Gadegaard, Klose and Nielsen single-source capacitated facility location instances (TB4)",
+  "properties": {
+    "directed": true,
+    "downloadBytes": 1765398,
+    "heterogeneous": true,
+    "multigraph": false,
+    "nodeTypes": 2,
+    "selfLoops": false
+  },
+  "recipe": {
+    "archive": {
+      "kind": "zip",
+      "members": {
+        "pattern": "All_instances_for_Imp_CnS/AnImprovedCutAndSolveAlgorithm\\(TB4\\)/.+\\.dat"
+      }
+    },
+    "parser": {
+      "costBasis": "per-assignment",
+      "encoding": "utf-8",
+      "format": "cflp",
+      "layout": "pairs"
+    },
+    "source": 1,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://github.com/SuneGadegaard/SSCFLPsolver"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://raw.githubusercontent.com/SuneGadegaard/SSCFLPsolver/master/All_instances_for_Imp_CnS.zip"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": [
+    "facility-location",
+    "single-source",
+    "bipartite",
+    "capacity",
+    "demand",
+    "fixedCost",
+    "cost"
+  ]
+}
