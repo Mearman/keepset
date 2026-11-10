@@ -1,4 +1,4 @@
-/* The interactive listing's filter state and its form in the URL's query string, which is the state's single source of truth: the island reads it on load and writes it back on every change, so any filtered view is a link that can be shared. The generator writes the same links from its listing pages into the filtered listing. Pure, with no DOM and no Node, so the generator, the client island and the tests share it. */
+/* The interactive listing's filter state and its form in the URL's query string, which is the state's single source of truth: the island reads it on load and writes it back on every change, so any filtered view is a link that can be shared. A listing page of one attribute's value starts from that value as its own filter, and once its filters change the view's link is the home listing's (see listingLocation). The generator writes the same links from its listing pages into the filtered listing. Pure, with no DOM and no Node, so the generator, the client island and the tests share it. */
 
 /** The attributes the listing filters by, in the order the query string writes them; each is also the name of its URL parameter. Several values of one attribute match an entry holding any of them, and several attributes must all match. */
 export const FACETS = ["kind", "domain", "subject", "tag", "namespace"] as const;
@@ -144,6 +144,30 @@ export function serialiseListingQuery(query: ListingQuery): string {
   ];
 
   return parameters.length === 0 ? "" : `?${parameters.join("&")}`;
+}
+
+/**
+ * The query a listing starts from. A listing page of one domain, subject, kind, tag or namespace starts from its own filter, which its path names, and reads nothing from its query string, since a filtered view is only ever written as a home listing link; the home listing starts from its query string.
+ * @param own - The page's own filter as a query string, as {@link serialiseListingQuery} writes it, or undefined on the home listing.
+ * @param search - The page's query string.
+ * @returns The query.
+ */
+export function initialListingQuery(own: string | undefined, search: string): ListingQuery {
+  return parseListingQuery(own ?? search);
+}
+
+/**
+ * Where a listing writes its filters, so the address bar always holds a link to the view on screen and every filtered view has one form of link. A listing page whose filters are still its own keeps its own path; any other view is the home listing's path with the view's query string, which is the one place filter state lives, so a listing page and the home listing never give two links to one view.
+ * @param query - The listing's filters.
+ * @param own - The page's own filter as a query string, or undefined on the home listing.
+ * @param here - The page's own path.
+ * @param home - The home listing's path.
+ * @returns The path and query string to write.
+ */
+export function listingLocation(query: ListingQuery, own: string | undefined, here: string, home: string): string {
+  const search = serialiseListingQuery(query);
+
+  return own !== undefined && search === own ? here : `${home}${search}`;
 }
 
 /**

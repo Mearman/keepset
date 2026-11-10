@@ -1,8 +1,8 @@
-/* The client island, now a React application: the whole script the site runs. On a page with a dataset listing it mounts a Mantine-controlled, TanStack-table view over the generated search index (the static table and form stay in the HTML as the no-JS baseline and are hidden once the island is live); on every page it turns each copy mount (a fetch command, a snapshot link) into a Mantine copy control; everywhere it registers the service worker. Every page still works without it: listings are static, commands are plain text. */
+/* The client island, now a React application: the whole script the site runs. On every page with a dataset listing (the home page, and each domain, subject, kind, tag and namespace page, which starts from its own filter) it mounts a Mantine-controlled, TanStack-table view over the generated search index; on an index of those pages it mounts the same controls over the index's list. The static table or list, and any link into the filtered listing, stay in the HTML as the no-JS baseline and are hidden once the island is live. On every page it turns each copy mount (a fetch command, a snapshot link) into a Mantine copy control; everywhere it registers the service worker. Every page still works without it: listings are static, commands are plain text. */
 
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { createRoot } from "react-dom/client";
-import { ActionIcon, Badge, Button, CopyButton, MantineProvider, MultiSelect, NumberInput, Table as MantineTable, TextInput, Tooltip } from "@mantine/core";
+import { ActionIcon, Badge, Button, CopyButton, MantineProvider, MultiSelect, NumberInput, SegmentedControl, Table as MantineTable, TextInput, Tooltip } from "@mantine/core";
 import "@mantine/core/styles.css";
 // Imported here and not by the map, because the stylesheet of a lazily loaded chunk is never linked to the page.
 import "leaflet/dist/leaflet.css";
@@ -10,7 +10,8 @@ import { useWindowVirtualizer } from "@tanstack/react-virtual";
 import { type ColumnDef, createSortedRowModel, rowSortingFeature, tableFeatures, useTable } from "@tanstack/react-table";
 import { entitiesText, entityTotal, sizeText, type Dimensions } from "../dimensions";
 import { listingColumnWidths } from "../listing-columns";
-import { FACETS, mapFacets, matchesFacets, parseListingQuery, serialiseListingQuery, type Facet, type FacetValues, type ListingQuery } from "../listing-query";
+import { matchingGroups, orderGroups, type GroupLink, type GroupOrder } from "../group-index";
+import { EMPTY_LISTING_QUERY, FACETS, initialListingQuery, listingLocation, mapFacets, matchesFacets, parseListingQuery, type Facet, type FacetValues } from "../listing-query";
 import { siteRoot } from "./site-root";
 import "../styles.css";
 
@@ -99,21 +100,28 @@ function facetOptions(records: readonly SearchRecord[], facet: Facet, chosen: re
   return (FACET_CONTROLS[facet].byCount ? byLabel.sort(([, left], [, right]) => right - left) : byLabel).map(([value, count]) => ({ value, label: `${value} (${String(count)})` }));
 }
 
-/**
- * Writes the query into the page's URL in place, without a reload or a new history entry, so the address bar always holds a link to the view on screen.
- * @param query - The query.
- */
-function writeQuery(query: ListingQuery): void {
-  const { pathname, hash } = window.location;
-  window.history.replaceState(window.history.state, "", `${pathname}${serialiseListingQuery(query)}${hash}`);
+/** Where a listing sits: the path back to the site root, the page's own filter as a query string (absent on the home listing), and the page's and the home listing's paths. */
+interface ListingPlace {
+  readonly root: string;
+  readonly own: string | undefined;
+  readonly here: string;
+  readonly home: string;
 }
 
-/** The interactive listing: filter inputs over the search index and a sortable table of what matches. The filters are read from the URL's query string when the listing mounts and written back to it on every change. */
-function Listing({ records }: { readonly records: readonly SearchRecord[] }): ReactNode {
-  const [query, setQuery] = useState(() => parseListingQuery(window.location.search));
+/**
+ * Writes a location into the page's URL in place, without a reload or a new history entry, so the address bar always holds a link to the view on screen.
+ * @param location - The path and query string.
+ */
+function writeLocation(location: string): void {
+  window.history.replaceState(window.history.state, "", `${location}${window.location.hash}`);
+}
+
+/** The interactive listing: filter inputs over the search index and a sortable table of what matches. The filters start from the page's own filter on a listing page and from the URL's query string on the home listing, and are written back to the URL on every change (see listingLocation). */
+function Listing({ records, place }: { readonly records: readonly SearchRecord[]; readonly place: ListingPlace }): ReactNode {
+  const [query, setQuery] = useState(() => initialListingQuery(place.own, window.location.search));
   useEffect(() => {
-    writeQuery(query);
-  }, [query]);
+    writeLocation(listingLocation(query, place.own, place.here, place.home));
+  }, [query, place]);
 
   const options = useMemo(() => mapFacets((facet) => facetOptions(records, facet, query.facets[facet])), [records, query.facets]);
 
@@ -138,7 +146,7 @@ function Listing({ records }: { readonly records: readonly SearchRecord[] }): Re
 
   // Column definitions are written as plain literals against the hook's own column type, not built through createColumnHelper: the helper infers each accessor over its own value type, which does not inter-type with the widened union under exactOptionalPropertyTypes. The order matches the static table's Name, Id, Kind, Domain so the two views of the listing read the same way.
   const columns: readonly ColumnDef<ListingFeatures, SearchRecord>[] = [
-    { accessorKey: "name", header: "Name", cell: (info) => <a href={`datasets/${info.row.original.id}/`}>{info.row.original.name}</a> },
+    { accessorKey: "name", header: "Name", cell: (info) => <a href={`${place.root}datasets/${info.row.original.id}/`}>{info.row.original.name}</a> },
     { accessorKey: "id", header: "Id", cell: (info) => <code>{info.row.original.id}</code> },
     { accessorKey: "kind", header: "Kind" },
     { accessorKey: "domain", header: "Domain" },
@@ -207,6 +215,7 @@ function Listing({ records }: { readonly records: readonly SearchRecord[] }): Re
             ))}
           </MantineTable.Thead>
           <MantineTable.Tbody>
+            {rows.length === 0 ? <tr><td className="island-empty" colSpan={columns.length}>No datasets match these filters.</td></tr> : null}
             {spaceAbove > 0 ? <tr aria-hidden="true" style={{ height: spaceAbove }} /> : null}
             {items.map((item) => {
               const row = rows[item.index];
@@ -236,6 +245,57 @@ function Listing({ records }: { readonly records: readonly SearchRecord[] }): Re
       </div>
     </>
   );
+}
+
+/** The interactive index of listing pages: a text filter over the labels, a choice of order and the list of what matches. The text is read from the URL's query string when the index mounts and written back to it on every change, as the listing's is. */
+function GroupIndex({ groups, noun, initialOrder }: { readonly groups: readonly GroupLink[]; readonly noun: string; readonly initialOrder: GroupOrder }): ReactNode {
+  const [text, setText] = useState(() => parseListingQuery(window.location.search).text);
+  const [order, setOrder] = useState(initialOrder);
+  useEffect(() => {
+    writeLocation(listingLocation({ ...EMPTY_LISTING_QUERY, text }, undefined, window.location.pathname, window.location.pathname));
+  }, [text]);
+  const shown = useMemo(() => orderGroups(matchingGroups(groups, text), order), [groups, text, order]);
+
+  return (
+    <>
+      <div className="island-controls">
+        <TextInput className="island-search" aria-label={`Filter the ${noun}`} placeholder={`filter the ${noun}`} value={text} onChange={(event) => {
+          setText(event.currentTarget.value);
+        }} />
+        <SegmentedControl aria-label="Order" value={order} onChange={(value) => {
+          if (isGroupOrder(value)) {
+            setOrder(value);
+          }
+        }} data={[{ value: "label", label: "By name" }, { value: "count", label: "Most datasets first" }]} />
+        <Badge variant="light" size="lg">
+          {String(shown.length)} of {String(groups.length)}
+        </Badge>
+      </div>
+      {shown.length === 0 ? <p className="island-empty">No {noun} match this filter.</p> : <ul className="groups">{shown.map((group) => <li key={group.path}><a href={group.path}>{group.label}</a> ({group.count})</li>)}</ul>}
+    </>
+  );
+}
+
+/**
+ * Reads an index's groups back from its static list, which carries each one's link, label and count, so the page does not hold them twice.
+ * @param mount - The index island's mount, which the list follows.
+ * @returns The groups, in the list's order.
+ */
+function staticGroups(mount: HTMLElement): GroupLink[] {
+  return [...(mount.parentElement?.querySelectorAll<HTMLLIElement>("ul.groups.island-baseline > li") ?? [])].map((item) => {
+    const link = item.querySelector("a");
+    const { count } = item.dataset;
+    const path = link?.getAttribute("href");
+    if (link === null || path === null || path === undefined || count === undefined) {
+      throw new Error("an index list item has no link or no count");
+    }
+
+    return { label: link.textContent, path, count: Number(count) };
+  });
+}
+
+function isGroupOrder(value: string): value is GroupOrder {
+  return value === "label" || value === "count";
 }
 
 /** How a copy mount is drawn: a labelled button, as for a fetch command, or a bare icon, as beside a link. */
@@ -283,6 +343,8 @@ function CopyText({ text, label, style }: { readonly text: string; readonly labe
 }
 
 async function mountListing(root: string, mount: HTMLElement): Promise<void> {
+  const { listingQuery } = mount.dataset;
+  const place: ListingPlace = { root, own: listingQuery, here: window.location.pathname, home: new URL(root, window.location.href).pathname };
   const response = await fetch(`${root}search-index.json`);
   const parsed: unknown = await response.json();
   if (!Array.isArray(parsed) || !parsed.every(isSearchRecord)) {
@@ -290,7 +352,7 @@ async function mountListing(root: string, mount: HTMLElement): Promise<void> {
   }
   createRoot(mount).render(
     <MantineProvider defaultColorScheme="auto">
-      <Listing records={parsed} />
+      <Listing records={parsed} place={place} />
     </MantineProvider>,
   );
 }
@@ -303,6 +365,20 @@ if (listing !== null) {
     // Only now does the interactive view take over: the live class shows the mount, and the stylesheet hides the static listing that follows it.
     listing.classList.add("island-live");
   });
+}
+
+const index = document.querySelector<HTMLElement>("#groups-root");
+if (index !== null) {
+  const { noun, order } = index.dataset;
+  if (noun === undefined || order === undefined || !isGroupOrder(order)) {
+    throw new Error("the index mount names no noun or no known order");
+  }
+  createRoot(index).render(
+    <MantineProvider defaultColorScheme="auto">
+      <GroupIndex groups={staticGroups(index)} noun={noun} initialOrder={order} />
+    </MantineProvider>,
+  );
+  index.classList.add("island-live");
 }
 
 // The preview and its helpers load only on a page that has a preview mount; the listing and the other pages never fetch them.

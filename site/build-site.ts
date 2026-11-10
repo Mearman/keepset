@@ -3,8 +3,9 @@ import { dirname, join } from "node:path";
 import { groupsOf, NAME_SEPARATOR, type Dataset, type DatasetQuery, type Entry, type Manifest, type NamespaceNode } from "keepset";
 import { dimensionsOf, type Dimensions } from "./dimensions";
 import { slug } from "./html";
+import { byText, groupLabel, type GroupOrder } from "./group-index";
 import { facetQuery, type Facet } from "./listing-query";
-import { entryPage, groupsPage, homePage, listingPage, namespacePage, type GroupOrder, type PageContext, type SameDataEntry } from "./pages";
+import { entryPage, groupsPage, homePage, listingPage, namespacePage, type PageContext, type SameDataEntry } from "./pages";
 
 /** One row of the search index the client island loads: enough to filter and label a result without fetching its page. */
 export interface SearchRecord extends Dimensions {
@@ -78,17 +79,13 @@ function groupBy(datasets: readonly Dataset[], labelsOf: (dataset: Dataset) => r
 
       return { slug: key, labels, datasets: datasets.filter((dataset) => group.datasets.has(dataset)) };
     })
-    .sort((left, right) => byText(left.labels.join(), right.labels.join()));
+    .sort((left, right) => byText(groupLabel(left.labels), groupLabel(right.labels)));
 }
 
-/** Orders text by its UTF-16 code units, as the listing pages always have, so an index reads the same on every machine whatever its locale. */
-function byText(left: string, right: string): number {
-  return left < right ? -1 : left > right ? 1 : 0;
-}
-
-/** One attribute the site has listing pages for: the index's title, the directory its pages sit in, the listing filter that selects the same datasets, each dataset's labels, whether labels sharing a slug share a page, and the order the index lists its groups in. */
+/** One attribute the site has listing pages for: the index's title, the attribute's name in a sentence, the directory its pages sit in, the listing filter that selects the same datasets, each dataset's labels, whether labels sharing a slug share a page, and the order the index lists its groups in. */
 interface Dimension {
   readonly title: string;
+  readonly noun: string;
   readonly directory: string;
   readonly facet: Facet;
   readonly labelsOf: (dataset: Dataset) => readonly string[];
@@ -98,10 +95,10 @@ interface Dimension {
 
 /** The attributes with listing pages. Tags are a source's field names, so labels that differ only in letter case share a page, and the index lists the most common first, since most tags name a field of one source only. */
 const DIMENSIONS: readonly Dimension[] = [
-  { title: "Domains", directory: "domains", facet: "domain", labelsOf: (dataset) => (dataset.entry.domain === undefined ? [] : [dataset.entry.domain]), shareSlugs: false, order: "label" },
-  { title: "Subjects", directory: "subjects", facet: "subject", labelsOf: (dataset) => dataset.entry.subjects ?? [], shareSlugs: false, order: "label" },
-  { title: "Kinds", directory: "kinds", facet: "kind", labelsOf: (dataset) => [dataset.kind], shareSlugs: false, order: "label" },
-  { title: "Tags", directory: "tags", facet: "tag", labelsOf: (dataset) => dataset.entry.tags, shareSlugs: true, order: "count" },
+  { title: "Domains", noun: "domain", directory: "domains", facet: "domain", labelsOf: (dataset) => (dataset.entry.domain === undefined ? [] : [dataset.entry.domain]), shareSlugs: false, order: "label" },
+  { title: "Subjects", noun: "subject", directory: "subjects", facet: "subject", labelsOf: (dataset) => dataset.entry.subjects ?? [], shareSlugs: false, order: "label" },
+  { title: "Kinds", noun: "kind", directory: "kinds", facet: "kind", labelsOf: (dataset) => [dataset.kind], shareSlugs: false, order: "label" },
+  { title: "Tags", noun: "tag", directory: "tags", facet: "tag", labelsOf: (dataset) => dataset.entry.tags, shareSlugs: true, order: "count" },
 ];
 
 /**
@@ -162,11 +159,11 @@ export function buildSite(options: SiteOptions): SiteFiles {
   for (const dataset of datasets) {
     files.set(`datasets/${dataset.entry.id}/index.html`, entryPage(context("../../"), dataset, sameDataOf(dataset)));
   }
-  for (const { title, directory, facet, labelsOf, shareSlugs, order } of DIMENSIONS) {
+  for (const { title, noun, directory, facet, labelsOf, shareSlugs, order } of DIMENSIONS) {
     const groups = groupBy(datasets, labelsOf, shareSlugs);
-    files.set(`${directory}/index.html`, groupsPage(context("../"), title, groups.map((group) => ({ labels: group.labels, path: `${group.slug}/`, count: group.datasets.length })), order));
+    files.set(`${directory}/index.html`, groupsPage(context("../"), title, groups.map((group) => ({ label: groupLabel(group.labels), path: `${group.slug}/`, count: group.datasets.length })), order));
     for (const group of groups) {
-      files.set(`${directory}/${group.slug}/index.html`, listingPage(context("../../"), `${title.slice(0, -1)}: ${group.labels.join(", ")}`, group.datasets, facetQuery(facet, group.labels)));
+      files.set(`${directory}/${group.slug}/index.html`, listingPage(context("../../"), { title: `${title.slice(0, -1)}: ${groupLabel(group.labels)}`, description: `The datasets with the ${noun} ${group.labels.join(" or ")}.` }, group.datasets, facetQuery(facet, group.labels)));
     }
   }
 

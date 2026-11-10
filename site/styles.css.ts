@@ -434,17 +434,22 @@ globalStyle("footer", {
   color: "var(--muted)",
 });
 
-/* The interactive listing replaces the static table once the island mounts; until then it must hold no space, so the mount is hidden by the stylesheet itself rather than an inline style the no-JS page would also carry. */
-globalStyle("#island-root", {
+/* An island's mount holds no space until the island renders into it, so it is hidden by the stylesheet itself rather than an inline style the no-JS page would also carry. */
+globalStyle(".island", {
   display: "none",
 });
 
-
-globalStyle("#island-root.island-live", {
+globalStyle(".island.island-live", {
   display: "block",
 });
 
-/* The static listing is the island mount's next sibling on the home page, so the live class itself retires it; no script has to find and hide it. */
-globalStyle("#island-root.island-live ~ .table-wrap.listing", {
+/* What an island replaces (a static listing, an index's list, a link into the filtered listing) follows its mount, so the live class itself retires it; no script has to find and hide it. */
+globalStyle(".island.island-live ~ .island-baseline", {
   display: "none",
+});
+
+/* What an island says when its filters match nothing, in the muted voice of the page's other notes. */
+globalStyle(".island-empty", {
+  color: "var(--muted)",
+  fontStyle: "italic",
 });
