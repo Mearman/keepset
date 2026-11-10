@@ -31,7 +31,7 @@
     "probedRows": 2671386
   },
   "recipe": {
-    "reason": "The flows are one CSV member of a zip that unpacks to more than a gigabyte: streaming reads a CSV table inside a tar member a chunk at a time but not one inside a zip, and a fetch holds the whole member as one text, which is past what a JavaScript string can hold. The edge-list parser also carries no edge attributes, so the tonnage, value and ton-mile columns would be lost.",
+    "reason": "The flows are one CSV member of a zip that unpacks to more than a gigabyte: streaming reads a CSV table inside a tar member a chunk at a time but not one inside a zip, and a fetch holds the whole member as one text, which is past what a JavaScript string can hold. The edge-list parser also carries no edge attributes, so the tonnage, value and ton-mile columns would be lost. Tracked in https://github.com/Mearman/keepset/issues/306.",
     "status": "not-fetchable"
   },
   "sources": [

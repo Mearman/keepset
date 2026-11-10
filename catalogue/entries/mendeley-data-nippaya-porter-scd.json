@@ -31,7 +31,7 @@
     "fileCount": 42
   },
   "recipe": {
-    "reason": "Each instance is spread over up to six headerless tab-separated matrices (capacity and fixed cost per plant and per distribution centre, demand per customer, and customer by facility matrices of transit time and unit shipping cost), with a bare carriage return ending the demand file's lines and a different width for every file; the csv-table parser reads each file but names one set of columns per recipe, and turning the matrices into one graph needs a parser that joins the files of an instance, which keepset does not have.",
+    "reason": "Each instance is spread over up to six headerless tab-separated matrices (capacity and fixed cost per plant and per distribution centre, demand per customer, and customer by facility matrices of transit time and unit shipping cost), with a bare carriage return ending the demand file's lines and a different width for every file; the csv-table parser reads each file but names one set of columns per recipe, and turning the matrices into one graph needs a parser that joins the files of an instance, which keepset does not have. Tracked in https://github.com/Mearman/keepset/issues/307.",
     "status": "not-fetchable"
   },
   "sources": [
