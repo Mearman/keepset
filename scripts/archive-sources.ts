@@ -10,7 +10,7 @@
 
    --checksum reads the raw form of every pinned snapshot that records no checksum (of the --entry entries, when named), exactly as a fetch reads it, and records the SHA-256 and byte length of what it serves on every source that pins that snapshot, so the entry names the bytes the pin stands for; a snapshot the archive does not serve is listed and left for --verify, and a run cut short keeps what it read.
 
-   --check changes nothing and exits non-zero when a source has no snapshot and the report does not account for it, when a pin is not listed as verified in the report, or when the report lists a source or a verification the catalogue no longer supports. --entry limits the run to the named entries, --limit to a number of URLs (or, with --verify, pins) requested over the network, --retry-exceptions looks again at URLs the report already excepts. --entries-dir, --report and --state point the run somewhere else, for a trial on a copy. */
+   --check changes nothing and exits non-zero when a source has no snapshot and the report does not account for it, when a pin is not listed as verified in the report, or when the report lists a source or a verification the catalogue no longer supports; it always reads the whole catalogue, since a stale report line belongs to no entry. --entry limits any other run to the named entries, --limit to a number of URLs (or, with --verify, pins) requested over the network, --retry-exceptions looks again at URLs the report already excepts. --entries-dir, --report and --state point the run somewhere else, for a trial on a copy. */
 
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
