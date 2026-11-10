@@ -83,6 +83,8 @@
     {
       "retrieved": "2026-11-10",
       "snapshot": {
+        "byteLength": 16538,
+        "sha256": "0dbc9e6f3178b357e788092b5010cf4c6fe4fa9cd5830655d2aabd2ca638d6fc",
         "timestamp": "20261110085116",
         "url": "https://web.archive.org/web/20261110085116/https://zenodo.org/records/17986740"
       },
@@ -91,6 +93,12 @@
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "byteLength": 96141,
+        "sha256": "9e0dd3f0b93f747671a291d3bef1d10041e179ad219af33a2e8aa369cdccf09d",
+        "timestamp": "20261110084541",
+        "url": "https://web.archive.org/web/20261110084541/https://zenodo.org/api/records/17986740/files/Dataset.zip/content"
+      },
       "status": "live",
       "url": "https://zenodo.org/api/records/17986740/files/Dataset.zip/content"
     }

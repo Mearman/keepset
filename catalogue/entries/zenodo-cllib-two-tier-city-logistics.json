@@ -27,7 +27,6 @@
   ],
   "properties": {
     "downloadBytes": 10679851,
-    "downloadSha256": "042984a51eb8a17dce3e1d724effb03fd3ed47de52dcb21f94c8d32e60354999",
     "instanceCount": 1782
   },
   "recipe": {
@@ -38,6 +37,8 @@
     {
       "retrieved": "2026-11-10",
       "snapshot": {
+        "byteLength": 19101,
+        "sha256": "11506e869679f8897093a496b64324c0c643e2f9921a56b5fbfbcd78b1b6cb50",
         "timestamp": "20261110085033",
         "url": "https://web.archive.org/web/20261110085033/https://zenodo.org/records/17303876"
       },
@@ -47,6 +48,8 @@
     {
       "retrieved": "2026-11-10",
       "snapshot": {
+        "byteLength": 10679851,
+        "sha256": "042984a51eb8a17dce3e1d724effb03fd3ed47de52dcb21f94c8d32e60354999",
         "timestamp": "20261110084514",
         "url": "https://web.archive.org/web/20261110084514/https://zenodo.org/api/records/17303876/files/CLLIB-Small.zip/content"
       },

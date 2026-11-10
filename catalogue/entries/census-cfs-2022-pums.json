@@ -39,6 +39,8 @@
     {
       "retrieved": "2026-11-10",
       "snapshot": {
+        "byteLength": 326080,
+        "sha256": "debee73a7e4b2ceb57cc6d8d55deabb55985f20c3630b660155c1d3253507f0f",
         "timestamp": "20260820020013",
         "url": "https://web.archive.org/web/20260820020013/https://www.census.gov/data/datasets/2022/econ/cfs/historical-datasets.html"
       },

@@ -35,6 +35,8 @@
     {
       "retrieved": "2026-11-10",
       "snapshot": {
+        "byteLength": 31254,
+        "sha256": "02254f0b6c5c70ffca3e8aa5a401ab1b4fcb31db36de1b9cda8b566ab9d62ec2",
         "timestamp": "20261110084231",
         "url": "https://web.archive.org/web/20261110084231/https://opensupplyhub.org/"
       },
@@ -44,6 +46,8 @@
     {
       "retrieved": "2026-11-10",
       "snapshot": {
+        "byteLength": 1760,
+        "sha256": "6d54fce2c90752ebd3bfb3d9209ac4aba7434c32d6e166dd4c352f57772e8eff",
         "timestamp": "20260503222637",
         "url": "https://web.archive.org/web/20260503222637/https://opensupplyhub.org/api/docs/"
       },

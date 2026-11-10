@@ -61,6 +61,8 @@
     {
       "retrieved": "2026-11-10",
       "snapshot": {
+        "byteLength": 2950,
+        "sha256": "c5063cd9f2cb1815cb46a9367a3b9b935aaaff8db1e7e0cdb8e1ec7d0849b2e1",
         "timestamp": "20261019191101",
         "url": "https://web.archive.org/web/20261019191101/https://netlib.org/lp/data/kennington/"
       },

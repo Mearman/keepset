@@ -59,6 +59,8 @@
     {
       "retrieved": "2026-11-10",
       "snapshot": {
+        "byteLength": 27851,
+        "sha256": "e7e01f29d410aa554f1740f5798c55b09c8c23edfba17674ea697d95d2eff6ec",
         "timestamp": "20260712153942",
         "url": "https://web.archive.org/web/20260712153942/https://plato.asu.edu/sub/testcases.html"
       },
@@ -68,6 +70,8 @@
     {
       "retrieved": "2026-11-10",
       "snapshot": {
+        "byteLength": 859,
+        "sha256": "f6f426ed637caf4d63dc5d28fc2c385d6d488074eb3450c2f8d2f2de6b30bee3",
         "timestamp": "20260921130127",
         "url": "https://web.archive.org/web/20260921130127/https://plato.asu.edu/ftp/lptestset/fctp/"
       },
