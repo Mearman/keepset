@@ -1,3 +1,17 @@
+# [0.130.0](https://github.com/Mearman/keepset/compare/v0.129.0...v0.130.0) (2026-11-10)
+
+
+### Bug Fixes
+
+* limit the checksum pass to the entries named with --entry ([6209517](https://github.com/Mearman/keepset/commit/62095170b3baa23dc0c5d9ef6356898472ce87a8))
+* type the new parsers' tests and keep them out of the graph import's map ([40e1743](https://github.com/Mearman/keepset/commit/40e174312d069b00e02ffc83422eea06ab98baaa))
+
+
+### Features
+
+* add network design, p-median and location-routing entries ([3b449d0](https://github.com/Mearman/keepset/commit/3b449d05d30efc842fb760c755576d247d61b3b3))
+* read network design, p-median, location-routing and min-cost flow files ([3b4ed95](https://github.com/Mearman/keepset/commit/3b4ed955ea672809c0ff5d7e5deda86d6d44aa21))
+
 # [0.129.0](https://github.com/Mearman/keepset/compare/v0.128.0...v0.129.0) (2026-11-10)
 
 
