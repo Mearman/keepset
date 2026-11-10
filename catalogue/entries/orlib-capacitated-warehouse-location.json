@@ -1,0 +1,579 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "category": "graph/v1",
+  "citations": [
+    {
+      "doi": "10.1057/jors.1990.166",
+      "text": "J. E. Beasley (1990). OR-Library: distributing test problems by electronic mail. Journal of the Operational Research Society 41(11), 1069-1072."
+    },
+    {
+      "doi": "10.1016/0377-2217(88)90175-0",
+      "text": "J. E. Beasley (1988). An algorithm for solving large capacitated warehouse location problems. European Journal of Operational Research 33(3), 314-325."
+    }
+  ],
+  "crosswalk": {
+    "file": "crosswalks/graph-v1/facility-location.json"
+  },
+  "description": "Beasley's capacitated warehouse location problems, test problem sets IV to XIII and A to C, which essentially include the Akinc and Khumawala test problems: 16 to 100 potential warehouses and 50 to 1,000 customers, each customer's whole demand assignable to any warehouse at a stated cost. Each of capa, capb and capc writes the word capacity in place of every warehouse's capacity and stands for four problems, one for each capacity Table 1 of Beasley (1988) gives, so the 37 files are 49 problems.",
+  "domain": "Facility location",
+  "expectedCounts": {
+    "instances": 49
+  },
+  "id": "orlib-capacitated-warehouse-location",
+  "licence": {
+    "kind": "unrecorded"
+  },
+  "name": "OR-Library capacitated warehouse location",
+  "properties": {
+    "directed": true,
+    "downloadBytes": 4337217,
+    "heterogeneous": true,
+    "multigraph": false,
+    "nodeTypes": 2,
+    "referenceValueKind": "optimal value of each problem, multi-source",
+    "referenceValues": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/capopt.txt",
+    "selfLoops": false
+  },
+  "recipe": {
+    "files": [
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap41.txt",
+        "source": 2
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap42.txt",
+        "source": 3
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap43.txt",
+        "source": 4
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap44.txt",
+        "source": 5
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap51.txt",
+        "source": 6
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap61.txt",
+        "source": 7
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap62.txt",
+        "source": 8
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap63.txt",
+        "source": 9
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap64.txt",
+        "source": 10
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap71.txt",
+        "source": 11
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap72.txt",
+        "source": 12
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap73.txt",
+        "source": 13
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap74.txt",
+        "source": 14
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap81.txt",
+        "source": 15
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap82.txt",
+        "source": 16
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap83.txt",
+        "source": 17
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap84.txt",
+        "source": 18
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap91.txt",
+        "source": 19
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap92.txt",
+        "source": 20
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap93.txt",
+        "source": 21
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap94.txt",
+        "source": 22
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap101.txt",
+        "source": 23
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap102.txt",
+        "source": 24
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap103.txt",
+        "source": 25
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap104.txt",
+        "source": 26
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap111.txt",
+        "source": 27
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap112.txt",
+        "source": 28
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap113.txt",
+        "source": 29
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap114.txt",
+        "source": 30
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap121.txt",
+        "source": 31
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap122.txt",
+        "source": 32
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap123.txt",
+        "source": 33
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap124.txt",
+        "source": 34
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap131.txt",
+        "source": 35
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap132.txt",
+        "source": 36
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap133.txt",
+        "source": 37
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap134.txt",
+        "source": 38
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "capa.txt",
+        "source": 39
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "capb.txt",
+        "source": 40
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "capc.txt",
+        "source": 41
+      }
+    ],
+    "parser": {
+      "capacityValues": [
+        {
+          "instance": "capa.txt",
+          "values": [
+            8000,
+            10000,
+            12000,
+            14000
+          ]
+        },
+        {
+          "instance": "capb.txt",
+          "values": [
+            5000,
+            6000,
+            7000,
+            8000
+          ]
+        },
+        {
+          "instance": "capc.txt",
+          "values": [
+            5000,
+            5750,
+            6500,
+            7250
+          ]
+        }
+      ],
+      "encoding": "utf-8",
+      "format": "cflp",
+      "layout": "orlib-cap"
+    },
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/capinfo.html"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/capopt.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap41.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap42.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap43.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap44.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap51.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap61.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap62.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap63.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap64.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap71.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap72.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap73.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap74.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap81.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap82.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap83.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap84.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap91.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap92.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap93.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap94.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap101.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap102.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap103.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap104.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap111.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap112.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap113.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap114.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap121.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap122.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap123.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap124.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap131.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap132.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap133.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap134.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/capa.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/capb.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/capc.txt"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": [
+    "facility-location",
+    "bipartite",
+    "capacity",
+    "demand",
+    "fixedCost",
+    "cost"
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "category": "graph/v1",
+  "citations": [
+    {
+      "doi": "10.1016/j.ejor.2014.04.007",
+      "text": "G. Guastaroba, M. G. Speranza (2014). A heuristic for BILP problems: the single source capacitated facility location problem. European Journal of Operational Research 238(2), 438-450."
+    },
+    {
+      "doi": "10.1016/S0377-2217(98)00008-3",
+      "text": "K. Holmberg, M. Rönnqvist, D. Yuan (1999). An exact algorithm for the capacitated facility location problems with single sourcing. European Journal of Operational Research 113(3), 544-559."
+    }
+  ],
+  "crosswalk": {
+    "file": "crosswalks/graph-v1/facility-location.json"
+  },
+  "description": "The 71 single-source capacitated facility location instances of Holmberg, Rönnqvist and Yuan (1999), 10 to 30 facilities and 50 to 200 customers, with the proven optimum of each reported by Guastaroba and Speranza (2014). Some files are padded with NUL bytes after the instance and p26 has the mail it was sent in after it, which the recipe does not read.",
+  "domain": "Facility location",
+  "expectedCounts": {
+    "instances": 71
+  },
+  "id": "unibs-sscflp-holmberg",
+  "licence": {
+    "kind": "unrecorded"
+  },
+  "name": "Holmberg, Rönnqvist and Yuan single-source capacitated facility location instances",
+  "properties": {
+    "directed": true,
+    "downloadBytes": 443529,
+    "heterogeneous": true,
+    "multigraph": false,
+    "nodeTypes": 2,
+    "referenceValueKind": "optimal value of each instance",
+    "referenceValues": "Holmberg_Solution_Values.txt (https://drive.usercontent.google.com/download?id=0B6LVUFLjwlvdVkI0VlhUellfbGc&export=download&confirm=t&resourcekey=0-TuGsKsJAKWjyBBGLS08Dxw)",
+    "selfLoops": false
+  },
+  "recipe": {
+    "archive": {
+      "kind": "zip",
+      "members": {
+        "pattern": "p[0-9]+"
+      }
+    },
+    "parser": {
+      "costBasis": "per-assignment",
+      "encoding": "utf-8",
+      "format": "cflp",
+      "layout": "pairs",
+      "trailingText": "ignore"
+    },
+    "source": 1,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://or-brescia.unibs.it/instances/instances_sscflp"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20261110090710",
+        "url": "https://web.archive.org/web/20261110090710/https://drive.usercontent.google.com/download?id=0B6LVUFLjwlvdOU51cVVoSGE3d0k&export=download&confirm=t&resourcekey=0-Ig2oWvThZBLhZosHbFPUNQ"
+      },
+      "status": "live",
+      "url": "https://drive.usercontent.google.com/download?id=0B6LVUFLjwlvdOU51cVVoSGE3d0k&export=download&confirm=t&resourcekey=0-Ig2oWvThZBLhZosHbFPUNQ"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://drive.usercontent.google.com/download?id=0B6LVUFLjwlvdVkI0VlhUellfbGc&export=download&confirm=t&resourcekey=0-TuGsKsJAKWjyBBGLS08Dxw"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": [
+    "facility-location",
+    "single-source",
+    "bipartite",
+    "capacity",
+    "demand",
+    "fixedCost",
+    "cost"
+  ]
+}

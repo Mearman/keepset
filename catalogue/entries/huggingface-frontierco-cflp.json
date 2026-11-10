@@ -1,0 +1,413 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "category": "graph/v1",
+  "citations": [
+    {
+      "text": "S. Feng, W. Sun, S. Li, A. Talwalkar, Y. Yang (2025). FrontierCO: real-world and large-scale evaluation of machine learning solvers for combinatorial optimization. arXiv:2505.16952.",
+      "url": "https://arxiv.org/abs/2505.16952"
+    },
+    {
+      "doi": "10.1007/s10589-007-9125-x",
+      "text": "P. Avella, M. Boccia (2009). A cutting plane algorithm for the capacitated facility location problem. Computational Optimization and Applications 43(1), 39-65."
+    }
+  ],
+  "crosswalk": {
+    "file": "crosswalks/graph-v1/facility-location.json"
+  },
+  "description": "The capacitated facility location track of FrontierCO (Feng et al., 2025), 70 multi-source instances: 20 easy test instances of 1,000 facilities and 1,000 customers (Avella and Boccia's 1,000 by 1,000 group with each per-unit cost multiplied by the customer's demand), 30 hard test instances of 2,000 by 2,000 and 20 validation instances of 100 by 100, with FrontierCO's reference value for each.",
+  "domain": "Facility location",
+  "expectedCounts": {},
+  "id": "huggingface-frontierco-cflp",
+  "licence": {
+    "id": "MIT",
+    "kind": "spdx"
+  },
+  "name": "FrontierCO capacitated facility location",
+  "properties": {
+    "directed": true,
+    "downloadBytes": 1779997644,
+    "heterogeneous": true,
+    "multigraph": false,
+    "nodeTypes": 2,
+    "referenceValueKind": "optimal_scores in norm_score: proven optima (easy), best value of a Gurobi run (hard), best known (validation)",
+    "referenceValues": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/config.py",
+    "selfLoops": false
+  },
+  "recipe": {
+    "reason": "Its instances hold 140,200,000 facility-customer edges in all, and a graph/v1 result is held whole: the largest such set read and round-tripped whole has 13,125,000 edges (ufllib-koerkel-ghosh-symmetric), and reading the 22,750,000 of ufllib-k-median whole ran out of the default Node heap. It becomes fetchable when graph/v1 results can be streamed (https://github.com/Mearman/keepset/issues/305).",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/config.py"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/easy_test_instances/i1000_1.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/easy_test_instances/i1000_2.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/easy_test_instances/i1000_3.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/easy_test_instances/i1000_4.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/easy_test_instances/i1000_5.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/easy_test_instances/i1000_6.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/easy_test_instances/i1000_7.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/easy_test_instances/i1000_8.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/easy_test_instances/i1000_9.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/easy_test_instances/i1000_10.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/easy_test_instances/i1000_11.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/easy_test_instances/i1000_12.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/easy_test_instances/i1000_13.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/easy_test_instances/i1000_14.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/easy_test_instances/i1000_15.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/easy_test_instances/i1000_16.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/easy_test_instances/i1000_17.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/easy_test_instances/i1000_18.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/easy_test_instances/i1000_19.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/easy_test_instances/i1000_20.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/hard_test_instances/p2000-2000-31.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/hard_test_instances/p2000-2000-32.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/hard_test_instances/p2000-2000-33.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/hard_test_instances/p2000-2000-34.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/hard_test_instances/p2000-2000-35.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/hard_test_instances/p2000-2000-36.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/hard_test_instances/p2000-2000-37.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/hard_test_instances/p2000-2000-38.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/hard_test_instances/p2000-2000-39.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/hard_test_instances/p2000-2000-40.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/hard_test_instances/p2000-2000-41.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/hard_test_instances/p2000-2000-42.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/hard_test_instances/p2000-2000-43.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/hard_test_instances/p2000-2000-44.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/hard_test_instances/p2000-2000-45.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/hard_test_instances/p2000-2000-46.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/hard_test_instances/p2000-2000-47.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/hard_test_instances/p2000-2000-48.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/hard_test_instances/p2000-2000-49.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/hard_test_instances/p2000-2000-50.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/hard_test_instances/p2000-2000-51.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/hard_test_instances/p2000-2000-52.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/hard_test_instances/p2000-2000-53.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/hard_test_instances/p2000-2000-54.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/hard_test_instances/p2000-2000-55.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/hard_test_instances/p2000-2000-56.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/hard_test_instances/p2000-2000-57.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/hard_test_instances/p2000-2000-58.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/hard_test_instances/p2000-2000-59.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/hard_test_instances/p2000-2000-60.plc"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/valid_instances/cflp_corn_n100_m100_r5.0_1.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/valid_instances/cflp_corn_n100_m100_r5.0_2.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/valid_instances/cflp_corn_n100_m100_r5.0_3.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/valid_instances/cflp_corn_n100_m100_r5.0_4.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/valid_instances/cflp_corn_n100_m100_r5.0_5.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/valid_instances/cflp_corn_n100_m100_r5.0_6.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/valid_instances/cflp_corn_n100_m100_r5.0_7.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/valid_instances/cflp_corn_n100_m100_r5.0_8.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/valid_instances/cflp_corn_n100_m100_r5.0_9.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/valid_instances/cflp_corn_n100_m100_r5.0_10.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/valid_instances/cflp_corn_n100_m100_r5.0_11.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/valid_instances/cflp_corn_n100_m100_r5.0_12.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/valid_instances/cflp_corn_n100_m100_r5.0_13.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/valid_instances/cflp_corn_n100_m100_r5.0_14.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/valid_instances/cflp_corn_n100_m100_r5.0_15.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/valid_instances/cflp_corn_n100_m100_r5.0_16.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/valid_instances/cflp_corn_n100_m100_r5.0_17.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/valid_instances/cflp_corn_n100_m100_r5.0_18.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/valid_instances/cflp_corn_n100_m100_r5.0_19.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/CFLP/valid_instances/cflp_corn_n100_m100_r5.0_20.txt"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": [
+    "facility-location",
+    "bipartite",
+    "capacity",
+    "demand",
+    "fixedCost",
+    "cost"
+  ]
+}

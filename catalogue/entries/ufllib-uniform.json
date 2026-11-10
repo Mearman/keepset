@@ -1,0 +1,89 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "category": "graph/v1",
+  "citations": [
+    {
+      "doi": "10.1007/3-540-44867-5_13",
+      "text": "M. Hoefer (2003). Experimental comparison of heuristic and approximation algorithms for uncapacitated facility location. Experimental and Efficient Algorithms (WEA 2003), LNCS 2647, 165-178."
+    },
+    {
+      "doi": "10.1007/0-387-25383-1_16",
+      "text": "Y. Kochetov, D. Ivanenko (2005). Computationally difficult instances for the uncapacitated facility location problem. In Metaheuristics: Progress as Real Problem Solvers, 351-367."
+    }
+  ],
+  "crosswalk": {
+    "file": "crosswalks/graph-v1/facility-location-uncapacitated.json"
+  },
+  "description": "UflLib's Uniform package: 30 instances of Kochetov and Ivanenko's class with connection costs drawn uniformly at random, 100 facilities and 100 cities, with an optimal solution for each.",
+  "domain": "Facility location",
+  "expectedCounts": {
+    "instances": 30
+  },
+  "id": "ufllib-uniform",
+  "licence": {
+    "kind": "unrecorded"
+  },
+  "name": "UflLib Uniform",
+  "namespace": [
+    "ufllib"
+  ],
+  "properties": {
+    "directed": true,
+    "downloadBytes": 676995,
+    "heterogeneous": true,
+    "multigraph": false,
+    "nodeTypes": 2,
+    "referenceValues": "the .opt (optimal) or .bub (best found) file beside each instance in the package, whose last number is the solution's cost and whose others name each city's facility, numbered from 0",
+    "selfLoops": false
+  },
+  "recipe": {
+    "archive": {
+      "kind": "tar.gz",
+      "members": {
+        "pattern": "Uniform/[0-9]+UnifS\\.txt"
+      }
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "cflp",
+      "layout": "simple"
+    },
+    "source": 1,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20261026091813",
+        "url": "https://web.archive.org/web/20261026091813/https://algo.rwth-aachen.de/ufllib"
+      },
+      "status": "live",
+      "url": "https://algo.rwth-aachen.de/ufllib"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://algo.rwth-aachen.de/ufllib/data/Uniform.tgz"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20240920150500",
+        "url": "https://web.archive.org/web/20240920150500/https://resources.mpi-inf.mpg.de/departments/d1/projects/benchmarks/UflLib/"
+      },
+      "status": "dead",
+      "url": "https://resources.mpi-inf.mpg.de/departments/d1/projects/benchmarks/UflLib/"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": [
+    "facility-location",
+    "uncapacitated",
+    "bipartite",
+    "fixedCost",
+    "cost"
+  ]
+}

@@ -1,0 +1,250 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "category": "graph/v1",
+  "citations": [
+    {
+      "doi": "10.1057/jors.1990.166",
+      "text": "J. E. Beasley (1990). OR-Library: distributing test problems by electronic mail. Journal of the Operational Research Society 41(11), 1069-1072."
+    },
+    {
+      "doi": "10.1016/0377-2217(93)90118-7",
+      "text": "J. E. Beasley (1993). Lagrangean heuristics for location problems. European Journal of Operational Research 65(3), 383-399."
+    }
+  ],
+  "crosswalk": {
+    "file": "crosswalks/graph-v1/facility-location-uncapacitated.json"
+  },
+  "description": "Beasley's uncapacitated warehouse location problems, test problem sets VII, X, XIII and A to C of Table 2 of Beasley (1993): 16 to 100 potential warehouses and 50 to 1,000 customers. The files are the capacitated warehouse location files of the same names, whose capacities and demands are read and checked but not carried, as the problems ignore them.",
+  "domain": "Facility location",
+  "expectedCounts": {
+    "instances": 15
+  },
+  "id": "orlib-uncapacitated-warehouse-location",
+  "licence": {
+    "kind": "unrecorded"
+  },
+  "name": "OR-Library uncapacitated warehouse location",
+  "properties": {
+    "directed": true,
+    "downloadBytes": 3868226,
+    "heterogeneous": true,
+    "multigraph": false,
+    "nodeTypes": 2,
+    "referenceValueKind": "optimal value of each problem",
+    "referenceValues": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/uncapopt.txt",
+    "selfLoops": false
+  },
+  "recipe": {
+    "files": [
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap71.txt",
+        "source": 2
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap72.txt",
+        "source": 3
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap73.txt",
+        "source": 4
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap74.txt",
+        "source": 5
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap101.txt",
+        "source": 6
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap102.txt",
+        "source": 7
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap103.txt",
+        "source": 8
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap104.txt",
+        "source": 9
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap131.txt",
+        "source": 10
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap132.txt",
+        "source": 11
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap133.txt",
+        "source": 12
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "cap134.txt",
+        "source": 13
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "capa.txt",
+        "source": 14
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "capb.txt",
+        "source": 15
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "capc.txt",
+        "source": 16
+      }
+    ],
+    "parser": {
+      "encoding": "utf-8",
+      "format": "cflp",
+      "layout": "orlib-cap",
+      "uncapacitated": true
+    },
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/uncapinfo.html"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/uncapopt.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap71.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap72.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap73.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap74.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap101.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap102.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap103.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap104.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap131.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap132.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap133.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/cap134.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/capa.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/capb.txt"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/capc.txt"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": [
+    "facility-location",
+    "uncapacitated",
+    "bipartite",
+    "fixedCost",
+    "cost"
+  ]
+}

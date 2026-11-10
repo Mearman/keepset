@@ -1,0 +1,86 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "category": "graph/v1",
+  "citations": [
+    {
+      "doi": "10.1016/j.ejor.2014.04.007",
+      "text": "G. Guastaroba, M. G. Speranza (2014). A heuristic for BILP problems: the single source capacitated facility location problem. European Journal of Operational Research 238(2), 438-450."
+    },
+    {
+      "doi": "10.1057/jors.1990.166",
+      "text": "J. E. Beasley (1990). OR-Library: distributing test problems by electronic mail. Journal of the Operational Research Society 41(11), 1069-1072."
+    }
+  ],
+  "crosswalk": {
+    "file": "crosswalks/graph-v1/facility-location.json"
+  },
+  "description": "Beasley's OR-Library capacitated warehouse location instances cap61 to cap134 and the twelve problems of capa, capb and capc written out with their capacities, as Guastaroba and Speranza (2014) used them for the single-source problem, in which each customer is served by one facility, with the optimal single-source value of each.",
+  "domain": "Facility location",
+  "expectedCounts": {
+    "instances": 36
+  },
+  "id": "unibs-sscflp-orlib",
+  "licence": {
+    "kind": "unrecorded"
+  },
+  "name": "OR-Library instances for the single-source capacitated facility location problem",
+  "properties": {
+    "directed": true,
+    "downloadBytes": 7094228,
+    "heterogeneous": true,
+    "multigraph": false,
+    "nodeTypes": 2,
+    "referenceValueKind": "optimal single-source value of each instance",
+    "referenceValues": "OR-Library_Solution_Values.txt (https://drive.usercontent.google.com/download?id=0B6LVUFLjwlvdMDBQNlg3OUhreGc&export=download&confirm=t&resourcekey=0-K3TCQtKHZQ8u157xWSjgHA)",
+    "selfLoops": false
+  },
+  "recipe": {
+    "archive": {
+      "kind": "zip",
+      "members": {
+        "pattern": "cap[0-9a-c][0-9]*"
+      }
+    },
+    "parser": {
+      "costBasis": "per-assignment",
+      "encoding": "utf-8",
+      "format": "cflp",
+      "layout": "pairs"
+    },
+    "source": 1,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://or-brescia.unibs.it/instances/instances_sscflp"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20261110090644",
+        "url": "https://web.archive.org/web/20261110090644/https://drive.usercontent.google.com/download?id=0B6LVUFLjwlvdNnhtcC1aOHQ5Z0E&export=download&confirm=t&resourcekey=0-S6lTc-C-9bv3DjYJx8q6sw"
+      },
+      "status": "live",
+      "url": "https://drive.usercontent.google.com/download?id=0B6LVUFLjwlvdNnhtcC1aOHQ5Z0E&export=download&confirm=t&resourcekey=0-S6lTc-C-9bv3DjYJx8q6sw"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://drive.usercontent.google.com/download?id=0B6LVUFLjwlvdMDBQNlg3OUhreGc&export=download&confirm=t&resourcekey=0-K3TCQtKHZQ8u157xWSjgHA"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": [
+    "facility-location",
+    "single-source",
+    "bipartite",
+    "capacity",
+    "demand",
+    "fixedCost",
+    "cost"
+  ]
+}

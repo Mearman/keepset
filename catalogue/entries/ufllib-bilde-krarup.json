@@ -1,0 +1,93 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "category": "graph/v1",
+  "citations": [
+    {
+      "doi": "10.1007/3-540-44867-5_13",
+      "text": "M. Hoefer (2003). Experimental comparison of heuristic and approximation algorithms for uncapacitated facility location. Experimental and Efficient Algorithms (WEA 2003), LNCS 2647, 165-178."
+    },
+    {
+      "doi": "10.1016/S0167-5060(08)70728-3",
+      "text": "O. Bilde, J. Krarup (1977). Sharp lower bounds and efficient algorithms for the simple plant location problem. Annals of Discrete Mathematics 1, 79-97."
+    }
+  ],
+  "crosswalk": {
+    "file": "crosswalks/graph-v1/facility-location-uncapacitated.json"
+  },
+  "description": "UflLib's Bilde-Krarup package: 220 uncapacitated facility location problems in 22 classes generated to the parameters of Bilde and Krarup (1977), 30 or 50 facilities and 80 or 100 cities, with an optimal solution for each.",
+  "domain": "Facility location",
+  "expectedCounts": {
+    "instances": 220
+  },
+  "id": "ufllib-bilde-krarup",
+  "licence": {
+    "kind": "unrecorded"
+  },
+  "name": "UflLib Bilde-Krarup",
+  "namespace": [
+    "ufllib"
+  ],
+  "properties": {
+    "directed": true,
+    "downloadBytes": 1438527,
+    "heterogeneous": true,
+    "multigraph": false,
+    "nodeTypes": 2,
+    "referenceValues": "the .opt (optimal) or .bub (best found) file beside each instance in the package, whose last number is the solution's cost and whose others name each city's facility, numbered from 0",
+    "selfLoops": false
+  },
+  "recipe": {
+    "archive": {
+      "kind": "tar.gz",
+      "members": {
+        "pattern": "BildeKrarup/(B|C|Dq/[0-9]+|Eq/[0-9]+)/[BCDE][0-9]+\\.[0-9]+"
+      }
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "cflp",
+      "layout": "simple"
+    },
+    "source": 1,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20261026091813",
+        "url": "https://web.archive.org/web/20261026091813/https://algo.rwth-aachen.de/ufllib"
+      },
+      "status": "live",
+      "url": "https://algo.rwth-aachen.de/ufllib"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20261110085914",
+        "url": "https://web.archive.org/web/20261110085914/https://algo.rwth-aachen.de/ufllib/data/BildeKrarup.tgz"
+      },
+      "status": "live",
+      "url": "https://algo.rwth-aachen.de/ufllib/data/BildeKrarup.tgz"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20240920150500",
+        "url": "https://web.archive.org/web/20240920150500/https://resources.mpi-inf.mpg.de/departments/d1/projects/benchmarks/UflLib/"
+      },
+      "status": "dead",
+      "url": "https://resources.mpi-inf.mpg.de/departments/d1/projects/benchmarks/UflLib/"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": [
+    "facility-location",
+    "uncapacitated",
+    "bipartite",
+    "fixedCost",
+    "cost"
+  ]
+}

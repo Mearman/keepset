@@ -1,0 +1,100 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "category": "graph/v1",
+  "citations": [
+    {
+      "doi": "10.1016/j.ejor.2014.04.007",
+      "text": "G. Guastaroba, M. G. Speranza (2014). A heuristic for BILP problems: the single source capacitated facility location problem. European Journal of Operational Research 238(2), 438-450."
+    },
+    {
+      "doi": "10.1007/s10589-007-9125-x",
+      "text": "P. Avella, M. Boccia (2009). A cutting plane algorithm for the capacitated facility location problem. Computational Optimization and Applications 43(1), 39-65."
+    }
+  ],
+  "crosswalk": {
+    "file": "crosswalks/graph-v1/facility-location.json"
+  },
+  "description": "The capacitated facility location test bed of Avella and Boccia (2009), 100 instances in five groups from 300 facilities and 300 customers to 1,000 and 1,000, as Guastaroba and Speranza (2014) used it for the single-source problem, with the best lower and upper bound of each. A cost is that of supplying one unit of a customer's demand. The files of the 300 by 1,500 group write their counts customers first, and the recipe reads the counts in the one order the file's numbers fit.",
+  "domain": "Facility location",
+  "expectedCounts": {},
+  "id": "unibs-sscflp-tbed1",
+  "licence": {
+    "kind": "unrecorded"
+  },
+  "name": "Avella and Boccia test bed for the single-source capacitated facility location problem (TBED1)",
+  "properties": {
+    "directed": true,
+    "downloadBytes": 156819343,
+    "heterogeneous": true,
+    "multigraph": false,
+    "nodeTypes": 2,
+    "referenceValueKind": "best lower bound (optimal value where proven) and best upper bound of each instance",
+    "referenceValues": "TBED1_Solution_Values.txt (https://drive.usercontent.google.com/download?id=0B6LVUFLjwlvdclZES1hkZXJvaEk&export=download&confirm=t&resourcekey=0-BqVU7PauRjfPHR67FFBBaw)",
+    "selfLoops": false
+  },
+  "recipe": {
+    "reason": "Its instances hold 45,600,000 facility-customer edges in all, and a graph/v1 result is held whole: the largest such set read and round-tripped whole has 13,125,000 edges (ufllib-koerkel-ghosh-symmetric), and reading the 22,750,000 of ufllib-k-median whole ran out of the default Node heap. It becomes fetchable when graph/v1 results can be streamed (https://github.com/Mearman/keepset/issues/305).",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://or-brescia.unibs.it/instances/instances_sscflp"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20261110090731",
+        "url": "https://web.archive.org/web/20261110090731/https://drive.usercontent.google.com/download?id=0B6LVUFLjwlvdSl8yQnBRb05OLTA&export=download&confirm=t&resourcekey=0-2cKtD_PkC_yDQWbzb89T7A"
+      },
+      "status": "live",
+      "url": "https://drive.usercontent.google.com/download?id=0B6LVUFLjwlvdSl8yQnBRb05OLTA&export=download&confirm=t&resourcekey=0-2cKtD_PkC_yDQWbzb89T7A"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://drive.usercontent.google.com/download?id=0B6LVUFLjwlvdZ2lRMFpCRVJocjA&export=download&confirm=t&resourcekey=0-APGXm8J-nF6DFAJYV6-3Sw"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20261110090925",
+        "url": "https://web.archive.org/web/20261110090925/https://drive.usercontent.google.com/download?id=0B6LVUFLjwlvdbkc5T2dfendNREE&export=download&confirm=t&resourcekey=0-zyLgYwiwbtnGMw_Zc6kIjQ"
+      },
+      "status": "live",
+      "url": "https://drive.usercontent.google.com/download?id=0B6LVUFLjwlvdbkc5T2dfendNREE&export=download&confirm=t&resourcekey=0-zyLgYwiwbtnGMw_Zc6kIjQ"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://drive.usercontent.google.com/download?id=0B6LVUFLjwlvddlJMdW84Rkg5SHc&export=download&confirm=t&resourcekey=0-CswCJ2e1gc84wWTWuPZlwg"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://drive.usercontent.google.com/download?id=0B6LVUFLjwlvdN00yQUhfTDZGM1U&export=download&confirm=t&resourcekey=0-EOYkHY5z2t2GbfAiJO0VPg"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20261110091011",
+        "url": "https://web.archive.org/web/20261110091011/https://drive.usercontent.google.com/download?id=0B6LVUFLjwlvdclZES1hkZXJvaEk&export=download&confirm=t&resourcekey=0-BqVU7PauRjfPHR67FFBBaw"
+      },
+      "status": "live",
+      "url": "https://drive.usercontent.google.com/download?id=0B6LVUFLjwlvdclZES1hkZXJvaEk&export=download&confirm=t&resourcekey=0-BqVU7PauRjfPHR67FFBBaw"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": [
+    "facility-location",
+    "single-source",
+    "bipartite",
+    "capacity",
+    "demand",
+    "fixedCost",
+    "cost"
+  ]
+}
