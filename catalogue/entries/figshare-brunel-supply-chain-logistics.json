@@ -1,0 +1,166 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "aliases": [
+    "brunel-supply-chain-logistics"
+  ],
+  "category": "tasks/v1",
+  "citations": [
+    {
+      "doi": "10.17633/rd.brunel.7558679.v2",
+      "text": "T. Kalganova, I. Dzalbs (2019). Supply Chain Logistics Problem Dataset. Brunel University London, version 2."
+    },
+    {
+      "doi": "10.1016/j.cie.2020.106610",
+      "text": "I. Dzalbs, T. Kalganova (2020). Accelerating supply chains with Ant Colony Optimization across a range of hardware solutions. Computers & Industrial Engineering 147, 106610."
+    }
+  ],
+  "crosswalk": {
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].Origin_Port",
+      "nodes[].Destination_Port",
+      "nodes[].Carrier",
+      "nodes[].TPT",
+      "nodes[].Ship_ahead_day_count",
+      "nodes[].Ship_Late_Day_count",
+      "nodes[].Customer",
+      "nodes[].Product_ID",
+      "nodes[].Unit_quantity",
+      "nodes[].Weight"
+    ],
+    "rules": [
+      {
+        "from": "nodes[].Order_Date",
+        "op": "move",
+        "to": "nodes[].opened"
+      },
+      {
+        "from": "nodes[].Service_Level",
+        "op": "move",
+        "to": "nodes[].skill"
+      },
+      {
+        "from": "nodes[].Plant_Code",
+        "op": "move",
+        "to": "nodes[].territory"
+      }
+    ],
+    "source": "csv-table",
+    "target": "tasks/v1"
+  },
+  "description": "Outbound logistics data of one company, released to test supply chain optimisation: order lines with their ports, carrier, service level, customer, product, plant, quantity and weight, read here from the workbook's OrderList sheet. Each order line is a node: its order date fills `opened`, its service level `skill` and the plant it is served from `territory`; the ports, carrier, transport days (TPT), ship-ahead and late day counts, customer, product, quantity and weight pass through under their own names. tasks/v1 is a compromise here: the rows are shipment or order records, not places or cases to visit or serve, and keepset has no records category yet. The workbook's other sheets (FreightRates, WhCosts, WhCapacities, ProductsPerPlant, VmiCustomers, PlantPorts) are lane rates, warehouse costs and capacities and the plant, product, customer and port mappings, which tasks/v1 has no place for and this entry does not read. The figshare landing page and download host sit behind a web application firewall that challenges browsers; the download address the figshare API gives (`download_url`) answers a plain HTTP client, and that is the source the recipe reads.",
+  "domain": "Outbound logistics",
+  "expectedCounts": {
+    "nodes": 9215
+  },
+  "id": "figshare-brunel-supply-chain-logistics",
+  "licence": {
+    "id": "CC-BY-4.0",
+    "kind": "spdx"
+  },
+  "name": "Supply Chain Logistics Problem Dataset (Brunel)",
+  "namespace": [
+    "figshare",
+    "brunel"
+  ],
+  "properties": {
+    "downloadBytes": 794602,
+    "timeUnit": "days"
+  },
+  "recipe": {
+    "archive": {
+      "kind": "xlsx",
+      "sheet": "OrderList"
+    },
+    "parser": {
+      "columns": [
+        "Order_Date",
+        "Service_Level",
+        "Plant_Code",
+        "Origin_Port",
+        "Destination_Port",
+        "Carrier",
+        "TPT",
+        "Ship_ahead_day_count",
+        "Ship_Late_Day_count",
+        "Customer",
+        "Product_ID",
+        "Unit_quantity",
+        "Weight"
+      ],
+      "delimiter": "comma",
+      "encoding": "utf-8",
+      "format": "csv-table",
+      "idColumn": "Order_ID",
+      "numericColumns": [
+        {
+          "column": "TPT",
+          "factor": 1
+        },
+        {
+          "column": "Ship_ahead_day_count",
+          "factor": 1
+        },
+        {
+          "column": "Ship_Late_Day_count",
+          "factor": 1
+        },
+        {
+          "column": "Unit_quantity",
+          "factor": 1
+        },
+        {
+          "column": "Weight",
+          "factor": 1
+        }
+      ],
+      "skipLines": 0
+    },
+    "source": 2,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20261013045429",
+        "url": "https://web.archive.org/web/20261013045429/https://brunel.figshare.com/articles/dataset/Supply_Chain_Logistics_Problem_Dataset/7558679"
+      },
+      "status": "live",
+      "url": "https://brunel.figshare.com/articles/dataset/Supply_Chain_Logistics_Problem_Dataset/7558679"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20260929135824",
+        "url": "https://web.archive.org/web/20260929135824/https://api.figshare.com/v2/articles/7558679"
+      },
+      "status": "live",
+      "url": "https://api.figshare.com/v2/articles/7558679"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://ndownloader.figshare.com/files/20162015"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": [
+    "opened",
+    "skill",
+    "territory",
+    "Origin_Port",
+    "Destination_Port",
+    "Carrier",
+    "TPT",
+    "Ship_ahead_day_count",
+    "Ship_Late_Day_count",
+    "Customer",
+    "Product_ID",
+    "Unit_quantity",
+    "Weight"
+  ]
+}

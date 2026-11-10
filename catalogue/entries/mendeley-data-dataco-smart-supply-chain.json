@@ -1,0 +1,198 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "aliases": [
+    "dataco-smart-supply-chain"
+  ],
+  "category": "tasks/v1",
+  "citations": [
+    {
+      "doi": "10.17632/8gx2fvg2k6.5",
+      "text": "F. Constante, F. Silva, A. Pereira (2019). DataCo smart supply chain for big data analysis. Mendeley Data, version 5."
+    }
+  ],
+  "crosswalk": {
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].Order_Id",
+      "nodes[].Type",
+      "nodes[].Days_for_shipping_real",
+      "nodes[].Days_for_shipment_scheduled",
+      "nodes[].Late_delivery_risk",
+      "nodes[].Order_Status",
+      "nodes[].Order_Item_Quantity",
+      "nodes[].Sales",
+      "nodes[].Order_Item_Total",
+      "nodes[].Product_Name",
+      "nodes[].Category_Name",
+      "nodes[].Customer_Segment",
+      "nodes[].Market",
+      "nodes[].Order_City",
+      "nodes[].Order_Country",
+      "nodes[].Latitude",
+      "nodes[].Longitude"
+    ],
+    "rules": [
+      {
+        "from": "nodes[].order_date_DateOrders",
+        "op": "move",
+        "to": "nodes[].opened"
+      },
+      {
+        "from": "nodes[].shipping_date_DateOrders",
+        "op": "move",
+        "to": "nodes[].closed"
+      },
+      {
+        "from": "nodes[].Delivery_Status",
+        "op": "move",
+        "to": "nodes[].status"
+      },
+      {
+        "from": "nodes[].Shipping_Mode",
+        "op": "move",
+        "to": "nodes[].skill"
+      },
+      {
+        "from": "nodes[].Order_Region",
+        "op": "move",
+        "to": "nodes[].territory"
+      }
+    ],
+    "source": "csv-table",
+    "target": "tasks/v1"
+  },
+  "description": "Order item records of a sporting goods retailer, DataCo Global, with sales, shipping mode, scheduled and actual shipping days, delivery status and the order's market, region, city and country. Each order item is a node: its order date fills `opened`, its shipping date `closed`, its delivery status `status`, its shipping mode `skill` and its order region `territory`; the order id, payment type, shipping days, late delivery risk, order status, quantity, sales, product, category, customer segment, market, order city and country pass through under their own names, as do `Latitude` and `Longitude`, which the dataset's description gives as the store's location, not the delivery's, so they do not fill the node's position. The customer name and address columns are left out. tasks/v1 is a compromise here: the rows are shipment or order records, not places or cases to visit or serve, and keepset has no records category yet. The file is Latin-1. The record's access log table is not read.",
+  "domain": "Order fulfilment",
+  "expectedCounts": {
+    "nodes": 180519
+  },
+  "id": "mendeley-data-dataco-smart-supply-chain",
+  "licence": {
+    "id": "CC-BY-4.0",
+    "kind": "spdx"
+  },
+  "name": "DataCo Smart Supply Chain for Big Data Analysis",
+  "namespace": [
+    "mendeley-data"
+  ],
+  "properties": {
+    "downloadBytes": 95910149,
+    "timeUnit": "days"
+  },
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "columns": [
+        "order_date_DateOrders",
+        "shipping_date_DateOrders",
+        "Delivery_Status",
+        "Shipping_Mode",
+        "Order_Region",
+        "Order_Id",
+        "Type",
+        "Days_for_shipping_real",
+        "Days_for_shipment_scheduled",
+        "Late_delivery_risk",
+        "Order_Status",
+        "Order_Item_Quantity",
+        "Sales",
+        "Order_Item_Total",
+        "Product_Name",
+        "Category_Name",
+        "Customer_Segment",
+        "Market",
+        "Order_City",
+        "Order_Country",
+        "Latitude",
+        "Longitude"
+      ],
+      "delimiter": "comma",
+      "encoding": "latin1",
+      "format": "csv-table",
+      "idColumn": "Order_Item_Id",
+      "numericColumns": [
+        {
+          "column": "Days_for_shipping_real",
+          "factor": 1
+        },
+        {
+          "column": "Days_for_shipment_scheduled",
+          "factor": 1
+        },
+        {
+          "column": "Late_delivery_risk",
+          "factor": 1
+        },
+        {
+          "column": "Order_Item_Quantity",
+          "factor": 1
+        },
+        {
+          "column": "Sales",
+          "factor": 1
+        },
+        {
+          "column": "Order_Item_Total",
+          "factor": 1
+        },
+        {
+          "column": "Latitude",
+          "factor": 1
+        },
+        {
+          "column": "Longitude",
+          "factor": 1
+        }
+      ],
+      "skipLines": 0
+    },
+    "source": 1,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20261013082623",
+        "url": "https://web.archive.org/web/20261013082623/https://data.mendeley.com/datasets/8gx2fvg2k6/5"
+      },
+      "status": "live",
+      "url": "https://data.mendeley.com/datasets/8gx2fvg2k6/5"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://data.mendeley.com/public-files/datasets/8gx2fvg2k6/files/72784be5-36d3-44fe-b75d-0edbf1999f65/file_downloaded"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": [
+    "opened",
+    "closed",
+    "status",
+    "skill",
+    "territory",
+    "Order_Id",
+    "Type",
+    "Days_for_shipping_real",
+    "Days_for_shipment_scheduled",
+    "Late_delivery_risk",
+    "Order_Status",
+    "Order_Item_Quantity",
+    "Sales",
+    "Order_Item_Total",
+    "Product_Name",
+    "Category_Name",
+    "Customer_Segment",
+    "Market",
+    "Order_City",
+    "Order_Country",
+    "Latitude",
+    "Longitude"
+  ]
+}
