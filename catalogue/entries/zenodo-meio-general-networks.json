@@ -1,0 +1,120 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "aliases": [
+    "meio-general-networks"
+  ],
+  "category": "tasks/v1",
+  "citations": [
+    {
+      "doi": "10.5281/zenodo.18803200",
+      "text": "B. Puente-Mejia, J. Arts, S. Klosterhalfen (2026). Supplementary material for publication \"Multi-Echelon Inventory Optimization in Supply Chain Networks: Exploring Network Structures and Predictive Modeling\". Zenodo."
+    }
+  ],
+  "crosswalk": {
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].Node_Holding_Cost",
+      "nodes[].Leaf_Node_Avg_Demand",
+      "nodes[].Leaf_Node_SD_Demand",
+      "nodes[].Service_Level",
+      "nodes[].Lead_Time"
+    ],
+    "source": "csv-table",
+    "target": "tasks/v1"
+  },
+  "description": "Synthetic multi-echelon inventory optimisation instances with a general network structure, one workbook per instance, from the supplementary material of a multi-echelon inventory optimisation study (the record holds serial, convergent, divergent and general families, each its own entry). Each workbook's Nodes sheet is read as one instance: a stage is a node, named by its number, with its holding cost, the mean and standard deviation of its demand (non-zero at leaf stages), its service level and its lead time passing through under the sheet's names; the source states no unit for lead time. The Arcs sheet, which says which stage supplies which, is not read: tasks/v1 has no arcs, and graph/v1 would keep the arcs but lose every stage's figures, since keepset's graph parsers read the edge table alone and do not join a node table to it. The Plot sheet holds a picture.",
+  "domain": "Multi-echelon inventory",
+  "expectedCounts": {
+    "instances": 20000
+  },
+  "id": "zenodo-meio-general-networks",
+  "licence": {
+    "id": "CC-BY-4.0",
+    "kind": "spdx"
+  },
+  "name": "Multi-echelon inventory network structures: general networks",
+  "namespace": [
+    "zenodo",
+    "meio-network-structures"
+  ],
+  "properties": {
+    "downloadBytes": 812387151
+  },
+  "recipe": {
+    "archive": {
+      "inner": {
+        "kind": "xlsx",
+        "sheets": "Nodes"
+      },
+      "kind": "zip",
+      "members": {
+        "pattern": "General_Networks/Inst_General_[0-9]+\\.xlsx"
+      }
+    },
+    "parser": {
+      "columns": [
+        "Node_Holding_Cost",
+        "Leaf_Node_Avg_Demand",
+        "Leaf_Node_SD_Demand",
+        "Service_Level",
+        "Lead_Time"
+      ],
+      "delimiter": "comma",
+      "encoding": "utf-8",
+      "format": "csv-table",
+      "idColumn": "Node_Name",
+      "numericColumns": [
+        {
+          "column": "Node_Holding_Cost",
+          "factor": 1
+        },
+        {
+          "column": "Leaf_Node_Avg_Demand",
+          "factor": 1
+        },
+        {
+          "column": "Leaf_Node_SD_Demand",
+          "factor": 1
+        },
+        {
+          "column": "Service_Level",
+          "factor": 1
+        },
+        {
+          "column": "Lead_Time",
+          "factor": 1
+        }
+      ],
+      "skipLines": 0
+    },
+    "source": 1,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20261110085155",
+        "url": "https://web.archive.org/web/20261110085155/https://zenodo.org/records/18803200"
+      },
+      "status": "live",
+      "url": "https://zenodo.org/records/18803200"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://zenodo.org/api/records/18803200/files/General_Networks.zip/content"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": [
+    "Node_Holding_Cost",
+    "Leaf_Node_Avg_Demand",
+    "Leaf_Node_SD_Demand",
+    "Service_Level",
+    "Lead_Time"
+  ]
+}
