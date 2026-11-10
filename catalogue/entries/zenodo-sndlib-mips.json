@@ -1,0 +1,75 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "aliases": [
+    "sndlib-mips"
+  ],
+  "category": "resources/v1",
+  "citations": [
+    {
+      "doi": "10.5281/zenodo.8021237",
+      "text": "M. Turner, T. Berthold, M. Besançon, T. Koch (2023). SNDlib-MIPs: a new set of homogeneous MILP instances. Zenodo."
+    }
+  ],
+  "crosswalk": {
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].path"
+    ],
+    "source": "member-path",
+    "target": "resources/v1"
+  },
+  "description": "Mixed-integer linear programmes built from the networks and demands of SNDlib, the survivable network design library, as gzipped MPS files in one archive. Listed from the archive's member paths, one file per instance, each with its path in the archive; the record also holds a description of the model as a PDF. No reference objective values are distributed. The entry lists the files and carries none of their contents, since keepset has no category for a mathematical programme yet.",
+  "domain": "Survivable network design",
+  "expectedCounts": {
+    "nodes": 289
+  },
+  "id": "zenodo-sndlib-mips",
+  "licence": {
+    "id": "CC-BY-4.0",
+    "kind": "spdx"
+  },
+  "name": "SNDlib-MIPs",
+  "namespace": [
+    "zenodo"
+  ],
+  "properties": {
+    "downloadBytes": 26199010,
+    "fileFormat": "MPS, gzipped"
+  },
+  "recipe": {
+    "archive": {
+      "files": {
+        "extensions": [
+          ".mps.gz"
+        ]
+      },
+      "kind": "zip"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "member-path",
+      "idPattern": "(?:[^/]+/)*([^/]+)\\.mps\\.gz"
+    },
+    "source": 1,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://zenodo.org/records/8021237"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://zenodo.org/api/records/8021237/files/mps-instances.zip/content"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": [
+    "path"
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "aliases": [
+    "fctp"
+  ],
+  "category": "resources/v1",
+  "citations": [
+    {
+      "text": "H. D. Mittelmann. Fixed Charge Transportation Benchmark, MPS format. Arizona State University.",
+      "url": "https://plato.asu.edu/sub/testcases.html"
+    }
+  ],
+  "crosswalk": {
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].url",
+      "nodes[].size"
+    ],
+    "source": "text-pattern",
+    "target": "resources/v1"
+  },
+  "description": "Fixed-charge transportation problem instances, a single-echelon fixed-charge network design case, as bzip2-compressed MPS files in H. Mittelmann's LP test set, originally posted by Jens Gottlieb in 1998. Listed from the host's directory with each file's address and listed size. Three files hold the reference values: `easy.result` and `ran.result` the optima found by branch and bound for the bal, gr, bk and ran instances, and `sun.result` the values of one tabu search run on the n370 instances, which are not proven optimal; `00README` is the provenance note. The entry lists the files and carries none of their contents, since keepset has no category for a mathematical programme yet.",
+  "domain": "Fixed-charge network design",
+  "expectedCounts": {
+    "nodes": 36
+  },
+  "id": "mittelmann-fctp",
+  "licence": {
+    "kind": "unrecorded"
+  },
+  "name": "Fixed-charge transportation problems (Gottlieb, via Mittelmann)",
+  "namespace": [
+    "mittelmann"
+  ],
+  "properties": {
+    "fileFormat": "MPS, bzip2-compressed",
+    "referenceValues": "easy.result, ran.result (optima); sun.result (tabu search values)"
+  },
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "derivedColumns": [
+        {
+          "name": "url",
+          "template": "https://plato.asu.edu/ftp/lptestset/fctp/{id}"
+        }
+      ],
+      "encoding": "utf-8",
+      "format": "text-pattern",
+      "pattern": "<td><a href=\"(?<id>[^\"/?]+)\">[^<]*</a>\\s*</td><td align=\"right\">[^<]*</td><td align=\"right\">(?<size>[^<]*)</td>"
+    },
+    "source": 1,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://plato.asu.edu/sub/testcases.html"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://plato.asu.edu/ftp/lptestset/fctp/"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": [
+    "url",
+    "size"
+  ]
+}

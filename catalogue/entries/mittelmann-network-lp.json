@@ -1,0 +1,76 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "aliases": [
+    "network-lp"
+  ],
+  "category": "resources/v1",
+  "citations": [
+    {
+      "text": "H. D. Mittelmann. Benchmark of network-LP solvers. Arizona State University.",
+      "url": "https://plato.asu.edu/ftp/network.html"
+    }
+  ],
+  "crosswalk": {
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].url",
+      "nodes[].size"
+    ],
+    "source": "text-pattern",
+    "target": "resources/v1"
+  },
+  "description": "The large network linear programmes (minimum-cost flow problems written as LPs) of H. Mittelmann's benchmark of LP solvers, listed from the host's directory of bzip2-compressed MPS files with each file's address and its size as the listing states it. The entry lists the files and carries none of their contents: keepset has no category for a mathematical programme yet, and graph/v1 would lose the row senses, right-hand sides and bounds a solver test needs. The grid-on-torus instances the benchmark page also reports are generated, not distributed, so they are not listed. The page reports solve times and no reference objective values.",
+  "domain": "Network linear programming",
+  "expectedCounts": {
+    "nodes": 10
+  },
+  "id": "mittelmann-network-lp",
+  "licence": {
+    "kind": "unrecorded"
+  },
+  "name": "Mittelmann network LP benchmark instances",
+  "namespace": [
+    "mittelmann"
+  ],
+  "properties": {
+    "fileFormat": "MPS, bzip2-compressed"
+  },
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "derivedColumns": [
+        {
+          "name": "url",
+          "template": "https://plato.asu.edu/ftp/lptestset/network/{id}"
+        }
+      ],
+      "encoding": "utf-8",
+      "format": "text-pattern",
+      "pattern": "<td><a href=\"(?<id>[^\"/?]+)\">[^<]*</a>\\s*</td><td align=\"right\">[^<]*</td><td align=\"right\">(?<size>[^<]*)</td>"
+    },
+    "source": 1,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://plato.asu.edu/ftp/network.html"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://plato.asu.edu/ftp/lptestset/network/"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": [
+    "url",
+    "size"
+  ]
+}
