@@ -9,6 +9,7 @@ import { listingColumnWidths } from "./listing-columns";
 import { propertyLabel, propertyText } from "./properties";
 import { scriptJson, slug } from "./html";
 import { datasetJsonLd, describe } from "./jsonld";
+import { facetQuery, serialiseListingQuery, type ListingQuery } from "./listing-query";
 
 /** What every page needs to know about the site: where it is published, which catalogue and package built it, and how deep the page sits, so its links stay relative and the site works from any base path. */
 export interface PageContext {
@@ -150,7 +151,7 @@ function Layout(context: PageContext, page: PageContent): string {
 
   return `<!doctype html>
 ${renderToStaticMarkup(
-  <html lang="en-GB"><head><meta charSet="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>{title}</title><meta name="description" content={description} /><link rel="manifest" href={`${root}manifest.webmanifest`} /><link rel="icon" href={`${root}icon.svg`} type="image/svg+xml" /><link rel="stylesheet" href={`${root}app.css`} /><meta name="theme-color" content="#1f4e79" />{head}</head><body data-root={root}><a className="skip-link" href="#main">Skip to content</a><header><a className="home" href={root}>keepset</a><nav><a href={root}>All datasets</a><a href={`${root}domains/`}>Domains</a><a href={`${root}subjects/`}>Subjects</a><a href={`${root}kinds/`}>Kinds</a><a href={`${root}namespaces/`}>Namespaces</a><a href="https://github.com/Mearman/keepset">Source</a></nav></header><main id="main" tabIndex={-1}>{body}</main><footer>Catalogue <code>{manifest.id}</code> {manifest.version}, built by keepset {context.packageVersion}.</footer><script type="module" src={`${root}app.js`} /></body></html>,
+  <html lang="en-GB"><head><meta charSet="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>{title}</title><meta name="description" content={description} /><link rel="manifest" href={`${root}manifest.webmanifest`} /><link rel="icon" href={`${root}icon.svg`} type="image/svg+xml" /><link rel="stylesheet" href={`${root}app.css`} /><meta name="theme-color" content="#1f4e79" />{head}</head><body data-root={root}><a className="skip-link" href="#main">Skip to content</a><header><a className="home" href={root}>keepset</a><nav><a href={root}>All datasets</a><a href={`${root}domains/`}>Domains</a><a href={`${root}subjects/`}>Subjects</a><a href={`${root}kinds/`}>Kinds</a><a href={`${root}tags/`}>Tags</a><a href={`${root}namespaces/`}>Namespaces</a><a href="https://github.com/Mearman/keepset">Source</a></nav></header><main id="main" tabIndex={-1}>{body}</main><footer>Catalogue <code>{manifest.id}</code> {manifest.version}, built by keepset {context.packageVersion}.</footer><script type="module" src={`${root}app.js`} /></body></html>,
 )}
 `;
 }
@@ -245,7 +246,7 @@ export function entryPage(context: PageContext, dataset: Dataset, sameData: read
       ["Kind", <a key="kind" href={`../../kinds/${slug(dataset.kind)}/`}>{dataset.kind}</a>],
       ...(entry.domain === undefined ? [] : [["Domain", <a key="domain" href={`../../domains/${slug(entry.domain)}/`}>{entry.domain}</a>] as const]),
       ...(entry.subjects === undefined ? [] : [["Subjects", entry.subjects.map((subject) => <a key={subject} href={`../../subjects/${slug(subject)}/`}>{subject}</a>).flatMap((link, index) => (index === 0 ? [link] : [", ", link]))] as const]),
-      ...(entry.tags.length === 0 ? [] : [["Tags", entry.tags.join(", ")] as const]),
+      ...(entry.tags.length === 0 ? [] : [["Tags", entry.tags.map((tag) => <a key={tag} href={`../../tags/${slug(tag)}/`}>{tag}</a>).flatMap((link, index) => (index === 0 ? [link] : [", ", link]))] as const]),
       ["Licence", licenceNode],
       ["Catalogue", <Fragment key="catalogue"><code>{dataset.catalogue.id}</code> {dataset.catalogue.version}</Fragment>],
     ]} />,
@@ -293,25 +294,46 @@ export function entryPage(context: PageContext, dataset: Dataset, sameData: read
 }
 
 /**
- * A listing page: the datasets of one domain, subject or kind.
+ * A listing page: the datasets of one domain, subject, kind or tag, with a link to the same datasets in the filterable listing, where they can be narrowed further and the view shared.
  * @param context - The page context (`root` is two levels up).
  * @param title - What the datasets share, such as "Domain: Social network" or "Subject: operations-research".
  * @param datasets - The datasets.
+ * @param query - The listing filter that selects the same datasets.
  * @returns The document.
  */
-export function listingPage(context: PageContext, title: string, datasets: readonly Dataset[]): string {
-  return Layout(context, { title: `${title}: keepset`, description: `${title}: datasets in the keepset catalogue.`, body: <Fragment><h1>{title}</h1><Listing datasets={datasets} root={context.root} /></Fragment> });
+export function listingPage(context: PageContext, title: string, datasets: readonly Dataset[], query: ListingQuery): string {
+  return Layout(context, { title: `${title}: keepset`, description: `${title}: datasets in the keepset catalogue.`, body: <Fragment><h1>{title}</h1><p><a href={`${context.root}${serialiseListingQuery(query)}`}>Filter these datasets further in the full listing</a></p><Listing datasets={datasets} root={context.root} /></Fragment> });
+}
+
+/** How an index of listing pages orders them: by label, or by how many datasets each holds, the most first and ties by label. */
+export type GroupOrder = "label" | "count";
+
+/** One listing page as its index links it: every label the page is for, its path relative to the index and how many datasets it holds. */
+export interface GroupLink {
+  readonly labels: readonly string[];
+  readonly path: string;
+  readonly count: number;
 }
 
 /**
- * An index of listing pages: every domain, subject or kind, with how many datasets each holds.
+ * An index of listing pages: every domain, subject, kind or tag, with how many datasets each holds.
  * @param context - The page context (`root` is one level up).
- * @param title - "Domains", "Subjects" or "Kinds".
- * @param groups - Each group's label and datasets.
+ * @param title - "Domains", "Subjects", "Kinds" or "Tags".
+ * @param groups - Each page's labels, path and count, in label order.
+ * @param order - The order to list them in.
  * @returns The document.
  */
-export function groupsPage(context: PageContext, title: string, groups: readonly { readonly label: string; readonly count: number }[]): string {
-  return Layout(context, { title: `${title}: keepset`, description: `${title} of the datasets in the keepset catalogue.`, body: <Fragment><h1>{title}</h1><ul className="groups">{groups.map((group) => <li key={group.label}><a href={`${slug(group.label)}/`}>{group.label}</a> ({group.count})</li>)}</ul></Fragment> });
+export function groupsPage(context: PageContext, title: string, groups: readonly GroupLink[], order: GroupOrder): string {
+  const listed = order === "label" ? groups : [...groups].sort((left, right) => right.count - left.count);
+  const body = (
+    <Fragment>
+      <h1>{title}</h1>
+      {order === "count" ? <p>The most common first.</p> : null}
+      <ul className="groups">{listed.map((group) => <li key={group.path}><a href={group.path}>{group.labels.join(", ")}</a> ({group.count})</li>)}</ul>
+    </Fragment>
+  );
+
+  return Layout(context, { title: `${title}: keepset`, description: `${title} of the datasets in the keepset catalogue.`, body });
 }
 
 /**
@@ -327,7 +349,7 @@ export function namespacePage(context: PageContext, path: string | undefined, ch
   const body = (
     <Fragment>
       <h1>{title}</h1>
-      {path === undefined ? null : <p>Entries in this namespace and in every namespace beneath it.</p>}
+      {path === undefined ? null : <p>Entries in this namespace and in every namespace beneath it. <a href={`${context.root}${serialiseListingQuery(facetQuery("namespace", [path]))}`}>Filter them further in the full listing</a></p>}
       {children.length === 0 ? null : <ul className="groups">{children.map((child) => <li key={child.path}><a href={`${child.name}/`}>{child.name}</a> ({child.count})</li>)}</ul>}
       {path === undefined ? null : <Listing datasets={datasets} root={context.root} />}
     </Fragment>

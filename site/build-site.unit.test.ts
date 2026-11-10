@@ -162,6 +162,46 @@ describe("buildSite on a fixture catalogue", () => {
   });
 });
 
+describe("the tag pages", () => {
+  const one = { ...liveEntry, id: "one", name: "Entry one", tags: ["Weight", "cost", "rare"] };
+  const two = { ...liveEntry, id: "two", name: "Entry two", tags: ["weight", "cost"] };
+  const three = { ...liveEntry, id: "three", name: "Entry three", tags: ["cost"] };
+  const files = build(createCatalogue({ ...fixtureIndex, entries: [one, two, three] }));
+
+  it("writes an index and a page per tag, as for the other attributes, and precaches them", () => {
+    expect([...files.keys()].filter((path) => path.startsWith("tags/")).sort()).toEqual(["tags/cost/index.html", "tags/index.html", "tags/rare/index.html", "tags/weight/index.html"]);
+    const { urls } = z.object({ urls: z.array(z.string()) }).parse(JSON.parse(page(files, "precache.json")));
+    expect(urls).toEqual(expect.arrayContaining(["tags/", "tags/cost/", "tags/weight/"]));
+  });
+
+  it("lists the tags on the index with the most common first", () => {
+    expect(page(files, "tags/index.html")).toContain('<ul class="groups"><li><a href="cost/">cost</a> (3)</li><li><a href="weight/">Weight, weight</a> (2)</li><li><a href="rare/">rare</a> (1)</li></ul>');
+  });
+
+  it("gives tags that differ only in letter case one page, holding every entry that carries either", () => {
+    const text = page(files, "tags/weight/index.html");
+    expect(text).toContain("<h1>Tag: Weight, weight</h1>");
+    expect(text).toContain('<tr data-id="one">');
+    expect(text).toContain('<tr data-id="two">');
+    expect(text).not.toContain('<tr data-id="three">');
+  });
+
+  it("links a tag page into the listing filtered by its tags, and an entry's tags to their pages", () => {
+    expect(page(files, "tags/weight/index.html")).toContain('<a href="../../?tag=Weight,weight">Filter these datasets further in the full listing</a>');
+    expect(page(files, "datasets/one/index.html")).toContain('<th scope="row">Tags</th><td><a href="../../tags/weight/">Weight</a>, <a href="../../tags/cost/">cost</a>, <a href="../../tags/rare/">rare</a></td>');
+    expect(page(files, "index.html")).toContain('<a href="tags/">Tags</a>');
+  });
+
+  it("still refuses two domains that share a slug, since one would hide the other", () => {
+    const clash = createCatalogue({ ...fixtureIndex, entries: [{ ...liveEntry, id: "a", name: "Entry a", domain: "Road network" }, { ...liveEntry, id: "b", name: "Entry b", domain: "road-network" }] });
+    expect(() => build(clash)).toThrow(/share the slug "road-network"/);
+  });
+
+  it("links a domain page into the listing filtered by its domain", () => {
+    expect(page(build(createCatalogue(fixtureIndex)), "domains/social-network/index.html")).toContain('<a href="../../?domain=Social%20network">Filter these datasets further in the full listing</a>');
+  });
+});
+
 describe("buildSite with entries that hold the same data", () => {
   const twins = createCatalogue({
     ...fixtureIndex,
@@ -204,6 +244,11 @@ describe("buildSite with namespaced and aliased entries", () => {
     expect(index).toEqual([expect.objectContaining({ id: "karate", namespace: "one/inner", aliases: ["short", "club"] })]);
   });
 
+  it("carries every namespace the entry is listed under at any depth, so the listing filters by any of them", () => {
+    const index: unknown = JSON.parse(page(files, "search-index.json"));
+    expect(index).toEqual([expect.objectContaining({ id: "karate", namespaces: ["one", "one/inner"] })]);
+  });
+
   it("names the aliases as schema.org alternate names", () => {
     expect(DatasetJsonLdSchema.parse(jsonLdOf(page(files, "datasets/karate/index.html")))).toMatchObject({ alternateName: ["short", "club"] });
   });
@@ -242,6 +287,15 @@ describe("the namespace pages", () => {
     expect(deep).toContain('<link rel="stylesheet" href="../../../app.css"/>');
     expect(deep).toContain('href="../../../datasets/bar/"');
     expect(deep).not.toContain('<ul class="groups">');
+  });
+
+  it("lists in the search index the namespaces a path alias files an entry under, with the namespaces above them", () => {
+    const index: unknown = JSON.parse(page(files, "search-index.json"));
+    expect(index).toContainEqual(expect.objectContaining({ id: "bar", namespaces: ["home", "home/deep", "foo", "foo/graphs", "one"] }));
+  });
+
+  it("links a namespace page into the listing filtered by its namespace", () => {
+    expect(page(files, "namespaces/foo/graphs/index.html")).toContain('<a href="../../../?namespace=foo/graphs">Filter them further in the full listing</a>');
   });
 
   it("files an entry under each group a path alias names, and not under a group it is not in", () => {
