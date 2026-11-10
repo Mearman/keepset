@@ -1,0 +1,79 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "aliases": [
+    "fixed-charge-network-flow"
+  ],
+  "category": "resources/v1",
+  "citations": [
+    {
+      "doi": "10.1016/S0167-6377(01)00100-6",
+      "text": "A. Atamtürk (2001). Flow pack facets of the single node fixed-charge flow polytope. Operations Research Letters 29(3), 107-114."
+    }
+  ],
+  "crosswalk": {
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].path"
+    ],
+    "source": "member-path",
+    "target": "resources/v1"
+  },
+  "description": "Single-node fixed-charge flow instances, the building block of fixed-charge network design relaxations, from the Berkeley Computational Optimization Lab's data repository, as gzipped MPS files with a citation note in one tarball. Listed from the tarball's member paths, each with its path. No reference objective values are distributed. The entry lists the files and carries none of their contents, since keepset has no category for a mathematical programme yet.",
+  "domain": "Fixed-charge network flow",
+  "expectedCounts": {
+    "nodes": 21
+  },
+  "id": "atamturk-fixed-charge-network-flow",
+  "licence": {
+    "kind": "custom",
+    "name": "Free to download and use, with an MIT-style permission notice covering the data (Copyright UC Berkeley, 2010)",
+    "url": "https://atamturk.ieor.berkeley.edu/data/readme.txt"
+  },
+  "name": "Single-node fixed-charge flow instances (Atamtürk)",
+  "namespace": [
+    "atamturk"
+  ],
+  "properties": {
+    "downloadBytes": 141282,
+    "fileFormat": "MPS, gzipped"
+  },
+  "recipe": {
+    "archive": {
+      "files": {
+        "pattern": "(?:[^/]+/)*(?:README\\.TXT|[^/]+\\.mps\\.gz)"
+      },
+      "kind": "tar.gz"
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "member-path",
+      "idPattern": "(?:[^/]+/)*([^/]+)"
+    },
+    "source": 1,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://atamturk.ieor.berkeley.edu/data/fixed.charge.network.flow/"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://atamturk.ieor.berkeley.edu/data/fixed.charge.network.flow/fc.data.tar.gz"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://atamturk.ieor.berkeley.edu/data/readme.txt"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": [
+    "path"
+  ]
+}

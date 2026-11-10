@@ -1,0 +1,75 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "aliases": [
+    "kennington"
+  ],
+  "category": "resources/v1",
+  "citations": [
+    {
+      "doi": "10.1287/opre.38.2.240",
+      "text": "W. J. Carolan, J. E. Hill, J. L. Kennington, S. Niemi, S. J. Wichmann (1990). An empirical evaluation of the KORBX algorithms for military airlift applications. Operations Research 38(2), 240-248."
+    }
+  ],
+  "crosswalk": {
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].url",
+      "nodes[].size",
+      "nodes[].description"
+    ],
+    "source": "text-pattern",
+    "target": "resources/v1"
+  },
+  "description": "The sixteen Kennington linear programmes (CRE, KEN, OSA and PDS), multicommodity network flow LPs from military airlift planning, as distributed by netlib in its doubly compressed MPS form (gzip of the packed form that netlib's emps expander turns into MPS). Listed from netlib's index with each file's address, format and the size the index states where it states one; the `readme` holds each problem's rows, columns, nonzeros and optimal value. The entry lists the files and carries none of their contents, since keepset has no category for a mathematical programme yet.",
+  "domain": "Multicommodity network flow",
+  "expectedCounts": {
+    "nodes": 17
+  },
+  "id": "netlib-kennington",
+  "licence": {
+    "kind": "unrecorded"
+  },
+  "name": "netlib Kennington LPs",
+  "namespace": [
+    "netlib",
+    "lp"
+  ],
+  "properties": {
+    "fileFormat": "netlib compressed MPS, gzipped",
+    "referenceValues": "readme"
+  },
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "derivedColumns": [
+        {
+          "name": "url",
+          "template": "https://netlib.org/lp/data/kennington/{id}"
+        }
+      ],
+      "encoding": "utf-8",
+      "format": "text-pattern",
+      "pattern": "<li><em>file: </em><a href=\"(?<id>[^\"]+)\">[^<]*</a>(?:\\s*<menu>)?(?:\\s*<li><em>lang: </em>(?<description>[^<]*)</li>)?(?:\\s*<li><em>size: </em>(?<size>[^<]*)</li>)?"
+    },
+    "source": 0,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://netlib.org/lp/data/kennington/"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": [
+    "url",
+    "size",
+    "description"
+  ]
+}

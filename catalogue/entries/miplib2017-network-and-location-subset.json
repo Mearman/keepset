@@ -1,0 +1,79 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "aliases": [
+    "miplib2017-network-subset"
+  ],
+  "category": "resources/v1",
+  "citations": [
+    {
+      "doi": "10.1007/s12532-020-00194-3",
+      "text": "A. Gleixner, G. Hendel, G. Gamrath, T. Achterberg, M. Bastubbe, T. Berthold, P. Christophel, K. Jarck, T. Koch, J. Linderoth, M. Lübbecke, H. D. Mittelmann, D. Ozyurt, T. K. Ralphs, D. Salvagnin, Y. Shinano (2021). MIPLIB 2017: data-driven compilation of the 6th mixed-integer programming library. Mathematical Programming Computation 13, 443-490."
+    }
+  ],
+  "crosswalk": {
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].url",
+      "nodes[].status",
+      "nodes[].objective"
+    ],
+    "source": "text-pattern",
+    "target": "resources/v1"
+  },
+  "description": "The MIPLIB 2017 collection instances in the application groups closest to supply chain network design: network_design (SNDlib-derived), fixed-cost-network-flow, exp_and_fc (expansion and fixed charge), supplynetworkplanning and cmflsp (capacitated multi-family lot sizing), with transportmoment, tbfp-network and germanrr, which carry no group. MIPLIB 2017 has no facility location group. Read from the collection's solution file (v37), whose line for each instance gives its status (opt for a proven optimum, best for the best known value of an open instance) and objective value, which each file carries; its address is the collection's per-instance `.mps.gz`. The instances are listed by name in the recipe's pattern, chosen from the Group column of the collection table, so the subset does not change as the solution file is revised. The entry lists the files and carries none of their contents, since keepset has no category for a mathematical programme yet; the whole collection is also distributed as one archive, not listed here.",
+  "domain": "Mixed-integer network design",
+  "expectedCounts": {
+    "nodes": 28
+  },
+  "id": "miplib2017-network-and-location-subset",
+  "licence": {
+    "kind": "unrecorded"
+  },
+  "name": "MIPLIB 2017 network design and supply network subset",
+  "namespace": [
+    "miplib"
+  ],
+  "properties": {
+    "fileFormat": "MPS, gzipped",
+    "referenceValues": "https://miplib.zib.de/downloads/miplib2017-v37.solu"
+  },
+  "recipe": {
+    "archive": {
+      "kind": "none"
+    },
+    "parser": {
+      "derivedColumns": [
+        {
+          "name": "url",
+          "template": "https://miplib.zib.de/WebData/instances/{id}.mps.gz"
+        }
+      ],
+      "encoding": "utf-8",
+      "format": "text-pattern",
+      "pattern": "(?<![^\\n])=(?<status>[a-z]+)=[ \\t]+(?<id>ta1-UUM|ta2-UUE|cost266-UUE|germany50-UUM|dfn-bwin-DBE|h50x2450|h80x6320|h80x6320d|k16x240b|g200x740|nexp-50-20-1-1|nexp-50-20-4-2|nexp-150-20-1-5|nexp-150-20-8-5|exp-1-500-5-5|snp-02-004-104|snp-04-052-052|snp-06-004-052|snp-10-004-052|snp-10-052-052|cmflsp40-24-10-7|cmflsp40-36-2-10|cmflsp50-24-8-8|cmflsp50-24-10-4|cmflsp60-36-2-6|transportmoment|tbfp-network|germanrr)(?:[ \\t]+(?<objective>[^ \\t\\n]+))?[ \\t]*(?![^\\n])"
+    },
+    "source": 1,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://miplib.zib.de/tag_collection.html"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://miplib.zib.de/downloads/miplib2017-v37.solu"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": [
+    "url",
+    "status",
+    "objective"
+  ]
+}
