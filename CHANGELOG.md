@@ -1,3 +1,12 @@
+# [0.133.0](https://github.com/Mearman/keepset/compare/v0.132.0...v0.133.0) (2026-11-10)
+
+
+### Features
+
+* filter the listing by several values and keep the filters in the URL ([c548783](https://github.com/Mearman/keepset/commit/c548783628a2f0b826e6ccaf3444fe436ae887c5))
+* list datasets by tag on the site ([8a8752a](https://github.com/Mearman/keepset/commit/8a8752a8b08bceda3b4fcc95b38cbe0664a5496a))
+* read and write the listing's filters as a URL query string ([996d81a](https://github.com/Mearman/keepset/commit/996d81a40a5f0c8822c773276e67b4ab76a3cf24))
+
 # [0.132.0](https://github.com/Mearman/keepset/compare/v0.131.1...v0.132.0) (2026-11-10)
 
 
