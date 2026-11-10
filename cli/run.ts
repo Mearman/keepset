@@ -162,6 +162,89 @@ function indented(text: string, spaces: number): string {
   return text.replaceAll("\n", `\n${" ".repeat(spaces)}`);
 }
 
+const KIBI = 1024;
+
+/** How much text the piecewise writer gathers before handing it to the file: a mebi-character, large enough that a document of millions of short values is a few hundred writes, small enough that what it holds stays far below the longest string the runtime allows. */
+const WRITE_CHUNK_CHARACTERS = KIBI * KIBI;
+
+/**
+ * Whether a value is written member by member: an array, or an object holding an array or object, which is where a large document's size lies. Any other value is written whole by `JSON.stringify`.
+ * @param value - A JSON value.
+ * @returns True for a container written piece by piece.
+ */
+function splits(value: unknown): value is readonly unknown[] | Readonly<Record<string, unknown>> {
+  if (Array.isArray(value)) {
+    return true;
+  }
+
+  return typeof value === "object" && value !== null && Object.values(value).some((member) => typeof member === "object" && member !== null);
+}
+
+/**
+ * Yields the text `json` gives a value, two-space indented at a depth, in pieces: a container's members one by one, every other value whole.
+ * @param value - A JSON value, as a fetched result holds it (no undefined members, functions or `toJSON`).
+ * @param depth - How many levels deep it sits.
+ * @returns The text, in order.
+ */
+function* jsonPieces(value: unknown, depth: number): Generator<string, void, undefined> {
+  if (!splits(value)) {
+    yield indented(JSON.stringify(value, undefined, JSON_INDENT), depth * JSON_INDENT);
+
+    return;
+  }
+  const inner = " ".repeat((depth + 1) * JSON_INDENT);
+  const members: [string, unknown][] = Array.isArray(value) ? value.map((member) => ["", member]) : Object.entries(value).map(([key, member]) => [`${JSON.stringify(key)}: `, member]);
+  const [open, close] = Array.isArray(value) ? ["[", "]"] : ["{", "}"];
+  if (members.length === 0) {
+    yield `${open}${close}`;
+
+    return;
+  }
+  yield open;
+  for (const [index, [key, member]] of members.entries()) {
+    yield `${index === 0 ? "\n" : ",\n"}${inner}${key}`;
+    yield* jsonPieces(member, depth + 1);
+  }
+  yield `\n${" ".repeat(depth * JSON_INDENT)}${close}`;
+}
+
+/**
+ * Writes a held result to a file as the same text `json` gives it, a piece at a time, so a result whose text is longer than the runtime's longest string (a graph of millions of edges) is still written.
+ * @param file - The file, closed once the text is written.
+ * @param value - The result.
+ */
+async function writeJson(file: FileWriter, value: unknown): Promise<void> {
+  const chunks = jsonChunks(value);
+  // One write at a time, each awaited, so a slow disk holds the writing back rather than the chunks piling up in memory.
+  const writeRest = async (): Promise<void> => {
+    const next = chunks.next();
+    if (next.done === true) {
+      return;
+    }
+    await file.write(next.value);
+    await writeRest();
+  };
+  await writeRest();
+  await file.close();
+}
+
+/**
+ * Gathers the pieces of a value's text into chunks of at least `WRITE_CHUNK_CHARACTERS`, the last ending the document with its newline.
+ * @param value - The result.
+ * @returns The chunks, in order.
+ */
+function* jsonChunks(value: unknown): Generator<string, void, undefined> {
+  let pending = "";
+  for (const piece of jsonPieces(value, 0)) {
+    pending += piece;
+    if (pending.length >= WRITE_CHUNK_CHARACTERS) {
+      yield pending;
+      pending = "";
+    }
+  }
+  yield `${pending}\n`;
+}
+
 /**
  * Writes a streamed result to a file as it arrives, as the same text `json` gives the whole `{ meta, nodes }` document, so a streamed fetch's file is byte for byte the file a held fetch of the same nodes would write.
  * @param file - The file.
@@ -461,7 +544,7 @@ export async function run(args: readonly string[], library: CliLibrary, io: CliI
     if (command === "fetch") {
       const fetched = await library.fetchDataset(id);
       const out = values.out ?? `${id}.json`;
-      io.writeFile(out, json(fetched.data));
+      await writeJson(io.openFile(out), fetched.data);
       io.writeFile(provenancePath(out), json(fetched.provenance));
       for (const warning of fetched.warnings) {
         io.writeStderr(`warning: ${warning}\n`);

@@ -264,6 +264,9 @@ describe("fetch of a streamed entry", () => {
   });
 });
 
+/** Edges whose text, at about seventy characters each, runs past the writer's one mebi-character chunk several times over. */
+const EDGES_PAST_A_CHUNK = 50_000;
+
 describe("fetch", () => {
   it("writes the result and its provenance, prints the counts and the warnings", async () => {
     const { library, io, out, calls } = harness();
@@ -273,6 +276,22 @@ describe("fetch", () => {
     expect(JSON.parse(out.files.get("karate.provenance.json") ?? "null")).toEqual(fetched.provenance);
     expect(out.stdout).toBe("wrote karate.json (nodes 2, edges 1) and karate.provenance.json\n");
     expect(out.stderr).toBe("warning: nodes: the entry records 34, the fetched result has 2\n");
+  });
+
+  it("writes a held result a piece at a time as the same text one JSON document would be, so no result is bounded by the longest string the runtime holds", async () => {
+    const { library, io, out } = harness();
+    expect(await run(["fetch", "karate"], library, io)).toBe(EXIT_OK);
+    expect(out.files.get("karate.json")).toBe(`${JSON.stringify(fetched.data, undefined, 2)}\n`);
+    expect(out.closed).toContain("karate.json");
+  });
+
+  it("writes nested collections, empty arrays and objects, and text holding line breaks exactly as one JSON document", async () => {
+    // Enough edges that the text spans several of the writer's chunks.
+    const edges = Array.from({ length: EDGES_PAST_A_CHUNK }, (_, index) => ({ source: "1", target: "1", weight: index }));
+    const data = { meta: { id: "c", note: "two\nlines" }, instances: [{ id: "a", meta: {}, nodes: [{ id: "1", tags: ["x", { deep: [1, []] }] }], edges: [] }, { id: "b", meta: { empty: null }, nodes: [], edges }], empty: [] };
+    const { library, io, out } = harness({ fetchDataset: async () => Promise.resolve({ ...fetched, data }) });
+    expect(await run(["fetch", "karate"], library, io)).toBe(EXIT_OK);
+    expect(out.files.get("karate.json")).toBe(`${JSON.stringify(data, undefined, 2)}\n`);
   });
 
   it("asks the Archive to capture a source read live, after the files are written, and says so", async () => {
