@@ -1,0 +1,61 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "aliases": [
+    "cfs-2017-puf"
+  ],
+  "category": "tasks/v1",
+  "citations": [
+    {
+      "text": "U.S. Department of Transportation, Bureau of Transportation Statistics; U.S. Department of Commerce, U.S. Census Bureau (2020). 2017 Commodity Flow Survey Datasets: 2017 CFS Public Use File (PUF).",
+      "url": "https://www.census.gov/data/datasets/2017/econ/cfs/historical-datasets.html"
+    }
+  ],
+  "crosswalk": {
+    "file": "crosswalks/tasks-v1/nodes.json"
+  },
+  "description": "Shipment-level public use microdata of the 2017 US Commodity Flow Survey. Each row is one sampled shipment with its origin and destination CFS areas, commodity (SCTG), industry, mode, value, weight, distance and hazardous material, export and temperature control flags, with its tabulation weighting factor. tasks/v1 is the nearest target, each shipment a node, but it is a compromise: a shipment is a record, not a place or case to visit or serve, and keepset has no records category yet.",
+  "domain": "Freight shipments",
+  "expectedCounts": {},
+  "id": "census-cfs-2017-puf",
+  "licence": {
+    "kind": "unrecorded"
+  },
+  "name": "Commodity Flow Survey 2017 public use file",
+  "namespace": [
+    "census",
+    "cfs"
+  ],
+  "properties": {
+    "downloadBytes": 121629639,
+    "downloadSha256": "b27d703975b920077b2375b8de6403f564d9866d4f0a7efa7e95347664cd0884",
+    "memberBytes": 499959411
+  },
+  "recipe": {
+    "reason": "The shipments are one CSV member of a zip that unpacks to about half a gigabyte: streaming reads a CSV table inside a tar member a chunk at a time but not one inside a zip, and a fetch holds the whole member as one text, which is past what a JavaScript string can hold.",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20261024042142",
+        "url": "https://web.archive.org/web/20261024042142/https://www.census.gov/data/datasets/2017/econ/cfs/historical-datasets.html"
+      },
+      "status": "live",
+      "url": "https://www.census.gov/data/datasets/2017/econ/cfs/historical-datasets.html"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20260824223003",
+        "url": "https://web.archive.org/web/20260824223003/https://www2.census.gov/programs-surveys/cfs/datasets/2017/CFS%202017%20PUF%20CSV.zip"
+      },
+      "status": "live",
+      "url": "https://www2.census.gov/programs-surveys/cfs/datasets/2017/CFS%202017%20PUF%20CSV.zip"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": []
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "aliases": [
+    "willems-multi-echelon-supply-chains"
+  ],
+  "category": "graph/v1",
+  "citations": [
+    {
+      "doi": "10.1287/msom.1070.0176",
+      "text": "S. P. Willems (2008). Data set: real-world multiechelon supply chains used for inventory optimization. Manufacturing & Service Operations Management 10(1), 19-23."
+    }
+  ],
+  "crosswalk": {
+    "file": "crosswalks/graph-v1/topology.json"
+  },
+  "description": "Thirty-eight real multi-echelon supply chains used for inventory optimisation, each as its stages (with costs, lead times and demand) and the links between them, distributed as supplemental files of the journal article in Excel, Access and XML form. graph/v1 is the target: stages as nodes and links as edges, with each chain's figures in meta.",
+  "domain": "Multi-echelon inventory",
+  "expectedCounts": {},
+  "id": "informs-willems-multi-echelon-supply-chains",
+  "licence": {
+    "kind": "unrecorded"
+  },
+  "name": "Real-world multi-echelon supply chains (Willems)",
+  "namespace": [
+    "informs"
+  ],
+  "properties": {},
+  "recipe": {
+    "reason": "The publisher's site answers a plain HTTP client, such as keepset's fetch, with a bot challenge (403) for both the supplement page and its files, and no Wayback capture of the files exists. The publisher states no licence, only its copyright, so the files are not captured or pinned here until reuse is cleared.",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20240615025543",
+        "url": "https://web.archive.org/web/20240615025543/https://pubsonline.informs.org/doi/suppl/10.1287/msom.1070.0176"
+      },
+      "status": "live",
+      "url": "https://pubsonline.informs.org/doi/suppl/10.1287/msom.1070.0176"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": []
+}

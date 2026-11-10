@@ -1,0 +1,62 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "aliases": [
+    "faf5-regional"
+  ],
+  "category": "graph/v1",
+  "citations": [
+    {
+      "text": "Bureau of Transportation Statistics, Federal Highway Administration. Freight Analysis Framework, version 5.7.1.",
+      "url": "https://faf.ornl.gov/faf5/"
+    }
+  ],
+  "crosswalk": {
+    "file": "crosswalks/graph-v1/topology.json"
+  },
+  "description": "Freight Analysis Framework 5.7.1 origin-destination freight flows between FAF regions (domestic zones and foreign regions), estimated for 2017 to 2024 and forecast to 2050. Each row is a flow from an origin zone to a destination zone for one commodity (SCTG2), mode and trade type, with tonnage, value and ton-miles for each year; graph/v1 is the target, zones as nodes and flows as edges carrying those figures, which keepset's edge-list parser cannot yet carry (it reads topology only). The codebook FAF5_metadata.xlsx is in the zip.",
+  "domain": "Freight flows",
+  "expectedCounts": {},
+  "id": "bts-faf5-regional",
+  "licence": {
+    "kind": "unrecorded"
+  },
+  "name": "Freight Analysis Framework 5.7.1 regional flows",
+  "namespace": [
+    "bts",
+    "faf5"
+  ],
+  "properties": {
+    "downloadBytes": 305397783,
+    "downloadSha256": "1429be77a578f2b32913320a1299c0e3de8aa9c6180ce5aacfd65a7886ba55b8",
+    "memberBytes": 1179593832,
+    "probedRows": 2671386
+  },
+  "recipe": {
+    "reason": "The flows are one CSV member of a zip that unpacks to more than a gigabyte: streaming reads a CSV table inside a tar member a chunk at a time but not one inside a zip, and a fetch holds the whole member as one text, which is past what a JavaScript string can hold. The edge-list parser also carries no edge attributes, so the tonnage, value and ton-mile columns would be lost.",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20261012170954",
+        "url": "https://web.archive.org/web/20261012170954/https://faf.ornl.gov/faf5/"
+      },
+      "status": "live",
+      "url": "https://faf.ornl.gov/faf5/"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20260508193820",
+        "url": "https://web.archive.org/web/20260508193820/https://faf.ornl.gov/faf5/Data/Download_Files/FAF5.7.1.zip"
+      },
+      "status": "live",
+      "url": "https://faf.ornl.gov/faf5/Data/Download_Files/FAF5.7.1.zip"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": []
+}

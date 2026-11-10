@@ -170,6 +170,22 @@
     },
     {
       "entries": [
+        "mendeley-data-nippaya-porter-scd"
+      ],
+      "evidence": "2 captures were taken and the Wayback Machine served none of them back: the raw snapshot answered HTTP 404 with the Wayback Machine's page",
+      "reason": "not-served",
+      "url": "https://data.mendeley.com/public-api/zip/hshn2rtcb5/download/2"
+    },
+    {
+      "entries": [
+        "mendeley-data-dataco-smart-supply-chain"
+      ],
+      "evidence": "2 captures were taken and the Wayback Machine served none of them back: the raw snapshot answered HTTP 404 with the Wayback Machine's page",
+      "reason": "not-served",
+      "url": "https://data.mendeley.com/public-files/datasets/8gx2fvg2k6/files/72784be5-36d3-44fe-b75d-0edbf1999f65/file_downloaded"
+    },
+    {
+      "entries": [
         "montgomery-county-md-troubled-properties-analysis"
       ],
       "evidence": "a recipe reads this URL as a paged query, so a capture of the URL is not the data",
@@ -14679,6 +14695,26 @@
       "url": "https://algo.rwth-aachen.de/ufllib/data/ORLIB.tgz"
     },
     {
+      "timestamp": "20260929135824",
+      "url": "https://api.figshare.com/v2/articles/7558679"
+    },
+    {
+      "timestamp": "20240709075835",
+      "url": "https://atamturk.ieor.berkeley.edu/data/fixed.charge.network.flow/"
+    },
+    {
+      "timestamp": "20261110083611",
+      "url": "https://atamturk.ieor.berkeley.edu/data/fixed.charge.network.flow/fc.data.tar.gz"
+    },
+    {
+      "timestamp": "20240708073156",
+      "url": "https://atamturk.ieor.berkeley.edu/data/readme.txt"
+    },
+    {
+      "timestamp": "20261013045429",
+      "url": "https://brunel.figshare.com/articles/dataset/Supply_Chain_Logistics_Problem_Dataset/7558679"
+    },
+    {
       "timestamp": "20261011035221",
       "url": "https://commalab.di.unipi.it/datasets/mmcf/"
     },
@@ -14705,6 +14741,14 @@
     {
       "timestamp": "20261021225301",
       "url": "https://data.lincolnshire.gov.uk/@place/pcns"
+    },
+    {
+      "timestamp": "20261013082623",
+      "url": "https://data.mendeley.com/datasets/8gx2fvg2k6/5"
+    },
+    {
+      "timestamp": "20250209185141",
+      "url": "https://data.mendeley.com/datasets/hshn2rtcb5/2"
     },
     {
       "timestamp": "20261022000917",
@@ -14771,6 +14815,18 @@
       "url": "https://environment.data.gov.uk/dataset/9c7728fc-68e2-46e1-addb-63790b6b5313"
     },
     {
+      "timestamp": "20261012170954",
+      "url": "https://faf.ornl.gov/faf5/"
+    },
+    {
+      "timestamp": "20260508193820",
+      "url": "https://faf.ornl.gov/faf5/Data/Download_Files/FAF5.7.1.zip"
+    },
+    {
+      "timestamp": "20260508070127",
+      "url": "https://faf.ornl.gov/faf5/Data/Download_Files/FAF5.7.1_State.zip"
+    },
+    {
       "timestamp": "20260722214503",
       "url": "https://figshare.com/articles/A_Wikipedia_Based_Map_of_Science/11638932"
     },
@@ -14809,6 +14865,10 @@
     {
       "timestamp": "20260228133049",
       "url": "https://github.com/benmaier/BFMaierFBnetwork"
+    },
+    {
+      "timestamp": "20250425205803",
+      "url": "https://github.com/ciol-researchlab/SupplyGraph"
     },
     {
       "timestamp": "20261031113231",
@@ -14855,8 +14915,20 @@
       "url": "https://media.githubusercontent.com/media/hetio/hetionet/main/hetnet/tsv/hetionet-v1.0-edges.sif.gz"
     },
     {
+      "timestamp": "20261110084035",
+      "url": "https://miplib.zib.de/downloads/miplib2017-v37.solu"
+    },
+    {
+      "timestamp": "20261110084103",
+      "url": "https://miplib.zib.de/tag_collection.html"
+    },
+    {
       "timestamp": "20130716012808",
       "url": "https://neo.lcc.uma.es/vrp/wp-content/data/instances/solomon/solomon_100.zip"
+    },
+    {
+      "timestamp": "20261019191101",
+      "url": "https://netlib.org/lp/data/kennington/"
     },
     {
       "timestamp": "20221016224557",
@@ -15335,6 +15407,14 @@
       "url": "https://opendata.maryland.gov/Housing/District-Court-of-Maryland-Eviction-Case-Data/mvqb-b4hf"
     },
     {
+      "timestamp": "20261110084231",
+      "url": "https://opensupplyhub.org/"
+    },
+    {
+      "timestamp": "20260503222637",
+      "url": "https://opensupplyhub.org/api/docs/"
+    },
+    {
       "timestamp": "20250620014823",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/pmed1.txt"
     },
@@ -15509,6 +15589,26 @@
     {
       "timestamp": "20260207063651",
       "url": "https://people.brunel.ac.uk/~mastjjb/jeb/orlib/pmedinfo.html"
+    },
+    {
+      "timestamp": "20260921130127",
+      "url": "https://plato.asu.edu/ftp/lptestset/fctp/"
+    },
+    {
+      "timestamp": "20250327064042",
+      "url": "https://plato.asu.edu/ftp/lptestset/network/"
+    },
+    {
+      "timestamp": "20250819054736",
+      "url": "https://plato.asu.edu/ftp/network.html"
+    },
+    {
+      "timestamp": "20260712153942",
+      "url": "https://plato.asu.edu/sub/testcases.html"
+    },
+    {
+      "timestamp": "20240615025543",
+      "url": "https://pubsonline.informs.org/doi/suppl/10.1287/msom.1070.0176"
     },
     {
       "timestamp": "20260922102933",
@@ -16027,6 +16127,22 @@
       "url": "https://raw.githubusercontent.com/afkummer/hhcrsp-dataset-2021/262c7b89938ca817b927d4287e709252844b63fd/instances/instances-75/HHCRSP_75_15_98_1.6_R_C.txt"
     },
     {
+      "timestamp": "20261110084325",
+      "url": "https://raw.githubusercontent.com/ciol-researchlab/SupplyGraph/0e6d010e256ee08e34ab6bef5a111ef1c758b32d/Raw%20Dataset/Homogenoeus/Edges/Edges%20%28Plant%29.csv"
+    },
+    {
+      "timestamp": "20261110084417",
+      "url": "https://raw.githubusercontent.com/ciol-researchlab/SupplyGraph/0e6d010e256ee08e34ab6bef5a111ef1c758b32d/Raw%20Dataset/Homogenoeus/Edges/Edges%20%28Product%20Group%29.csv"
+    },
+    {
+      "timestamp": "20261110084405",
+      "url": "https://raw.githubusercontent.com/ciol-researchlab/SupplyGraph/0e6d010e256ee08e34ab6bef5a111ef1c758b32d/Raw%20Dataset/Homogenoeus/Edges/Edges%20%28Product%20Sub-Group%29.csv"
+    },
+    {
+      "timestamp": "20261110084437",
+      "url": "https://raw.githubusercontent.com/ciol-researchlab/SupplyGraph/0e6d010e256ee08e34ab6bef5a111ef1c758b32d/Raw%20Dataset/Homogenoeus/Edges/Edges%20%28Storage%20Location%29.csv"
+    },
+    {
       "timestamp": "20261022040239",
       "url": "https://raw.githubusercontent.com/dwitvliet/nature2021/master/data/synapses/Dataset1_synapses.json"
     },
@@ -16205,6 +16321,38 @@
     {
       "timestamp": "20260609052254",
       "url": "https://stringdb-downloads.org/download/protein.links.v12.0/9606.protein.links.v12.0.txt.gz"
+    },
+    {
+      "timestamp": "20261024042142",
+      "url": "https://www.census.gov/data/datasets/2017/econ/cfs/historical-datasets.html"
+    },
+    {
+      "timestamp": "20260820020013",
+      "url": "https://www.census.gov/data/datasets/2022/econ/cfs/historical-datasets.html"
+    },
+    {
+      "timestamp": "20260824223003",
+      "url": "https://www2.census.gov/programs-surveys/cfs/datasets/2017/CFS%202017%20PUF%20CSV.zip"
+    },
+    {
+      "timestamp": "20261110084514",
+      "url": "https://zenodo.org/api/records/17303876/files/CLLIB-Small.zip/content"
+    },
+    {
+      "timestamp": "20261110085033",
+      "url": "https://zenodo.org/records/17303876"
+    },
+    {
+      "timestamp": "20261110085116",
+      "url": "https://zenodo.org/records/17986740"
+    },
+    {
+      "timestamp": "20261110085155",
+      "url": "https://zenodo.org/records/18803200"
+    },
+    {
+      "timestamp": "20261015000614",
+      "url": "https://zenodo.org/records/8021237"
     }
   ]
 }

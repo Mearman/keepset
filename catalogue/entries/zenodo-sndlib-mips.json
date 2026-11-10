@@ -57,6 +57,10 @@
   "sources": [
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20261015000614",
+        "url": "https://web.archive.org/web/20261015000614/https://zenodo.org/records/8021237"
+      },
       "status": "live",
       "url": "https://zenodo.org/records/8021237"
     },

@@ -1,0 +1,62 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "aliases": [
+    "nippaya-porter-scd"
+  ],
+  "category": "graph/v1",
+  "citations": [
+    {
+      "doi": "10.17632/hshn2rtcb5.2",
+      "text": "J. D. Porter (2019). Large, medium, and small problem instance data for experimental design and model validation in supply chain design. Mendeley Data, version 2 (data created by D. Nippaya)."
+    }
+  ],
+  "crosswalk": {
+    "file": "crosswalks/graph-v1/topology.json"
+  },
+  "description": "Three-echelon supply chain design instances (plants, distribution centres, customers) in small, medium and large sizes, with low and high variants of each for a factorial experiment: plant and distribution centre capacities and fixed costs, customer demands, transit times and unit shipping costs from plants and from distribution centres to customers. graph/v1 is the target, as for other facility location data: plants, distribution centres and customers as typed nodes with capacity, fixed cost and demand, and the shipping lanes as edges with cost and transit time.",
+  "domain": "Supply chain network design",
+  "expectedCounts": {},
+  "id": "mendeley-data-nippaya-porter-scd",
+  "licence": {
+    "id": "CC-BY-4.0",
+    "kind": "spdx"
+  },
+  "name": "Supply chain design problem instances (Nippaya and Porter)",
+  "namespace": [
+    "mendeley-data"
+  ],
+  "properties": {
+    "downloadBytes": 90150,
+    "downloadSha256": "e2b0cf9598fd1d1ae581bf1cf56982257427c8800abd2725ff9478a54098fb49",
+    "fileCount": 42
+  },
+  "recipe": {
+    "reason": "Each instance is spread over up to six headerless tab-separated matrices (capacity and fixed cost per plant and per distribution centre, demand per customer, and customer by facility matrices of transit time and unit shipping cost), with a bare carriage return ending the demand file's lines and a different width for every file; the csv-table parser reads each file but names one set of columns per recipe, and turning the matrices into one graph needs a parser that joins the files of an instance, which keepset does not have.",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250209185141",
+        "url": "https://web.archive.org/web/20250209185141/https://data.mendeley.com/datasets/hshn2rtcb5/2"
+      },
+      "status": "live",
+      "url": "https://data.mendeley.com/datasets/hshn2rtcb5/2"
+    },
+    {
+      "retrieved": "2026-11-10",
+      "status": "live",
+      "url": "https://data.mendeley.com/public-api/zip/hshn2rtcb5/download/2"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": [
+    "capacity",
+    "fixedCost",
+    "demand",
+    "cost"
+  ]
+}

@@ -57,11 +57,19 @@
   "sources": [
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250819054736",
+        "url": "https://web.archive.org/web/20250819054736/https://plato.asu.edu/ftp/network.html"
+      },
       "status": "live",
       "url": "https://plato.asu.edu/ftp/network.html"
     },
     {
       "retrieved": "2026-11-10",
+      "snapshot": {
+        "timestamp": "20250327064042",
+        "url": "https://web.archive.org/web/20250327064042/https://plato.asu.edu/ftp/lptestset/network/"
+      },
       "status": "live",
       "url": "https://plato.asu.edu/ftp/lptestset/network/"
     }
