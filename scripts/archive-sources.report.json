@@ -14755,6 +14755,10 @@
       "url": "https://codeload.github.com/bstabler/TransportationNetworks/zip/d1639b4ef218c17928ba573e806ddf8ba5e7ae6d"
     },
     {
+      "timestamp": "20261111210642",
+      "url": "https://codeload.github.com/power-grid-lib/pglib-opf/zip/dc6be4b2f85ca0e776952ec22cbd4c22396ea5a3"
+    },
+    {
       "timestamp": "20261011035221",
       "url": "https://commalab.di.unipi.it/datasets/mmcf/"
     },
@@ -14921,6 +14925,10 @@
     {
       "timestamp": "20261031113231",
       "url": "https://github.com/karolpiczak/ESC-50"
+    },
+    {
+      "timestamp": "20260607092944",
+      "url": "https://github.com/power-grid-lib/pglib-opf"
     },
     {
       "timestamp": "20261022021217",
@@ -16393,6 +16401,10 @@
     {
       "timestamp": "20261031113059",
       "url": "https://raw.githubusercontent.com/karolpiczak/ESC-50/33c8ce9eb2cf0b1c2f8bcf322eb349b6be34dbb6/meta/esc50.csv"
+    },
+    {
+      "timestamp": "20261111210813",
+      "url": "https://raw.githubusercontent.com/power-grid-lib/pglib-opf/dc6be4b2f85ca0e776952ec22cbd4c22396ea5a3/BASELINE.md"
     },
     {
       "timestamp": "20261022040339",

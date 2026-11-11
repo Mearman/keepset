@@ -107,16 +107,34 @@
   "sources": [
     {
       "retrieved": "2026-11-11",
+      "snapshot": {
+        "byteLength": 57104,
+        "sha256": "2c5db8843d6ea2d55ebaa6945d421d29e6e95272e7000f9643ce4a3f18604288",
+        "timestamp": "20260607092944",
+        "url": "https://web.archive.org/web/20260607092944/https://github.com/power-grid-lib/pglib-opf"
+      },
       "status": "live",
       "url": "https://github.com/power-grid-lib/pglib-opf"
     },
     {
       "retrieved": "2026-11-11",
+      "snapshot": {
+        "byteLength": 49765204,
+        "sha256": "281ad37cc859ff453b28f1a363b549b693af0c12b6f0228ae5627b2aa978386b",
+        "timestamp": "20261111210642",
+        "url": "https://web.archive.org/web/20261111210642/https://codeload.github.com/power-grid-lib/pglib-opf/zip/dc6be4b2f85ca0e776952ec22cbd4c22396ea5a3"
+      },
       "status": "live",
       "url": "https://codeload.github.com/power-grid-lib/pglib-opf/zip/dc6be4b2f85ca0e776952ec22cbd4c22396ea5a3"
     },
     {
       "retrieved": "2026-11-11",
+      "snapshot": {
+        "byteLength": 5957,
+        "sha256": "41f7358e8b0eeb2dd05833f15feab648475cfca5a53c37529530e3ec8f613827",
+        "timestamp": "20261111210813",
+        "url": "https://web.archive.org/web/20261111210813/https://raw.githubusercontent.com/power-grid-lib/pglib-opf/dc6be4b2f85ca0e776952ec22cbd4c22396ea5a3/BASELINE.md"
+      },
       "status": "live",
       "url": "https://raw.githubusercontent.com/power-grid-lib/pglib-opf/dc6be4b2f85ca0e776952ec22cbd4c22396ea5a3/BASELINE.md"
     }
