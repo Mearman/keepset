@@ -110,10 +110,34 @@ function split(text: string): { scalars: Map<string, { readonly value: string; r
  * @throws NativeParseError when the table is missing, a row has another width or the rows differ in width, or a field is not a number.
  */
 function numbers(tables: ReadonlyMap<string, Table>, table: string, widths: readonly number[]): { readonly line: number; readonly values: readonly number[] }[] {
+  return numbersOf(table, requireTable(tables, table), widths);
+}
+
+/**
+ * Finds a table the case must have.
+ * @param tables - The case's tables.
+ * @param table - The table's name.
+ * @returns The table.
+ * @throws NativeParseError when the table is missing.
+ */
+function requireTable(tables: ReadonlyMap<string, Table>, table: string): Table {
   const found = tables.get(table);
   if (found === undefined) {
     throw new NativeParseError(FORMAT, 1, `the case has no mpc.${table} table`);
   }
+
+  return found;
+}
+
+/**
+ * Reads a found table's rows as numbers, each row of one of the widths allowed.
+ * @param table - The table's name, for errors.
+ * @param found - The table.
+ * @param widths - The numbers of columns a row may have.
+ * @returns The rows, each its numbers with its line.
+ * @throws NativeParseError when a row has another width or the rows differ in width, or a field is not a number.
+ */
+function numbersOf(table: string, found: Table, widths: readonly number[]): { readonly line: number; readonly values: readonly number[] }[] {
   const width = found.rows[0]?.fields.length;
 
   return found.rows.map(({ line, fields }) => {
@@ -179,9 +203,10 @@ export function parseMatpower(text: string): NativeAttributedGraph {
   };
 
   const gens = numbers(tables, "gen", [GEN_REQUIRED, GEN_COLUMNS.length]);
-  const costs = numbers(tables, "gencost", [GENCOST_COLUMNS.length]);
+  const costTable = requireTable(tables, "gencost");
+  const costs = numbersOf("gencost", costTable, [GENCOST_COLUMNS.length]);
   if (costs.length !== gens.length) {
-    throw new NativeParseError(FORMAT, tables.get("gencost")?.line ?? 1, `expected one cost row per generator (${String(gens.length)}), found ${String(costs.length)}`);
+    throw new NativeParseError(FORMAT, costTable.line, `expected one cost row per generator (${String(gens.length)}), found ${String(costs.length)}`);
   }
   const edges: NativeAttributedEdge[] = [];
   for (const [index, { line, values }] of gens.entries()) {
