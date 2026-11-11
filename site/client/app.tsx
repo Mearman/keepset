@@ -180,7 +180,7 @@ function Listing({ records, place }: { readonly records: readonly SearchRecord[]
           setQuery((current) => ({ ...current, text }));
         }} />
         {FACETS.map((facet) => (
-          <MultiSelect key={facet} className="island-filter" aria-label={FACET_CONTROLS[facet].label} placeholder={FACET_CONTROLS[facet].placeholder} data={options[facet]} value={[...query.facets[facet]]} onChange={(values) => { setQuery((current) => ({ ...current, facets: { ...current.facets, [facet]: values } })); }} clearable searchable hidePickedOptions />
+          <MultiSelect key={facet} className="island-filter" aria-label={FACET_CONTROLS[facet].label} placeholder={FACET_CONTROLS[facet].placeholder} data={options[facet]} value={[...query.facets[facet]]} onChange={(values) => { setQuery((current) => ({ ...current, facets: { ...current.facets, [facet]: values } })); }} clearable searchable hidePickedOptions maxDisplayedValues={1} />
         ))}
         <div className="island-range" role="group" aria-label="Entities">
           <span className="island-range-label" aria-hidden="true">Entities</span>
