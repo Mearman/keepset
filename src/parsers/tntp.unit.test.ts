@@ -90,4 +90,10 @@ describe("the TNTP parser", () => {
     expect(() => parse(NETWORK, TRIPS.filter((line) => !line.startsWith("Origin \t1")))).toThrow(/line 7: expected an origin line Origin N/);
     expect(() => parse(NETWORK, TRIPS.map((line) => line.replace("2 :    100.0", "2 =    100.0")))).toThrow(/line 8: expected a destination entry D : FLOW/);
   });
+
+  it("reads a link value and the total flow written with an exponent", () => {
+    const parsed = parse(NETWORK.map((line) => line.replace("\t3\t2\t4958.180928\t5\t;", "\t3\t2\t4.95818e+3\t5E-1\t;")), TRIPS);
+    expect(parsed.edges[1]).toMatchObject({ capacity: 4958.18, freeFlowTime: 0.5 });
+    expect(parsed).toMatchObject({ meta: { totalOdFlow: 150 } });
+  });
 });

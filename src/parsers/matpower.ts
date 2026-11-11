@@ -1,10 +1,11 @@
 import { NativeParseError } from "../errors";
 import type { NativeAttributedEdge, NativeAttributedGraph, NativeRow } from "./native";
 import { lines } from "./native";
-import { SCIENTIFIC } from "./number-lines";
+import { numberReader } from "./number-lines";
 
 const FORMAT = "matpower";
 
+const read = numberReader(FORMAT);
 
 /** The bus table's columns in MATPOWER's order (the MATPOWER manual, appendix B, "caseformat"). `type` is read as `busType`, since a node's `type` says what the node is. */
 const BUS_COLUMNS = ["bus_i", "busType", "Pd", "Qd", "Gs", "Bs", "area", "Vm", "Va", "baseKV", "zone", "Vmax", "Vmin"] as const;
@@ -29,22 +30,6 @@ const SCALAR = /^mpc\.(\w+)\s*=\s*(?:'([^']*)'|([^;\s]+))\s*;$/;
 const FUNCTION = /^function\s+mpc\s*=\s*(\w+)$/;
 /** The tables the parser reads. */
 const TABLES: ReadonlySet<string> = new Set(["bus", "gen", "gencost", "branch", "areas"]);
-
-/**
- * Reads a field as a number, which a case writes with an exponent where its software chose one.
- * @param field - The field as written.
- * @param line - Its 1-based line.
- * @param what - What the field should be.
- * @returns The number.
- * @throws NativeParseError when the field is not a number.
- */
-function number(field: string, line: number, what: string): number {
-  if (!SCIENTIFIC.test(field)) {
-    throw new NativeParseError(FORMAT, line, `expected ${what} as a number, found ${JSON.stringify(field)}`);
-  }
-
-  return Number(field);
-}
 
 /** A table's rows, each with its 1-based line. */
 interface Table {
@@ -136,7 +121,7 @@ function numbers(tables: ReadonlyMap<string, Table>, table: string, widths: read
       throw new NativeParseError(FORMAT, line, `expected a row of mpc.${table} of ${widths.join(" or ")} columns, the same in every row, found ${String(fields.length)}`);
     }
 
-    return { line, values: fields.map((field) => number(field, line, `a value of mpc.${table}`)) };
+    return { line, values: fields.map((field) => read.scientific(field, line, `a value of mpc.${table}`)) };
   });
 }
 
@@ -167,7 +152,7 @@ export function parseMatpower(text: string): NativeAttributedGraph {
   const meta: Record<string, string | number> = {
     ...(name === undefined ? {} : { name }),
     version: version.value,
-    baseMVA: number(base.value, base.line, "mpc.baseMVA"),
+    baseMVA: read.scientific(base.value, base.line, "mpc.baseMVA"),
     ...(areas === undefined ? {} : { areas: numbers(tables, "areas", [2]).map(({ values }) => values.join(" ")).join("; ") }),
   };
 
