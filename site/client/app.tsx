@@ -11,7 +11,7 @@ import { type ColumnDef, createSortedRowModel, rowSortingFeature, tableFeatures,
 import { entitiesText, entityTotal, sizeText, type Dimensions } from "../dimensions";
 import { listingColumnWidths } from "../listing-columns";
 import { matchingGroups, orderGroups, type GroupLink, type GroupOrder } from "../group-index";
-import { EMPTY_LISTING_QUERY, FACETS, initialListingQuery, listingLocation, mapFacets, matchesFacets, parseListingQuery, type Facet, type FacetValues } from "../listing-query";
+import { EMPTY_LISTING_QUERY, FACETS, initialListingQuery, listingLocation, mapFacets, matchesFacets, parseListingQuery, type Facet, type FacetValues, type ListingQuery } from "../listing-query";
 import { siteRoot } from "./site-root";
 import "../styles.css";
 
@@ -123,19 +123,47 @@ interface ListingPlace {
 }
 
 /**
- * Writes a location into the page's URL in place, without a reload or a new history entry, so the address bar always holds a link to the view on screen.
+ * Writes a location into the page's URL without a reload, so the address bar always holds a link to the view on screen.
  * @param location - The path and query string.
+ * @param entry - "push" adds a history entry, so Back returns to the view before the change; "replace" rewrites the current one, so a typed input does not leave an entry for every keystroke.
  */
-function writeLocation(location: string): void {
-  window.history.replaceState(window.history.state, "", `${location}${window.location.hash}`);
+function writeLocation(location: string, entry: "push" | "replace"): void {
+  const target = `${location}${window.location.hash}`;
+  if (entry === "push") {
+    window.history.pushState(window.history.state, "", target);
+  } else {
+    window.history.replaceState(window.history.state, "", target);
+  }
 }
 
-/** The interactive listing: filter inputs over the search index and a sortable table of what matches. The filters start from the page's own filter on a listing page and from the URL's query string on the home listing, and are written back to the URL on every change (see listingLocation). */
+/** The interactive listing: filter inputs over the search index and a sortable table of what matches. The filters start from the page's own filter on a listing page and from the URL's query string on the home listing, and are written back to the URL on every change (see listingLocation): choosing values adds a history entry and Back or Forward restores the view, while typing rewrites the current entry. */
 function Listing({ records, place }: { readonly records: readonly SearchRecord[]; readonly place: ListingPlace }): ReactNode {
   const [query, setQuery] = useState(() => initialListingQuery(place.own, window.location.search));
+  // How the next change reaches the history: choosing values is a step the user may want to go back over, typing is refinement of one step.
+  const entry = useRef<"push" | "replace">("replace");
+  const change = (how: "push" | "replace", next: (current: ListingQuery) => ListingQuery): void => {
+    entry.current = how;
+    setQuery(next);
+  };
   useEffect(() => {
-    writeLocation(listingLocation(query, place.own, place.here, place.home));
+    const location = listingLocation(query, place.own, place.here, place.home);
+    // The address already shows this view after Back or Forward, and on mount when the link was already in canonical form: nothing to write.
+    if (location !== `${window.location.pathname}${window.location.search}`) {
+      writeLocation(location, entry.current);
+    }
+    entry.current = "replace";
   }, [query, place]);
+  useEffect(() => {
+    const restore = (): void => {
+      entry.current = "replace";
+      setQuery(initialListingQuery(place.own, window.location.search));
+    };
+    window.addEventListener("popstate", restore);
+
+    return () => {
+      window.removeEventListener("popstate", restore);
+    };
+  }, [place]);
 
   const options = useMemo(() => mapFacets((facet) => facetOptions(records, facet, query.facets[facet])), [records, query.facets]);
 
@@ -191,15 +219,15 @@ function Listing({ records, place }: { readonly records: readonly SearchRecord[]
       <div className="island-controls">
         <TextInput className="island-search" aria-label="Search the catalogue" placeholder="search the catalogue" value={query.text} onChange={(event) => {
           const text = event.currentTarget.value;
-          setQuery((current) => ({ ...current, text }));
+          change("replace", (current) => ({ ...current, text }));
         }} />
         {FACETS.map((facet) => (
-          <MultiSelect key={facet} className="island-filter" aria-label={FACET_CONTROLS[facet].label} placeholder={FACET_CONTROLS[facet].placeholder} data={options[facet]} value={[...query.facets[facet]]} onChange={(values) => { setQuery((current) => ({ ...current, facets: { ...current.facets, [facet]: values } })); }} clearable searchable renderPill={(pill) => facetPill(query.facets[facet], pill)} />
+          <MultiSelect key={facet} className="island-filter" aria-label={FACET_CONTROLS[facet].label} placeholder={FACET_CONTROLS[facet].placeholder} data={options[facet]} value={[...query.facets[facet]]} onChange={(values) => { change("push", (current) => ({ ...current, facets: { ...current.facets, [facet]: values } })); }} clearable searchable renderPill={(pill) => facetPill(query.facets[facet], pill)} />
         ))}
         <div className="island-range" role="group" aria-label="Entities">
           <span className="island-range-label" aria-hidden="true">Entities</span>
           {([["min", "minEntities"], ["max", "maxEntities"]] as const).map(([key, field]) => (
-            <NumberInput key={key} className="island-bound" aria-label={`${key === "min" ? "Minimum" : "Maximum"} entities`} placeholder={key} min={0} allowNegative={false} allowDecimal={false} value={query[field] ?? ""} onChange={(value) => { setQuery((current) => ({ ...current, [field]: typeof value === "number" ? value : undefined })); }} />
+            <NumberInput key={key} className="island-bound" aria-label={`${key === "min" ? "Minimum" : "Maximum"} entities`} placeholder={key} min={0} allowNegative={false} allowDecimal={false} value={query[field] ?? ""} onChange={(value) => { change("replace", (current) => ({ ...current, [field]: typeof value === "number" ? value : undefined })); }} />
           ))}
         </div>
         <Badge variant="light" size="lg">
