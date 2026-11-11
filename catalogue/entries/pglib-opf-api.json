@@ -1,0 +1,131 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "category": "graph/v1",
+  "citations": [
+    {
+      "text": "S. Babaeinejadsarookolaee, A. Birchfield, R. D. Christie, C. Coffrin, C. DeMarco, R. Diao, M. Ferris, S. Fliscounakis, S. Greene, R. Huang, C. Josz, R. Korab, B. Lesieutre, J. Maeght, T. W. K. Mak, D. K. Molzahn, T. J. Overbye, P. Panciatici, B. Park, J. Snodgrass, A. Tbaileh, P. Van Hentenryck, R. Zimmerman (2019). The Power Grid Library for benchmarking AC optimal power flow algorithms. arXiv:1908.02788.",
+      "url": "https://arxiv.org/abs/1908.02788"
+    }
+  ],
+  "crosswalk": {
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].type",
+      "nodes[].busType",
+      "nodes[].Pd",
+      "nodes[].Qd",
+      "nodes[].Gs",
+      "nodes[].Bs",
+      "nodes[].area",
+      "nodes[].Vm",
+      "nodes[].Va",
+      "nodes[].baseKV",
+      "nodes[].zone",
+      "nodes[].Vmax",
+      "nodes[].Vmin",
+      "nodes[].Pg",
+      "nodes[].Qg",
+      "nodes[].Qmax",
+      "nodes[].Qmin",
+      "nodes[].Vg",
+      "nodes[].mBase",
+      "nodes[].status",
+      "nodes[].Pmax",
+      "nodes[].Pmin",
+      "nodes[].Pc1",
+      "nodes[].Pc2",
+      "nodes[].Qc1min",
+      "nodes[].Qc1max",
+      "nodes[].Qc2min",
+      "nodes[].Qc2max",
+      "nodes[].ramp_agc",
+      "nodes[].ramp_10",
+      "nodes[].ramp_30",
+      "nodes[].ramp_q",
+      "nodes[].apf",
+      "nodes[].startup",
+      "nodes[].shutdown",
+      "nodes[].c2",
+      "nodes[].c1",
+      "nodes[].c0",
+      "edges[].source",
+      "edges[].target",
+      "edges[].type",
+      "edges[].r",
+      "edges[].x",
+      "edges[].b",
+      "edges[].rateA",
+      "edges[].rateB",
+      "edges[].rateC",
+      "edges[].ratio",
+      "edges[].angle",
+      "edges[].branchStatus",
+      "edges[].angmin",
+      "edges[].angmax"
+    ],
+    "source": "matpower",
+    "target": "graph/v1"
+  },
+  "description": "The heavily loaded (API) group of PGLib-OPF v23.07, the IEEE PES Power Grid Library's benchmark cases for AC optimal power flow: 66 power system cases, heavily loaded cases, in which thermal limits bind, each a MATPOWER case file of the repository at commit dc6be4b2f85c. In each case the buses are nodes of type bus with the bus table's columns, the generators nodes of type generator with the generator table's columns and their quadratic costs, joined to their buses by edges of type generator, and the branches edges of type branch with their impedances, ratings, tap ratios and angle limits; the case's name, base MVA and any legacy area table are in its meta. Each file's header names the source documents of its network. Reference objective values (the AC and DC optima PowerModels.jl reached and the QC and SOC relaxation gaps) are in the repository's BASELINE.md, section Congested Operating Conditions (API), which this entry lists as a source and does not merge.",
+  "domain": "Optimal power flow",
+  "expectedCounts": {
+    "instances": 66
+  },
+  "id": "pglib-opf-api",
+  "licence": {
+    "id": "CC-BY-4.0",
+    "kind": "spdx"
+  },
+  "name": "PGLib-OPF heavily loaded (API) cases",
+  "namespace": [
+    "pglib"
+  ],
+  "properties": {
+    "directed": false,
+    "downloadBytes": 49765204,
+    "heterogeneous": true,
+    "multigraph": true,
+    "nodeTypes": 2,
+    "referenceValueKind": "AC and DC optimal objective values (dollars per hour) reached by PowerModels.jl with IPOPT, and QC and SOC relaxation gaps",
+    "referenceValues": "https://raw.githubusercontent.com/power-grid-lib/pglib-opf/dc6be4b2f85ca0e776952ec22cbd4c22396ea5a3/BASELINE.md"
+  },
+  "recipe": {
+    "archive": {
+      "kind": "zip",
+      "members": {
+        "pattern": "pglib-opf-dc6be4b2f85ca0e776952ec22cbd4c22396ea5a3/api/pglib_opf_case[^/]*\\.m"
+      }
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "matpower"
+    },
+    "source": 1,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://github.com/power-grid-lib/pglib-opf"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://codeload.github.com/power-grid-lib/pglib-opf/zip/dc6be4b2f85ca0e776952ec22cbd4c22396ea5a3"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://raw.githubusercontent.com/power-grid-lib/pglib-opf/dc6be4b2f85ca0e776952ec22cbd4c22396ea5a3/BASELINE.md"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": [
+    "power-flow",
+    "typed"
+  ]
+}
