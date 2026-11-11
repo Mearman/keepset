@@ -1,3 +1,15 @@
+# [0.136.0](https://github.com/Mearman/keepset/compare/v0.135.0...v0.136.0) (2026-11-11)
+
+
+### Bug Fixes
+
+* **site:** the index text filter rewrites its history entry as it is typed ([bf1184d](https://github.com/Mearman/keepset/commit/bf1184d4a0073ba2907481926ffac55ce3e64789))
+
+
+### Features
+
+* **site:** add a history entry when a filter value is chosen, and restore the view on Back ([13da006](https://github.com/Mearman/keepset/commit/13da006f63832eba0577b19ba3af4e31f0ed2cda))
+
 # [0.135.0](https://github.com/Mearman/keepset/compare/v0.134.2...v0.135.0) (2026-11-11)
 
 
