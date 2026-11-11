@@ -518,6 +518,8 @@ export const ParserSchema = z.discriminatedUnion("format", [
   z.object({ format: z.literal("dimacs-graph"), encoding: EncodingSchema, layout: z.enum(["dimacs", "pace"]) }).strict(),
   /** A Steiner tree problem in graphs in the SteinLib STP format: the nodes, terminals typed as such, the weighted undirected edges, and the Comment and Presolve values in `meta`. */
   z.object({ format: z.literal("steinlib"), encoding: EncodingSchema }).strict(),
+  /** A power system case in the MATPOWER case format, version 2: buses and generators as nodes with their tables' columns and each generator's quadratic cost, generators joined to their buses, branches as edges, and the case's name, version and base MVA in `meta`. */
+  z.object({ format: z.literal("matpower"), encoding: EncodingSchema }).strict(),
   /** A resource page of OpenSLR (openslr.org): the resource's title, identifier, summary, category, licence, description and external address as the instance's meta, and its download links as nodes. */
   z.object({ format: z.literal("openslr-resource"), encoding: z.literal("utf-8") }).strict(),
   /** A text read as the records a regular expression matches in it (a host's directory listing, a reference-value file): every match, in text order, is a row of the pattern's named captures, the `id` capture being the row's id, and each derived column is built from the captures its template names. */
