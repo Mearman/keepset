@@ -1,3 +1,18 @@
+# [0.135.0](https://github.com/Mearman/keepset/compare/v0.134.2...v0.135.0) (2026-11-11)
+
+
+### Bug Fixes
+
+* **site:** give each filter room for a pill and a visible search field ([d4b3af8](https://github.com/Mearman/keepset/commit/d4b3af864952f8c7db6500b5eb5eb494a4ea691a))
+* **site:** keep a chosen pill at its natural width inside its filter ([3990b7c](https://github.com/Mearman/keepset/commit/3990b7c1a63ccc7c8c69edb5890b14f78f977208))
+* **site:** let a filter's pill list fill its control so the search field has room ([e66fa99](https://github.com/Mearman/keepset/commit/e66fa99cbd83feff3922f14d33024b101a784392))
+* **site:** let the search field fill the width a chosen pill leaves ([fccdacc](https://github.com/Mearman/keepset/commit/fccdacc5b8ac5474a05b40a1131d6898b7e333ce))
+
+
+### Features
+
+* **site:** list a filter's chosen values first in its dropdown, where a click clears them ([d4eec1f](https://github.com/Mearman/keepset/commit/d4eec1f6b5aea008347614c855b350b3e1e591c0))
+
 ## [0.134.2](https://github.com/Mearman/keepset/compare/v0.134.1...v0.134.2) (2026-11-11)
 
 
