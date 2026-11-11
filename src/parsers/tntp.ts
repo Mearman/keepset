@@ -1,6 +1,7 @@
 import { NativeParseError } from "../errors";
 import type { NativeAttributedEdge, NativeAttributedGraph, NativeRow } from "./native";
 import { lines } from "./native";
+import { SCIENTIFIC } from "./number-lines";
 
 /** What every error from the network file names as its format. */
 const NETWORK = "tntp network";
@@ -11,8 +12,6 @@ const TRIPS = "tntp trips";
 const METADATA = /^<([^<>]+)>\s*(.*)$/;
 /** The key that ends a file's metadata. */
 const END_OF_METADATA = "END OF METADATA";
-/** A decimal as the TNTP files write one: optionally signed, with digits on either side of an optional point and an optional exponent (`25900.20064`, `7.12506e+007`). */
-const DECIMAL = /^[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?$/;
 /** A whole number of at least one, as a node or zone number is written. */
 const POSITIVE_INTEGER = /^\d+$/;
 /** A column name of the harmonised header line, which the files write in lower snake case (`free_flow_time`). */
@@ -83,7 +82,7 @@ interface FieldReader {
 function fieldReader(format: string): FieldReader {
   return {
     decimal(field, line, what) {
-      if (!DECIMAL.test(field)) {
+      if (!SCIENTIFIC.test(field)) {
         throw new NativeParseError(format, line, `expected ${what} as a number, found ${JSON.stringify(field)}`);
       }
 

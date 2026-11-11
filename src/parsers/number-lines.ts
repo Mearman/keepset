@@ -10,6 +10,9 @@ export interface FieldLine {
 /** A decimal as the numeric instance formats write one: optionally signed, with digits on either side of an optional point (`5`, `6.000000`, `.0`). */
 const DECIMAL = /^[+-]?(?:\d+\.?\d*|\.\d+)$/;
 
+/** A decimal that may carry an exponent, as the formats written by numeric software do (`25900.20064`, `7.12506e+007`, `5.02e-05`). */
+export const SCIENTIFIC = /^[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?$/;
+
 /** A whole number as the numeric instance formats write one, optionally signed. */
 const INTEGER = /^[+-]?\d+$/;
 

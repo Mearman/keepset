@@ -48,6 +48,7 @@ import { parseDimacsMin } from "./dimacs-min";
 import { parseTntp } from "./tntp";
 import { parseDimacsGraph } from "./dimacs-graph";
 import { parseSteinlib } from "./steinlib";
+import { parseMatpower } from "./matpower";
 import type { NativeAttributedGraph, NativeDocument, NativeGraph, NativeInstance, NativeTable } from "./native";
 import { parsePajek } from "./pajek";
 import { parseCustomerPoints } from "./customer-points";
@@ -166,7 +167,7 @@ export function* decodePieces(bytes: Uint8Array, parser: Parser, pieceBytes: num
 type TableParser = Extract<Parser, { format: "csv-table" | "geojson" | "json-table" | "json-word-counts" | "lexicon-lines" }>;
 
 /** The parsers of network instance formats, whose nodes and edges carry the fields the file gives them. */
-type AttributedGraphParser = Extract<Parser, { format: "canad-dow" | "orlib-pmed" | "dimacs-min" | "steinlib" }>;
+type AttributedGraphParser = Extract<Parser, { format: "canad-dow" | "orlib-pmed" | "dimacs-min" | "steinlib" | "matpower" }>;
 
 /**
  * Reads a file into the native shape of the recipe's parser: a graph for the graph formats, a table of rows for the table formats.
@@ -304,6 +305,9 @@ export function parseNative(bytes: Uint8Array, parser: Parser): NativeDocument {
   }
   if (parser.format === "steinlib") {
     return parseSteinlib(text);
+  }
+  if (parser.format === "matpower") {
+    return parseMatpower(text);
   }
 
   return parsePajek(text);
