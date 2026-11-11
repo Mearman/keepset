@@ -201,6 +201,20 @@ describe("an entry's sameDataAs", () => {
   });
 });
 
+describe("a tntp entry's parts", () => {
+  const part = (name: string): unknown => ({ name, member: { path: `${name}.tntp` } });
+  const tntpEntry = (parts: readonly unknown[]): unknown => ({ ...liveEntry, recipe: { status: "fetchable", source: 0, archive: { kind: "zip", parts }, parser: { format: "tntp", encoding: "utf-8" } } });
+
+  it("requires both the network and the trips part, and no other", () => {
+    expect(EntrySchema.is(tntpEntry([part("network"), part("trips")]))).toBe(true);
+    expect(EntrySchema.is(tntpEntry([part("network")]))).toBe(false);
+    expect(EntrySchema.is(tntpEntry([part("trips")]))).toBe(false);
+    expect(EntrySchema.is(tntpEntry([part("network"), part("nodes")]))).toBe(false);
+    expect(EntrySchema.is(tntpEntry([part("network"), part("trips"), part("extra")]))).toBe(false);
+    expect(EntrySchema.is({ ...liveEntry, recipe: { ...liveEntry.recipe, archive: { kind: "zip", member: { path: "net.tntp" } }, parser: { format: "tntp", encoding: "utf-8" } } })).toBe(false);
+  });
+});
+
 describe("an archive that selects one file or every file", () => {
   const withArchive = (base: typeof taskEntry | typeof taskCollectionEntry, archive: unknown): unknown => ({ ...base, recipe: { ...base.recipe, archive } });
   const issues = (doc: unknown): string => {
