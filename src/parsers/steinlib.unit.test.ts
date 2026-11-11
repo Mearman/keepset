@@ -47,4 +47,25 @@ describe("the SteinLib parser", () => {
     expect(() => parseNative(bytes(...SMALL.slice(0, -1)), steinlib)).toThrow(/the file has no EOF line/);
     expect(() => parseNative(bytes(...SMALL, "E 1 2 3"), steinlib)).toThrow(/line 24: a line after EOF/);
   });
+
+  it("refuses a file with no Terminals section rather than typing every node as a plain node", () => {
+    const withoutTerminals = SMALL.slice(0, SMALL.indexOf("Section Terminals"));
+    expect(() => parseNative(bytes(...withoutTerminals, "EOF"), steinlib)).toThrow(/steinlib.*the file has no complete Terminals section/);
+  });
+
+  it("refuses a Presolve section before the instance's own Terminals section instead of skipping that section", () => {
+    const own = SMALL.indexOf("Section Terminals");
+    const reordered = [...SMALL.slice(0, own), ...PRESOLVED.slice(0, PRESOLVED.indexOf("SECTION Coordinates")), ...SMALL.slice(own, -1), "EOF"];
+    expect(() => parseNative(bytes(...reordered), steinlib)).toThrow(/a Presolve section before the instance's Terminals section/);
+  });
+
+  it("reads CRLF line endings", () => {
+    const crlf = new TextEncoder().encode(`${SMALL.join("\r\n")}\r\n`);
+    expect(parseNative(crlf, steinlib)).toEqual(parseNative(bytes(...SMALL), steinlib));
+  });
+
+  it("ignores # comment lines and trailing comments", () => {
+    const commented = ["# a comment", ...SMALL.map((line) => (line === "E 3 4 7" ? "E 3 4 7 # heavy" : line)), "# after"];
+    expect(parseNative(bytes(...commented), steinlib)).toEqual(parseNative(bytes(...SMALL), steinlib));
+  });
 });

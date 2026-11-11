@@ -42,7 +42,7 @@ type Section = "comment" | "graph" | "terminals" | "original-terminals" | "preso
  * Parses a Steiner tree problem in graphs in the SteinLib STP format (https://steinlib.zib.de/format.php): the magic number line `33D32945 STP File, STP Format Version 1.0`, then sections from `SECTION <name>` to `END` (either in upper or title case), then `EOF`; `#` starts a comment on a line holding no quoted string. The Comment sections give `meta` their `Name`, `Date`, `Creator`, `Remark` and `Problem` as text, unquoted. The Graph section's `Nodes` and `Edges` counts and `E U V WEIGHT` lines give the nodes `1` to `n` and one undirected edge per line with its `weight`, in file order. The first Terminals section's `Terminals` count and `T V` lines make those nodes of type `terminal` and the rest of type `node`. A Presolve section, which says the instance is the reduced form of an original one, gives `meta` its `fixed` value (added to the reduced optimum to give the original's), `lower` and `upper` bounds, `presolveTime` and the original's `orgNodes`, `orgEdges` and `orgTerminals`; its EA, EC, ED and ES lines, which map the reduced instance back onto the original, are not read, nor is the Terminals section after it, which lists the original's terminals. Coordinates sections are not read, as graph/v1 carries no positions.
  * @param text - The file text.
  * @returns The native graph.
- * @throws NativeParseError naming the line for a file without the magic number, a line outside a section, an unknown section or key, a directed (`Arcs`), obstacle, root, prize or degree-constrained instance, a line of the wrong shape, a key given twice, a node outside 1 to n, a terminal given twice, a count that disagrees with its lines, a missing Graph section or text after `EOF`.
+ * @throws NativeParseError naming the line for a file without the magic number, a line outside a section, an unknown section or key, a directed (`Arcs`), obstacle, root, prize or degree-constrained instance, a line of the wrong shape, a key given twice, a node outside 1 to n, a terminal given twice, a count that disagrees with its lines, a missing Graph or Terminals section, a Presolve section before the instance's own Terminals section (the format lists the instance's terminals first and the original's after Presolve) or text after `EOF`.
  */
 export function parseSteinlib(text: string): NativeAttributedGraph {
   const all = lines(text);
@@ -113,6 +113,9 @@ export function parseSteinlib(text: string): NativeAttributedGraph {
       } else if (name === "presolve") {
         if (presolved) {
           throw new NativeParseError(FORMAT, line, "a second Presolve section");
+        }
+        if (!terminalsRead) {
+          throw new NativeParseError(FORMAT, line, "a Presolve section before the instance's Terminals section (the format gives the instance's own Terminals section first and the original's after Presolve)");
         }
         section = "presolve";
       } else {
@@ -213,6 +216,9 @@ export function parseSteinlib(text: string): NativeAttributedGraph {
   }
   if (!graphRead || counts.nodes === undefined) {
     throw new NativeParseError(FORMAT, last, "the file has no complete Graph section");
+  }
+  if (!terminalsRead) {
+    throw new NativeParseError(FORMAT, last, "the file has no complete Terminals section");
   }
   if (section !== undefined) {
     throw new NativeParseError(FORMAT, last, "the file ends inside a section");
