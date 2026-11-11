@@ -530,6 +530,33 @@ describe("a graph/v1 entry that is a collection", () => {
   });
 });
 
+describe("a graph/v1 entry read from named parts", () => {
+  const network = ["<NUMBER OF ZONES> 1", "<NUMBER OF NODES> 2", "<FIRST THRU NODE> 1", "<NUMBER OF LINKS> 1", "<NAME> Parser name", "<ID> parser-id", "<END OF METADATA>", "~\tinit_node\tterm_node\tcapacity\t;", "\t1\t2\t10\t;"];
+  const trips = ["<NUMBER OF ZONES> 1", "<TOTAL OD FLOW> 5", "<END OF METADATA>", "Origin 1", "    1 : 5;"];
+  const archive = zipSync({ "road/net.tntp": new TextEncoder().encode(`${network.join("\n")}\n`), "road/trips.tntp": new TextEncoder().encode(`${trips.join("\n")}\n`) });
+  const entry = {
+    ...liveEntry,
+    id: "road-network",
+    name: "Road network",
+    sources: [{ url: "https://example.org/data/road.zip", retrieved: "2026-10-21", status: "live" }],
+    recipe: {
+      status: "fetchable",
+      source: 0,
+      archive: { kind: "zip", parts: [{ name: "network", member: { path: "road/net.tntp" } }, { name: "trips", member: { path: "road/trips.tntp" } }] },
+      parser: { format: "tntp", encoding: "utf-8" },
+    },
+    crosswalk: { file: "crosswalks/graph-v1/topology.json" },
+    expectedCounts: {},
+    properties: {},
+  };
+
+  it("keeps the meta the parser gives, and lets the entry's id and name take precedence over a parser key of the same name", async () => {
+    const { fetch } = servedBy({ "https://example.org/data/road.zip": archive });
+    const fetched = await fetchEntry(datasetWith(entry), { ...storePort, fetch, now });
+    expect(fetched.data.meta).toEqual({ id: "road-network", name: "Road network", zones: 1, firstThruNode: 1, totalOdFlow: 5 });
+  });
+});
+
 describe("a graph/v1 entry of a multi-file format", () => {
   const archive = zipSync({
     "dataset/raw/num-node-dict.csv.gz": gzip("paper,author\n2,1\n"),
