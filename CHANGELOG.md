@@ -1,3 +1,13 @@
+## [0.134.1](https://github.com/Mearman/keepset/compare/v0.134.0...v0.134.1) (2026-11-11)
+
+
+### Bug Fixes
+
+* **site:** collapse extra filter values into a count on the first pill ([fa55118](https://github.com/Mearman/keepset/commit/fa551187f9a964984a48a3f9e4ef5b49177259c5))
+* **site:** keep every listing filter at the height of the search box ([3fe77a4](https://github.com/Mearman/keepset/commit/3fe77a434a0da9718b5a9f92b380794f945d8818))
+* **site:** pass the pill's remove handler only when Mantine supplies one ([846e7e5](https://github.com/Mearman/keepset/commit/846e7e5b5f5b40f08e562a48e14cd17294db3197))
+* **site:** type the filter pill renderer to return an element or nothing ([8bb5bee](https://github.com/Mearman/keepset/commit/8bb5bee65ff4dc4498905af51c513863eeb419b0))
+
 # [0.134.0](https://github.com/Mearman/keepset/compare/v0.133.0...v0.134.0) (2026-11-11)
 
 
