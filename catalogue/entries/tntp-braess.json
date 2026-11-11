@@ -1,0 +1,118 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "category": "graph/v1",
+  "citations": [
+    {
+      "text": "Transportation Networks for Research Core Team. Transportation Networks for Research.",
+      "url": "https://github.com/bstabler/TransportationNetworks"
+    }
+  ],
+  "crosswalk": {
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].type",
+      "nodes[].demand",
+      "edges[].source",
+      "edges[].target",
+      "edges[].type",
+      "edges[].capacity",
+      "edges[].length",
+      "edges[].freeFlowTime",
+      "edges[].b",
+      "edges[].power",
+      "edges[].speed",
+      "edges[].toll",
+      "edges[].linkType"
+    ],
+    "source": "tntp",
+    "target": "graph/v1"
+  },
+  "description": "The four-node network of Braess's paradox, prepared by A. Koh. From Transportation Networks for Research, the traffic assignment test networks that continue H. Bar-Gera's TNTP collection, read from the repository at commit d1639b4ef218 in the TNTP format: the network file's links are directed edges of type link carrying capacity, length, freeFlowTime, b, power, speed, toll, linkType, and nodes 1 to 2 are zones (type zone) and the rest of type node; each origin-destination entry of the trip table is a node of type commodity carrying its demand, joined by an origin edge and a destination edge to its two zones, zero entries included as the file lists them. The node coordinate files are not read.",
+  "domain": "Traffic assignment",
+  "expectedCounts": {
+    "edges": 9,
+    "nodes": 6
+  },
+  "id": "tntp-braess",
+  "licence": {
+    "kind": "custom",
+    "name": "Transportation Networks for Research terms: academic research purposes only, with the source indicated in any publication",
+    "url": "https://github.com/bstabler/TransportationNetworks/blob/d1639b4ef218c17928ba573e806ddf8ba5e7ae6d/README.md#license"
+  },
+  "name": "TNTP Braess example traffic assignment network",
+  "namespace": [
+    "tntp"
+  ],
+  "properties": {
+    "directed": true,
+    "downloadBytes": 58755409,
+    "heterogeneous": true,
+    "multigraph": true,
+    "nodeTypes": 3,
+    "selfLoops": false
+  },
+  "recipe": {
+    "archive": {
+      "kind": "zip",
+      "parts": [
+        {
+          "member": {
+            "path": "TransportationNetworks-d1639b4ef218c17928ba573e806ddf8ba5e7ae6d/Braess-Example/Braess_net.tntp"
+          },
+          "name": "network"
+        },
+        {
+          "member": {
+            "path": "TransportationNetworks-d1639b4ef218c17928ba573e806ddf8ba5e7ae6d/Braess-Example/Braess_trips.tntp"
+          },
+          "name": "trips"
+        }
+      ]
+    },
+    "parser": {
+      "encoding": "utf-8",
+      "format": "tntp"
+    },
+    "source": 1,
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-11",
+      "snapshot": {
+        "timestamp": "20260530135004",
+        "url": "https://web.archive.org/web/20260530135004/https://github.com/bstabler/TransportationNetworks"
+      },
+      "status": "live",
+      "url": "https://github.com/bstabler/TransportationNetworks"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "snapshot": {
+        "byteLength": 58755409,
+        "sha256": "0bfb1f9593fccc23fd07c174ac5c20da31fc759081f9d2b89e48ec07846138e7",
+        "timestamp": "20261111203011",
+        "url": "https://web.archive.org/web/20261111203011/https://codeload.github.com/bstabler/TransportationNetworks/zip/d1639b4ef218c17928ba573e806ddf8ba5e7ae6d"
+      },
+      "status": "live",
+      "url": "https://codeload.github.com/bstabler/TransportationNetworks/zip/d1639b4ef218c17928ba573e806ddf8ba5e7ae6d"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": [
+    "traffic-assignment",
+    "typed",
+    "demand",
+    "capacity",
+    "length",
+    "freeFlowTime",
+    "b",
+    "power",
+    "speed",
+    "toll",
+    "linkType"
+  ]
+}

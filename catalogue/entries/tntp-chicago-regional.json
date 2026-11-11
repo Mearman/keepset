@@ -1,0 +1,89 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "category": "graph/v1",
+  "citations": [
+    {
+      "text": "Transportation Networks for Research Core Team. Transportation Networks for Research.",
+      "url": "https://github.com/bstabler/TransportationNetworks"
+    }
+  ],
+  "crosswalk": {
+    "file": "crosswalks/graph-v1/topology.json"
+  },
+  "description": "A large, detailed network of the Chicago region developed by the Chicago Area Transportation Study, with its basic trip table (times in minutes, lengths in miles, tolls in cents). From Transportation Networks for Research, the traffic assignment test networks that continue H. Bar-Gera's TNTP collection, read from the repository at commit d1639b4ef218 in the TNTP format: the network file's links are directed edges of type link carrying capacity, length, freeFlowTime, b, power, speed, toll, linkType, and nodes 1 to 1790 are zones (type zone) and the rest of type node; each origin-destination entry of the trip table is a node of type commodity carrying its demand, joined by an origin edge and a destination edge to its two zones, zero entries included as the file lists them. The node coordinate files are not read. The best known equilibrium link flows are in the repository's ChicagoRegional_flow.tntp, which this entry lists as a source and does not merge.",
+  "domain": "Traffic assignment",
+  "expectedCounts": {},
+  "id": "tntp-chicago-regional",
+  "licence": {
+    "kind": "custom",
+    "name": "Transportation Networks for Research terms: academic research purposes only, with the source indicated in any publication",
+    "url": "https://github.com/bstabler/TransportationNetworks/blob/d1639b4ef218c17928ba573e806ddf8ba5e7ae6d/README.md#license"
+  },
+  "name": "TNTP Chicago Regional traffic assignment network",
+  "namespace": [
+    "tntp"
+  ],
+  "properties": {
+    "directed": true,
+    "downloadBytes": 58755409,
+    "heterogeneous": true,
+    "multigraph": true,
+    "nodeTypes": 3,
+    "referenceValueKind": "best known user-equilibrium link flows, with the optimal objective value in the network's readme",
+    "referenceValues": "https://raw.githubusercontent.com/bstabler/TransportationNetworks/d1639b4ef218c17928ba573e806ddf8ba5e7ae6d/chicago-regional/ChicagoRegional_flow.tntp",
+    "selfLoops": false
+  },
+  "recipe": {
+    "reason": "Its trip table lists 3,136,441 origin and destination pairs, so the graph holds 3,149,423 nodes and 6,311,900 edges, and a round trip of it read whole ran out of the default Node heap; the largest network of this collection round-tripped whole is tntp-austin, with 2,514,339 edges. The recipe it would use is the parts archive of the other entries, reading chicago-regional/ChicagoRegional_net.tntp and chicago-regional/ChicagoRegional_trips.tntp. It becomes fetchable when graph/v1 results can be streamed (https://github.com/Mearman/keepset/issues/305).",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-11",
+      "snapshot": {
+        "timestamp": "20260530135004",
+        "url": "https://web.archive.org/web/20260530135004/https://github.com/bstabler/TransportationNetworks"
+      },
+      "status": "live",
+      "url": "https://github.com/bstabler/TransportationNetworks"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "snapshot": {
+        "byteLength": 58755409,
+        "sha256": "0bfb1f9593fccc23fd07c174ac5c20da31fc759081f9d2b89e48ec07846138e7",
+        "timestamp": "20261111203011",
+        "url": "https://web.archive.org/web/20261111203011/https://codeload.github.com/bstabler/TransportationNetworks/zip/d1639b4ef218c17928ba573e806ddf8ba5e7ae6d"
+      },
+      "status": "live",
+      "url": "https://codeload.github.com/bstabler/TransportationNetworks/zip/d1639b4ef218c17928ba573e806ddf8ba5e7ae6d"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "snapshot": {
+        "byteLength": 799918,
+        "sha256": "62376a794eaf917427ba88c419d3331fee568e335a0a83707b24c1d825aaab9b",
+        "timestamp": "20261111203211",
+        "url": "https://web.archive.org/web/20261111203211/https://raw.githubusercontent.com/bstabler/TransportationNetworks/d1639b4ef218c17928ba573e806ddf8ba5e7ae6d/chicago-regional/ChicagoRegional_flow.tntp"
+      },
+      "status": "live",
+      "url": "https://raw.githubusercontent.com/bstabler/TransportationNetworks/d1639b4ef218c17928ba573e806ddf8ba5e7ae6d/chicago-regional/ChicagoRegional_flow.tntp"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": [
+    "traffic-assignment",
+    "typed",
+    "demand",
+    "capacity",
+    "length",
+    "freeFlowTime",
+    "b",
+    "power",
+    "speed",
+    "toll",
+    "linkType"
+  ]
+}
