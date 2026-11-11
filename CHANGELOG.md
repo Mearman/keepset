@@ -1,3 +1,10 @@
+# [0.137.0](https://github.com/Mearman/keepset/compare/v0.136.0...v0.137.0) (2026-11-11)
+
+
+### Features
+
+* **site:** count each filter option against the other filters ([fa97c24](https://github.com/Mearman/keepset/commit/fa97c243d4088647a01466928f04e4029e681e77))
+
 # [0.136.0](https://github.com/Mearman/keepset/compare/v0.135.0...v0.136.0) (2026-11-11)
 
 
