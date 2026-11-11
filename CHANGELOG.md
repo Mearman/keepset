@@ -1,3 +1,10 @@
+# [0.134.0](https://github.com/Mearman/keepset/compare/v0.133.0...v0.134.0) (2026-11-11)
+
+
+### Features
+
+* **site:** give every listing page the home page's interactive listing ([5883cd2](https://github.com/Mearman/keepset/commit/5883cd2c464fa2717f1526d49155c10adf28821a))
+
 # [0.133.0](https://github.com/Mearman/keepset/compare/v0.132.0...v0.133.0) (2026-11-10)
 
 
