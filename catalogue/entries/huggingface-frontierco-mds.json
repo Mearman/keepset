@@ -1,0 +1,358 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "category": "graph/v1",
+  "citations": [
+    {
+      "text": "S. Feng, W. Sun, S. Li, A. Talwalkar, Y. Yang (2025). FrontierCO: real-world and large-scale evaluation of machine learning solvers for combinatorial optimization. arXiv:2505.16952.",
+      "url": "https://arxiv.org/abs/2505.16952"
+    },
+    {
+      "text": "PACE 2025: the Parameterized Algorithms and Computational Experiments Challenge, Dominating Set.",
+      "url": "https://pacechallenge.org/2025/ds/"
+    }
+  ],
+  "crosswalk": {
+    "file": "crosswalks/graph-v1/topology.json"
+  },
+  "description": "The minimum dominating set track of FrontierCO (Feng et al., 2025), 60 undirected graphs in the PACE 2025 graph format (`p ds n m`, then one edge per line): 20 easy test instances named after the exact track of the PACE 2025 dominating set challenge, 20 hard test instances named after its heuristic track, and 20 generated Barabasi-Albert validation graphs. Each instance is a graph whose nodes are 1 to n, isolated ones included; FrontierCO's reference value for each instance is in the track's config.py.",
+  "domain": "Minimum dominating set",
+  "expectedCounts": {},
+  "id": "huggingface-frontierco-mds",
+  "licence": {
+    "id": "MIT",
+    "kind": "spdx"
+  },
+  "name": "FrontierCO minimum dominating set",
+  "properties": {
+    "directed": false,
+    "downloadBytes": 2671331407,
+    "referenceValueKind": "optimal_scores in norm_score: the domination number where it is known, else the best known value",
+    "referenceValues": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/config.py"
+  },
+  "recipe": {
+    "reason": "Its 20 hard test instances hold 164,677,007 edges between them by their problem lines (the largest 12,885,369), and a collection is held whole: the easy and validation instances alone hold 10,239,865 edges, read and checked with the dimacs-graph parser in its pace layout, which is the recipe this entry would use. It becomes fetchable when graph/v1 results can be streamed (https://github.com/Mearman/keepset/issues/305).",
+    "status": "not-fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-11",
+      "snapshot": {
+        "timestamp": "20260527024426",
+        "url": "https://web.archive.org/web/20260527024426/https://huggingface.co/datasets/CO-Bench/FrontierCO"
+      },
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/config.py"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/easy_test_instances/exact_033.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/easy_test_instances/exact_034.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/easy_test_instances/exact_051.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/easy_test_instances/exact_056.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/easy_test_instances/exact_057.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/easy_test_instances/exact_058.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/easy_test_instances/exact_063.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/easy_test_instances/exact_066.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/easy_test_instances/exact_067.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/easy_test_instances/exact_069.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/easy_test_instances/exact_071.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/easy_test_instances/exact_072.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/easy_test_instances/exact_075.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/easy_test_instances/exact_076.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/easy_test_instances/exact_081.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/easy_test_instances/exact_083.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/easy_test_instances/exact_088.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/easy_test_instances/exact_092.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/easy_test_instances/exact_093.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/easy_test_instances/exact_097.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/hard_test_instances/heuristic_003.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/hard_test_instances/heuristic_015.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/hard_test_instances/heuristic_016.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/hard_test_instances/heuristic_017.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/hard_test_instances/heuristic_019.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/hard_test_instances/heuristic_026.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/hard_test_instances/heuristic_036.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/hard_test_instances/heuristic_037.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/hard_test_instances/heuristic_042.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/hard_test_instances/heuristic_044.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/hard_test_instances/heuristic_049.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/hard_test_instances/heuristic_059.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/hard_test_instances/heuristic_060.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/hard_test_instances/heuristic_065.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/hard_test_instances/heuristic_066.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/hard_test_instances/heuristic_067.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/hard_test_instances/heuristic_074.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/hard_test_instances/heuristic_077.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/hard_test_instances/heuristic_078.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/hard_test_instances/heuristic_097.gr"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/valid_instances/ba_graph_large_train_0.txt"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/valid_instances/ba_graph_large_train_1.txt"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/valid_instances/ba_graph_large_train_10.txt"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/valid_instances/ba_graph_large_train_11.txt"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/valid_instances/ba_graph_large_train_12.txt"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/valid_instances/ba_graph_large_train_13.txt"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/valid_instances/ba_graph_large_train_14.txt"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/valid_instances/ba_graph_large_train_15.txt"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/valid_instances/ba_graph_large_train_16.txt"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/valid_instances/ba_graph_large_train_17.txt"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/valid_instances/ba_graph_large_train_18.txt"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/valid_instances/ba_graph_large_train_19.txt"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/valid_instances/ba_graph_large_train_2.txt"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/valid_instances/ba_graph_large_train_3.txt"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/valid_instances/ba_graph_large_train_4.txt"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/valid_instances/ba_graph_large_train_5.txt"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/valid_instances/ba_graph_large_train_6.txt"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/valid_instances/ba_graph_large_train_7.txt"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/valid_instances/ba_graph_large_train_8.txt"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MDS/valid_instances/ba_graph_large_train_9.txt"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": [
+    "minimum-dominating-set"
+  ]
+}

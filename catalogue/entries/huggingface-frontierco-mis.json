@@ -1,0 +1,946 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "category": "graph/v1",
+  "citations": [
+    {
+      "text": "S. Feng, W. Sun, S. Li, A. Talwalkar, Y. Yang (2025). FrontierCO: real-world and large-scale evaluation of machine learning solvers for combinatorial optimization. arXiv:2505.16952.",
+      "url": "https://arxiv.org/abs/2505.16952"
+    },
+    {
+      "doi": "10.1090/dimacs/026",
+      "text": "D. S. Johnson, M. A. Trick (eds.) (1996). Cliques, Coloring, and Satisfiability: Second DIMACS Implementation Challenge. DIMACS Series in Discrete Mathematics and Theoretical Computer Science 26."
+    },
+    {
+      "doi": "10.1016/j.artint.2007.04.001",
+      "text": "K. Xu, F. Boussemart, F. Hemery, C. Lecoutre (2007). Random constraint satisfaction: easy generation of hard (satisfiable) instances. Artificial Intelligence 171(8-9), 514-534."
+    }
+  ],
+  "crosswalk": {
+    "file": "crosswalks/graph-v1/topology.json"
+  },
+  "description": "The maximum independent set track of FrontierCO (Feng et al., 2025), 73 undirected graphs in the DIMACS graph format (`p edge`, then `e` lines): 37 easy test instances that are the complements of graphs of the Second DIMACS Implementation Challenge's clique benchmark (brock, C, DSJC, gen, hamming, keller, MANN and p_hat), so that an independent set here is a clique there, 16 hard test instances from BHOSLIB (the frb graphs of Xu et al.'s model RB, with hidden optimum) and 20 validation instances generated from the same RB model. Each instance is a graph whose nodes are 1 to n, isolated ones included, with one edge per line; FrontierCO's reference value for each instance is in the track's config.py.",
+  "domain": "Maximum independent set",
+  "expectedCounts": {
+    "instances": 73
+  },
+  "id": "huggingface-frontierco-mis",
+  "licence": {
+    "id": "MIT",
+    "kind": "spdx"
+  },
+  "name": "FrontierCO maximum independent set",
+  "properties": {
+    "directed": false,
+    "downloadBytes": 142244252,
+    "referenceValueKind": "optimal_scores in norm_score: the independence number where it is known, else the best known value",
+    "referenceValues": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/config.py"
+  },
+  "recipe": {
+    "files": [
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/C1000.9.mis",
+        "source": 2
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/C125.9.mis",
+        "source": 3
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/C2000.5.mis",
+        "source": 4
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/C2000.9.mis",
+        "source": 5
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/C250.9.mis",
+        "source": 6
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/C4000.5.mis",
+        "source": 7
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/C500.9.mis",
+        "source": 8
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/DSJC1000.5.mis",
+        "source": 9
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/DSJC500.5.mis",
+        "source": 10
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/MANN_a27.mis",
+        "source": 11
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/MANN_a45.mis",
+        "source": 12
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/MANN_a81.mis",
+        "source": 13
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/brock200_2.mis",
+        "source": 14
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/brock200_4.mis",
+        "source": 15
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/brock400_2.mis",
+        "source": 16
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/brock400_4.mis",
+        "source": 17
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/brock800_2.mis",
+        "source": 18
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/brock800_4.mis",
+        "source": 19
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/gen200_p0.9_44.mis",
+        "source": 20
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/gen200_p0.9_55.mis",
+        "source": 21
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/gen400_p0.9_55.mis",
+        "source": 22
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/gen400_p0.9_65.mis",
+        "source": 23
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/gen400_p0.9_75.mis",
+        "source": 24
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/hamming10-4.mis",
+        "source": 25
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/hamming8-4.mis",
+        "source": 26
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/keller4.mis",
+        "source": 27
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/keller5.mis",
+        "source": 28
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/keller6.mis",
+        "source": 29
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/p_hat1500-1.mis",
+        "source": 30
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/p_hat1500-2.mis",
+        "source": 31
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/p_hat1500-3.mis",
+        "source": 32
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/p_hat300-1.mis",
+        "source": 33
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/p_hat300-2.mis",
+        "source": 34
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/p_hat300-3.mis",
+        "source": 35
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/p_hat700-1.mis",
+        "source": 36
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/p_hat700-2.mis",
+        "source": 37
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/p_hat700-3.mis",
+        "source": 38
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/frb100-40.mis",
+        "source": 39
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/frb50-23-1.mis",
+        "source": 40
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/frb50-23-2.mis",
+        "source": 41
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/frb50-23-3.mis",
+        "source": 42
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/frb50-23-4.mis",
+        "source": 43
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/frb50-23-5.mis",
+        "source": 44
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/frb53-24-1.mis",
+        "source": 45
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/frb53-24-2.mis",
+        "source": 46
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/frb53-24-3.mis",
+        "source": 47
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/frb53-24-4.mis",
+        "source": 48
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/frb53-24-5.mis",
+        "source": 49
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/frb59-26-1.mis",
+        "source": 50
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/frb59-26-2.mis",
+        "source": 51
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/frb59-26-3.mis",
+        "source": 52
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/frb59-26-4.mis",
+        "source": 53
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/frb59-26-5.mis",
+        "source": 54
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/RB_800_1200_0.mis",
+        "source": 55
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/RB_800_1200_1.mis",
+        "source": 56
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/RB_800_1200_10.mis",
+        "source": 57
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/RB_800_1200_11.mis",
+        "source": 58
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/RB_800_1200_12.mis",
+        "source": 59
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/RB_800_1200_13.mis",
+        "source": 60
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/RB_800_1200_14.mis",
+        "source": 61
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/RB_800_1200_15.mis",
+        "source": 62
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/RB_800_1200_16.mis",
+        "source": 63
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/RB_800_1200_17.mis",
+        "source": 64
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/RB_800_1200_18.mis",
+        "source": 65
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/RB_800_1200_19.mis",
+        "source": 66
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/RB_800_1200_2.mis",
+        "source": 67
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/RB_800_1200_3.mis",
+        "source": 68
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/RB_800_1200_4.mis",
+        "source": 69
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/RB_800_1200_5.mis",
+        "source": 70
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/RB_800_1200_6.mis",
+        "source": 71
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/RB_800_1200_7.mis",
+        "source": 72
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/RB_800_1200_8.mis",
+        "source": 73
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/RB_800_1200_9.mis",
+        "source": 74
+      }
+    ],
+    "parser": {
+      "encoding": "utf-8",
+      "format": "dimacs-graph",
+      "layout": "dimacs"
+    },
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-11",
+      "snapshot": {
+        "timestamp": "20260527024426",
+        "url": "https://web.archive.org/web/20260527024426/https://huggingface.co/datasets/CO-Bench/FrontierCO"
+      },
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/config.py"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/C1000.9.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/C125.9.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/C2000.5.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/C2000.9.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/C250.9.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/C4000.5.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/C500.9.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/DSJC1000.5.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/DSJC500.5.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/MANN_a27.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/MANN_a45.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/MANN_a81.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/brock200_2.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/brock200_4.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/brock400_2.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/brock400_4.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/brock800_2.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/brock800_4.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/gen200_p0.9_44.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/gen200_p0.9_55.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/gen400_p0.9_55.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/gen400_p0.9_65.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/gen400_p0.9_75.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/hamming10-4.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/hamming8-4.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/keller4.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/keller5.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/keller6.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/p_hat1500-1.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/p_hat1500-2.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/p_hat1500-3.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/p_hat300-1.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/p_hat300-2.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/p_hat300-3.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/p_hat700-1.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/p_hat700-2.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/easy_test_instances/p_hat700-3.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/hard_test_instances/frb100-40.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/hard_test_instances/frb50-23-1.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/hard_test_instances/frb50-23-2.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/hard_test_instances/frb50-23-3.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/hard_test_instances/frb50-23-4.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/hard_test_instances/frb50-23-5.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/hard_test_instances/frb53-24-1.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/hard_test_instances/frb53-24-2.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/hard_test_instances/frb53-24-3.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/hard_test_instances/frb53-24-4.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/hard_test_instances/frb53-24-5.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/hard_test_instances/frb59-26-1.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/hard_test_instances/frb59-26-2.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/hard_test_instances/frb59-26-3.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/hard_test_instances/frb59-26-4.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/hard_test_instances/frb59-26-5.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/valid_instances/RB_800_1200_0.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/valid_instances/RB_800_1200_1.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/valid_instances/RB_800_1200_10.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/valid_instances/RB_800_1200_11.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/valid_instances/RB_800_1200_12.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/valid_instances/RB_800_1200_13.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/valid_instances/RB_800_1200_14.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/valid_instances/RB_800_1200_15.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/valid_instances/RB_800_1200_16.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/valid_instances/RB_800_1200_17.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/valid_instances/RB_800_1200_18.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/valid_instances/RB_800_1200_19.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/valid_instances/RB_800_1200_2.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/valid_instances/RB_800_1200_3.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/valid_instances/RB_800_1200_4.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/valid_instances/RB_800_1200_5.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/valid_instances/RB_800_1200_6.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/valid_instances/RB_800_1200_7.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/valid_instances/RB_800_1200_8.mis"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/MIS/valid_instances/RB_800_1200_9.mis"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": [
+    "maximum-independent-set"
+  ]
+}

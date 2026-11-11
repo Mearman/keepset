@@ -1,0 +1,1132 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/keepset/schemas/entry.schema.json",
+  "category": "graph/v1",
+  "citations": [
+    {
+      "text": "S. Feng, W. Sun, S. Li, A. Talwalkar, Y. Yang (2025). FrontierCO: real-world and large-scale evaluation of machine learning solvers for combinatorial optimization. arXiv:2505.16952.",
+      "url": "https://arxiv.org/abs/2505.16952"
+    },
+    {
+      "doi": "10.1007/978-1-4613-0255-1_9",
+      "text": "T. Koch, A. Martin, S. Voss (2001). SteinLib: an updated library on Steiner tree problems in graphs. In Steiner Trees in Industry, Combinatorial Optimization 11, 285-325."
+    }
+  ],
+  "crosswalk": {
+    "keep": [
+      "meta",
+      "nodes[].id",
+      "nodes[].type",
+      "edges[].source",
+      "edges[].target",
+      "edges[].weight"
+    ],
+    "source": "steinlib",
+    "target": "graph/v1"
+  },
+  "description": "The Steiner tree problem in graphs track of FrontierCO (Feng et al., 2025), 88 instances in the SteinLib STP format: 23 easy test instances (the G instances, each the presolved reduction of a larger original whose fixed value, bounds and original counts the instance's meta carries), 50 hard test instances from SteinLib's bipartite (bip), code covering (cc) and hypercube (hc) sets, and 15 validation instances (generated hypercube graphs and GeoSteiner's reduced full Steiner tree graphs of random points, R25K). In each, the nodes are 1 to n, those that must be connected of type terminal and the rest of type node, and every edge is undirected with its weight; the Comment section's name, creator and remark are in the meta. FrontierCO's reference value for each instance is in the track's config.py.",
+  "domain": "Steiner tree problem in graphs",
+  "expectedCounts": {
+    "instances": 88
+  },
+  "id": "huggingface-frontierco-stp",
+  "licence": {
+    "id": "MIT",
+    "kind": "spdx"
+  },
+  "name": "FrontierCO Steiner tree problem in graphs",
+  "properties": {
+    "directed": false,
+    "downloadBytes": 180648556,
+    "referenceValueKind": "optimal_scores in norm_score: the optimal or best known tree weight",
+    "referenceValues": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/config.py"
+  },
+  "recipe": {
+    "files": [
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/G101a.stp",
+        "source": 2
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/G102a.stp",
+        "source": 3
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/G103a.stp",
+        "source": 4
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/G104a.stp",
+        "source": 5
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/G105a.stp",
+        "source": 6
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/G106a.stp",
+        "source": 7
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/G107a.stp",
+        "source": 8
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/G201a.stp",
+        "source": 9
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/G202a.stp",
+        "source": 10
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/G203a.stp",
+        "source": 11
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/G204a.stp",
+        "source": 12
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/G205a.stp",
+        "source": 13
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/G206a.stp",
+        "source": 14
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/G207a.stp",
+        "source": 15
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/G301a.stp",
+        "source": 16
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/G302a.stp",
+        "source": 17
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/G303a.stp",
+        "source": 18
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/G304a.stp",
+        "source": 19
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/G305a.stp",
+        "source": 20
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/G306a.stp",
+        "source": 21
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/G307a.stp",
+        "source": 22
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/G308a.stp",
+        "source": 23
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "easy_test_instances/G309a.stp",
+        "source": 24
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/bip42p.stp",
+        "source": 25
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/bip42u.stp",
+        "source": 26
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/bip52p.stp",
+        "source": 27
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/bip52u.stp",
+        "source": 28
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/bip62p.stp",
+        "source": 29
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/bip62u.stp",
+        "source": 30
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/bipa2p.stp",
+        "source": 31
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/bipa2u.stp",
+        "source": 32
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/bipe2p.stp",
+        "source": 33
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/bipe2u.stp",
+        "source": 34
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/cc10-2p.stp",
+        "source": 35
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/cc10-2u.stp",
+        "source": 36
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/cc11-2p.stp",
+        "source": 37
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/cc11-2u.stp",
+        "source": 38
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/cc12-2p.stp",
+        "source": 39
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/cc12-2u.stp",
+        "source": 40
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/cc3-10p.stp",
+        "source": 41
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/cc3-10u.stp",
+        "source": 42
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/cc3-11p.stp",
+        "source": 43
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/cc3-11u.stp",
+        "source": 44
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/cc3-12p.stp",
+        "source": 45
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/cc3-12u.stp",
+        "source": 46
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/cc3-4p.stp",
+        "source": 47
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/cc3-4u.stp",
+        "source": 48
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/cc3-5p.stp",
+        "source": 49
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/cc3-5u.stp",
+        "source": 50
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/cc5-3p.stp",
+        "source": 51
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/cc5-3u.stp",
+        "source": 52
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/cc6-2p.stp",
+        "source": 53
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/cc6-2u.stp",
+        "source": 54
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/cc6-3p.stp",
+        "source": 55
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/cc6-3u.stp",
+        "source": 56
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/cc7-3p.stp",
+        "source": 57
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/cc7-3u.stp",
+        "source": 58
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/cc9-2p.stp",
+        "source": 59
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/cc9-2u.stp",
+        "source": 60
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/hc10p.stp",
+        "source": 61
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/hc10u.stp",
+        "source": 62
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/hc11p.stp",
+        "source": 63
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/hc11u.stp",
+        "source": 64
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/hc12p.stp",
+        "source": 65
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/hc12u.stp",
+        "source": 66
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/hc6p.stp",
+        "source": 67
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/hc6u.stp",
+        "source": 68
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/hc7p.stp",
+        "source": 69
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/hc7u.stp",
+        "source": 70
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/hc8p.stp",
+        "source": 71
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/hc8u.stp",
+        "source": 72
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/hc9p.stp",
+        "source": 73
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "hard_test_instances/hc9u.stp",
+        "source": 74
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/R25K01EFST.stp",
+        "source": 75
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/R25K02EFST.stp",
+        "source": 76
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/R25K03EFST.stp",
+        "source": 77
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/R25K04EFST.stp",
+        "source": 78
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/R25K05EFST.stp",
+        "source": 79
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/hc10_valid_0p.stp",
+        "source": 80
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/hc10_valid_1p.stp",
+        "source": 81
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/hc6_valid_0p.stp",
+        "source": 82
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/hc6_valid_1p.stp",
+        "source": 83
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/hc7_valid_0p.stp",
+        "source": 84
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/hc7_valid_1p.stp",
+        "source": 85
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/hc8_valid_0p.stp",
+        "source": 86
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/hc8_valid_1p.stp",
+        "source": 87
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/hc9_valid_0p.stp",
+        "source": 88
+      },
+      {
+        "archive": {
+          "kind": "none"
+        },
+        "path": "valid_instances/hc9_valid_1p.stp",
+        "source": 89
+      }
+    ],
+    "parser": {
+      "encoding": "utf-8",
+      "format": "steinlib"
+    },
+    "status": "fetchable"
+  },
+  "sources": [
+    {
+      "retrieved": "2026-11-11",
+      "snapshot": {
+        "timestamp": "20260527024426",
+        "url": "https://web.archive.org/web/20260527024426/https://huggingface.co/datasets/CO-Bench/FrontierCO"
+      },
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/config.py"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/easy_test_instances/G101a.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/easy_test_instances/G102a.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/easy_test_instances/G103a.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/easy_test_instances/G104a.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/easy_test_instances/G105a.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/easy_test_instances/G106a.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/easy_test_instances/G107a.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/easy_test_instances/G201a.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/easy_test_instances/G202a.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/easy_test_instances/G203a.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/easy_test_instances/G204a.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/easy_test_instances/G205a.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/easy_test_instances/G206a.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/easy_test_instances/G207a.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/easy_test_instances/G301a.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/easy_test_instances/G302a.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/easy_test_instances/G303a.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/easy_test_instances/G304a.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/easy_test_instances/G305a.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/easy_test_instances/G306a.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/easy_test_instances/G307a.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/easy_test_instances/G308a.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/easy_test_instances/G309a.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/bip42p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/bip42u.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/bip52p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/bip52u.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/bip62p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/bip62u.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/bipa2p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/bipa2u.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/bipe2p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/bipe2u.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/cc10-2p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/cc10-2u.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/cc11-2p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/cc11-2u.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/cc12-2p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/cc12-2u.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/cc3-10p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/cc3-10u.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/cc3-11p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/cc3-11u.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/cc3-12p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/cc3-12u.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/cc3-4p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/cc3-4u.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/cc3-5p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/cc3-5u.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/cc5-3p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/cc5-3u.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/cc6-2p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/cc6-2u.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/cc6-3p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/cc6-3u.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/cc7-3p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/cc7-3u.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/cc9-2p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/cc9-2u.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/hc10p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/hc10u.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/hc11p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/hc11u.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/hc12p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/hc12u.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/hc6p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/hc6u.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/hc7p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/hc7u.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/hc8p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/hc8u.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/hc9p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/hard_test_instances/hc9u.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/valid_instances/R25K01EFST.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/valid_instances/R25K02EFST.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/valid_instances/R25K03EFST.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/valid_instances/R25K04EFST.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/valid_instances/R25K05EFST.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/valid_instances/hc10_valid_0p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/valid_instances/hc10_valid_1p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/valid_instances/hc6_valid_0p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/valid_instances/hc6_valid_1p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/valid_instances/hc7_valid_0p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/valid_instances/hc7_valid_1p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/valid_instances/hc8_valid_0p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/valid_instances/hc8_valid_1p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/valid_instances/hc9_valid_0p.stp"
+    },
+    {
+      "retrieved": "2026-11-11",
+      "status": "live",
+      "url": "https://huggingface.co/datasets/CO-Bench/FrontierCO/resolve/e92b9d60757ac4a6274c4b27f40e03fc70c60061/STP/valid_instances/hc9_valid_1p.stp"
+    }
+  ],
+  "subjects": [
+    "operations-research"
+  ],
+  "tags": [
+    "steiner-tree",
+    "typed",
+    "weight"
+  ]
+}
