@@ -46,6 +46,7 @@ import { parseOrlibPmedcap } from "./orlib-pmedcap";
 import { parseLrp } from "./lrp";
 import { parseDimacsMin } from "./dimacs-min";
 import { parseTntp } from "./tntp";
+import { parseDimacsGraph } from "./dimacs-graph";
 import type { NativeAttributedGraph, NativeDocument, NativeGraph, NativeInstance, NativeTable } from "./native";
 import { parsePajek } from "./pajek";
 import { parseCustomerPoints } from "./customer-points";
@@ -296,6 +297,9 @@ export function parseNative(bytes: Uint8Array, parser: Parser): NativeDocument {
   }
   if (parser.format === "dimacs-min") {
     return parseDimacsMin(text);
+  }
+  if (parser.format === "dimacs-graph") {
+    return parseDimacsGraph(text, parser.layout);
   }
 
   return parsePajek(text);

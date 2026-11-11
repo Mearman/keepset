@@ -514,6 +514,8 @@ export const ParserSchema = z.discriminatedUnion("format", [
   z.object({ format: z.literal("dimacs-min"), encoding: EncodingSchema }).strict(),
   /** A Transportation Networks for Research dataset in the TNTP format, read from the parts `network` (the `_net.tntp` file) and `trips` (the trip table): the road network's zones and nodes, its links with their columns as fields, and each origin and destination pair of the trip table as a commodity node with its demand, joined to its origin and destination zones. */
   z.object({ format: z.literal("tntp"), encoding: EncodingSchema }).strict(),
+  /** An undirected graph in the DIMACS challenge graph format (`p edge N M`, then `e U V` lines) or the PACE challenge format (`p PROBLEM N M`, then `U V` lines), as `layout` says: the nodes `1` to `N`, isolated ones included, and each edge once. */
+  z.object({ format: z.literal("dimacs-graph"), encoding: EncodingSchema, layout: z.enum(["dimacs", "pace"]) }).strict(),
   /** A resource page of OpenSLR (openslr.org): the resource's title, identifier, summary, category, licence, description and external address as the instance's meta, and its download links as nodes. */
   z.object({ format: z.literal("openslr-resource"), encoding: z.literal("utf-8") }).strict(),
   /** A text read as the records a regular expression matches in it (a host's directory listing, a reference-value file): every match, in text order, is a row of the pattern's named captures, the `id` capture being the row's id, and each derived column is built from the captures its template names. */
