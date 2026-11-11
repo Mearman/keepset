@@ -163,6 +163,27 @@ test("choosing a filter value adds a history entry, typing does not, and Back an
   expect((await shownOf(page)).shown).toBeLessThan(graphs.shown);
 });
 
+test("a dropdown counts each option against the other filters, and says how many there are in all when that differs", async ({ page }) => {
+  await page.goto("/");
+  const subject = page.getByRole("combobox", { name: "Subject", exact: true });
+  await subject.click();
+  const unfiltered = await page.getByRole("option").allInnerTexts();
+  expect(unfiltered.every((text) => !text.includes(" of "))).toBe(true);
+  await page.keyboard.press("Escape");
+
+  await page.goto("/?kind=graph");
+  await subject.click();
+  const narrowed = await page.getByRole("option").allInnerTexts();
+  const counted = narrowed.map((text) => /^(.*) \((?:(\d+) of )?(\d+)\)$/.exec(text.replaceAll("\n", " ")));
+  expect(counted.every((match) => match !== null)).toBe(true);
+  const partial = counted.filter((match) => match?.[2] !== undefined);
+  expect(partial.length).toBeGreaterThan(0);
+  expect(partial.every((match) => Number(match?.[2]) < Number(match?.[3]))).toBe(true);
+  // The listing's own total is the sum of the filtered rows, so no option can claim more than the page holds.
+  const { shown } = await shownOf(page);
+  expect(counted.every((match) => Number(match?.[2] ?? match?.[3]) <= shown)).toBe(true);
+});
+
 test("a chosen value leads its dropdown, ticked, and a click on it clears it", async ({ page }) => {
   await page.goto("/?kind=resources");
   const kind = page.getByRole("combobox", { name: "Kind", exact: true });

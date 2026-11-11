@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { EMPTY_LISTING_QUERY, facetQuery, initialListingQuery, listingLocation, matchesFacets, parseListingQuery, serialiseListingQuery, type ListingQuery } from "./listing-query";
+import { EMPTY_LISTING_QUERY, facetQuery, facetValueCounts, initialListingQuery, listingLocation, matchesFacets, parseListingQuery, serialiseListingQuery, type FacetValues, type ListingQuery } from "./listing-query";
 
 const full: ListingQuery = {
   text: "lead time & cost",
@@ -82,5 +82,27 @@ describe("where a listing starts and what link it writes", () => {
     expect(listingLocation({ ...start, text: "depot" }, own, "/keepset/tags/weight/", "/keepset/")).toBe("/keepset/?tag=Weight,weight&q=depot");
     expect(listingLocation(facetQuery("tag", ["weight"]), own, "/keepset/tags/weight/", "/keepset/")).toBe("/keepset/?tag=weight");
     expect(listingLocation(EMPTY_LISTING_QUERY, own, "/keepset/tags/weight/", "/keepset/")).toBe("/keepset/");
+  });
+});
+
+describe("facetValueCounts", () => {
+  const record = (kind: string, domain: string, subjects: string[]): FacetValues => ({ ...EMPTY_LISTING_QUERY.facets, kind: [kind], domain: [domain], subject: subjects });
+  const held = [record("graph", "Social", ["a", "b"]), record("graph", "Academic", ["a"]), record("table", "Academic", ["c"])];
+
+  it("counts every value against all records when nothing is chosen", () => {
+    expect([...facetValueCounts(held, "subject", EMPTY_LISTING_QUERY.facets)]).toEqual([["a", 2], ["b", 1], ["c", 1]]);
+  });
+
+  it("counts a value against the other attributes' choices only", () => {
+    const counts = facetValueCounts(held, "subject", { ...EMPTY_LISTING_QUERY.facets, domain: ["Social"] });
+    expect(counts.get("a")).toBe(1);
+    expect(counts.get("b")).toBe(1);
+    expect(counts.get("c")).toBeUndefined();
+  });
+
+  it("does not apply the attribute's own choices, so its alternatives are counted alike", () => {
+    const counts = facetValueCounts(held, "subject", { ...EMPTY_LISTING_QUERY.facets, subject: ["c"], domain: ["Academic"] });
+    expect(counts.get("a")).toBe(1);
+    expect(counts.get("c")).toBe(1);
   });
 });
