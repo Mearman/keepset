@@ -132,6 +132,37 @@ for (const url of ["/", "/?kind=graph", "/?kind=graph,resources&domain=Social%20
   });
 }
 
+test("choosing a filter value adds a history entry, typing does not, and Back and Forward restore the view", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.getByLabel("Search the catalogue")).toBeVisible();
+  const all = await shownOf(page);
+  const entries = async (): Promise<number> => page.evaluate(() => window.history.length);
+  const start = await entries();
+  await page.getByRole("combobox", { name: "Kind", exact: true }).click();
+  await page.getByRole("option", { name: /^graph \(/ }).click();
+  await expect(page).toHaveURL(/\/\?kind=graph$/);
+  expect(await entries()).toBe(start + 1);
+  const graphs = await shownOf(page);
+  expect(graphs.shown).toBeLessThan(all.shown);
+
+  await page.getByLabel("Search the catalogue").pressSequentially("karate");
+  await expect(page).toHaveURL(/\/\?kind=graph&q=karate$/);
+  expect(await entries()).toBe(start + 1);
+
+  await page.goBack();
+  await expect(page).not.toHaveURL(/kind=/);
+  await expect(page.locator("#island-root .island-filter .mantine-Pill-root")).toHaveCount(0);
+  await expect(page.getByLabel("Search the catalogue")).toHaveValue("");
+  expect(await shownOf(page)).toEqual(all);
+  expect(await entries()).toBe(start + 1);
+
+  await page.goForward();
+  await expect(page).toHaveURL(/\/\?kind=graph&q=karate$/);
+  await expect(page.locator("#island-root .island-filter .mantine-Pill-root", { hasText: "graph" })).toBeVisible();
+  await expect(page.getByLabel("Search the catalogue")).toHaveValue("karate");
+  expect((await shownOf(page)).shown).toBeLessThan(graphs.shown);
+});
+
 test("a chosen value leads its dropdown, ticked, and a click on it clears it", async ({ page }) => {
   await page.goto("/?kind=resources");
   const kind = page.getByRole("combobox", { name: "Kind", exact: true });
