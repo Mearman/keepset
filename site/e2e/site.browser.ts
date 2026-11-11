@@ -132,6 +132,15 @@ for (const url of ["/", "/?kind=graph", "/?kind=graph,resources&domain=Social%20
   });
 }
 
+test("a chosen filter value is shown whole, never clipped inside its control", async ({ page }) => {
+  await page.goto("/?kind=graph,resources&domain=Social%20network&tag=social");
+  await expect(page.locator("#island-root .island-filter .mantine-Pill-label").first()).toBeVisible();
+  const clipped = await page.evaluate(() => [...document.querySelectorAll<HTMLElement>("#island-root .island-filter .mantine-Pill-label")].filter((label) => label.scrollWidth > label.clientWidth).map((label) => label.textContent));
+  expect(clipped).toEqual([]);
+  const overflowing = await page.evaluate(() => [...document.querySelectorAll<HTMLElement>("#island-root .island-filter .mantine-Pill-root")].filter((pill) => pill.getBoundingClientRect().right > (pill.closest(".mantine-MultiSelect-input")?.getBoundingClientRect().right ?? 0)).map((pill) => pill.textContent));
+  expect(overflowing).toEqual([]);
+});
+
 test("a tag page mounts the home page's listing with its tag chosen, and any change gives the view as a home listing link", async ({ page }) => {
   await page.goto("/tags/");
   await expect(page.locator("#groups-root.island-live")).toBeVisible();

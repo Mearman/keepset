@@ -422,11 +422,11 @@ globalStyle(".island-controls .island-search", {
 });
 
 globalStyle(".island-controls .island-filter", {
-  flex: "1 1 9rem",
+  flex: "1 1 11rem",
   minWidth: "8rem",
 });
 
-/* A filter is one input-height control whatever it holds: Mantine's multi-select wraps its pills onto further lines and grows with them, so the pill list is held to one line, the input is given the height of the text input beside it and the values beyond the first collapse into a "+N" on the first pill (renderPill). */
+/* A filter is one input-height control whatever it holds: Mantine's multi-select wraps its pills onto further lines and grows with them, so the pill list is held to one line, the input is given the height of the text input beside it, the values beyond the first collapse into a "+N" on the first pill (renderPill), and once a value is chosen the search field shrinks to a sliver (its placeholder hidden) so the pill takes the width and its label is never clipped. */
 globalStyle(".island-controls .island-filter .mantine-MultiSelect-input", {
   height: "var(--input-height)",
   minHeight: "var(--input-height)",
@@ -436,9 +436,23 @@ globalStyle(".island-controls .island-filter .mantine-MultiSelect-pillsList", {
   flexWrap: "nowrap",
   height: "100%",
 });
-globalStyle(".island-controls .island-filter .mantine-MultiSelect-inputField", {
-  minWidth: "2rem",
-  flex: "1 1 2rem",
+globalStyle(".island-controls .island-filter .mantine-MultiSelect-pillsList:has(.mantine-Pill-root) .mantine-MultiSelect-inputField", {
+  flex: "0 0 0.25rem",
+  minWidth: "0.25rem",
+  width: "0.25rem",
+  padding: 0,
+});
+globalStyle(".island-controls .island-filter .mantine-MultiSelect-pillsList:has(.mantine-Pill-root) .mantine-MultiSelect-inputField::placeholder", {
+  color: "transparent",
+});
+globalStyle(".island-controls .island-filter .mantine-Pill-root", {
+  flex: "0 1 auto",
+  minWidth: 0,
+});
+globalStyle(".island-controls .island-filter .mantine-Pill-label", {
+  overflow: "visible",
+  textOverflow: "clip",
+  maxWidth: "none",
 });
 
 globalStyle("footer", {
