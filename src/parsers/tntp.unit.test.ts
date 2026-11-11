@@ -96,4 +96,19 @@ describe("the TNTP parser", () => {
     expect(parsed.edges[1]).toMatchObject({ capacity: 4958.18, freeFlowTime: 0.5 });
     expect(parsed).toMatchObject({ meta: { totalOdFlow: 150 } });
   });
+
+  it("refuses a metadata key given twice, in either file", () => {
+    expect(() => parse([NETWORK[0] ?? "", NETWORK[1] ?? "", "<NUMBER OF NODES> 3", ...NETWORK.slice(2)], TRIPS)).toThrow(/tntp network line 3: the metadata key <NUMBER OF NODES> is given twice/);
+    expect(() => parse(NETWORK, [TRIPS[0] ?? "", TRIPS[0] ?? "", ...TRIPS.slice(1)])).toThrow(/tntp trips line 2: the metadata key <NUMBER OF ZONES> is given twice/);
+  });
+
+  it("refuses a zone count or first through node above the node count", () => {
+    expect(() => parse(NETWORK.map((line) => line.replace("<NUMBER OF ZONES> 2", "<NUMBER OF ZONES> 4")), TRIPS)).toThrow(/tntp network line 1: the zone count 4 is above the node count 3/);
+    expect(() => parse(NETWORK.map((line) => line.replace("<FIRST THRU NODE> 3", "<FIRST THRU NODE> 4")), TRIPS)).toThrow(/tntp network line 3: the first through node 4 is above the node count 3/);
+  });
+
+  it("refuses a second column header line rather than ignoring it", () => {
+    const header = "~\tinit_node\tterm_node\tcapacity\tfree_flow_time\t;";
+    expect(() => parse(NETWORK.flatMap((line) => (line === header ? [line, line] : [line])), TRIPS)).toThrow(/tntp network line 10: the column header line is given twice/);
+  });
 });
