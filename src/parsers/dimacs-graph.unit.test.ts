@@ -32,4 +32,15 @@ describe("the DIMACS graph parser", () => {
     expect(() => parseNative(bytes("p edge 3 2", "e 1 2"), dimacs)).toThrow(/expected 2 edges, found 1/);
     expect(() => parseNative(bytes("c nothing"), dimacs)).toThrow(/the file has no problem line/);
   });
+
+  it("refuses an edge count that differs from the problem line's under the PACE layout", () => {
+    expect(() => parseNative(bytes("p ds 3 2", "1 2"), pace)).toThrow(/expected 2 edges, found 1/);
+    expect(() => parseNative(bytes("p ds 3 1", "1 2", "2 3"), pace)).toThrow(/expected 1 edges, found 2/);
+  });
+
+  it("reads a file with no edges as isolated nodes only, and refuses one that promises edges it lacks", () => {
+    expect(parseNative(bytes("p ds 3 0"), pace)).toEqual({ nodes: [{ id: "1" }, { id: "2" }, { id: "3" }], edges: [] });
+    expect(parseNative(bytes("p edge 2 0"), dimacs)).toEqual({ nodes: [{ id: "1" }, { id: "2" }], edges: [] });
+    expect(() => parseNative(bytes("p ds 3 1"), pace)).toThrow(/expected 1 edges, found 0/);
+  });
 });
