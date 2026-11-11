@@ -47,6 +47,7 @@ import { parseLrp } from "./lrp";
 import { parseDimacsMin } from "./dimacs-min";
 import { parseTntp } from "./tntp";
 import { parseDimacsGraph } from "./dimacs-graph";
+import { parseSteinlib } from "./steinlib";
 import type { NativeAttributedGraph, NativeDocument, NativeGraph, NativeInstance, NativeTable } from "./native";
 import { parsePajek } from "./pajek";
 import { parseCustomerPoints } from "./customer-points";
@@ -165,7 +166,7 @@ export function* decodePieces(bytes: Uint8Array, parser: Parser, pieceBytes: num
 type TableParser = Extract<Parser, { format: "csv-table" | "geojson" | "json-table" | "json-word-counts" | "lexicon-lines" }>;
 
 /** The parsers of network instance formats, whose nodes and edges carry the fields the file gives them. */
-type AttributedGraphParser = Extract<Parser, { format: "canad-dow" | "orlib-pmed" | "dimacs-min" }>;
+type AttributedGraphParser = Extract<Parser, { format: "canad-dow" | "orlib-pmed" | "dimacs-min" | "steinlib" }>;
 
 /**
  * Reads a file into the native shape of the recipe's parser: a graph for the graph formats, a table of rows for the table formats.
@@ -300,6 +301,9 @@ export function parseNative(bytes: Uint8Array, parser: Parser): NativeDocument {
   }
   if (parser.format === "dimacs-graph") {
     return parseDimacsGraph(text, parser.layout);
+  }
+  if (parser.format === "steinlib") {
+    return parseSteinlib(text);
   }
 
   return parsePajek(text);
