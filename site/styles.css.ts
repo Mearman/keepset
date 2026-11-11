@@ -435,6 +435,7 @@ globalStyle(".island-controls .island-filter .mantine-MultiSelect-input", {
 globalStyle(".island-controls .island-filter .mantine-MultiSelect-pillsList", {
   flexWrap: "nowrap",
   height: "100%",
+  width: "100%",
 });
 globalStyle(".island-controls .island-filter .mantine-MultiSelect-pillsList:has(.mantine-Pill-root) .mantine-MultiSelect-inputField", {
   flex: "1 1 0",
