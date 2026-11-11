@@ -80,7 +80,7 @@ function facetPill(chosen: readonly string[], { value, onRemove, disabled }: Com
     return null;
   }
 
-  return <Pill withRemoveButton={disabled !== true} onRemove={onRemove}>{chosen.length > 1 ? `${value} +${String(chosen.length - 1)}` : value}</Pill>;
+  return <Pill withRemoveButton={disabled !== true} {...(onRemove === undefined ? {} : { onRemove })}>{chosen.length > 1 ? `${value} +${String(chosen.length - 1)}` : value}</Pill>;
 }
 
 const FACET_CONTROLS: Readonly<Record<Facet, { readonly label: string; readonly placeholder: string; readonly byCount: boolean }>> = {
