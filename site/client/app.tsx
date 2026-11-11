@@ -2,7 +2,7 @@
 
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { createRoot } from "react-dom/client";
-import { ActionIcon, Badge, Button, CopyButton, MantineProvider, MultiSelect, NumberInput, Pill, SegmentedControl, Table as MantineTable, TextInput, Tooltip } from "@mantine/core";
+import { ActionIcon, Badge, Button, type ComboboxRenderPillInput, CopyButton, MantineProvider, MultiSelect, NumberInput, Pill, SegmentedControl, Table as MantineTable, TextInput, Tooltip } from "@mantine/core";
 import "@mantine/core/styles.css";
 // Imported here and not by the map, because the stylesheet of a lazily loaded chunk is never linked to the page.
 import "leaflet/dist/leaflet.css";
@@ -73,6 +73,15 @@ function heldBy(record: SearchRecord): FacetValues {
 }
 
 /** Each attribute's filter as the controls show it: its accessible name, its placeholder, and whether its options list the most common first (tags, most of which name a field of one source only) or in label order. */
+/** A filter holds one line whatever is chosen: only the first chosen value is drawn, carrying a count of the others. */
+function facetPill(chosen: readonly string[], { value, onRemove, disabled }: ComboboxRenderPillInput): ReactNode {
+  const [first] = chosen;
+  if (value === undefined || value !== first) {
+    return null;
+  }
+  return <Pill withRemoveButton={disabled !== true} onRemove={onRemove}>{chosen.length > 1 ? `${value} +${String(chosen.length - 1)}` : value}</Pill>;
+}
+
 const FACET_CONTROLS: Readonly<Record<Facet, { readonly label: string; readonly placeholder: string; readonly byCount: boolean }>> = {
   kind: { label: "Kind", placeholder: "kind", byCount: false },
   domain: { label: "Domain", placeholder: "domain", byCount: false },
@@ -180,7 +189,7 @@ function Listing({ records, place }: { readonly records: readonly SearchRecord[]
           setQuery((current) => ({ ...current, text }));
         }} />
         {FACETS.map((facet) => (
-          <MultiSelect key={facet} className="island-filter" aria-label={FACET_CONTROLS[facet].label} placeholder={FACET_CONTROLS[facet].placeholder} data={options[facet]} value={[...query.facets[facet]]} onChange={(values) => { setQuery((current) => ({ ...current, facets: { ...current.facets, [facet]: values } })); }} clearable searchable hidePickedOptions renderPill={({ value, onRemove, disabled }) => (value === query.facets[facet][0] ? <Pill withRemoveButton={!disabled} onRemove={onRemove}>{query.facets[facet].length > 1 ? `${value} +${String(query.facets[facet].length - 1)}` : value}</Pill> : null)} />
+          <MultiSelect key={facet} className="island-filter" aria-label={FACET_CONTROLS[facet].label} placeholder={FACET_CONTROLS[facet].placeholder} data={options[facet]} value={[...query.facets[facet]]} onChange={(values) => { setQuery((current) => ({ ...current, facets: { ...current.facets, [facet]: values } })); }} clearable searchable hidePickedOptions renderPill={(pill) => facetPill(query.facets[facet], pill)} />
         ))}
         <div className="island-range" role="group" aria-label="Entities">
           <span className="island-range-label" aria-hidden="true">Entities</span>
