@@ -19,7 +19,7 @@ const BRANCH_COLUMNS = ["fbus", "tbus", "r", "x", "b", "rateA", "rateB", "rateC"
 const GENCOST_COLUMNS = ["model", "startup", "shutdown", "n", "c2", "c1", "c0"] as const;
 /** MATPOWER's code for a polynomial cost. */
 const POLYNOMIAL = 2;
-/** The number of polynomial coefficients read: a quadratic cost, the form every case of the PGLib OPF library uses. */
+/** The number of polynomial coefficients the parser accepts, a quadratic cost: a cost row of any other model or coefficient count is refused. */
 const COEFFICIENTS = 3;
 
 /** A matrix assignment's opening line, `mpc.NAME = [`. */
