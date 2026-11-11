@@ -122,16 +122,15 @@ test("the filters are read from the URL, and every change is written back to it 
   expect(await shownOf(page)).toEqual(searched);
 });
 
-test("every filter keeps the height of the search box whatever it holds", async ({ page }) => {
-  const heights = async (): Promise<number[]> => page.evaluate(() => [...document.querySelectorAll<HTMLElement>("#island-root .island-controls .island-search input, #island-root .island-controls .island-filter .mantine-MultiSelect-input")].map((control) => Math.round(control.getBoundingClientRect().height)));
-  for (const url of ["/", "/?kind=graph", "/?kind=graph,resources&domain=Social%20network&tag=url"]) {
+for (const url of ["/", "/?kind=graph", "/?kind=graph,resources&domain=Social%20network&tag=url"]) {
+  test(`every filter keeps the height of the search box whatever it holds: ${url}`, async ({ page }) => {
     await page.goto(url);
     await expect(page.getByLabel("Search the catalogue")).toBeVisible();
-    const measured = await heights();
+    const measured = await page.evaluate(() => [...document.querySelectorAll<HTMLElement>("#island-root .island-controls .island-search input, #island-root .island-controls .island-filter .mantine-MultiSelect-input")].map((control) => Math.round(control.getBoundingClientRect().height)));
     expect(measured.length).toBeGreaterThan(2);
-    expect(new Set(measured).size, `${url}: ${measured.join(", ")}`).toBe(1);
-  }
-});
+    expect(new Set(measured).size, measured.join(", ")).toBe(1);
+  });
+}
 
 test("a tag page mounts the home page's listing with its tag chosen, and any change gives the view as a home listing link", async ({ page }) => {
   await page.goto("/tags/");
