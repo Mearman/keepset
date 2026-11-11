@@ -220,7 +220,10 @@ function readNetwork(text: string): Network {
     }
     if (raw.startsWith("~")) {
       const names = raw.slice(1).replace(/;\s*$/, "").trim().split(/\s+/);
-      if (header === undefined && names[0] === ENDS[0] && names[1] === ENDS[1]) {
+      if (names[0] === ENDS[0] && names[1] === ENDS[1]) {
+        if (header !== undefined) {
+          throw new NativeParseError(NETWORK, line, "the column header line is given twice");
+        }
         header = { names, fields: linkFields(names, line) };
       }
       continue;
