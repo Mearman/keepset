@@ -96,7 +96,7 @@ const FACET_CONTROLS: Readonly<Record<Facet, { readonly label: string; readonly 
  * @param records - Every record.
  * @param facet - The attribute.
  * @param chosen - The values already chosen.
- * @returns The options in the attribute's order.
+ * @returns The chosen values first, then the rest, each group in the attribute's order.
  */
 function facetOptions(records: readonly SearchRecord[], facet: Facet, chosen: readonly string[]): { value: string; label: string }[] {
   const counts = new Map<string, number>(chosen.map((value) => [value, 0]));
@@ -107,7 +107,11 @@ function facetOptions(records: readonly SearchRecord[], facet: Facet, chosen: re
   }
   const byLabel = [...counts].sort(([left], [right]) => (left < right ? -1 : left > right ? 1 : 0));
 
-  return (FACET_CONTROLS[facet].byCount ? byLabel.sort(([, left], [, right]) => right - left) : byLabel).map(([value, count]) => ({ value, label: `${value} (${String(count)})` }));
+  const ordered = FACET_CONTROLS[facet].byCount ? byLabel.sort(([, left], [, right]) => right - left) : byLabel;
+  const picked = new Set(chosen);
+
+  // The chosen values lead, in the attribute's own order, so they sit where a finger or the keyboard lands first and a click on one clears it.
+  return [...ordered.filter(([value]) => picked.has(value)), ...ordered.filter(([value]) => !picked.has(value))].map(([value, count]) => ({ value, label: `${value} (${String(count)})` }));
 }
 
 /** Where a listing sits: the path back to the site root, the page's own filter as a query string (absent on the home listing), and the page's and the home listing's paths. */
@@ -190,7 +194,7 @@ function Listing({ records, place }: { readonly records: readonly SearchRecord[]
           setQuery((current) => ({ ...current, text }));
         }} />
         {FACETS.map((facet) => (
-          <MultiSelect key={facet} className="island-filter" aria-label={FACET_CONTROLS[facet].label} placeholder={FACET_CONTROLS[facet].placeholder} data={options[facet]} value={[...query.facets[facet]]} onChange={(values) => { setQuery((current) => ({ ...current, facets: { ...current.facets, [facet]: values } })); }} clearable searchable hidePickedOptions renderPill={(pill) => facetPill(query.facets[facet], pill)} />
+          <MultiSelect key={facet} className="island-filter" aria-label={FACET_CONTROLS[facet].label} placeholder={FACET_CONTROLS[facet].placeholder} data={options[facet]} value={[...query.facets[facet]]} onChange={(values) => { setQuery((current) => ({ ...current, facets: { ...current.facets, [facet]: values } })); }} clearable searchable renderPill={(pill) => facetPill(query.facets[facet], pill)} />
         ))}
         <div className="island-range" role="group" aria-label="Entities">
           <span className="island-range-label" aria-hidden="true">Entities</span>
