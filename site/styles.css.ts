@@ -426,7 +426,7 @@ globalStyle(".island-controls .island-filter", {
   minWidth: "8rem",
 });
 
-/* A filter is one input-height control whatever it holds: Mantine's multi-select wraps its pills onto further lines and grows with them, so the pill list is held to one line, the input is given the height of the text input beside it, the values beyond the first collapse into a "+N" on the first pill (renderPill), and once a value is chosen the search field gives up its basis width (its placeholder hidden) and fills only what the pill leaves, so the label is never clipped and typed text still has room. */
+/* A filter is one input-height control whatever it holds: Mantine's multi-select wraps its pills onto further lines and grows with them, so the pill list is held to one line, the input is given the height of the text input beside it, the values beyond the first collapse into a "+N" on the first pill (renderPill), and once a value is chosen the search field gives up its basis width (its placeholder hidden) and fills only what the pill leaves, so the pill keeps its natural width and typed text still has room. */
 globalStyle(".island-controls .island-filter .mantine-MultiSelect-input", {
   height: "var(--input-height)",
   minHeight: "var(--input-height)",
@@ -449,11 +449,6 @@ globalStyle(".island-controls .island-filter .mantine-MultiSelect-pillsList:has(
 globalStyle(".island-controls .island-filter .mantine-Pill-root", {
   flex: "0 1 auto",
   minWidth: 0,
-});
-globalStyle(".island-controls .island-filter .mantine-Pill-label", {
-  overflow: "visible",
-  textOverflow: "clip",
-  maxWidth: "none",
 });
 
 globalStyle("footer", {
