@@ -74,4 +74,19 @@ describe("the MATPOWER parser", () => {
   it("reads a value written with an exponent", () => {
     expect(parseNative(bytes(...SMALL.map((line) => line.replace("baseMVA = 100.0", "baseMVA = 1.5e+2"))), matpower).meta).toMatchObject({ baseMVA: 150 });
   });
+
+  it("refuses a case with no gencost table", () => {
+    const start = SMALL.indexOf("mpc.gencost = [");
+    const without = [...SMALL.slice(0, start), ...SMALL.slice(SMALL.indexOf("];", start) + 1)];
+    expect(() => parseNative(bytes(...without), matpower)).toThrow(/matpower line 1: the case has no mpc.gencost table/);
+  });
+
+  it("refuses Inf as a value that is not a number", () => {
+    expect(() => parseNative(bytes(...SMALL.map((line) => line.replace("\t 472\t 472\t 472\t", "\t Inf\t 472\t 472\t"))), matpower)).toThrow(/matpower line 25: expected a value of mpc.branch as a number, found "Inf"/);
+  });
+
+  it("refuses a gencost table of twice as many rows as generators", () => {
+    const cost = SMALL.find((line) => line.includes("% NG")) ?? "";
+    expect(() => parseNative(bytes(...SMALL.flatMap((line) => (line === cost ? [line, line] : [line]))), matpower)).toThrow(/matpower line 19: expected one cost row per generator \(1\), found 2/);
+  });
 });
