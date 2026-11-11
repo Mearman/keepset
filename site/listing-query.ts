@@ -179,3 +179,25 @@ export function listingLocation(query: ListingQuery, own: string | undefined, he
 export function matchesFacets(held: FacetValues, facets: FacetValues): boolean {
   return FACETS.every((facet) => facets[facet].length === 0 || facets[facet].some((value) => held[facet].includes(value)));
 }
+
+/**
+ * How many of some records hold each value of one attribute, given the choices made in the other attributes: the number an option would add to the listing if it were chosen alongside what is already chosen. The attribute's own choices are not applied, since several values of one attribute are alternatives, so each of its options is counted against the same other filters.
+ * @param held - What each record holds, already narrowed by every filter that is not an attribute (free text, entity bounds).
+ * @param facet - The attribute whose options are counted.
+ * @param facets - The values chosen for every attribute.
+ * @returns For each value some record holds, how many of the records the other attributes admit hold it.
+ */
+export function facetValueCounts(held: readonly FacetValues[], facet: Facet, facets: FacetValues): ReadonlyMap<string, number> {
+  const others = { ...facets, [facet]: [] };
+  const counts = new Map<string, number>();
+  for (const record of held) {
+    if (!matchesFacets(record, others)) {
+      continue;
+    }
+    for (const value of new Set(record[facet])) {
+      counts.set(value, (counts.get(value) ?? 0) + 1);
+    }
+  }
+
+  return counts;
+}

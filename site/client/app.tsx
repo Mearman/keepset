@@ -11,7 +11,7 @@ import { type ColumnDef, createSortedRowModel, rowSortingFeature, tableFeatures,
 import { entitiesText, entityTotal, sizeText, type Dimensions } from "../dimensions";
 import { listingColumnWidths } from "../listing-columns";
 import { matchingGroups, orderGroups, type GroupLink, type GroupOrder } from "../group-index";
-import { EMPTY_LISTING_QUERY, FACETS, initialListingQuery, listingLocation, mapFacets, matchesFacets, parseListingQuery, type Facet, type FacetValues, type ListingQuery } from "../listing-query";
+import { EMPTY_LISTING_QUERY, FACETS, facetValueCounts, initialListingQuery, listingLocation, mapFacets, matchesFacets, parseListingQuery, type Facet, type FacetValues, type ListingQuery } from "../listing-query";
 import { siteRoot } from "./site-root";
 import "../styles.css";
 
@@ -92,26 +92,26 @@ const FACET_CONTROLS: Readonly<Record<Facet, { readonly label: string; readonly 
 };
 
 /**
- * One attribute's options: every value a record holds, labelled with how many records hold it, and every value the query already chose, so a value from a shared link that no record holds still shows as chosen and can be removed.
- * @param records - Every record.
+ * One attribute's options: every value a record holds, and every value the query already chose, so a value from a shared link that no record holds still shows as chosen and can be cleared. Each is labelled with how many records it would add to the listing given the other filters, and, where that differs, how many hold it in all.
+ * @param totals - How many of every record hold each value.
+ * @param relative - How many of the records the other filters admit hold each value.
  * @param facet - The attribute.
  * @param chosen - The values already chosen.
- * @returns The chosen values first, then the rest, each group in the attribute's order.
+ * @returns The chosen values first, then the rest, each group in the attribute's order (by total, so an option does not move as the other filters change).
  */
-function facetOptions(records: readonly SearchRecord[], facet: Facet, chosen: readonly string[]): { value: string; label: string }[] {
-  const counts = new Map<string, number>(chosen.map((value) => [value, 0]));
-  for (const record of records) {
-    for (const value of new Set(heldBy(record)[facet])) {
-      counts.set(value, (counts.get(value) ?? 0) + 1);
-    }
-  }
-  const byLabel = [...counts].sort(([left], [right]) => (left < right ? -1 : left > right ? 1 : 0));
-
+function facetOptions(totals: ReadonlyMap<string, number>, relative: ReadonlyMap<string, number>, facet: Facet, chosen: readonly string[]): { value: string; label: string }[] {
+  const values = new Map<string, number>([...chosen.map((value): [string, number] => [value, 0]), ...totals]);
+  const byLabel = [...values].sort(([left], [right]) => (left < right ? -1 : left > right ? 1 : 0));
   const ordered = FACET_CONTROLS[facet].byCount ? byLabel.sort(([, left], [, right]) => right - left) : byLabel;
   const picked = new Set(chosen);
+  const label = (value: string, total: number): string => {
+    const shown = relative.get(value) ?? 0;
+
+    return shown === total ? `${value} (${String(total)})` : `${value} (${String(shown)} of ${String(total)})`;
+  };
 
   // The chosen values lead, in the attribute's own order, so they sit where a finger or the keyboard lands first and a click on one clears it.
-  return [...ordered.filter(([value]) => picked.has(value)), ...ordered.filter(([value]) => !picked.has(value))].map(([value, count]) => ({ value, label: `${value} (${String(count)})` }));
+  return [...ordered.filter(([value]) => picked.has(value)), ...ordered.filter(([value]) => !picked.has(value))].map(([value, total]) => ({ value, label: label(value, total) }));
 }
 
 /** Where a listing sits: the path back to the site root, the page's own filter as a query string (absent on the home listing), and the page's and the home listing's paths. */
@@ -165,15 +165,12 @@ function Listing({ records, place }: { readonly records: readonly SearchRecord[]
     };
   }, [place]);
 
-  const options = useMemo(() => mapFacets((facet) => facetOptions(records, facet, query.facets[facet])), [records, query.facets]);
 
-  const filtered = useMemo(() => {
+  // What the free text and the entity bounds admit; the attributes narrow this further, and each attribute's options are counted against the other attributes' choices over this set.
+  const scoped = useMemo(() => {
     const needle = query.text.trim().toLowerCase();
 
     return records.filter((record) => {
-      if (!matchesFacets(heldBy(record), query.facets)) {
-        return false;
-      }
       if (!within(entityTotal(record), query.minEntities, query.maxEntities)) {
         return false;
       }
@@ -184,7 +181,20 @@ function Listing({ records, place }: { readonly records: readonly SearchRecord[]
 
       return haystack.some((field) => field.toLowerCase().includes(needle));
     });
-  }, [records, query]);
+  }, [records, query.text, query.minEntities, query.maxEntities]);
+  const filtered = useMemo(() => scoped.filter((record) => matchesFacets(heldBy(record), query.facets)), [scoped, query.facets]);
+
+  const totals = useMemo(() => {
+    const held = records.map(heldBy);
+
+    return mapFacets((facet) => facetValueCounts(held, facet, EMPTY_LISTING_QUERY.facets));
+  }, [records]);
+  const options = useMemo(() => {
+    const held = scoped.map(heldBy);
+
+    return mapFacets((facet) => facetOptions(totals[facet], facetValueCounts(held, facet, query.facets), facet, query.facets[facet]));
+  }, [scoped, totals, query.facets]);
+
 
   // Column definitions are written as plain literals against the hook's own column type, not built through createColumnHelper: the helper infers each accessor over its own value type, which does not inter-type with the widened union under exactOptionalPropertyTypes. The order matches the static table's Name, Id, Kind, Domain so the two views of the listing read the same way.
   const columns: readonly ColumnDef<ListingFeatures, SearchRecord>[] = [
