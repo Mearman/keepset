@@ -132,6 +132,19 @@ for (const url of ["/", "/?kind=graph", "/?kind=graph,resources&domain=Social%20
   });
 }
 
+test("a chosen value leads its dropdown, ticked, and a click on it clears it", async ({ page }) => {
+  await page.goto("/?kind=resources");
+  const kind = page.getByLabel("Kind", { exact: true });
+  await kind.click();
+  const options = page.getByRole("option");
+  await expect(options.first()).toContainText("resources");
+  await expect(options.first()).toHaveAttribute("aria-selected", "true");
+  await expect(options.nth(1)).not.toHaveAttribute("aria-selected", "true");
+  await options.first().click();
+  await expect(page).not.toHaveURL(/kind=/);
+  await expect(page.locator("#island-root .island-filter .mantine-Pill-root")).toHaveCount(0);
+});
+
 test("a chosen filter value is shown whole, never clipped inside its control", async ({ page }) => {
   await page.goto("/?kind=graph,resources&domain=Social%20network&tag=social");
   await expect(page.locator("#island-root .island-filter .mantine-Pill-label").first()).toBeVisible();
