@@ -134,7 +134,7 @@ for (const url of ["/", "/?kind=graph", "/?kind=graph,resources&domain=Social%20
 
 test("a chosen value leads its dropdown, ticked, and a click on it clears it", async ({ page }) => {
   await page.goto("/?kind=resources");
-  const kind = page.getByLabel("Kind", { exact: true });
+  const kind = page.getByRole("combobox", { name: "Kind", exact: true });
   await kind.click();
   const options = page.getByRole("option");
   await expect(options.first()).toContainText("resources");
