@@ -1,3 +1,22 @@
+# [0.138.0](https://github.com/Mearman/keepset/compare/v0.137.0...v0.138.0) (2026-11-11)
+
+
+### Bug Fixes
+
+* **steinlib:** require the Terminals section and refuse Presolve before it ([efe9f33](https://github.com/Mearman/keepset/commit/efe9f33f13a8553d23601a3af628f667549cc4d9))
+* **tntp:** refuse a second column header line ([c21af49](https://github.com/Mearman/keepset/commit/c21af4930860698190433b5bd857ddfea3075366))
+
+
+### Features
+
+* **catalogue:** add the FrontierCO independent set, dominating set and Steiner tree tracks ([8b3bac9](https://github.com/Mearman/keepset/commit/8b3bac99a7905329ad812f6cb84c79f56679e466))
+* **catalogue:** add the PGLib optimal power flow cases ([329cd97](https://github.com/Mearman/keepset/commit/329cd97cf51e6e4f0114134d34933d6cdac24c3f))
+* **catalogue:** add the Transportation Networks for Research traffic assignment networks ([55ca6dc](https://github.com/Mearman/keepset/commit/55ca6dc496d86513558419976c2272d4601aafd7))
+* read DIMACS and PACE challenge graph files ([393f1b3](https://github.com/Mearman/keepset/commit/393f1b3192ad6621553143e972785e3262250818))
+* read MATPOWER power system cases ([a9452c0](https://github.com/Mearman/keepset/commit/a9452c09a99609cbb460dc118911aab9a51e56a0))
+* read SteinLib Steiner tree problem files ([510b246](https://github.com/Mearman/keepset/commit/510b24606bf2afe743c9f0917fa76917bd02649a))
+* read TNTP traffic assignment networks with their trip tables ([1b0c4b1](https://github.com/Mearman/keepset/commit/1b0c4b12735eba66a73993719f3c689946124bf3))
+
 # [0.137.0](https://github.com/Mearman/keepset/compare/v0.136.0...v0.137.0) (2026-11-11)
 
 
