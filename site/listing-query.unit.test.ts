@@ -86,7 +86,7 @@ describe("where a listing starts and what link it writes", () => {
 });
 
 describe("facetValueCounts", () => {
-  const record = (kind: string, domain: string, subjects: string[]): FacetValues => ({ ...EMPTY_LISTING_QUERY.facets, kind: [kind], domain: [domain], subject: subjects });
+  const record = (kind: string, domain: string, subjects: readonly string[]): FacetValues => ({ ...EMPTY_LISTING_QUERY.facets, kind: [kind], domain: [domain], subject: subjects });
   const held = [record("graph", "Social", ["a", "b"]), record("graph", "Academic", ["a"]), record("table", "Academic", ["c"])];
 
   it("counts every value against all records when nothing is chosen", () => {
