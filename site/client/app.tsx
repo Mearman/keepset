@@ -294,7 +294,7 @@ function GroupIndex({ groups, noun, initialOrder }: { readonly groups: readonly 
   const [text, setText] = useState(() => parseListingQuery(window.location.search).text);
   const [order, setOrder] = useState(initialOrder);
   useEffect(() => {
-    writeLocation(listingLocation({ ...EMPTY_LISTING_QUERY, text }, undefined, window.location.pathname, window.location.pathname));
+    writeLocation(listingLocation({ ...EMPTY_LISTING_QUERY, text }, undefined, window.location.pathname, window.location.pathname), "replace");
   }, [text]);
   const shown = useMemo(() => orderGroups(matchingGroups(groups, text), order), [groups, text, order]);
 
