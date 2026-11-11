@@ -115,10 +115,10 @@ function readMetadata(format: string, all: readonly string[]): Metadata {
  * @param metadata - The file's metadata.
  * @param key - The key.
  * @param least - The smallest value it may take.
- * @returns The number.
+ * @returns The number and the 1-based line it is on.
  * @throws NativeParseError when the key is missing or its value is not such a number.
  */
-function metadataCount(format: string, metadata: Metadata, key: string, least: number): number {
+function metadataCount(format: string, metadata: Metadata, key: string, least: number): { readonly value: number; readonly line: number } {
   const entry = metadata.values.get(key);
   if (entry === undefined) {
     throw new NativeParseError(format, metadata.next, `the metadata has no <${key}>`);
@@ -128,7 +128,7 @@ function metadataCount(format: string, metadata: Metadata, key: string, least: n
     throw new NativeParseError(format, entry.line, `expected <${key}> as a whole number of at least ${String(least)}, found ${JSON.stringify(entry.value)}`);
   }
 
-  return value;
+  return { value, line: entry.line };
 }
 
 /**
@@ -196,15 +196,15 @@ interface Network {
 function readNetwork(text: string): Network {
   const all = lines(text);
   const metadata = readMetadata(NETWORK, all);
-  const zones = metadataCount(NETWORK, metadata, NETWORK_COUNTS.zones, 1);
-  const nodes = metadataCount(NETWORK, metadata, NETWORK_COUNTS.nodes, 1);
-  const firstThruNode = metadataCount(NETWORK, metadata, NETWORK_COUNTS.firstThruNode, 1);
-  const links = metadataCount(NETWORK, metadata, NETWORK_COUNTS.links, 0);
+  const { value: zones, line: zonesLine } = metadataCount(NETWORK, metadata, NETWORK_COUNTS.zones, 1);
+  const { value: nodes } = metadataCount(NETWORK, metadata, NETWORK_COUNTS.nodes, 1);
+  const { value: firstThruNode, line: firstThruNodeLine } = metadataCount(NETWORK, metadata, NETWORK_COUNTS.firstThruNode, 1);
+  const { value: links } = metadataCount(NETWORK, metadata, NETWORK_COUNTS.links, 0);
   if (zones > nodes) {
-    throw new NativeParseError(NETWORK, metadata.values.get(NETWORK_COUNTS.zones)?.line ?? 1, `the zone count ${String(zones)} is above the node count ${String(nodes)}`);
+    throw new NativeParseError(NETWORK, zonesLine, `the zone count ${String(zones)} is above the node count ${String(nodes)}`);
   }
   if (firstThruNode > nodes) {
-    throw new NativeParseError(NETWORK, metadata.values.get(NETWORK_COUNTS.firstThruNode)?.line ?? 1, `the first through node ${String(firstThruNode)} is above the node count ${String(nodes)}`);
+    throw new NativeParseError(NETWORK, firstThruNodeLine, `the first through node ${String(firstThruNode)} is above the node count ${String(nodes)}`);
   }
   const originalHeader = metadata.values.get(ORIGINAL_HEADER);
   const counted: Record<string, string | number> = { zones, firstThruNode, ...(originalHeader === undefined ? {} : { originalHeader: originalHeader.value }) };
@@ -270,9 +270,9 @@ export function parseTntp(files: TntpFiles): NativeAttributedGraph {
   const network = readNetwork(files.network);
   const all = lines(files.trips);
   const metadata = readMetadata(TRIPS, all);
-  const zones = metadataCount(TRIPS, metadata, TRIP_ZONES, 1);
+  const { value: zones, line: zonesLine } = metadataCount(TRIPS, metadata, TRIP_ZONES, 1);
   if (zones !== network.zones) {
-    throw new NativeParseError(TRIPS, metadata.values.get(TRIP_ZONES)?.line ?? 1, `the trip table has ${String(zones)} zones and the network ${String(network.zones)}`);
+    throw new NativeParseError(TRIPS, zonesLine, `the trip table has ${String(zones)} zones and the network ${String(network.zones)}`);
   }
   const total = metadata.values.get(TOTAL_OD_FLOW);
   if (total === undefined) {
