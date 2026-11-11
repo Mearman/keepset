@@ -1,3 +1,10 @@
+## [0.134.2](https://github.com/Mearman/keepset/compare/v0.134.1...v0.134.2) (2026-11-11)
+
+
+### Bug Fixes
+
+* **site:** show a chosen filter value whole inside its control ([87e5f93](https://github.com/Mearman/keepset/commit/87e5f93ce7f393e2d040f1e9514b6fbfb61afe4a))
+
 ## [0.134.1](https://github.com/Mearman/keepset/compare/v0.134.0...v0.134.1) (2026-11-11)
 
 
