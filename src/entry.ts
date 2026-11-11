@@ -177,7 +177,7 @@ export type SheetArchive = z.infer<typeof SheetArchiveSchema>;
 export const InnerArchiveSchema = z.union([z.object({ kind: z.literal("gzip") }).strict(), z.object({ kind: FileArchiveKindSchema, member: ArchiveMemberSchema }).strict(), SheetArchiveSchema]);
 export type InnerArchive = z.infer<typeof InnerArchiveSchema>;
 
-/** The name of a part of a document read from several files, which the parser gives its meaning: the split a triples file holds (`train`, `valid`, `test`), or which of an HGB dataset's files it is (`nodes`, `links`). */
+/** The name of a part of a document read from several files, which the parser gives its meaning: the split a triples file holds (`train`, `valid`, `test`), which of an HGB dataset's files it is (`nodes`, `links`), or which of a TNTP dataset's files it is (`network`, `trips`). */
 export const PartNameSchema = z.string().regex(/^[a-z][a-z0-9]*$/, { message: "must be a lowercase name of letters and digits, such as train" });
 
 /** An archive one document is read from several files of: each part names the one member it is read from, and the parser reads the parts together in the order given. */
@@ -192,7 +192,7 @@ export const PartsArchiveSchema = z
   .strict();
 export type PartsArchive = z.infer<typeof PartsArchiveSchema>;
 
-/** How the downloaded bytes unpack into the file the parser reads, the named files a parser of a parts format reads together into one document (`parts`, such as the split files of a triples download or an HGB dataset's nodes and links), the files a parser of a multi-file format reads together into one document (`files`, such as an OGB raw directory), or for a collection the files it reads one by one. A `members` selector gives every member it matches, at least one, in path order. `gzip`, `bzip2` and `xz` are one compressed file, `tar.gz`, `tar.bz2` and `tar.xz` a tar archive compressed with them, and `7z` a 7z archive, solid or not, which is decoded once from its start for every member selected; xz and 7z are read only where the platform gives a decoder or reader (Node does, the browser does not). A member that is an archive in its turn (a contest bundle that ships its problems as a zip inside the zip, a spreadsheet inside a zip) is unpacked by `inner`. A spreadsheet (`xlsx`, `xls` or `ods`) is read as the CSV of its named sheet, with dates as ISO 8601 text, for the `csv-table` or `edge-list` parser. A point shapefile (`shapefile`) is a zip whose `member` selects the `.shp`, read with the `.dbf`, `.prj` and `.cpg` of the same name beside it as the CSV of its attribute table with each point's stored coordinates and its WGS84 position, for the `csv-table` parser. */
+/** How the downloaded bytes unpack into the file the parser reads, the named files a parser of a parts format reads together into one document (`parts`, such as the split files of a triples download, an HGB dataset's nodes and links, or a TNTP dataset's network and trips), the files a parser of a multi-file format reads together into one document (`files`, such as an OGB raw directory), or for a collection the files it reads one by one. A `members` selector gives every member it matches, at least one, in path order. `gzip`, `bzip2` and `xz` are one compressed file, `tar.gz`, `tar.bz2` and `tar.xz` a tar archive compressed with them, and `7z` a 7z archive, solid or not, which is decoded once from its start for every member selected; xz and 7z are read only where the platform gives a decoder or reader (Node does, the browser does not). A member that is an archive in its turn (a contest bundle that ships its problems as a zip inside the zip, a spreadsheet inside a zip) is unpacked by `inner`. A spreadsheet (`xlsx`, `xls` or `ods`) is read as the CSV of its named sheet, with dates as ISO 8601 text, for the `csv-table` or `edge-list` parser. A point shapefile (`shapefile`) is a zip whose `member` selects the `.shp`, read with the `.dbf`, `.prj` and `.cpg` of the same name beside it as the CSV of its attribute table with each point's stored coordinates and its WGS84 position, for the `csv-table` parser. */
 export const ArchiveSchema = z.union([
   z.object({ kind: z.literal("none") }).strict(),
   z.object({ kind: z.literal("gzip") }).strict(),
@@ -512,6 +512,8 @@ export const ParserSchema = z.discriminatedUnion("format", [
   z.object({ format: z.literal("lrp"), encoding: EncodingSchema }).strict(),
   /** A DIMACS minimum-cost flow problem (`.min`): nodes with their supply, arcs with their lower bound, capacity and cost. */
   z.object({ format: z.literal("dimacs-min"), encoding: EncodingSchema }).strict(),
+  /** A Transportation Networks for Research dataset in the TNTP format, read from the parts `network` (the `_net.tntp` file) and `trips` (the trip table): the road network's zones and nodes, its links with their columns as fields, and each origin and destination pair of the trip table as a commodity node with its demand, joined to its origin and destination zones. */
+  z.object({ format: z.literal("tntp"), encoding: EncodingSchema }).strict(),
   /** A resource page of OpenSLR (openslr.org): the resource's title, identifier, summary, category, licence, description and external address as the instance's meta, and its download links as nodes. */
   z.object({ format: z.literal("openslr-resource"), encoding: z.literal("utf-8") }).strict(),
   /** A text read as the records a regular expression matches in it (a host's directory listing, a reference-value file): every match, in text order, is a row of the pattern's named captures, the `id` capture being the row's id, and each derived column is built from the captures its template names. */
@@ -656,6 +658,7 @@ export const STREAMED_FILE_FORMATS: ReadonlySet<Parser["format"]> = new Set<Stre
 const PART_FORMATS: ReadonlyMap<Parser["format"], readonly string[] | undefined> = new Map([
   ["kg-triples", undefined],
   ["hgb", ["nodes", "links"]],
+  ["tntp", ["network", "trips"]],
 ]);
 
 /**

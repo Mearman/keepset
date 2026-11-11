@@ -45,6 +45,7 @@ import { parseOrlibPmed } from "./orlib-pmed";
 import { parseOrlibPmedcap } from "./orlib-pmedcap";
 import { parseLrp } from "./lrp";
 import { parseDimacsMin } from "./dimacs-min";
+import { parseTntp } from "./tntp";
 import type { NativeAttributedGraph, NativeDocument, NativeGraph, NativeInstance, NativeTable } from "./native";
 import { parsePajek } from "./pajek";
 import { parseCustomerPoints } from "./customer-points";
@@ -323,13 +324,13 @@ export interface NamedBytes {
 }
 
 /**
- * Reads the named parts of a parts archive into the one native graph of the recipe's parser: the split files of a triples download, each edge carrying its part's name as its split, or an HGB dataset's `nodes` and `links` files.
+ * Reads the named parts of a parts archive into the one native graph of the recipe's parser: the split files of a triples download, each edge carrying its part's name as its split, an HGB dataset's `nodes` and `links` files, or a TNTP dataset's `network` file and `trips` table, whose graph carries a `meta` of its own.
  * @param parts - The parts, in the order the recipe names them.
  * @param parser - The recipe's parser, one of the formats that read parts.
  * @returns The native graph.
- * @throws NativeParseError when a part is not valid in the stated encoding, its text is not in the stated format, the parser reads one file, or an HGB recipe lacks its `nodes` or `links` part.
+ * @throws NativeParseError when a part is not valid in the stated encoding, its text is not in the stated format, the parser reads one file, or an HGB or TNTP recipe lacks one of its parts.
  */
-export function parseNativeParts(parts: readonly NamedBytes[], parser: Parser): NativeGraph {
+export function parseNativeParts(parts: readonly NamedBytes[], parser: Parser): NativeGraph | NativeAttributedGraph {
   if (parser.format === "kg-triples") {
     return parseKgTriples(
       parts.map((part) => ({ split: part.name, pieces: decodePieces(part.bytes, parser) })),
@@ -344,6 +345,15 @@ export function parseNativeParts(parts: readonly NamedBytes[], parser: Parser): 
     }
 
     return parseHgb({ nodes: decodePieces(nodes.bytes, parser), links: decodePieces(links.bytes, parser) }, parser);
+  }
+  if (parser.format === "tntp") {
+    const network = parts.find((part) => part.name === "network");
+    const trips = parts.find((part) => part.name === "trips");
+    if (network === undefined || trips === undefined) {
+      throw new NativeParseError(parser.format, 1, "a TNTP recipe reads the parts network and trips");
+    }
+
+    return parseTntp({ network: decode(network.bytes, parser), trips: decode(trips.bytes, parser) });
   }
   throw new NativeParseError(parser.format, 1, `the ${parser.format} parser reads one file, not named parts`);
 }

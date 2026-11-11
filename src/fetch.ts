@@ -337,7 +337,7 @@ async function runToNative(dataset: Dataset, options: FetchOptions): Promise<Nat
       const parts = await step(entry.id, "extract", async () => unpackParts(stored, archive, unpackOptionsOf(options)));
       const parsed = await step(entry.id, "parse", () => parseNativeParts(parts, recipe.parser));
 
-      return { collection: false, documents: [{ id: undefined, native: { ...parsed, meta: metaOf(entry) } }], provenance: await provenanceOf({ members: parts.map((part) => part.path) }) };
+      return { collection: false, documents: [{ id: undefined, native: { ...parsed, meta: { ...("meta" in parsed ? parsed.meta : {}), ...metaOf(entry) } } }], provenance: await provenanceOf({ members: parts.map((part) => part.path) }) };
     }
     if ("files" in archive) {
       if (recipe.parser.format === "member-path" || recipe.parser.format === "grouped-member-path") {
