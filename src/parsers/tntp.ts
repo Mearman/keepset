@@ -1,7 +1,7 @@
 import { NativeParseError } from "../errors";
 import type { NativeAttributedEdge, NativeAttributedGraph, NativeRow } from "./native";
 import { lines } from "./native";
-import { SCIENTIFIC } from "./number-lines";
+import { numberReader } from "./number-lines";
 
 /** What every error from the network file names as its format. */
 const NETWORK = "tntp network";
@@ -51,56 +51,27 @@ function camel(name: string): string {
   return first + rest.map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join("");
 }
 
-/** Reads the fields of one of the two files, naming the file and the line in every error. */
-interface FieldReader {
-  /**
-   * Reads a field as a decimal number.
-   * @param field - The field as written.
-   * @param line - Its 1-based line.
-   * @param what - What the field should be.
-   * @returns The number.
-   * @throws NativeParseError when the field is not a decimal number.
-   */
-  readonly decimal: (field: string, line: number, what: string) => number;
-  /**
-   * Reads a field as a number from 1 to `count`, a node or a zone.
-   * @param field - The field as written.
-   * @param line - Its 1-based line.
-   * @param what - What the field numbers.
-   * @param count - The largest number allowed.
-   * @returns The number.
-   * @throws NativeParseError when the field is not a whole number from 1 to `count`.
-   */
-  readonly numbered: (field: string, line: number, what: string, count: number) => number;
-}
+const networkRead = numberReader(NETWORK);
+const tripsRead = numberReader(TRIPS);
 
 /**
- * Makes the field reader of one file.
+ * Makes the reader of a node or zone number of one file.
  * @param format - The file's format, which every error names.
- * @returns The reader.
+ * @returns A function reading a field as a number from 1 to `count`: it takes the field as written, its 1-based line, what it numbers and the largest number allowed, and throws NativeParseError when the field is not a whole number in that range.
  */
-function fieldReader(format: string): FieldReader {
-  return {
-    decimal(field, line, what) {
-      if (!SCIENTIFIC.test(field)) {
-        throw new NativeParseError(format, line, `expected ${what} as a number, found ${JSON.stringify(field)}`);
-      }
+function numberedReader(format: string): (field: string, line: number, what: string, count: number) => number {
+  return (field, line, what, count) => {
+    const value = Number(field);
+    if (!POSITIVE_INTEGER.test(field) || value < 1 || value > count) {
+      throw new NativeParseError(format, line, `expected a ${what} from 1 to ${String(count)}, found ${JSON.stringify(field)}`);
+    }
 
-      return Number(field);
-    },
-    numbered(field, line, what, count) {
-      const value = Number(field);
-      if (!POSITIVE_INTEGER.test(field) || value < 1 || value > count) {
-        throw new NativeParseError(format, line, `expected a ${what} from 1 to ${String(count)}, found ${JSON.stringify(field)}`);
-      }
-
-      return value;
-    },
+    return value;
   };
 }
 
-const networkField = fieldReader(NETWORK);
-const tripsField = fieldReader(TRIPS);
+const networkNumbered = numberedReader(NETWORK);
+const tripsNumbered = numberedReader(TRIPS);
 
 /** A file's metadata and the 0-based index of the first line after it. */
 interface Metadata {
@@ -265,11 +236,11 @@ function readNetwork(text: string): Network {
       throw new NativeParseError(NETWORK, line, `expected a link line of the header's ${String(header.names.length)} columns, found ${String(values.length)} values`);
     }
     const [init = "", term = "", ...rest] = values;
-    const source = String(networkField.numbered(init, line, "node", nodes));
-    const target = String(networkField.numbered(term, line, "node", nodes));
+    const source = String(networkNumbered(init, line, "node", nodes));
+    const target = String(networkNumbered(term, line, "node", nodes));
     const fields: Record<string, number> = {};
     for (const [position, field] of header.fields.entries()) {
-      fields[field] = networkField.decimal(rest[position] ?? "", line, `the link's ${header.names[position + ENDS.length] ?? field}`);
+      fields[field] = networkRead.scientific(rest[position] ?? "", line, `the link's ${header.names[position + ENDS.length] ?? field}`);
     }
     edges.push({ source, target, type: "link", ...fields });
   }
@@ -307,7 +278,7 @@ export function parseTntp(files: TntpFiles): NativeAttributedGraph {
   if (total === undefined) {
     throw new NativeParseError(TRIPS, metadata.next, `the metadata has no <${TOTAL_OD_FLOW}>`);
   }
-  const counted: Record<string, string | number> = { ...network.meta, totalOdFlow: tripsField.decimal(total.value, total.line, `<${TOTAL_OD_FLOW}>`) };
+  const counted: Record<string, string | number> = { ...network.meta, totalOdFlow: tripsRead.scientific(total.value, total.line, `<${TOTAL_OD_FLOW}>`) };
   const meta: Record<string, string | number> = { ...counted, ...textMetadata(TRIPS, metadata, new Set([TRIP_ZONES, TOTAL_OD_FLOW]), new Set(Object.keys(counted))) };
 
   const nulls = Object.fromEntries(network.columns.map((field) => [field, null]));
@@ -323,7 +294,7 @@ export function parseTntp(files: TntpFiles): NativeAttributedGraph {
     }
     const start = ORIGIN.exec(raw);
     if (start !== null) {
-      origin = tripsField.numbered(start[1] ?? "", line, "zone", zones);
+      origin = tripsNumbered(start[1] ?? "", line, "zone", zones);
       continue;
     }
     if (origin === undefined) {
@@ -338,8 +309,8 @@ export function parseTntp(files: TntpFiles): NativeAttributedGraph {
       if (match === null) {
         throw new NativeParseError(TRIPS, line, `expected a destination entry D : FLOW, found ${JSON.stringify(entry)}`);
       }
-      const destination = tripsField.numbered(match[1] ?? "", line, "zone", zones);
-      const demand = tripsField.decimal(match[2] ?? "", line, "the flow");
+      const destination = tripsNumbered(match[1] ?? "", line, "zone", zones);
+      const demand = tripsRead.scientific(match[2] ?? "", line, "the flow");
       if (demand < 0) {
         throw new NativeParseError(TRIPS, line, `expected a flow of at least 0, found ${match[2] ?? ""}`);
       }

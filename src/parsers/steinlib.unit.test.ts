@@ -68,4 +68,9 @@ describe("the SteinLib parser", () => {
     const commented = ["# a comment", ...SMALL.map((line) => (line === "E 3 4 7" ? "E 3 4 7 # heavy" : line)), "# after"];
     expect(parseNative(bytes(...commented), steinlib)).toEqual(parseNative(bytes(...SMALL), steinlib));
   });
+
+  it("reads an edge weight written with an exponent", () => {
+    const parsed = parseNative(bytes(...SMALL.map((line) => (line === "E 3 4 7" ? "E 3 4 1.5e+3" : line))), steinlib);
+    expect(parsed.edges[3]).toEqual({ source: "3", target: "4", weight: 1500 });
+  });
 });

@@ -70,4 +70,8 @@ describe("the MATPOWER parser", () => {
     expect(() => parseNative(bytes(...SMALL, "mpc.dcline = ["), matpower)).toThrow(/the table mpc.dcline is not one the parser reads/);
     expect(() => parseNative(bytes(...SMALL.slice(0, -1)), matpower)).toThrow(/line 24: the table mpc.branch is not closed/);
   });
+
+  it("reads a value written with an exponent", () => {
+    expect(parseNative(bytes(...SMALL.map((line) => line.replace("baseMVA = 100.0", "baseMVA = 1.5e+2"))), matpower).meta).toMatchObject({ baseMVA: 150 });
+  });
 });

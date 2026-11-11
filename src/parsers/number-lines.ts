@@ -11,7 +11,7 @@ export interface FieldLine {
 const DECIMAL = /^[+-]?(?:\d+\.?\d*|\.\d+)$/;
 
 /** A decimal that may carry an exponent, as the formats written by numeric software do (`25900.20064`, `7.12506e+007`, `5.02e-05`). */
-export const SCIENTIFIC = /^[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?$/;
+const SCIENTIFIC = /^[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?$/;
 
 /** A whole number as the numeric instance formats write one, optionally signed. */
 const INTEGER = /^[+-]?\d+$/;
@@ -44,6 +44,15 @@ export interface NumberReader {
    * @throws NativeParseError when the field is not a decimal number.
    */
   readonly decimal: (field: string, line: number, what: string) => number;
+  /**
+   * Reads a field as a finite number that may carry an exponent (`1.5e+3`, `5.02e-05`).
+   * @param field - The field as written.
+   * @param line - Its 1-based line.
+   * @param what - What the field should be.
+   * @returns The number.
+   * @throws NativeParseError when the field is not a decimal number, with or without an exponent.
+   */
+  readonly scientific: (field: string, line: number, what: string) => number;
   /**
    * Reads a field as a whole number that a double holds exactly.
    * @param field - The field as written.
@@ -92,6 +101,13 @@ export function numberReader(format: string): NumberReader {
   return {
     decimal(field, line, what) {
       if (!DECIMAL.test(field)) {
+        throw new NativeParseError(format, line, `expected ${what} as a number, found ${JSON.stringify(field)}`);
+      }
+
+      return Number(field);
+    },
+    scientific(field, line, what) {
+      if (!SCIENTIFIC.test(field)) {
         throw new NativeParseError(format, line, `expected ${what} as a number, found ${JSON.stringify(field)}`);
       }
 
