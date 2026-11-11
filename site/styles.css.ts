@@ -422,8 +422,8 @@ globalStyle(".island-controls .island-search", {
 });
 
 globalStyle(".island-controls .island-filter", {
-  flex: "1 1 11rem",
-  minWidth: "8rem",
+  flex: "1 1 14rem",
+  minWidth: "12rem",
 });
 
 /* A filter is one input-height control whatever it holds: Mantine's multi-select wraps its pills onto further lines and grows with them, so the pill list is held to one line, the input is given the height of the text input beside it, the values beyond the first collapse into a "+N" on the first pill (renderPill), and once a value is chosen the search field gives up its basis width (its placeholder hidden) and fills only what the pill leaves, so the pill keeps its natural width and typed text still has room. */
