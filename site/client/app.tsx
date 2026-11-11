@@ -1,6 +1,6 @@
 /* The client island, now a React application: the whole script the site runs. On every page with a dataset listing (the home page, and each domain, subject, kind, tag and namespace page, which starts from its own filter) it mounts a Mantine-controlled, TanStack-table view over the generated search index; on an index of those pages it mounts the same controls over the index's list. The static table or list, and any link into the filtered listing, stay in the HTML as the no-JS baseline and are hidden once the island is live. On every page it turns each copy mount (a fetch command, a snapshot link) into a Mantine copy control; everywhere it registers the service worker. Every page still works without it: listings are static, commands are plain text. */
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactElement, type ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import { ActionIcon, Badge, Button, type ComboboxRenderPillInput, CopyButton, MantineProvider, MultiSelect, NumberInput, Pill, SegmentedControl, Table as MantineTable, TextInput, Tooltip } from "@mantine/core";
 import "@mantine/core/styles.css";
@@ -74,11 +74,12 @@ function heldBy(record: SearchRecord): FacetValues {
 
 /** Each attribute's filter as the controls show it: its accessible name, its placeholder, and whether its options list the most common first (tags, most of which name a field of one source only) or in label order. */
 /** A filter holds one line whatever is chosen: only the first chosen value is drawn, carrying a count of the others. */
-function facetPill(chosen: readonly string[], { value, onRemove, disabled }: ComboboxRenderPillInput): ReactNode {
+function facetPill(chosen: readonly string[], { value, onRemove, disabled }: ComboboxRenderPillInput): ReactElement | null {
   const [first] = chosen;
   if (value === undefined || value !== first) {
     return null;
   }
+
   return <Pill withRemoveButton={disabled !== true} onRemove={onRemove}>{chosen.length > 1 ? `${value} +${String(chosen.length - 1)}` : value}</Pill>;
 }
 
