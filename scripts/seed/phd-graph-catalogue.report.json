@@ -10854,7 +10854,7 @@
     }
   ],
   "source": {
-    "catalogue": "Mearman/Thesis experiments/pipeline/graphs/catalog.json",
+    "catalogue": "example/experiments/pipeline/graphs/catalog.json",
     "generated": "2026-03-26T12:20:00.000Z",
     "version": "2.0.0"
   }

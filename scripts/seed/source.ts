@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-/* The shape of the thesis pipeline's graph dataset catalogue (Mearman/Thesis, experiments/pipeline/graphs/catalog.json, with its own catalog.schema.json beside it), as far as the seed import reads it. The upstream schema leaves `citation` and `sources` open, so each of their recorded variants is spelled out here: a variant the import has never seen fails the parse loudly rather than converting into something unchecked. The graphbox catalogue (Mearman/graphbox, src/data/catalog.json) has the same outer shape and is read only for the overlap report. */
+/* The shape of the thesis pipeline's graph dataset catalogue (experiments/pipeline/graphs/catalog.json, with its own catalog.schema.json beside it), as far as the seed import reads it. The upstream schema leaves `citation` and `sources` open, so each of their recorded variants is spelled out here: a variant the import has never seen fails the parse loudly rather than converting into something unchecked. The graphbox catalogue (Mearman/graphbox, src/data/catalog.json) has the same outer shape and is read only for the overlap report. */
 
 /** One download of a dataset: a URL in a stated format, optionally naming the archive member to read and, for a delimited table, the columns holding an edge's endpoints and the header lines to skip, or a generator description for a synthetic dataset. */
 export const SourceDownloadSchema = z.looseObject({

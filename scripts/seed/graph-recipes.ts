@@ -8,7 +8,7 @@ interface StatedRecipe {
 }
 
 /**
- * Catalogue formats that name one publisher's fixed file layout, each with the recipe that reads it, found by reading the files: the pipeline reads each with a converter of its own (the format branches of experiments/pipeline/scripts/download_benchmark_graph.py and `parse_benchmark_download` in experiments/shared/infrastructure/benchmark_data.py of Mearman/Thesis), and the recipe states the same reading declaratively.
+ * Catalogue formats that name one publisher's fixed file layout, each with the recipe that reads it, found by reading the files: the pipeline reads each with a converter of its own (the format branches of experiments/pipeline/scripts/download_benchmark_graph.py and `parse_benchmark_download` in experiments/shared/infrastructure/benchmark_data.py of the pipeline's repository), and the recipe states the same reading declaratively.
  */
 export const FORMAT_RECIPES: ReadonlyMap<string, StatedRecipe> = new Map<string, StatedRecipe>([
   [
