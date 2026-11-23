@@ -24,7 +24,7 @@ export const CROSSWALKS = {
 export type CrosswalkFile = (typeof CROSSWALKS)[keyof typeof CROSSWALKS];
 
 /**
- * Per-dataset parser options the thesis pipeline sets in Python rather than in its catalogue (`BENCHMARK_DATASETS` and `HETEROGENEOUS_DATASETS` in experiments/shared/infrastructure/benchmark_data.py of Mearman/Thesis). The import carries them into the recipe as stated options and flags each one in the report.
+ * Per-dataset parser options the thesis pipeline sets in Python rather than in its catalogue (`BENCHMARK_DATASETS` and `HETEROGENEOUS_DATASETS` in experiments/shared/infrastructure/benchmark_data.py of the pipeline's repository). The import carries them into the recipe as stated options and flags each one in the report.
  */
 export const PIPELINE_PARSER_OVERRIDES: ReadonlyMap<string, { readonly delimiter?: "space" | "tab"; readonly skipLines?: number }> = new Map([
   ["karate", { delimiter: "space" }],
@@ -314,7 +314,7 @@ function archiveKindOf(url: string): Exclude<Archive["kind"], SheetArchive["kind
 /** The parser formats the graph import maps a catalogue format to by name alone: those that read a graph from one file and need no option beyond the encoding. The ratings and KONECT parsers have options, which the import reads from the file, the `cflp` parser needs its layout, and the multi-file `ogb` format is never mapped by name. */
 type GraphFormat = Exclude<Parser["format"], "canad-dow" | "orlib-pmed" | "dimacs-min" | "tntp" | "dimacs-graph" | "steinlib" | "matpower" | "csv-table" | "geojson" | "json-table" | "json-word-counts" | "lexicon-lines" | "user-item-ratings" | "konect" | "kg-triples" | "hgb" | "user-item-counts" | "ogb" | "member-text" | "nxt-words" | "eaf" | "transcriber" | "textgrid" | "option-list" | "chat" | "mtedx" | "stm" | "musan-annotations" | "nicolingua" | "nicolingua-radio" | "simulated-rir" | "similarity-ratings" | "speaker-trials" | "air-mat" | "member-path" | "grouped-member-path" | "word-text" | "wav-metadata" | "cflp" | "text-pattern" | InstanceFormat>;
 
-/** The keepset parser each catalogue format reads with, by the pipeline's own dispatch (the format branches of experiments/pipeline/scripts/download_benchmark_graph.py in Mearman/Thesis): formats whose pipeline parser is the generic edge list, GML, Pajek, Matrix Market, UCINet DL or GD contest reader. */
+/** The keepset parser each catalogue format reads with, by the pipeline's own dispatch (the format branches of experiments/pipeline/scripts/download_benchmark_graph.py in the pipeline's repository): formats whose pipeline parser is the generic edge list, GML, Pajek, Matrix Market, UCINet DL or GD contest reader. */
 const PARSERS: ReadonlyMap<string, GraphFormat | "linqs"> = new Map([
   ["matrix-market", "matrix-market"],
   ["gml", "gml"],
@@ -1013,7 +1013,7 @@ export function convertCatalogue(pipeline: SourceCatalogue, graphbox: GraphboxCa
   return {
     entries,
     report: {
-      source: { catalogue: "Mearman/Thesis experiments/pipeline/graphs/catalog.json", version: pipeline.version, generated: pipeline.generated },
+      source: { catalogue: "example/experiments/pipeline/graphs/catalog.json", version: pipeline.version, generated: pipeline.generated },
       outcomes,
       judgementCallRemovals: JUDGEMENT_CALL_REMOVALS,
       omittedFields: OMITTED_FIELDS,
