@@ -1,3 +1,5 @@
+## [0.138.1](https://github.com/Mearman/keepset/compare/v0.138.0...v0.138.1) (2026-11-23)
+
 # [0.138.0](https://github.com/Mearman/keepset/compare/v0.137.0...v0.138.0) (2026-11-11)
 
 
